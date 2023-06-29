@@ -107,7 +107,7 @@ namespace Threading {
 		issue_error(msg);
 	}
 	void sleep(int milliseconds) {
-		struct timespec ts;
+		timespec ts;
 		ts.tv_sec = 0;
 		if (milliseconds > 1000) {
 			ts.tv_sec = milliseconds / 1000;
