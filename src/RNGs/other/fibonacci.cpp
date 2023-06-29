@@ -53,7 +53,7 @@ namespace PractRand {
 						if (true) {
 							Uint64 old = olda[0];
 							state[shift_i] += old;
-							bool carry = state[shift_i] < old;
+							//bool carry = state[shift_i] < old;
 						}
 						for (int i = shift_i+1; i < n; i++) {
 							Uint64 old = olda[i - shift_i];

@@ -743,7 +743,7 @@ namespace PractRand {
 			norm *= std::sqrt(0.5);
 			double scaled = math_erfcx(norm);
 			double scale = norm * norm;
-			double ec = 1 - math_erf(norm);
+			//double ec = 1 - math_erf(norm);
 			double l = (std::log(scaled) - scale) / std::log(2.0);
 			return -(l + 0);
 		}
@@ -977,7 +977,7 @@ namespace PractRand {
 			if (!size) return 0;
 			double size_f = size;
 			double size_a = size + 1.0;
-			double size_inv = 1.0 / size_a;
+			//double size_inv = 1.0 / size_a;
 			double prior = 0;
 			double sum_log = 0;
 			//double sum_exp = 0;
@@ -1039,8 +1039,8 @@ namespace PractRand {
 			long double total = 0;
 			for (unsigned long i = 0; i < categories; i++) total += counts[i];
 			if (!total) return 0;
-			long double sum_exp = 0, sum_log = 0;
-			double adjusted_total = total + 1.0;
+			//long double sum_exp = 0, sum_log = 0;
+			//double adjusted_total = total + 1.0;
 			//double prior = 0;
 			//double DoF = 0;
 			for (unsigned long i = 0; i < categories; i++) {
@@ -1048,7 +1048,7 @@ namespace PractRand {
 				if (counts[i]) {
 					double c = counts[i];
 					//DoF += c; //c > 2 ? 2 : 1;
-					double delta = cur_prob / (c + 1);
+					//double delta = cur_prob / (c + 1);
 					//sum += _uniformity_transform(prob_sum + delta * 0.5, adjusted_total);
 					if (c > 1) {
 						//sum += _uniformity_transform(delta, adjusted_total) * (c-1);
@@ -1336,7 +1336,7 @@ namespace PractRand {
 						while (y < h && !read_position(x, y)) y++;//it's now safe to search past virtual_h, because the buffer is clear
 					}
 					if (y != h) {
-						int rfww = ranks_found * ww;
+						//int rfww = ranks_found * ww;
 						xor_rows_skip_start(ranks_found, y, shortened);
 						//for (int i = shortened; i < ww; i++) base[rfww+i] ^= base[y*ww+i];
 						xor_rows_skip_start(y, ranks_found, shortened);

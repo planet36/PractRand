@@ -181,8 +181,8 @@ public:
 		for (int i = 0; i < 256; i++) table[i] = Word(good.raw64());
 	}
 	Word _raw_native() {
-		Word old;
-		const Word K = Word(0x92ec64765925a395ull);
+		//Word old;
+		//const Word K = Word(0x92ec64765925a395ull);
 		/*
 		old = a + b;// irreversible, but fast and seems decent enough once the cycle length is long enough
 		a = rotate(a, RSHIFT) ^ old;

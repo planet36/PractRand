@@ -577,7 +577,7 @@ namespace PractRand {
 					left = -1;
 				}
 				Uint16 genindC::refill() {
-					int size = 1 << table_size_L2;
+					//int size = 1 << table_size_L2;
 					int half_size = 1 << (table_size_L2 - 1);
 					int mask = half_size - 1;
 					Uint16 *table2 = table + half_size;
