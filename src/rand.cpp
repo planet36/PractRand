@@ -212,7 +212,7 @@ namespace PractRand {
 			PractRand::RNGs::Polymorphic::arbee seeder;
 			AutoSeedingStateWalker(const void *target) {
 				//get_autoseed_entropy(&seeder, target);
-				Uint32 seed_and_iv[10];
+				Uint32 seed_and_iv[10] = {0};
 				get_autoseed_fixed_entropy((Uint64*)&seed_and_iv[0], &seeder);
 
 				//I would prefer ChaCha, but the license is not 100% clear atm

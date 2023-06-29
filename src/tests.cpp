@@ -5598,7 +5598,7 @@ void PractRand::Tests::BirthdayLamda1::test_blocks(TestBlock *data, int numblock
 	if (autofail) return;
 	//const long shift1 = (64 - bits_to_use) & 63;
 	//const long shift2 = (bits_to_use - 64) & 63;
-	Uint64 mask_high = Uint64(Sint64(-1)), mask_low;
+	Uint64 mask_high = Uint64(Sint64(-1)), mask_low = 0;
 	if (bits_to_use < 64) {
 		mask_low = 0;
 		mask_high <<= (64 - bits_to_use);

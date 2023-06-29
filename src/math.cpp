@@ -803,7 +803,7 @@ namespace PractRand {
 
 			const double threshold_low = 0.02425;
 			const double threshold_high = 1.0 - threshold_low;
-			double q, x, r;
+			double q, x = 0, r;
 
 			if (pvalue <= 0) return -999999999.;
 			if (pvalue >= 1) return +999999999.;
