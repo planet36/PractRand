@@ -5623,7 +5623,7 @@ void PractRand::Tests::BirthdayLamda1::test_blocks(TestBlock *data, int numblock
 		num_buffered += TestBlock::SIZE / sizeof(i128);
 		if (num_buffered >> buffer_size_L2) {
 			flush_buffer();
-			mask_high = Uint64(Sint64(-1)), mask_low;
+			mask_high = Uint64(Sint64(-1));
 			if (bits_to_use < 64) {
 				mask_low = 0;
 				mask_high <<= (64 - bits_to_use);
@@ -5843,7 +5843,7 @@ void PractRand::Tests::BirthdaySystematic128::test_blocks(TestBlock *data, int n
 		num_buffered += TestBlock::SIZE / sizeof(i128);
 		if (num_buffered >> buffer_size_L2) {
 			flush_buffer();
-			mask_high = Uint64(Sint64(-1)), mask_low;
+			mask_high = Uint64(Sint64(-1));
 			if (bits_to_use < 64) {
 				mask_low = 0;
 				mask_high <<= (64 - bits_to_use);
