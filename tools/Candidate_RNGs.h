@@ -499,10 +499,10 @@ public:
 	32 bit: 25,8,3
 	64 bit: 25,12,3
 */
-class raw_sfc_alternative8  : public _sfc_alternative<Uint8 , 3, 2,1> { public: Uint8  raw8() {return _raw_native();} void seed(Uint64 s) {_seed(s);};};
-class raw_sfc_alternative16 : public _sfc_alternative<Uint16, 7, 3,2> {public: Uint16 raw16() {return _raw_native();} void seed(Uint64 s) {_seed(s);};};
-class raw_sfc_alternative32 : public _sfc_alternative<Uint32,25, 8,3> {public: Uint32 raw32() {return _raw_native();} void seed(Uint64 s) {_seed(s);};};
-class raw_sfc_alternative64 : public _sfc_alternative<Uint64,25,12,3>{public: Uint64 raw64() {return _raw_native();} void seed(Uint64 s) {_seed(s);};};
+class raw_sfc_alternative8  : public _sfc_alternative<Uint8 , 3, 2,1> { public: Uint8  raw8() {return _raw_native();} void seed(Uint64 s) {_seed(s);}};
+class raw_sfc_alternative16 : public _sfc_alternative<Uint16, 7, 3,2> {public: Uint16 raw16() {return _raw_native();} void seed(Uint64 s) {_seed(s);}};
+class raw_sfc_alternative32 : public _sfc_alternative<Uint32,25, 8,3> {public: Uint32 raw32() {return _raw_native();} void seed(Uint64 s) {_seed(s);}};
+class raw_sfc_alternative64 : public _sfc_alternative<Uint64,25,12,3>{public: Uint64 raw64() {return _raw_native();} void seed(Uint64 s) {_seed(s);}};
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 64)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 32)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 16)
