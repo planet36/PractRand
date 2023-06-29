@@ -413,6 +413,8 @@ double interpret_length(const std::string &lengthstr, bool normal_mode) {
 		scale = -86400;//one day
 		expect_B = false;
 		break;
+	default:
+		break;
 	}
 	pos++;
 	if (pos == lengthstr.size()) {

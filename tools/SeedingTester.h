@@ -169,6 +169,8 @@ public:
 		case 2://reverse a deletion with an insertion
 			apply_transform(message, transform - (Uint64(1) << 56));
 			break;
+		default:
+			break;
 		}
 	}
 	PractRand::Uint64 hash_message(const std::vector<Uint8> &message) {
