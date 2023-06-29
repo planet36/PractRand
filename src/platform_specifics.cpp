@@ -36,7 +36,7 @@ Two functions are performed that may need to use platform-specific functionality
 
 using namespace PractRand;
 
-bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng, int milliseconds ) {
+bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng, [[maybe_unused]] int milliseconds ) {
 	//the intention is for "millisecond" to be an amount of time that this function is permitted to spend on obtaining entropy
 	//but currently nothing that spends time in a controlled fashion is implemented, so it's meaningless
 

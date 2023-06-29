@@ -171,7 +171,7 @@ namespace PractRand {
 			enough_entropy_found = entropy_pool.add_entropy_automatically(1);
 			for (int i = 0; i < POOL_SIZE; i++) shared_entropy[i] = entropy_pool.raw64();
 		}
-		static void get_autoseed_fixed_entropy(Uint64 entropy[5], const void *target) {
+		static void get_autoseed_fixed_entropy(Uint64 entropy[5], [[maybe_unused]] const void *target) {
 			// NOT thread-safe the first time it's run
 			if (!initialized) initialize();
 #if defined PRACTRAND_THREAD_LOCAL_STORAGE
@@ -210,7 +210,7 @@ namespace PractRand {
 		class AutoSeedingStateWalker : public StateWalkingObject {
 		public:
 			PractRand::RNGs::Polymorphic::arbee seeder;
-			AutoSeedingStateWalker(const void *target) {
+			AutoSeedingStateWalker([[maybe_unused]] const void *target) {
 				//get_autoseed_entropy(&seeder, target);
 				Uint32 seed_and_iv[10] = {0};
 				get_autoseed_fixed_entropy((Uint64*)&seed_and_iv[0], &seeder);
@@ -227,8 +227,8 @@ namespace PractRand {
 			virtual void handle(Uint16 &v) {v = seeder.raw16();}
 			virtual void handle(Uint32 &v) {v = seeder.raw32();}
 			virtual void handle(Uint64 &v) {v = seeder.raw64();}
-			virtual void handle(float  &v) {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			virtual void handle(double &v) {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			virtual void handle([[maybe_unused]] float  &v) {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			virtual void handle([[maybe_unused]] double &v) {issue_error("RNGs with auto-seeding should not contain floating point values");}
 			virtual Uint32 get_properties() const {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 		class CryptoAutoSeedingStateWalker : public StateWalkingObject {

@@ -201,7 +201,7 @@ void benchmark_entropy_pool_input() {
 	POLYPERF(sha2_based)
 }
 
-int main(int argc, char **argv) {
+int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
 	PractRand::initialize_PractRand();
 //	PractRand::self_test_PractRand();
 

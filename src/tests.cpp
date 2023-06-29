@@ -1521,7 +1521,7 @@ class TableIndexMasker {
 	Uint32 lookup2[256];
 	Uint32 lookup3[256];
 public:
-	void set_mask(int old_bits, Uint32 mask) {
+	void set_mask([[maybe_unused]] int old_bits, Uint32 mask) {
 		int bit_to_bit_lookup[32];
 		int new_bit = 0;
 		for (int old_bit = 0; old_bit < 32; old_bit++) {
@@ -1604,7 +1604,7 @@ Tests::ListOfTests::ListOfTests(
 	if (test16) tests.push_back(test16);
 }
 
-void PractRand::Tests::TestBaseclass::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::TestBaseclass::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	blocks_tested = 0;
 }
 int PractRand::Tests::TestBaseclass::get_blocks_to_repeat() const { return 1; }
@@ -1614,7 +1614,7 @@ int PractRand::Tests::TestBaseclass::get_blocks_to_repeat() const { return 1; }
 std::string PractRand::Tests::Gap16::get_name() const {
 	return std::string("Gap-16");
 }
-void PractRand::Tests::Gap16::init( PractRand::RNGs::vRNG *known_good ) {
+void PractRand::Tests::Gap16::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	int i;
 	for (i = 0; i < 65536; i += 1) last[i] = 0;
 	counts.reset_counts();
@@ -1843,7 +1843,7 @@ void PractRand::Tests::Rep16::test_blocks(TestBlock *data, int numblocks) {
 	}
 	blocks_tested += numblocks;
 }
-void  PractRand::Tests::Rep16::get_results(std::vector<TestResult> &results) {
+void  PractRand::Tests::Rep16::get_results([[maybe_unused]] std::vector<TestResult> &results) {
 	if (blocks_tested < 1) return;
 	//Uint64 len = Uint64(blocks_tested) * TestBlock::SIZE / 2;
 	//double e = len / (65536.0 * 65536.0);
@@ -1911,7 +1911,7 @@ int PractRand::Tests::DistC6::transform_bitcount ( int bit_count ) const {
 	}
 	return (((k >> bits_clipped_0) + (1 << (bits_per_sample-1)))) & ((1 << bits_per_sample) - 1);
 }
-void PractRand::Tests::DistC6::init( PractRand::RNGs::vRNG *known_good ) {
+void PractRand::Tests::DistC6::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	counts.set_size(size);
 	counts.reset_counts();
 	last_index = 0;
@@ -2641,7 +2641,7 @@ PractRand::Tests::BCFN::BCFN( int unitsL2_, int tbits_, bool unbalanced_ ) {
 	tbits = tbits_;
 	unbalanced = unbalanced_;
 }
-void PractRand::Tests::BCFN::init( PractRand::RNGs::vRNG *known_good ) {
+void PractRand::Tests::BCFN::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	for (int i = 0; i < LEVELS; i++) {
 		int tbitsl = tbits;
 		if (tbitsl <= 0) {
@@ -3336,7 +3336,7 @@ PractRand::Tests::BCFN_FF::BCFN_FF( int unitsL2_, int tbits_, bool unbalanced_ )
 	tbits = tbits_;
 	unbalanced = unbalanced_;
 }
-void PractRand::Tests::BCFN_FF::init( PractRand::RNGs::vRNG *known_good ) {
+void PractRand::Tests::BCFN_FF::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	int tsize = 1 << tbits;
 	mask = tsize - 1;
 	for (int level = 0; level < LEVELS; level++) {
@@ -3941,7 +3941,7 @@ PractRand::Tests::FPF::FPF(int stride_bits_L2_ , int sig_bits_ , int exp_bits_ )
 		if (count_low_zeroes32(y) != x) issue_error("count_low_zeroes32 behaving incorrectly");
 	}
 }
-void PractRand::Tests::FPF::init( RNGs::vRNG *known_good ) {
+void PractRand::Tests::FPF::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 	unsigned long max_exp = (1 << exp_bits) - 1;
 	if (max_exp - 1 + sig_bits > 64) max_exp = 64 + 1 - sig_bits;
 	unsigned long max_sig = (1 << sig_bits) - 1;
@@ -4377,7 +4377,7 @@ PractRand::Tests::FPMulti::FPMulti() //(int stride_bits_L2_, int skip_platters_)
 		//platter[i].gap_expected_inverse = std::pow(0.5, L-1);
 	}
 }
-void PractRand::Tests::FPMulti::Platter::reset(PractRand::RNGs::vRNG *known_good, unsigned long e) {
+void PractRand::Tests::FPMulti::Platter::reset([[maybe_unused]] PractRand::RNGs::vRNG *known_good, [[maybe_unused]] unsigned long e) {
 	total_count = 0;
 
 	//gap test stuff:
@@ -4866,7 +4866,7 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock *data, int numblocks) {
 PractRand::Tests::Birthday32::Birthday32() {
 	if (BUFFER_SIZE * sizeof(buffer[0]) < TestBlock::SIZE) issue_error("Birthday32 - bad BUFFER_SIZE");
 }
-void PractRand::Tests::Birthday32::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::Birthday32::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	num_buffered = 0;
 	for (int i = 0; i < MAX_DUPLICATES; i++) counts[i] = 0;
 }
@@ -5089,7 +5089,7 @@ void PractRand::Tests::Birthday64::_histogram_sort64(Uint64 *base, long length) 
 PractRand::Tests::Birthday64::Birthday64() {
 	if (BUFFER_SIZE * sizeof(buffer[0]) < TestBlock::SIZE) issue_error("Birthday64 - bad BUFFER_SIZE");
 }
-void PractRand::Tests::Birthday64::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::Birthday64::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	num_buffered = 0;
 	for (int i = 0; i < MAX_DUPLICATES; i++) counts[i] = 0;
 }
@@ -5466,7 +5466,7 @@ PractRand::Tests::BirthdayLamda1::BirthdayLamda1(int buffer_size_L2_) : buffer_s
 	if (bits_to_use > 128 || bits_to_use < 1) issue_error("BirthdayLamda1 - bad bits_to_use");
 	if ((1ull << buffer_size_L2) * sizeof(buffer[0]) < TestBlock::SIZE) issue_error("BirthdayLamda1 - bad buffer size");
 }
-void PractRand::Tests::BirthdayLamda1::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::BirthdayLamda1::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	num_buffered = 0;
 	for (int i = 0; i < (1 << SORT_HELPER_BITS); i++) sort_helper_counts[i] = 0;
 	autofail = false;
@@ -5873,7 +5873,7 @@ PractRand::Tests::BirthdayAlt::~BirthdayAlt() {
 	delete[] buffer;
 	buffer = NULL;
 }
-void PractRand::Tests::BirthdayAlt::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::BirthdayAlt::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	if (!buffer) buffer = new i128[1 << buffer_size_L2];
 	num_buffered = 0;
 	autofail = false;
@@ -6063,7 +6063,7 @@ PractRand::Tests::Pat5::Pat5()
 //	lifespan(1<<16),
 {
 }
-void PractRand::Tests::Pat5::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::Pat5::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	counts.reset_counts();
 	for (int pi = 0; pi < (1 << PATTERN_INDEX_BITS); pi++) patterns[pi].total_count = -1;
 	blocks_tested = 0;
@@ -6231,7 +6231,7 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 
 
 
-void PractRand::Tests::CoupGap::init( RNGs::vRNG *known_good ) {
+void PractRand::Tests::CoupGap::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 	autofail = 0;
 	blocks_tested = 0;
 	symbols_ready = 0;
@@ -6345,7 +6345,7 @@ void PractRand::Tests::BRank::deinit( ) {
 	if (in_progress) delete in_progress;
 	in_progress = NULL;
 }
-void PractRand::Tests::BRank::init( RNGs::vRNG *known_good ) {
+void PractRand::Tests::BRank::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 	for (int i = 0; i < ps.size(); i++) ps[i].reset();
 	saved_time = 0;
 	if (in_progress) delete in_progress;
@@ -7344,7 +7344,7 @@ void PractRand::Tests::NearSeq2::test_blocks(TestBlock *data, int numblocks) {
 
 
 
-void PractRand::Tests::mod3_simple::init(PractRand::RNGs::vRNG *known_good) {
+void PractRand::Tests::mod3_simple::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	if (P2 / 2 >= K) issue_error("mod3_simple - bad internal configuration1");
 	if (K != std::pow(3.0, EXP)) issue_error("mod3_simple - bad internal configuration2");
 	counts.reset_counts();
@@ -10931,7 +10931,7 @@ Tests::TestBaseclass *PractRand::Tests::Transforms::multiplex::get_child  (int i
 //std::string PractRand::Tests::Transforms::multiplex::get_child_name  (int index) const {return subtests[index]->get_name();}
 //double      PractRand::Tests::Transforms::multiplex::get_child_result(int index) {return subtests[index]->get_result();}
 
-Uint64 PractRand::Tests::Transforms::multiplex::get_blocks_passed_through(int index) const {
+Uint64 PractRand::Tests::Transforms::multiplex::get_blocks_passed_through([[maybe_unused]] int index) const {
 	return blocks_already;
 }
 Uint64 PractRand::Tests::Transforms::switching::get_blocks_passed_through(int index) const {
