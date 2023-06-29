@@ -4365,7 +4365,7 @@ PractRand::Tests::FPMulti::FPMulti() //(int stride_bits_L2_, int skip_platters_)
 	for (int i = 0; i <= MAX_EXP; i++) {
 		int L = i + BASE_SIG_BITS + 1 - (i == MAX_EXP ? 1 : 0);
 		double e;
-		enum { THRESHOLD = 30 };
+		static constexpr int THRESHOLD = 30;
 		//if (L <= THRESHOLD) e = gap_log2_expected(std::pow(0.5, L));
 		//else e = gap_log2_expected(std::pow(0.5, 20)) + L - THRESHOLD;
 		if (L < THRESHOLD) e = gap_L2_expected_lookup[L - 1];
@@ -6140,8 +6140,8 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 	if (!blocks_tested) return;
 	const Uint64 *_counts = counts.get_array();
 	Uint64 total_opportunities = blocks_tested * TestBlock::SIZE / sizeof(Word) - PATTERN_WIDTH + 1;
-	enum { TOTAL_SIZE = 1 << TABLE_SIZE_L2, TOTAL_PATTERNS = 1 << PATTERN_INDEX_BITS };
-	enum { BASE_SIZE = TOTAL_SIZE / TOTAL_PATTERNS };
+	static constexpr int TOTAL_SIZE = 1 << TABLE_SIZE_L2; static constexpr int TOTAL_PATTERNS = 1 << PATTERN_INDEX_BITS;
+	static constexpr int BASE_SIZE = TOTAL_SIZE / TOTAL_PATTERNS;
 	std::vector<double> base_probs; base_probs.resize(BASE_SIZE);
 	if (true) {
 		std::vector<double> primary_probs, secondary_probs, tertiary_probs, quaternary_probs;

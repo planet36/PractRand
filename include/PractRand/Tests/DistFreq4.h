@@ -67,16 +67,14 @@ namespace PractRand {
 			virtual int get_blocks_to_repeat() const;
 
 		protected:
-			enum {
-				BASE_ALIGN_L2 = 2,
-				POSITION_ALIGN_L2 = 2,
-				BLOCK_STEP = 16,
-				SIZE1 = 3,//units of bits
-				SIZE2 = 3,
-				SIZE3 = 3,
-				POSITIONS_L2 = 6,//can't exceed (10-SAMPLE_ALIGN_L2) atm
-				TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2,
-			};
+			static constexpr int BASE_ALIGN_L2 = 2;
+			static constexpr int POSITION_ALIGN_L2 = 2;
+			static constexpr int BLOCK_STEP = 16;
+			static constexpr int SIZE1 = 3;//units of bits
+			static constexpr int SIZE2 = 3;
+			static constexpr int SIZE3 = 3;
+			static constexpr int POSITIONS_L2 = 6;//can't exceed (10-SAMPLE_ALIGN_L2) atm
+			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
 			int blocks_till_next_pass;
 			int blocks_per_pass;
 			int passes_at_once;
@@ -94,16 +92,14 @@ namespace PractRand {
 			//virtual int get_blocks_to_repeat() const;
 
 		protected:
-			enum {
-				MAX_LEVELS = 16,
-				ALIGN_L2 = 2,
-				ALIGN = 1 << ALIGN_L2,
-				SIZE1 = 3,//units of bits, can't exceed ALIGN
-				SIZE2 = 3,
-				SIZE3 = 3,
-				POSITIONS_L2 = 4,//can't exceed (6-ALIGN_L2) atm
-				TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2,
-			};
+			static constexpr int MAX_LEVELS = 16;
+			static constexpr int ALIGN_L2 = 2;
+			static constexpr int ALIGN = 1 << ALIGN_L2;
+			static constexpr int SIZE1 = 3;//units of bits, can't exceed ALIGN
+			static constexpr int SIZE2 = 3;
+			static constexpr int SIZE3 = 3;
+			static constexpr int POSITIONS_L2 = 4;//can't exceed (6-ALIGN_L2) atm
+			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
 			Uint64 saved_blocks[MAX_LEVELS * 2];
 			char level_state[MAX_LEVELS];
 			//states: 
@@ -129,17 +125,15 @@ namespace PractRand {
 			virtual int get_blocks_to_repeat() const;
 
 		protected:
-			enum {
-				BASE_ALIGN_L2 = 2,
-				POSITION_ALIGN_L2 = 2,
-				BLOCK_STEP = 16,
-				SIZE1 = 3,//units of bits
-				SIZE2 = 3,
-				SIZE3 = 3,
-				POSITIONS_L2 = 6,//can't exceed (10-SAMPLE_ALIGN_L2) atm
-				TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2,
-				COUP_BUCKETS = 256,
-			};
+			static constexpr int BASE_ALIGN_L2 = 2;
+			static constexpr int POSITION_ALIGN_L2 = 2;
+			static constexpr int BLOCK_STEP = 16;
+			static constexpr int SIZE1 = 3;//units of bits
+			static constexpr int SIZE2 = 3;
+			static constexpr int SIZE3 = 3;
+			static constexpr int POSITIONS_L2 = 6;//can't exceed (10-SAMPLE_ALIGN_L2) atm
+			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
+			static constexpr int COUP_BUCKETS = 256;
 			Uint64 pass_number;
 			int blocks_till_next_pass;
 			int blocks_per_pass;

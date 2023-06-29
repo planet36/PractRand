@@ -32,10 +32,8 @@ namespace PractRand {
 	};
 	namespace Tests {
 		union TestBlock {
-			enum {
-				SIZE_L2 = 10,
-				SIZE = 1<<SIZE_L2
-			};
+			static constexpr int SIZE_L2 = 10;
+			static constexpr int SIZE = 1<<SIZE_L2;
 			Uint8  as8 [SIZE  ];
 			Uint16 as16[SIZE/2];
 			Uint32 as32[SIZE/4];

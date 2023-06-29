@@ -3,7 +3,6 @@ namespace PractRand {
 		class NearSeq : public TestBaseclass {
 		protected:
 			typedef Uint64 Word;
-			enum {
 				/*
 					parameterizations of interest:
 						blocks*bits=core		thresholds				evaluation
@@ -18,27 +17,26 @@ namespace PractRand {
 					32	8x4=32		64			0/1		43, 17 M		
 				*/
 
-				WORD_BITS = sizeof(Word)* 8,
-				WORD_BITS_L2 = (WORD_BITS == 8) ? 3 : ((WORD_BITS == 16) ? 4 : ((WORD_BITS == 32) ? 5 : ((WORD_BITS == 64) ? 6 : -1))),
-				NUM_BUCKETS_L2 = 9,
-				NUM_BUCKETS = 1 << NUM_BUCKETS_L2,
-				BITS_PER_BLOCK = 7,
-				BLOCKS_PER_CORE = NUM_BUCKETS_L2, 
-				CORE_SEQUENCE_BITS = BLOCKS_PER_CORE * BITS_PER_BLOCK,
+			static constexpr int WORD_BITS = sizeof(Word)* 8;
+			static constexpr int WORD_BITS_L2 = (WORD_BITS == 8) ? 3 : ((WORD_BITS == 16) ? 4 : ((WORD_BITS == 32) ? 5 : ((WORD_BITS == 64) ? 6 : -1)));
+			static constexpr int NUM_BUCKETS_L2 = 9;
+			static constexpr int NUM_BUCKETS = 1 << NUM_BUCKETS_L2;
+			static constexpr int BITS_PER_BLOCK = 7;
+			static constexpr int BLOCKS_PER_CORE = NUM_BUCKETS_L2; 
+			static constexpr int CORE_SEQUENCE_BITS = BLOCKS_PER_CORE * BITS_PER_BLOCK;
 
-				CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS, 
-				EXTRA_WORDS = 2,
-				SEQUENCE_WORDS = CORE_WORDS + EXTRA_WORDS,
-				SEQUENCE_BITS = SEQUENCE_WORDS * WORD_BITS,
-				SEQUENCE_WORD_OFFSET = (EXTRA_WORDS + 1) / 2,
-				MAX_ERRORS_PER_BLOCK = 2,
-				GOOD_ERRORS_PER_BLOCK = 1,
+			static constexpr int CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS; 
+			static constexpr int EXTRA_WORDS = 2;
+			static constexpr int SEQUENCE_WORDS = CORE_WORDS + EXTRA_WORDS;
+			static constexpr int SEQUENCE_BITS = SEQUENCE_WORDS * WORD_BITS;
+			static constexpr int SEQUENCE_WORD_OFFSET = (EXTRA_WORDS + 1) / 2;
+			static constexpr int MAX_ERRORS_PER_BLOCK = 2;
+			static constexpr int GOOD_ERRORS_PER_BLOCK = 1;
 
-				MAX_CORE_DISTANCES = CORE_SEQUENCE_BITS / 2,//distances of this much or higher get combined with (one less than this)
-				//MAX_CORE_DISTANCES = MAX_ERRORS_PER_BLOCK * BLOCKS_PER_CORE,//distances of this much or higher get combined with (one less than this)
-				//RARES_THRESHOLD = 8,//core distances less than or equal to this are required for rares
-				//RARES_SIZE_L2 = 16,
-			};
+			static constexpr int MAX_CORE_DISTANCES = CORE_SEQUENCE_BITS / 2;//distances of this much or higher get combined with (one less than this)
+			//static constexpr int AX_CORE_DISTANCES = MAX_ERRORS_PER_BLOCK * BLOCKS_PER_CORE;//distances of this much or higher get combined with (one less than this)
+			//static constexpr int ARES_THRESHOLD = 8;//core distances less than or equal to this are required for rares
+			//static constexpr int ARES_SIZE_L2 = 16;
 			struct Bucket {
 				Uint64 sequence[SEQUENCE_WORDS];
 			};
@@ -68,7 +66,6 @@ namespace PractRand {
 		class NearSeq2 : public TestBaseclass {
 		protected:
 			typedef Uint32 Word;
-			enum {
 				/*
 				parameterizations of interest:
 				blocks*bits=core		thresholds				evaluation
@@ -83,30 +80,29 @@ namespace PractRand {
 				32	8x4=32		64			0/1		43, 17 M
 				*/
 
-				WORD_BITS = sizeof(Word)* 8,
-				WORD_BITS_L2 = (WORD_BITS == 8) ? 3 : ((WORD_BITS == 16) ? 4 : ((WORD_BITS == 32) ? 5 : ((WORD_BITS == 64) ? 6 : -1))),
-				NUM_BUCKETS_L2 = 8,
-				NUM_BUCKETS = 1 << NUM_BUCKETS_L2,
-				BITS_PER_BLOCK = 32,
+			static constexpr int WORD_BITS = sizeof(Word)* 8;
+			static constexpr int WORD_BITS_L2 = (WORD_BITS == 8) ? 3 : ((WORD_BITS == 16) ? 4 : ((WORD_BITS == 32) ? 5 : ((WORD_BITS == 64) ? 6 : -1)));
+			static constexpr int NUM_BUCKETS_L2 = 8;
+			static constexpr int NUM_BUCKETS = 1 << NUM_BUCKETS_L2;
+			static constexpr int BITS_PER_BLOCK = 32;
 
-				BLOCKS_PER_CORE = NUM_BUCKETS_L2,
-				CORE_SEQUENCE_BITS = BLOCKS_PER_CORE * BITS_PER_BLOCK,
+			static constexpr int BLOCKS_PER_CORE = NUM_BUCKETS_L2;
+			static constexpr int CORE_SEQUENCE_BITS = BLOCKS_PER_CORE * BITS_PER_BLOCK;
 
-				CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS,
-				EXTRA_FULL_WORDS = 2,//should be an even number, otherwise call it an invalid parameterization
-				EXTRA_PARTIAL_WORD_BITS = CORE_WORDS * WORD_BITS - CORE_SEQUENCE_BITS, //should be less than 1 word, otherwise call it an invalid parameterization
-				EXTRA_BITS = EXTRA_FULL_WORDS * WORD_BITS + EXTRA_PARTIAL_WORD_BITS, 
-				SEQUENCE_WORDS = CORE_WORDS + EXTRA_FULL_WORDS,
-				SEQUENCE_BITS = SEQUENCE_WORDS * WORD_BITS,
-				SEQUENCE_WORD_OFFSET = EXTRA_FULL_WORDS / 2,
-				MAX_HDIST_PER_BLOCK = 12,
-				MAX_TOTAL_HDIST = MAX_HDIST_PER_BLOCK * BLOCKS_PER_CORE,
-				//MAX_CONCEIVABLE_HDIST = BLOCKS_PER_CORE * (BITS_PER_BLOCK / 2),
-				HDIST_BINS = 16,
+			static constexpr int CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS;
+			static constexpr int EXTRA_FULL_WORDS = 2;//should be an even number, otherwise call it an invalid parameterization
+			static constexpr int EXTRA_PARTIAL_WORD_BITS = CORE_WORDS * WORD_BITS - CORE_SEQUENCE_BITS; //should be less than 1 word, otherwise call it an invalid parameterization
+			static constexpr int EXTRA_BITS = EXTRA_FULL_WORDS * WORD_BITS + EXTRA_PARTIAL_WORD_BITS; 
+			static constexpr int SEQUENCE_WORDS = CORE_WORDS + EXTRA_FULL_WORDS;
+			static constexpr int SEQUENCE_BITS = SEQUENCE_WORDS * WORD_BITS;
+			static constexpr int SEQUENCE_WORD_OFFSET = EXTRA_FULL_WORDS / 2;
+			static constexpr int MAX_HDIST_PER_BLOCK = 12;
+			static constexpr int MAX_TOTAL_HDIST = MAX_HDIST_PER_BLOCK * BLOCKS_PER_CORE;
+			//static constexpr int MAX_CONCEIVABLE_HDIST = BLOCKS_PER_CORE * (BITS_PER_BLOCK / 2);
+			static constexpr int HDIST_BINS = 16;
 
-				MAX_LOOKUP_L2 = 12,//otherwise the tables get too big
-				CHECK_VALIDITY_EARLY = 0,//if true, checks for a bad core after each block for the first word, then once per word thereafter
-			};
+			static constexpr int MAX_LOOKUP_L2 = 12;//otherwise the tables get too big
+			static constexpr int CHECK_VALIDITY_EARLY = 0;//if true, checks for a bad core after each block for the first word, then once per word thereafter
 			struct Bucket {
 				//Word ideal_sequence[SEQUENCE_WORDS];
 				Uint64 core_hdist[MAX_TOTAL_HDIST + 1];

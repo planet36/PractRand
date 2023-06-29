@@ -1,11 +1,9 @@
 namespace PractRand {
 	namespace Tests {
 		class Birthday32 : public TestBaseclass {
-			enum {
-				BUFFER_SIZE_L2 = 12, // must be at least 8
-				BUFFER_SIZE = 1 << BUFFER_SIZE_L2,
-				MAX_DUPLICATES = 32
-			};
+			static constexpr int BUFFER_SIZE_L2 = 12; // must be at least 8
+			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
+			static constexpr int MAX_DUPLICATES = 32;
 			Uint32 buffer[1 << BUFFER_SIZE_L2];
 			Uint64 counts[MAX_DUPLICATES];
 			int num_buffered;
@@ -20,12 +18,10 @@ namespace PractRand {
 			virtual void test_blocks(TestBlock *data, int numblocks);
 		};
 		class Birthday64 : public TestBaseclass {
-			enum {
-				BUFFER_SIZE_L2 = 23, // must be at least 7
-				BUFFER_SIZE = 1 << BUFFER_SIZE_L2,
-				MAX_DUPLICATES = 64,
-				SORT_HELPER_BITS = 10
-			};
+			static constexpr int BUFFER_SIZE_L2 = 23; // must be at least 7
+			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
+			static constexpr int MAX_DUPLICATES = 64;
+			static constexpr int SORT_HELPER_BITS = 10;
 			Uint64 buffer[1 << BUFFER_SIZE_L2];
 			Uint64 counts[MAX_DUPLICATES];
 			static void _histogram_in_place_sort64(Uint64 *base, long length, long bits_already, Uint32 freq_counts[1 << SORT_HELPER_BITS]);
