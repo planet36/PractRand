@@ -1275,7 +1275,7 @@ namespace PractRand {
 						for (++y; y < h; y++) if (read_position(x,y)) xor_rows(y, ranks_found);
 						ranks_found++;
 					}
-					else ;//skipped rank
+					else {}//skipped rank
 				}
 			}
 			return ranks_found;
@@ -1346,7 +1346,7 @@ namespace PractRand {
 						rank_x.push_back(x);
 						ranks_found++;
 					}
-					else ;//skipped rank
+					else {}//skipped rank
 				}
 			}
 			return ranks_found;

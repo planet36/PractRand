@@ -5930,7 +5930,7 @@ void PractRand::Tests::BirthdayAlt::_lookup_constants(int table_size_L2,long dou
 	long double offset, dev, samples;
 	if (_offset) {
 		if (table[table_size_L2].mean > 0) *_offset = table[table_size_L2].mean;
-		else ;
+		else {}
 	}
 	if (_deviation) *_deviation = table[table_size_L2].dev;
 	if (_sample_size) *_sample_size = table[table_size_L2].samples;
