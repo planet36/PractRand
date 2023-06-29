@@ -3783,7 +3783,7 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					int bits0, bits1, bits2, bits3;
+					int bits0, bits1, bits2/*, bits3*/;
 					int tmp;
 					//0
 					bits1 = bits0 = GET_BITS(0);
@@ -3796,7 +3796,7 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 					bits1 = bits0 = GET_BITS(2);
 					HANDLE_BITS(0,bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
+					//bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
 					HANDLE_BITS(0,bits0);
 					HANDLE_BITS(1,bits1);
 					HANDLE_BITS(2,bits2);
@@ -8617,8 +8617,8 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 	int lperm4_lessthan[8] = { 3, 2, 2, 1, 1, 1, 0, 0 };
 	int lperm4_incomparable[8] = { 0, 1, 0, 1, 1, 0, 1, 0 };
 	double lperm8_chances[128];
-	int lperm8_greaterthan[128];
-	int lperm8_lessthan[128];
+	//int lperm8_greaterthan[128];
+	//int lperm8_lessthan[128];
 	int lperm8_incomparable[128];
 	const double lperm16_ratio[LPERM_BUCKETS / 2] = {//from 1 petabyte of hc256 (seed=0x5de6fa19):
 		0.50003673, 0.54964384, 0.59699571, 0.62975592, 0.61430835, 0.64362826, 0.65492433, 0.66203379, //    0-    7
@@ -10712,8 +10712,8 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 		double observed_ratio = lperm8_chances[i] / chance;
 		int low_odds = lperm4_greaterthan[low] - lperm4_lessthan[low];
 		int high_odds = lperm4_greaterthan[high] - lperm4_lessthan[high];
-		lperm8_greaterthan[i] = which ? lperm4_greaterthan[high] : lperm4_greaterthan[high] + lperm4_greaterthan[low] + 1;
-		lperm8_lessthan[i] = which ? lperm4_lessthan[high] + lperm4_lessthan[low] + 1 : lperm4_lessthan[high];
+		//lperm8_greaterthan[i] = which ? lperm4_greaterthan[high] : lperm4_greaterthan[high] + lperm4_greaterthan[low] + 1;
+		//lperm8_lessthan[i] = which ? lperm4_lessthan[high] + lperm4_lessthan[low] + 1 : lperm4_lessthan[high];
 		//if (!which) std::printf("%3d (%d:%d): %.5f %d\n", i, low, high, observed_ratio, high_odds - low_odds);
 	}
 	/*for (int i = 0; i < LPERM_BUCKETS; i++) {

@@ -1041,7 +1041,7 @@ namespace PractRand {
 			if (!total) return 0;
 			long double sum_exp = 0, sum_log = 0;
 			double adjusted_total = total + 1.0;
-			double prior = 0;
+			//double prior = 0;
 			//double DoF = 0;
 			for (unsigned long i = 0; i < categories; i++) {
 				double cur_prob = prob_table[i];
@@ -1053,7 +1053,7 @@ namespace PractRand {
 					if (c > 1) {
 						//sum += _uniformity_transform(delta, adjusted_total) * (c-1);
 					}
-					prior = prob_sum + cur_prob - delta * 0.5;
+					//prior = prob_sum + cur_prob - delta * 0.5;
 				}
 				prob_sum += cur_prob;
 			}
