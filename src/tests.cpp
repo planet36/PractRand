@@ -10675,7 +10675,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 		Uint8 rawperm[8];
 		Uint8 used = 0;
 		if (i == 1736) {
-			std::printf("");
+			//std::printf("");
 		}
 		int u = i;
 		int d;
