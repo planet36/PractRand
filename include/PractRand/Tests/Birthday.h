@@ -40,7 +40,7 @@ namespace PractRand {
 			virtual void test_blocks(TestBlock *data, int numblocks);
 		};
 		namespace BirthdayHelpers {
-			enum { SORT_HELPER_BITS = 8 };
+			constexpr int SORT_HELPER_BITS = 8;
 			struct i128 {
 				Uint64 low;
 				Uint64 high;
@@ -80,10 +80,8 @@ namespace PractRand {
 			//optimized for lambda=1, few runs, as described in "On the performance of birthday spacings tests with certain families of random number generators" (L'ecuyer & Simard, 2001)
 			//using namespace BirthdayHelpers; using BirthdayHelpers::i128// these are illegal in C++, I guess instead I'll try:
 			typedef BirthdayHelpers::i128 i128;
-			enum {
-				SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS,
-				DO_LARGEST_SPACING = 1,
-			};
+			static constexpr int SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS;
+			static constexpr int DO_LARGEST_SPACING = 1;
 			bool autofail;
 			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS];
 			//i128 buffer[1 << BUFFER_SIZE_L2];//can't have arrays this large inside a class due to object file or executable file format constraints
@@ -152,10 +150,8 @@ namespace PractRand {
 			// keep all bits regardless of buffer size, just count an adjusting range of near deltas as if they were exact matches (or score them based upon how exact they are?)
 			// try filtering the initial samples range, as if it was a small part of a larger sort buffer
 			typedef BirthdayHelpers::i128 i128;
-			enum {
-				SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS,
-				//FILTER_BITS = 0,
-			};
+			static constexpr int SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS;
+			//static constexpr int FILTER_BITS = 0;
 			//i128 buffer[1 << BUFFER_SIZE_L2];
 			//std::vector<i128> buffer;
 			i128 *buffer;

@@ -8,53 +8,53 @@ namespace PractRand {
 		class SHA2_512_constants {
 		public:
 			typedef Uint64 Word;
-			enum { ROUNDS = 80 };
-			enum { INPUT_WORDS = 16 };
-			enum { OUTPUT_WORDS = 8 };
-			enum { INPUT_SIZE = INPUT_WORDS * sizeof(Word) };
+			static constexpr int ROUNDS = 80;
+			static constexpr int INPUT_WORDS = 16;
+			static constexpr int OUTPUT_WORDS = 8;
+			static constexpr int INPUT_SIZE = INPUT_WORDS * sizeof(Word);
 #ifdef PRACTRAND_TARGET_IS_LITTLE_ENDIAN
-			enum { REVERSE_ENDIANNESS = 1 };
+			static constexpr int REVERSE_ENDIANNESS = 1;
 #else
-			enum { REVERSE_ENDIANNESS = 0 };
+			static constexpr int REVERSE_ENDIANNESS = 0;
 #endif
-			enum {WORD_BITS = 8 * sizeof(Word)};
+			static constexpr int WORD_BITS = 8 * sizeof(Word);
 			static const Uint64 round_constants[ROUNDS];
 			static const Uint64 initial_values[8];
 			static inline Word PREPROCESS_SHIFT_S0_1(Word value) {
-				enum {SHIFT=1};
+				constexpr int SHIFT=1;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word PREPROCESS_SHIFT_S0_2(Word value) {
-				enum {SHIFT=8};
+				constexpr int SHIFT=8;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word PREPROCESS_SHIFT_S0_3(Word value) {
-				enum {SHIFT=7};
+				constexpr int SHIFT=7;
 				return value >> SHIFT;}
 			static inline Word PREPROCESS_SHIFT_S1_1(Word value) {
-				enum {SHIFT=19};
+				constexpr int SHIFT=19;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word PREPROCESS_SHIFT_S1_2(Word value) {
-				enum {SHIFT=61};
+				constexpr int SHIFT=61;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word PREPROCESS_SHIFT_S1_3(Word value) {
-				enum {SHIFT=6};
+				constexpr int SHIFT=6;
 				return value >> SHIFT;}
 			static Word MAINLOOP_SHIFT_S0_1(Word value) {
-				enum {SHIFT=28};
+				constexpr int SHIFT=28;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word MAINLOOP_SHIFT_S0_2(Word value) {
-				enum {SHIFT=34};
+				constexpr int SHIFT=34;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word MAINLOOP_SHIFT_S0_3(Word value) {
-				enum {SHIFT=39};
+				constexpr int SHIFT=39;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word MAINLOOP_SHIFT_S1_1(Word value) {
-				enum {SHIFT=14};
+				constexpr int SHIFT=14;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word MAINLOOP_SHIFT_S1_2(Word value) {
-				enum {SHIFT=18};
+				constexpr int SHIFT=18;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 			static inline Word MAINLOOP_SHIFT_S1_3(Word value) {
-				enum {SHIFT=41};
+				constexpr int SHIFT=41;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 		};
 		const Uint64 SHA2_512_constants::initial_values[8] = {
@@ -220,7 +220,7 @@ namespace PractRand {
 		}
 		void SHA2_512::process_final_block () {
 			typedef SHA2_512_constants Constants;
-			enum { EXTRAS = sizeof(Word) * 2 + 1 };
+			constexpr int EXTRAS = sizeof(Word) * 2 + 1;
 			input_buffer.as_byte[leftover_input_bytes] = 0x80;
 			std::memset( input_buffer.as_byte + leftover_input_bytes + 1, 0, Constants::INPUT_SIZE - leftover_input_bytes - 1);
 			if (leftover_input_bytes > Constants::INPUT_SIZE - EXTRAS) {

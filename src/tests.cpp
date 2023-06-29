@@ -5209,7 +5209,7 @@ void PractRand::Tests::BirthdayHelpers::histogram_sort_and_copy(i128 *buffer, i1
 }
 void PractRand::Tests::BirthdayHelpers::radix_sort_and_copy(i128 *buffer, i128 *dest, Uint64 length, long bits_already) {
 	if (length <= 1) return;
-	enum {COMBINED_PASSES = 3};
+	constexpr int COMBINED_PASSES = 3;
 	Uint64 regions[COMBINED_PASSES << SORT_HELPER_BITS];
 	if (true) {//count frequencies for each pass
 		for (long i = 0; i < (COMBINED_PASSES << SORT_HELPER_BITS); i++) regions[i] = 0;
@@ -6945,7 +6945,7 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 		}
 		if (is_bad & 128) return true;
 		int index = 1;
-		enum { WORD_LEFTOVERS = WORD_BITS % BITS_PER_BLOCK };
+		constexpr int WORD_LEFTOVERS = WORD_BITS % BITS_PER_BLOCK;
 		int usable_bits = WORD_LEFTOVERS;
 		while (index < CORE_WORDS - 1) {//middle words
 			Word w2 = core[index++];
@@ -6964,9 +6964,9 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 			}
 		}
 		//last word
-		enum { INDEX = CORE_WORDS - 1 };
+		constexpr int INDEX = CORE_WORDS - 1;
 		if (index != INDEX) issue_error("NearSeq2::is_core_good - internal error");
-		enum { USABLE_BITS = ((CORE_WORDS - 1) * WORD_BITS) % BITS_PER_BLOCK };
+		constexpr int USABLE_BITS = ((CORE_WORDS - 1) * WORD_BITS) % BITS_PER_BLOCK;
 		if (usable_bits != USABLE_BITS) issue_error("NearSeq2::is_core_good - internal error 2");
 		enum { FINAL_WORD_BITS = WORD_BITS - EXTRA_PARTIAL_WORD_BITS };
 		Word w2 = core[INDEX];
@@ -7030,7 +7030,7 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 			w >>= BITS_PER_BLOCK;
 		}
 		int index = 1;
-		enum { WORD_LEFTOVERS = WORD_BITS % BITS_PER_BLOCK };
+		constexpr int WORD_LEFTOVERS = WORD_BITS % BITS_PER_BLOCK;
 		int usable_bits = WORD_LEFTOVERS;
 		while (index < CORE_WORDS - 1) {//middle words
 			Word w2 = core[index++];
@@ -7048,11 +7048,11 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 			}
 		}
 		//last word
-		enum { INDEX = CORE_WORDS - 1 };
+		constexpr int INDEX = CORE_WORDS - 1;
 		if (index != INDEX) issue_error("NearSeq2::analyze_core - internal error");
-		enum { USABLE_BITS = ((CORE_WORDS - 1) * WORD_BITS) % BITS_PER_BLOCK };
+		constexpr int USABLE_BITS = ((CORE_WORDS - 1) * WORD_BITS) % BITS_PER_BLOCK;
 		if (usable_bits != USABLE_BITS) issue_error("NearSeq2::analyze_core - internal error 2");
-		enum { FINAL_WORD_BITS = WORD_BITS - EXTRA_PARTIAL_WORD_BITS };
+		constexpr int FINAL_WORD_BITS = WORD_BITS - EXTRA_PARTIAL_WORD_BITS;
 		Word w2 = core[INDEX];
 		w |= w2 << USABLE_BITS;
 		if (USABLE_BITS + FINAL_WORD_BITS <= WORD_BITS - WORD_LEFTOVERS) {

@@ -34,19 +34,17 @@ namespace PractRand {
 			virtual void test_blocks(TestBlock *data, int numblocks);
 
 		protected:
-			enum {
-				BASE_ALIGNMENT = 64,//don't change
-				WINDOW_ALIGNMENT = 4,
-				SIZE1 = 4,//sizes must be multiples of WINDOW_ALIGNMENT
-				SIZE2 = 4,
-				SIZE3 = 4,
-				POSITIONS2_L2 = 6,
-				POSITIONS3_L2 = 6,
-				TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS2_L2 + POSITIONS3_L2,
-				REGION_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS3_L2,
-				PASSES_PER_REGION = 1 << 14, //
-				NUMBER_OF_REGIONS = 1 << POSITIONS2_L2
-			};
+			static constexpr int BASE_ALIGNMENT = 64;//don't change
+			static constexpr int WINDOW_ALIGNMENT = 4;
+			static constexpr int SIZE1 = 4;//sizes must be multiples of WINDOW_ALIGNMENT
+			static constexpr int SIZE2 = 4;
+			static constexpr int SIZE3 = 4;
+			static constexpr int POSITIONS2_L2 = 6;
+			static constexpr int POSITIONS3_L2 = 6;
+			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS2_L2 + POSITIONS3_L2;
+			static constexpr int REGION_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS3_L2;
+			static constexpr int PASSES_PER_REGION = 1 << 14; //
+			static constexpr int NUMBER_OF_REGIONS = 1 << POSITIONS2_L2;
 			int regions_tested;
 			int passes_till_next_region;
 			int blocks_till_next_pass;
@@ -155,21 +153,19 @@ namespace PractRand {
 			virtual void test_blocks(TestBlock *data, int numblocks);
 
 		protected:
-			enum {
-				BASE_ALIGNMENT = 64,//don't change
-				WINDOW_ALIGNMENT = 3,
-				SIZE1 = 3,//sizes must be multiples of WINDOW_ALIGNMENT
-				SIZE2 = 3,
-				SIZE3 = 3,
-				SIZE4 = 3,
-				POSITIONS2_L2 = 5,
-				POSITIONS3_L2 = 5,
-				POSITIONS4_L2 = 5,
-				TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + SIZE4 + POSITIONS2_L2 + POSITIONS3_L2 + POSITIONS4_L2,
-				REGION_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS4_L2,
-				PASSES_PER_REGION = 1 << 14, //
-				NUMBER_OF_REGIONS = 1 << POSITIONS2_L2
-			};
+			static constexpr int BASE_ALIGNMENT = 64;//don't change
+			static constexpr int WINDOW_ALIGNMENT = 3;
+			static constexpr int SIZE1 = 3;//sizes must be multiples of WINDOW_ALIGNMENT
+			static constexpr int SIZE2 = 3;
+			static constexpr int SIZE3 = 3;
+			static constexpr int SIZE4 = 3;
+			static constexpr int POSITIONS2_L2 = 5;
+			static constexpr int POSITIONS3_L2 = 5;
+			static constexpr int POSITIONS4_L2 = 5;
+			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + SIZE4 + POSITIONS2_L2 + POSITIONS3_L2 + POSITIONS4_L2;
+			static constexpr int REGION_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS4_L2;
+			static constexpr int PASSES_PER_REGION = 1 << 14; //
+			static constexpr int NUMBER_OF_REGIONS = 1 << POSITIONS2_L2;
 			int regions_tested;
 			int passes_till_next_region;
 			int blocks_till_next_pass;

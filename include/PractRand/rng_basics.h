@@ -169,26 +169,26 @@ namespace PractRand {
 //			REVERSIBLE_SINGLE_CYCLE = 3,
 //			IRREVERSIBLE_SINGLE_CYCLE = 4
 //		};
-		namespace FLAG { enum {
-			SUPPORTS_FASTFORWARD = 1<<0,//also includes rewind
-			SUPPORTS_ENTROPY_ACCUMULATION = 1<<1,//supports add_entropy*
-			CRYPTOGRAPHIC_SECURITY = 1<<2,
-			USES_SPECIFIED = 1<<3,//true if all the other USES_* flags are properly set
-			USES_MULTIPLICATION = 1<<4,
-			USES_COMPLEX_INSTRUCTIONS = 1<<5,//division, sqrt, exp, log, etc
-			USES_VARIABLE_SHIFTS = 1<<6,
-			USES_INDIRECTION = 1<<7,
-			USES_CYCLIC_BUFFER = 1<<8,
-			USES_FLOW_CONTROL = 1<<9,//very simple flow control is not counted
-			USES_BIT_SCANS = 1<<10,//bsf & bsr opcodes on x86
-			USES_OTHER_WORD_SIZES = 1 << 11,//uses mathematical primitives that do not match the size of its output
-			ENDIAN_SAFE = 1<<12,//single flag for output (raw*) and input (add_entropy*)
-			OUTPUT_IS_BUFFERED = 1<<13,
-			OUTPUT_IS_HASHED = 1<<14,
-			STATE_UNAVAILABLE = 1<<15,//don't trust any state-walking operations other than simple seeding (never true on recommended RNGs)
-			SEEDING_UNSUPPORTED = 1<<16,//PRNG does not support conventional seeding (example: an RNG that just returns data from standard input)
-			NEEDS_GENERIC_SEEDING = 1<<31,
-		};}
+		namespace FLAG {
+		constexpr int SUPPORTS_FASTFORWARD = 1<<0;//also includes rewind
+		constexpr int SUPPORTS_ENTROPY_ACCUMULATION = 1<<1;//supports add_entropy*
+		constexpr int CRYPTOGRAPHIC_SECURITY = 1<<2;
+		constexpr int USES_SPECIFIED = 1<<3;//true if all the other USES_* flags are properly set
+		constexpr int USES_MULTIPLICATION = 1<<4;
+		constexpr int USES_COMPLEX_INSTRUCTIONS = 1<<5;//division, sqrt, exp, log, etc
+		constexpr int USES_VARIABLE_SHIFTS = 1<<6;
+		constexpr int USES_INDIRECTION = 1<<7;
+		constexpr int USES_CYCLIC_BUFFER = 1<<8;
+		constexpr int USES_FLOW_CONTROL = 1<<9;//very simple flow control is not counted
+		constexpr int USES_BIT_SCANS = 1<<10;//bsf & bsr opcodes on x86
+		constexpr int USES_OTHER_WORD_SIZES = 1 << 11;//uses mathematical primitives that do not match the size of its output
+		constexpr int ENDIAN_SAFE = 1<<12;//single flag for output (raw*) and input (add_entropy*)
+		constexpr int OUTPUT_IS_BUFFERED = 1<<13;
+		constexpr int OUTPUT_IS_HASHED = 1<<14;
+		constexpr int STATE_UNAVAILABLE = 1<<15;//don't trust any state-walking operations other than simple seeding (never true on recommended RNGs)
+		constexpr int SEEDING_UNSUPPORTED = 1<<16;//PRNG does not support conventional seeding (example: an RNG that just returns data from standard input)
+		constexpr int NEEDS_GENERIC_SEEDING = 1<<31;
+		}
 		typedef vRNG PolymorphicRNG;
 		typedef vRNG8 PolymorphicRNG8;
 		typedef vRNG16 PolymorphicRNG16;

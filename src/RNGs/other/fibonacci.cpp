@@ -271,7 +271,7 @@ namespace PractRand {
 				Uint32 cbuf_2accum_small::raw32() {
 					Uint32 tmp = cbuf[--index] + accum2;
 					accum2 += accum1;
-					enum { SHIFT = 11 };// 3,11 for small, 12,11 for medium
+					constexpr int SHIFT = 11;// 3,11 for small, 12,11 for medium
 					accum1 = ((accum1 << SHIFT) | (accum1 >> (32-SHIFT))) ^ tmp;
 					//		1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31
 					//	3	22	27	28	28	29	30	31	37	43	42	39	43	37	37	37	16	36				42			37	31	30	29	28	28	26	23

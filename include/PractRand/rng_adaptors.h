@@ -22,7 +22,7 @@ namespace PractRand {
 				template<class base_rng, bool needs_int_seeding> class ADAPT_SEEDING;
 				template<class base_rng> class ADAPT_SEEDING<base_rng,true> : public base_rng {
 				public:
-					enum {FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING};
+					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 //						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
 					typedef base_rng base_rng_type;
 					void seed     (Uint64 seed) {StateWalkingObject *walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
@@ -31,7 +31,7 @@ namespace PractRand {
 				};
 				template<class base_rng> class ADAPT_SEEDING<base_rng,false> : public base_rng {
 				public:
-					enum {FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING};
+					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 //						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
 					typedef base_rng base_rng_type;
 					using base_rng :: seed;

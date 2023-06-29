@@ -689,7 +689,6 @@ public:
 		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
 	};
 	Word raw64() { return _raw(); }
-	enum {
 		/*
 			for non-cryptographic use, using the most limited round function (double-rounds w/ 5 shifts):
 				ROUNDS_PER_OUTPUT >= 1
@@ -705,17 +704,16 @@ public:
 				output function may need to be revised?
 				...
 		*/
-		ROUNDS_PER_INPUT = 1,
-		EXTRA_ROUNDS = 2,
-		ROUNDS_PER_OUTPUT = 1,
-		WORD_BITS = sizeof(Word)* 8,
-		SH1 = (WORD_BITS == 64) ? 11 : ((WORD_BITS == 32) ?  5 : ((WORD_BITS == 16) ? 3 : -1)),
-		SH2 = (WORD_BITS == 64) ? 16 : ((WORD_BITS == 32) ?  8 : ((WORD_BITS == 16) ? 4 : -1)),
-		SH3 = (WORD_BITS == 64) ? 32 : ((WORD_BITS == 32) ? 16 : ((WORD_BITS == 16) ? 8 : -1)),
-		SH4 = (WORD_BITS == 64) ? 13 : ((WORD_BITS == 32) ?  9 : ((WORD_BITS == 16) ? 3 : -1)),
-		SH5 = (WORD_BITS == 64) ? 19 : ((WORD_BITS == 32) ? 11 : ((WORD_BITS == 16) ? 5 : -1)),
-		SH6 = (WORD_BITS == 64) ? 32 : ((WORD_BITS == 32) ? 16 : ((WORD_BITS == 16) ? 8 : -1)),
-	};
+	static constexpr int ROUNDS_PER_INPUT = 1;
+	static constexpr int EXTRA_ROUNDS = 2;
+	static constexpr int ROUNDS_PER_OUTPUT = 1;
+	static constexpr int WORD_BITS = sizeof(Word)* 8;
+	static constexpr int SH1 = (WORD_BITS == 64) ? 11 : ((WORD_BITS == 32) ?  5 : ((WORD_BITS == 16) ? 3 : -1));
+	static constexpr int SH2 = (WORD_BITS == 64) ? 16 : ((WORD_BITS == 32) ?  8 : ((WORD_BITS == 16) ? 4 : -1));
+	static constexpr int SH3 = (WORD_BITS == 64) ? 32 : ((WORD_BITS == 32) ? 16 : ((WORD_BITS == 16) ? 8 : -1));
+	static constexpr int SH4 = (WORD_BITS == 64) ? 13 : ((WORD_BITS == 32) ?  9 : ((WORD_BITS == 16) ? 3 : -1));
+	static constexpr int SH5 = (WORD_BITS == 64) ? 19 : ((WORD_BITS == 32) ? 11 : ((WORD_BITS == 16) ? 5 : -1));
+	static constexpr int SH6 = (WORD_BITS == 64) ? 32 : ((WORD_BITS == 32) ? 16 : ((WORD_BITS == 16) ? 8 : -1));
 	Word k1, k2, counter;
 	class SipHash {
 	public:

@@ -181,7 +181,9 @@ namespace PractRand {
 			std::vector<Word> data;
 			int w, h, ww;
 		public:
-			enum { WORD_BITS = sizeof(Word)*8, WORD_BITS_MASK = WORD_BITS-1, WORD_BITS_L2 = WORD_BITS==64?6:(WORD_BITS==32?5:(WORD_BITS==16?4:(WORD_BITS==8?3:-1)))};
+			static constexpr int WORD_BITS = sizeof(Word)*8;
+			static constexpr int WORD_BITS_MASK = WORD_BITS-1;
+			static constexpr int WORD_BITS_L2 = WORD_BITS==64?6:(WORD_BITS==32?5:(WORD_BITS==16?4:(WORD_BITS==8?3:-1)));
 			void init(int w_, int h_);
 			void raw_import(int offset, Word *input, int length);
 			void import_partial_row(int x, int y, Word *input, int bits, int bit_offset, bool zeroed=false);
