@@ -56,7 +56,8 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 //alternatively, can return "b" alone - it's horrible at 8/16 bit, but acceptable at 32 and good at 64
 
 
-//#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
+/*
+#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
 	Word iterated = iteration_table  [i % ITERATION_SIZE];\
 	Word indirect = indirection_table[c % INDIRECTION_SIZE];\
 	indirection_table[c % INDIRECTION_SIZE] = iterated ^ a;\
@@ -66,13 +67,15 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	b = c ^ indirect;\
 	c = old + rotate ## BITS (c, SHIFT_AMOUNT);\
 	return b;
+*/
 //adequate statistically, good speed
 //wider connection between mixing pool (a,b,c) and indirection pool (the two arrays) means it's now safe to use a simpler output function
 //...I think, anyway
 //"old" now being a function of (a,i) instead of (a,b) means worse mixing in the pool, I think
 
 
-//#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
+/*
+#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
 	Word iterated = iteration_table  [i % ITERATION_SIZE] ^ i;\
 	Word indirect = indirection_table[c % INDIRECTION_SIZE] + a;\
 	indirection_table[c % INDIRECTION_SIZE] = iterated;\
@@ -83,11 +86,13 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	c = old + rotate ## BITS (c, SHIFT_AMOUNT);\
 	i++;\
 	return b;
+*/
 //not good enough statistically (8x1+1: 128 GB, 8x2+2: 32 MB, 8x4+4: 8 GB, 8x8+8: 32 GB), adequate speed
 //looks like the above one but better mixing in the pool?
 
 
-//#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
+/*
+#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
 	Word iterated = iteration_table  [i % ITERATION_SIZE] ^ a;\
 	Word indirect = indirection_table[c % INDIRECTION_SIZE] + i;\
 	indirection_table[c % INDIRECTION_SIZE] = iterated;\
@@ -97,6 +102,7 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	b = c + indirect;\
 	c = old ^ rotate ## BITS (c, SHIFT_AMOUNT);\
 	i++; return old;
+*/
 //decent statistically, decent speed
 //wider connection between mixing pool (a,b,c) and indirection pool (the two arrays) means it's now safe to use a simpler output function
 //...I think, anyway
