@@ -238,7 +238,7 @@ namespace PractRand {
 			process_block();
 		}
 		void SHA2_512::finish (Uint8 destination[SHA2_512::RESULT_LENGTH]) {
-			typedef SHA2_512_constants Constants;
+			//typedef SHA2_512_constants Constants;
 			process_final_block();
 			endianness_state();
 			std::memcpy(destination, state, RESULT_LENGTH);
