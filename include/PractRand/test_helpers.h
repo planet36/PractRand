@@ -204,9 +204,9 @@ namespace PractRand {
 			Uint64 num_duplicates;
 
 			double table[117];
-			double median;//redundant
-			double mean;
-			double stddev;
+			double median{};//redundant
+			double mean{};
+			double stddev{};
 
 			static const double ref_p[117];
 
