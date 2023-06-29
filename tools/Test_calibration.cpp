@@ -1,3 +1,4 @@
+#include <bit>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -169,7 +170,7 @@ double fake_bcfn2(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n, double
 	std::vector<Uint64> table; table.resize(size, 0);
 	std::vector<double> probs; probs.resize(size);
 	for (Uint32 i = 0; i < size; i++) {
-		int ones = count_bits32(i);
+		int ones = std::popcount(i);
 		probs[i] = std::pow(p, ones) * std::pow(1-p, tbits-ones);
 	}
 	n = (n + 3) >> 3;
@@ -265,8 +266,8 @@ Uint64 generate_binomial_dist(PractRand::RNGs::vRNG *known_good, Uint64 sample_l
 	}
 	Uint32 len = sample_length;
 	Uint32 rv = 0;
-	for (; len >= 32; len -= 32) rv += Tests::count_bits32(known_good->raw32());
-	for (; len >= 8; len -= 8) rv += Tests::count_bits8(known_good->raw8());
+	for (; len >= 32; len -= 32) rv += std::popcount(known_good->raw32());
+	for (; len >= 8; len -= 8) rv += std::popcount(known_good->raw8());
 	for (; len >= 1; len -= 1) rv += known_good->raw32() & 1;	
 	return rv;
 }

@@ -50,11 +50,6 @@ namespace PractRand {
 		void get_hamming_weight_chances(int num_bits, std::vector<double> &pdf, std::vector<double> &cdf);//vector size = 1+(num_bits/2))
 		// switches between a variety of mathods based upon the magnitude of num_bits
 
-		int count_bits8 (Uint8 a);
-		int count_bits16(Uint16 a);
-		int count_bits32(Uint32 a);
-		int count_bits64(Uint64 a);
-
 		Uint8  reverse_bits8 (Uint8);
 		Uint16 reverse_bits16(Uint16);
 		Uint32 reverse_bits32(Uint32);

@@ -1,3 +1,4 @@
+#include <bit>
 #include <string>
 //#include <ostream>
 #include <sstream>
@@ -106,56 +107,6 @@ static long double gap_log2_variance(long double chance_of_gap1 = 1.0 / 65536) {
 	var += partial_var;
 	t += partial_t;
 	return var;
-}
-
-static const Uint8 distance_table[256] = {
-	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
-};
-int PractRand::Tests::count_bits8 (Uint8 a) {
-	return distance_table[a];
-}
-int PractRand::Tests::count_bits16(Uint16 a) {
-	return distance_table[Uint8(a)] + distance_table[Uint8(a>>8)];
-}
-int PractRand::Tests::count_bits32(Uint32 a) {
-	return distance_table[Uint8(a)] + distance_table[Uint8(a>>8)] + distance_table[Uint8(a>>16)] + distance_table[Uint8(a>>24)];
-}
-int PractRand::Tests::count_bits64(Uint64 a) {
-//	return distance_table[Uint8(a)] + distance_table[Uint8(a>>8)] + distance_table[Uint8(a>>16)] + distance_table[Uint8(a>>24)] +
-//		distance_table[Uint8(a>>32)] + distance_table[Uint8(a>>40)] + distance_table[Uint8(a>>48)] + distance_table[Uint8(a>>56)];
-
-	// at some point it makes sense to stop using the tables and start using bitwise math
-	//... I *think* that point is around 64 bits on 64 bit hardware + compilers
-	Uint64 b;
-	b = a & 0xAAAAAAAAAAAAAAAAull; a ^= b; // 1 -> 2
-	b >>= 1; a += b;//0-2
-	b = a & 0xCCCCCCCCCCCCCCCCull; a ^= b; // 2 -> 4
-	b >>= 2; a += b;//0-4
-	b = a & 0xF0F0F0F0F0F0F0F0ull; a ^= b; // 4 -> 8
-	b >>= 4; a += b;//0-8
-	b = a;// & 0xFF00FF00FF00FF00ull; a ^= b; // 8 -> 16
-	b >>= 8; a += b;//0-16
-	b = a;// & 0xFFFF0000FFFF0000ull; a ^= b; // 16 -> 32
-	b >>= 16; a += b;//0-32
-	b = a;// & 0xFFFFFFFF00000000ull; a ^= b; // 32 -> 64
-	b >>= 32; a += b;//0-64
-	return Uint8(a);
-	//*/
 }
 
 double PractRand::TestResult::pvalue_to_suspicion(double pvalue) {
@@ -1931,8 +1882,8 @@ void PractRand::Tests::DistC6::init([[maybe_unused]] PractRand::RNGs::vRNG *know
 			//int rb = reorder_bits(rc);
 			tmp[i] = reorder_bits(reorder_codes(transform_bitcount(i)));
 		}
-		for (int i = 0; i < 256; i++) {
-			lookup_table[i] = tmp[count_bits8(i)];
+		for (unsigned int i = 0; i < 256; i++) {
+			lookup_table[i] = tmp[std::popcount(i)];
 		}
 	}
 	warmup = length-1;
@@ -1957,10 +1908,10 @@ void PractRand::Tests::DistC6::test_blocks(TestBlock *data, int numblocks) {
 		if (!ENABLE_8_BIT_BYPASS || unitsL) while (max2 > i) {
 			int bits;
 			switch (unitsL) {
-				case 0: bits = count_bits8 (data->as8 [i]); break;
-				case 1: bits = count_bits16(data->as16[i]); break;
-				case 2: bits = count_bits32(data->as32[i]); break;
-				case 3: bits = count_bits64(data->as64[i]); break;
+				case 0: bits = std::popcount(data->as8 [i]); break;
+				case 1: bits = std::popcount(data->as16[i]); break;
+				case 2: bits = std::popcount(data->as32[i]); break;
+				case 3: bits = std::popcount(data->as64[i]); break;
 				default: {
 					issue_error();
 					bits=0;//just to make the compiler happy
@@ -1991,52 +1942,52 @@ void PractRand::Tests::DistC6::test_blocks(TestBlock *data, int numblocks) {
 				counts.increment(index);
 			}
 			else for (; i < max; ) {
-				index = _advance_index(index, lookup_table[count_bits8 (data->as8 [i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits8 (data->as8 [i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits8 (data->as8 [i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits8 (data->as8 [i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
 				counts.increment(index);
 			}
 		}
 		break;
 		case 1: {//16bit
 			for (; i < max; ) {
-				index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 				counts.increment(index);
 			}
 		}
 		break;
 		case 2: {//32bit
 			for (; i < max; ) {
-				index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 				counts.increment(index);
 			}
 		}
 		break;
 		case 3: {//64bit
 			for (; i < max; ) {
-				index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 				counts.increment(index);
-				index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+				index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 				counts.increment(index);
 			}
 		}
@@ -2228,10 +2179,10 @@ void PractRand::Tests::DistC7::test_blocks(TestBlock *data, int numblocks) {
 		if (!ENABLE_8_BIT_BYPASS || unitsL) while (max2 > i) {
 			int bits;
 			switch (unitsL) {
-				case 0: bits = count_bits8(data->as8[i]); break;
-				case 1: bits = count_bits16(data->as16[i]); break;
-				case 2: bits = count_bits32(data->as32[i]); break;
-				case 3: bits = count_bits64(data->as64[i]); break;
+				case 0: bits = std::popcount(data->as8[i]); break;
+				case 1: bits = std::popcount(data->as16[i]); break;
+				case 2: bits = std::popcount(data->as32[i]); break;
+				case 3: bits = std::popcount(data->as64[i]); break;
 				default: {
 					issue_error();
 					bits = 0;//just to make the compiler happy
@@ -2271,52 +2222,52 @@ void PractRand::Tests::DistC7::test_blocks(TestBlock *data, int numblocks) {
 					odd_counts.increment(index);
 				}
 				else for (; i < max;) {
-					index = _advance_index(index, lookup_table[count_bits8(data->as8[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits8(data->as8[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8[i++])]);
 					odd_counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits8(data->as8[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits8(data->as8[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8[i++])]);
 					odd_counts.increment(index);
 				}
 		}
 		break;
 		case 1: {//16bit
 				for (; i < max;) {
-					index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 					odd_counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits16(data->as16[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as16[i++])]);
 					odd_counts.increment(index);
 				}
 		}
 		break;
 		case 2: {//32bit
 				for (; i < max;) {
-					index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 					odd_counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits32(data->as32[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as32[i++])]);
 					odd_counts.increment(index);
 				}
 		}
 		break;
 		case 3: {//64bit
 				for (; i < max;) {
-					index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 					odd_counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 					counts.increment(index);
-					index = _advance_index(index, lookup_table[count_bits64(data->as64[i++])]);
+					index = _advance_index(index, lookup_table[std::popcount(data->as64[i++])]);
 					odd_counts.increment(index);
 				}
 		}
@@ -2471,10 +2422,10 @@ std::string PractRand::Tests::BCFN_MT::get_name() const {
 void PractRand::Tests::BCFN_MT::test_blocks(TestBlock *data, int numblocks) {
 	//while (warmup[4]) {
 	while (true) {
-#define GET_BITS8(pos)  (count_bits8 (data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (count_bits16(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (count_bits32(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (count_bits64(data[0].as64[i+(pos)]) - 32)
+#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
+#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
+#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
+#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
 //#define HANDLE_BITS(level,var) if (var){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
@@ -2756,8 +2707,8 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 		if (unbalanced) {
 			double p1 = 0.5 - 0.5 * chance_balanced;
 			double p1L = std::log(p1), p0L = std::log(1-p1);
-			for (int i = 0; i < probs.size(); i++) {
-				int b = count_bits32(i);
+			for (unsigned int i = 0; i < probs.size(); i++) {
+				int b = std::popcount(i);
 				probs[i] = std::exp(p1L * b + p0L * (tbits-b));
 			}
 		}
@@ -2841,10 +2792,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 		numblocks -= 1;
 	}
 	if (unbalanced) while (warmup[4]) {
-#define GET_BITS8(pos)  (count_bits8 (data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (count_bits16(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (count_bits32(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (count_bits64(data[0].as64[i+(pos)]) - 32)
+#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
+#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
+#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
+#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
 #define HANDLE_BITS(level,var) if (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
@@ -2901,10 +2852,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 		if (!numblocks) return;
 	}
 	else while (warmup[4]) {//balanced
-#define GET_BITS8(pos)  (count_bits8 (data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (count_bits16(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (count_bits32(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (count_bits64(data[0].as64[i+(pos)]) - 32)
+#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
+#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
+#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
+#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
 #define HANDLE_BITS(level,var) if (var){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
@@ -3471,8 +3422,8 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		if (unbalanced) {
 			double p1 = 0.5 - 0.5 * chance_balanced;
 			double p1L = std::log(p1), p0L = std::log(1 - p1);
-			for (int i = 0; i < probs.size(); i++) {
-				int b = count_bits32(i);
+			for (unsigned int i = 0; i < probs.size(); i++) {
+				int b = std::popcount(i);
 				probs[i] = std::exp(p1L * b + p0L * (tbits - b));
 			}
 		}
@@ -3596,10 +3547,10 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 		numblocks -= 1;
 	}
 	while (warmup[4]) {
-#define GET_BITS8(pos)  (count_bits8 (data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (count_bits16(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (count_bits32(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (count_bits64(data[0].as64[i+(pos)]) - 32)
+#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
+#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
+#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
+#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
 #define HANDLE_BITS(level,var) {counts2[level][var+COUNTS2_SIZE/2]++; if (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
 		switch (unitsL2) {
 			case 0: {
@@ -6082,27 +6033,27 @@ void PractRand::Tests::Pat5::test_blocks(TestBlock *data, int numblocks) {
 		if (!(word & ((1<<ZERO_FILTER_BITS)-1))) {
 			int pi = word >> ((8 * sizeof(word)) - PATTERN_INDEX_BITS);
 			if (patterns[pi].total_count == -1) {
-				if (count_bits32(data->as32[i] ^ data->as32[i + 1]) > 4) {
+				if (std::popcount(data->as32[i] ^ data->as32[i + 1]) > 4) {
 					patterns[pi].total_count = 0;
 					for (int j = 0; j < PATTERN_WIDTH; j++) patterns[pi].base_pattern[j] = data->as32[i + j - CENTER];
 				}
 			}
 			else {
 				patterns[pi].total_count++;
-				int d1 = count_bits32(patterns[pi].base_pattern[CENTER] ^ word);
+				int d1 = std::popcount(patterns[pi].base_pattern[CENTER] ^ word);
 				unsigned int d2 = 0, d3 = 0, d4 = 0;
 				enum { D1 = 1, D2 = D1 + NUM_SECONDARY_WORDS, D3 = D2 + NUM_TERTIARY_WORDS, D4 = D3 + NUM_QUATERNARY_WORDS };
 				for (int j = D1; j < D2; j++) {
-					d2 += count_bits32(patterns[pi].base_pattern[CENTER - j] ^ data->as32[i - j]);
-					d2 += count_bits32(patterns[pi].base_pattern[CENTER + j] ^ data->as32[i + j]);
+					d2 += std::popcount(patterns[pi].base_pattern[CENTER - j] ^ data->as32[i - j]);
+					d2 += std::popcount(patterns[pi].base_pattern[CENTER + j] ^ data->as32[i + j]);
 				}
 				for (int j = D2; j < D3; j++) {
-					d3 += count_bits32(patterns[pi].base_pattern[CENTER - j] ^ data->as32[i - j]);
-					d3 += count_bits32(patterns[pi].base_pattern[CENTER + j] ^ data->as32[i + j]);
+					d3 += std::popcount(patterns[pi].base_pattern[CENTER - j] ^ data->as32[i - j]);
+					d3 += std::popcount(patterns[pi].base_pattern[CENTER + j] ^ data->as32[i + j]);
 				}
 				for (int j = D3; j < D4; j++) {
-					d4 += count_bits32(patterns[pi].base_pattern[CENTER - j] ^ data->as32[i - j]);
-					d4 += count_bits32(patterns[pi].base_pattern[CENTER + j] ^ data->as32[i + j]);
+					d4 += std::popcount(patterns[pi].base_pattern[CENTER - j] ^ data->as32[i - j]);
+					d4 += std::popcount(patterns[pi].base_pattern[CENTER + j] ^ data->as32[i + j]);
 				}
 				d1 >>= PRIMARY_WORD_DISTANCE_EXTRA_BITS;
 				d2 >>= SECONDARY_WORD_DISTANCE_EXTRA_BITS;
@@ -6552,8 +6503,8 @@ void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 	int table_size = 1 << BITS_PER_BLOCK;
 	lookup_table = new Uint8[table_size];
 	lookup_table2 = new Uint8[table_size];
-	for (int i = 0; i < table_size; i++) {
-		int bits = count_bits16(i);
+	for (unsigned int i = 0; i < table_size; i++) {
+		int bits = std::popcount(i);
 		if (bits > BITS_PER_BLOCK / 2) {
 			bits = BITS_PER_BLOCK - bits;
 			lookup_table[i] = 1;
@@ -6731,37 +6682,33 @@ int PractRand::Tests::NearSeq::core_to_index(const Word *core) const {
 	}
 }
 int  PractRand::Tests::NearSeq::get_core_distance(const Word *core, int bucket_index) const {
-	typedef int(*CBFUNC)(Word);
-	CBFUNC _count_bits = (WORD_BITS == 64) ? (CBFUNC)count_bits64 : ((WORD_BITS == 32) ? (CBFUNC)count_bits32 : ((WORD_BITS == 16) ? (CBFUNC)count_bits16 : NULL));// ((WORD_BITS == 8) ? counts_bits8 : NULL)));
 	int bits_left = CORE_SEQUENCE_BITS;
 	int core_distance = 0;
 	int pos = 0;
 	while (bits_left >= WORD_BITS) {
-		core_distance += _count_bits(core[pos] ^ buckets[bucket_index].sequence[pos + SEQUENCE_WORD_OFFSET]);
+		core_distance += std::popcount(core[pos] ^ buckets[bucket_index].sequence[pos + SEQUENCE_WORD_OFFSET]);
 		bits_left -= WORD_BITS;
 		pos++;
 	}
 	if (CORE_SEQUENCE_BITS % WORD_BITS) {
 		Word delta = core[pos] ^ buckets[bucket_index].sequence[pos + SEQUENCE_WORD_OFFSET];
 		delta &= (1ull << (CORE_SEQUENCE_BITS % WORD_BITS)) - 1;
-		core_distance += _count_bits(delta);
+		core_distance += std::popcount(delta);
 	}
 	return core_distance;
 }
 int  PractRand::Tests::NearSeq::get_extra_distance(const Word *core, int bucket_index) const {
-	typedef int(*CBFUNC)(Word);
-	CBFUNC _count_bits = (WORD_BITS == 64) ? (CBFUNC)count_bits64 : ((WORD_BITS == 32) ? (CBFUNC)count_bits32 : ((WORD_BITS == 16) ? (CBFUNC)count_bits16 : NULL));// ((WORD_BITS == 8) ? counts_bits8 : NULL)));
 	//int bits_left = CORE_SEQUENCE_BITS;
 	int extra_distance = 0;
 	//int pos = 0;
 	//early words
-	for (int i = 0; i < SEQUENCE_WORD_OFFSET; i++) extra_distance += _count_bits(core[i - SEQUENCE_WORD_OFFSET] ^ buckets[bucket_index].sequence[i]);
+	for (int i = 0; i < SEQUENCE_WORD_OFFSET; i++) extra_distance += std::popcount(core[i - SEQUENCE_WORD_OFFSET] ^ buckets[bucket_index].sequence[i]);
 	if (CORE_SEQUENCE_BITS % WORD_BITS) {
 		enum { INDEX = CORE_SEQUENCE_BITS / WORD_BITS };
-		extra_distance += _count_bits((core[INDEX] ^ buckets[bucket_index].sequence[INDEX + SEQUENCE_WORD_OFFSET]) >> (CORE_SEQUENCE_BITS % WORD_BITS));
+		extra_distance += std::popcount((core[INDEX] ^ buckets[bucket_index].sequence[INDEX + SEQUENCE_WORD_OFFSET]) >> (CORE_SEQUENCE_BITS % WORD_BITS));
 	}
 	for (int i = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS; i < SEQUENCE_BITS / WORD_BITS - SEQUENCE_WORD_OFFSET; i++) 
-		extra_distance += _count_bits(core[i] ^ buckets[bucket_index].sequence[i +  SEQUENCE_WORD_OFFSET]);
+		extra_distance += std::popcount(core[i] ^ buckets[bucket_index].sequence[i +  SEQUENCE_WORD_OFFSET]);
 	return extra_distance;
 }
 void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
@@ -6843,8 +6790,8 @@ void PractRand::Tests::NearSeq2::init(PractRand::RNGs::vRNG *known_good) {
 		if (BITS_PER_BLOCK <= MAX_LOOKUP_L2) {//index directly with block value
 			lookup_table1 = new Sint8[1 << BITS_PER_BLOCK];
 			lookup_table2 = new Uint8[1 << BITS_PER_BLOCK];
-			for (int i = 0; i < (1 << BITS_PER_BLOCK); i++) {
-				int h = count_bits32(i);
+			for (unsigned int i = 0; i < (1 << BITS_PER_BLOCK); i++) {
+				int h = std::popcount(i);
 				int v1, v2;
 				if (h >= BITS_PER_BLOCK - MAX_HDIST_PER_BLOCK) {
 					v1 = 1;
@@ -7861,7 +7808,7 @@ void PractRand::Tests::Coup16::test_blocks(TestBlock *data, int numblocks) {
 		if (!(blocks_tested & 127)) {
 			int sum = 0;
 			for (int i = 0; i < S; i++) {
-				sum += count_bits32(flags[i]);
+				sum += std::popcount(flags[i]);
 				flags[i] = 0;
 			}
 			counts.increment(sum - 1);

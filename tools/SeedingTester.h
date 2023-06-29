@@ -1,3 +1,5 @@
+#include <bit>
+
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
@@ -188,7 +190,7 @@ public:
 	}
 	int hamming_distance(const Uint8 *message1, const Uint8 *message2, int n) {
 		Uint32 sum = 0;
-		for (int i = 0; i < n; i++) sum += PractRand::Tests::count_bits8(message1[i] ^ message2[i]);
+		for (int i = 0; i < n; i++) sum += std::popcount(static_cast<unsigned int>(message1[i] ^ message2[i]));
 		return sum;
 	}
 	bool check_conflict(const std::vector<Uint8> &message) {
