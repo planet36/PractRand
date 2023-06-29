@@ -83,7 +83,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		//mostly safe to use even on platforms where it won't work
 		std::FILE *f;
 		Uint64 buf[N64];
-		if (f = std::fopen("/dev/urandom", "rb")) {
+		if ((f = std::fopen("/dev/urandom", "rb"))) {
 			if (std::fread(buf,N64*sizeof(buf[0]),1,f) == 1) {
 				for (int i = 0; i < N64; i++) rng->add_entropy64(buf[i]);
 				std::fclose(f);
