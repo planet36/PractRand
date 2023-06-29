@@ -40,7 +40,7 @@ class MultithreadedTestManager : public TestManager {
 			if (param->numblocks) param->test->test_blocks(param->base_block,(int)param->numblocks);
 			param->finished = true;
 			param->lock.leave();
-			return 0;
+			return nullptr;
 		}
 	};
 	std::vector<TestThread *> threads;
