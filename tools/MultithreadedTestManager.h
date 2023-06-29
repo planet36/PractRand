@@ -6,7 +6,7 @@ class MultithreadedTestManager : public TestManager {
 		Threading::Lock lock;
 		bool finished;
 	public:
-		volatile bool retire() {
+		bool retire() {
 			lock.enter();
 			if (!finished) {
 				//must have tried to retire it too quickly to initialize properly?
