@@ -26,19 +26,17 @@ namespace PractRand {
 			*/
 		protected:
 			//typedef Uint32 COUP_WORD;//must be 4 or 8 bytes
-			enum {
-				EXP_BITS = 6,
-				BASE_SIG_BITS = 9,
-				MAX_EXP = 64 - BASE_SIG_BITS,
+			static constexpr int EXP_BITS = 6;
+			static constexpr int BASE_SIG_BITS = 9;
+			static constexpr int MAX_EXP = 64 - BASE_SIG_BITS;
 
-				//FREQ_SIG_BITS = 12,
-				//COUP_SIG_BITS = 12,
-				GAP_SIG_BITS = 9,
+			//static constexpr int FREQ_SIG_BITS = 12;
+			//static constexpr int COUP_SIG_BITS = 12;
+			static constexpr int GAP_SIG_BITS = 9;
 
-				//COUP_WORD_SIZE = 8 * sizeof(COUP_WORD),
-				//COUP_WORD_SIZE_L2 = sizeof(COUP_WORD) == 4 ? 5 : 6,
-				//COUP_MASK_SIZE = 1 << (COUP_SIG_BITS - COUP_WORD_SIZE_L2),
-			};
+			//static constexpr int COUP_WORD_SIZE = 8 * sizeof(COUP_WORD);
+			//static constexpr int COUP_WORD_SIZE_L2 = sizeof(COUP_WORD) == 4 ? 5 : 6;
+			//static constexpr int COUP_MASK_SIZE = 1 << (COUP_SIG_BITS - COUP_WORD_SIZE_L2);
 			//static unsigned long count_leading_zeroes32( Uint32 value );
 			//const int stride_bits_L2, skip_platters;
 			bool autofail;
