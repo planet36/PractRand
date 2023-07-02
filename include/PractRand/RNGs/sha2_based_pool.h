@@ -22,20 +22,20 @@ namespace PractRand {
 				sha2_based_pool() {reset_state();}
 				~sha2_based_pool();
 
-				std::string get_name() const;
-				Uint64 get_flags() const;
+				std::string get_name() const override;
+				Uint64 get_flags() const override;
 
-				Uint8  raw8 ();
-				void seed(Uint64 s);
+				Uint8  raw8 () override;
+				void seed(Uint64 s) override;
 				void reset_state();
 				using vRNG::seed;
-				void walk_state(StateWalkingObject *walker);
-				void reset_entropy() {reset_state();}
-				void add_entropy8 (Uint8  value);
-				void add_entropy16(Uint16 value);
-				void add_entropy32(Uint32 value);
-				void add_entropy64(Uint64 value);
-				void flush_buffers();
+				void walk_state(StateWalkingObject *walker) override;
+				void reset_entropy() override {reset_state();}
+				void add_entropy8 (Uint8  value) override;
+				void add_entropy16(Uint16 value) override;
+				void add_entropy32(Uint32 value) override;
+				void add_entropy64(Uint64 value) override;
+				void flush_buffers() override;
 //				static void self_test();
 			protected:
 				void empty_input_buffer();

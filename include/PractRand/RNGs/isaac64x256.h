@@ -39,9 +39,9 @@ namespace PractRand {
 		namespace Polymorphic {
 			class isaac64x256 : public vRNG64 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(isaac64x256)
-				void seed(Uint64 s);
-				void seed(vRNG *seeder_rng);
-				void flush_buffers();
+				void seed(Uint64 s) override;
+				void seed(vRNG *seeder_rng) override;
+				void flush_buffers() override;
 			};
 		}
 		PRACTRAND__LIGHT_WEIGHT_RNG(isaac64x256)

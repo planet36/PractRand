@@ -10,12 +10,12 @@ namespace PractRand {
 			void flush_buffer();
 		public:
 			Birthday32();
-			virtual void init(PractRand::RNGs::vRNG *known_good);
+			virtual void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const;
-			virtual void get_results(std::vector<TestResult> &results);
+			virtual std::string get_name() const override;
+			virtual void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		class Birthday64 : public TestBaseclass {
 			static constexpr int BUFFER_SIZE_L2 = 23; // must be at least 7
@@ -32,12 +32,12 @@ namespace PractRand {
 			void flush_buffer();
 		public:
 			Birthday64();
-			virtual void init(PractRand::RNGs::vRNG *known_good);
+			virtual void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const;
-			virtual void get_results(std::vector<TestResult> &results);
+			virtual std::string get_name() const override;
+			virtual void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		namespace BirthdayHelpers {
 			constexpr int SORT_HELPER_BITS = 8;
@@ -97,12 +97,12 @@ namespace PractRand {
 		public:
 			BirthdayLamda1(int buffer_size_L2_ = 26);
 			virtual ~BirthdayLamda1();
-			virtual void init(PractRand::RNGs::vRNG *known_good);
+			virtual void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const;
-			virtual void get_results(std::vector<TestResult> &results);
+			virtual std::string get_name() const override;
+			virtual void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		/*
 		class BirthdaySystematic64 {
@@ -128,7 +128,7 @@ namespace PractRand {
 			// similar to BirthdayLambda1 above
 			// but if a result is requested before the first sample is ready, it will return a result for a partial buffer
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
-			virtual Uint64 flush_buffer();
+			virtual Uint64 flush_buffer() override;
 			static Uint64 get_target_num_at_bufsize(int bufsize_L2_);
 			int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold 
 
@@ -140,10 +140,10 @@ namespace PractRand {
 			double incomplete_expected_duplicates;
 		public:
 			BirthdaySystematic128(int max_bufsize_L2_ = 28);
-			virtual void init(PractRand::RNGs::vRNG *known_good);
-			virtual std::string get_name() const;
-			virtual void get_results(std::vector<TestResult> &results);
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void init(PractRand::RNGs::vRNG *known_good) override;
+			virtual std::string get_name() const override;
+			virtual void get_results(std::vector<TestResult> &results) override;
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		class BirthdayAlt : public TestBaseclass {
 			//as for BirthdayLambda1, but: 
@@ -170,12 +170,12 @@ namespace PractRand {
 		public:
 			BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
 			~BirthdayAlt();
-			virtual void init(PractRand::RNGs::vRNG *known_good);
+			virtual void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const;
-			virtual void get_results(std::vector<TestResult> &results);
+			virtual std::string get_name() const override;
+			virtual void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};//*/
 	}//Tests
 }//PractRand

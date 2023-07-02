@@ -43,12 +43,12 @@ namespace PractRand {
 			std::size_t index = size_used++;
 			if (index < max_size) buffer[index] = value;
 		}
-		virtual void handle(bool   &v) {push(v ? 1 : 0);}
-		virtual void handle(Uint8  &v) {push(v);}
-		virtual void handle(Uint16 &v) {Uint8  tmp=Uint8 (v); handle(tmp); tmp=Uint8 (v>> 8); handle(tmp);}
-		virtual void handle(Uint32 &v) {Uint16 tmp=Uint16(v); handle(tmp); tmp=Uint16(v>>16); handle(tmp);}
-		virtual void handle(Uint64 &v) {Uint32 tmp=Uint32(v); handle(tmp); tmp=Uint32(v>>32); handle(tmp);}
-		virtual void handle(float  &v) {
+		virtual void handle(bool   &v) override {push(v ? 1 : 0);}
+		virtual void handle(Uint8  &v) override {push(v);}
+		virtual void handle(Uint16 &v) override {Uint8  tmp=Uint8 (v); handle(tmp); tmp=Uint8 (v>> 8); handle(tmp);}
+		virtual void handle(Uint32 &v) override {Uint16 tmp=Uint16(v); handle(tmp); tmp=Uint16(v>>16); handle(tmp);}
+		virtual void handle(Uint64 &v) override {Uint32 tmp=Uint32(v); handle(tmp); tmp=Uint32(v>>32); handle(tmp);}
+		virtual void handle(float  &v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::fabs(v);
@@ -59,7 +59,7 @@ namespace PractRand {
 			Uint32 tmp_sig = Uint32(std::ldexp(n - 0.5, 32));
 			handle(tmp_sig);
 		}
-		virtual void handle(double &v) {
+		virtual void handle(double &v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::fabs(v);
@@ -70,7 +70,7 @@ namespace PractRand {
 			Uint64 tmp_sig = Uint64(std::ldexp(n - 0.5, 64));
 			handle(tmp_sig);
 		}
-		virtual Uint32 get_properties() const {return FLAG_READ_ONLY;}
+		virtual Uint32 get_properties() const override {return FLAG_READ_ONLY;}
 	};
 	class DeserializingStateWalker : public StateWalkingObject {
 	public:
@@ -88,12 +88,12 @@ namespace PractRand {
 		Uint16 pop16() {Uint16 tmp=pop8 (); tmp|=Uint16(pop8 ())<< 8; return tmp;}
 		Uint32 pop32() {Uint32 tmp=pop16(); tmp|=Uint32(pop16())<<16; return tmp;}
 		Uint64 pop64() {Uint64 tmp=pop32(); tmp|=Uint64(pop32())<<32; return tmp;}
-		virtual void handle(bool   &v) {v = pop8() ? true : false;}
-		virtual void handle(Uint8  &v) {v = pop8();}
-		virtual void handle(Uint16 &v) {v = pop16();}
-		virtual void handle(Uint32 &v) {v = pop32();}
-		virtual void handle(Uint64 &v) {v = pop64();}
-		virtual void handle(float  &v) {
+		virtual void handle(bool   &v) override {v = pop8() ? true : false;}
+		virtual void handle(Uint8  &v) override {v = pop8();}
+		virtual void handle(Uint16 &v) override {v = pop16();}
+		virtual void handle(Uint32 &v) override {v = pop32();}
+		virtual void handle(Uint64 &v) override {v = pop64();}
+		virtual void handle(float  &v) override {
 			Uint16 tmp_exp = pop16();
 			Uint32 tmp_sig = pop32();
 			bool sign = (tmp_exp & 1) ? true : false;
@@ -101,7 +101,7 @@ namespace PractRand {
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0f : 1.0f) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
 		}
-		virtual void handle(double &v) {
+		virtual void handle(double &v) override {
 			Uint16 tmp_exp = pop16();
 			Uint64 tmp_sig = pop64();
 			bool sign = (tmp_exp & 1) ? true : false;
@@ -109,7 +109,7 @@ namespace PractRand {
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0 : 1.0) * std::ldexp(static_cast<double>(tmp_sig), exp-64);
 		}
-		virtual Uint32 get_properties() const {return 0;}
+		virtual Uint32 get_properties() const override {return 0;}
 	};
 	class PrintingStateWalker : public StateWalkingObject {
 		std::ostringstream outbuf;
@@ -120,15 +120,15 @@ namespace PractRand {
 		}
 	public:
 		PrintingStateWalker() : first(true) {}
-		virtual void handle(bool   &v) { pre(); outbuf << v; }
-		virtual void handle(Uint8  &v) { pre(); outbuf << v; }
-		virtual void handle(Uint16 &v) { pre(); outbuf << v; }
-		virtual void handle(Uint32 &v) { pre(); outbuf << v; }
-		virtual void handle(Uint64 &v) { pre(); outbuf << v; }
-		virtual void handle(float  &v) { pre(); outbuf << v; }
-		virtual void handle(double &v) { pre(); outbuf << v; }
+		virtual void handle(bool   &v) override { pre(); outbuf << v; }
+		virtual void handle(Uint8  &v) override { pre(); outbuf << v; }
+		virtual void handle(Uint16 &v) override { pre(); outbuf << v; }
+		virtual void handle(Uint32 &v) override { pre(); outbuf << v; }
+		virtual void handle(Uint64 &v) override { pre(); outbuf << v; }
+		virtual void handle(float  &v) override { pre(); outbuf << v; }
+		virtual void handle(double &v) override { pre(); outbuf << v; }
 
-		virtual Uint32 get_properties() const { return FLAG_CLUMSY; }
+		virtual Uint32 get_properties() const override { return FLAG_CLUMSY; }
 		std::string get_string() const { return outbuf.str(); }
 		void reset() { first = true; outbuf.str(""); }
 	};
@@ -136,27 +136,27 @@ namespace PractRand {
 	public:
 		PractRand::RNGs::Raw::arbee seeder;
 		GenericIntegerSeedingStateWalker(Uint64 seed) : seeder(seed) {}
-		virtual void handle(bool   &v) {v = (seeder.raw8() & 1) ? true : false;}
-		virtual void handle(Uint8  &v) {v = seeder.raw8 ();}
-		virtual void handle(Uint16 &v) {v = seeder.raw16();}
-		virtual void handle(Uint32 &v) {v = seeder.raw32();}
-		virtual void handle(Uint64 &v) {v = seeder.raw64();}
-		virtual void handle(float  &) {issue_error("RNGs with default integer seeding should not contain floating point values");}
-		virtual void handle(double &) {issue_error("RNGs with default integer seeding should not contain floating point values");}
-		virtual Uint32 get_properties() const { return FLAG_CLUMSY | FLAG_SEEDER; }
+		virtual void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
+		virtual void handle(Uint8  &v) override {v = seeder.raw8 ();}
+		virtual void handle(Uint16 &v) override {v = seeder.raw16();}
+		virtual void handle(Uint32 &v) override {v = seeder.raw32();}
+		virtual void handle(Uint64 &v) override {v = seeder.raw64();}
+		virtual void handle(float  &) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
+		virtual void handle(double &) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
+		virtual Uint32 get_properties() const override { return FLAG_CLUMSY | FLAG_SEEDER; }
 	};
 	class GenericSeedingStateWalker : public StateWalkingObject {
 	public:
 		PractRand::RNGs::vRNG *seeder;
 		GenericSeedingStateWalker(RNGs::vRNG *seeder_) : seeder(seeder_) {}
-		virtual void handle(bool   &v) { v = (seeder->raw8() & 1) ? true : false; }
-		virtual void handle(Uint8  &v) {v = seeder->raw8 ();}
-		virtual void handle(Uint16 &v) {v = seeder->raw16();}
-		virtual void handle(Uint32 &v) {v = seeder->raw32();}
-		virtual void handle(Uint64 &v) {v = seeder->raw64();}
-		virtual void handle(float  &) {issue_error("RNGs with default seeding should not contain floating point values");}
-		virtual void handle(double &) {issue_error("RNGs with default seeding should not contain floating point values");}
-		virtual Uint32 get_properties() const {return FLAG_CLUMSY | FLAG_SEEDER;}
+		virtual void handle(bool   &v) override { v = (seeder->raw8() & 1) ? true : false; }
+		virtual void handle(Uint8  &v) override {v = seeder->raw8 ();}
+		virtual void handle(Uint16 &v) override {v = seeder->raw16();}
+		virtual void handle(Uint32 &v) override {v = seeder->raw32();}
+		virtual void handle(Uint64 &v) override {v = seeder->raw64();}
+		virtual void handle(float  &) override {issue_error("RNGs with default seeding should not contain floating point values");}
+		virtual void handle(double &) override {issue_error("RNGs with default seeding should not contain floating point values");}
+		virtual Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 	};
 	namespace AutoSeeder {
 		enum {POOL_SIZE = 5};
@@ -222,14 +222,14 @@ namespace PractRand {
 				std::memset(seed_and_iv, 0, sizeof(seed_and_iv));
 				seeder.seed(bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64());
 			}
-			virtual void handle(bool   &v) {v = (seeder.raw8() & 1) ? true : false;}
-			virtual void handle(Uint8  &v) {v = seeder.raw8 ();}
-			virtual void handle(Uint16 &v) {v = seeder.raw16();}
-			virtual void handle(Uint32 &v) {v = seeder.raw32();}
-			virtual void handle(Uint64 &v) {v = seeder.raw64();}
-			virtual void handle([[maybe_unused]] float  &v) {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			virtual void handle([[maybe_unused]] double &v) {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			virtual Uint32 get_properties() const {return FLAG_CLUMSY | FLAG_SEEDER;}
+			virtual void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
+			virtual void handle(Uint8  &v) override {v = seeder.raw8 ();}
+			virtual void handle(Uint16 &v) override {v = seeder.raw16();}
+			virtual void handle(Uint32 &v) override {v = seeder.raw32();}
+			virtual void handle(Uint64 &v) override {v = seeder.raw64();}
+			virtual void handle([[maybe_unused]] float  &v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			virtual void handle([[maybe_unused]] double &v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			virtual Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 		class CryptoAutoSeedingStateWalker : public StateWalkingObject {
 		public:
@@ -256,14 +256,14 @@ namespace PractRand {
 					for (int i = 0; i < 4; i++) seeder.raw64();//strength of Trivium might be improved by skipping a few outputs after seeding
 				}
 			}
-			virtual void handle(bool   &v) {v = (seeder.raw8() & 1) ? true : false;}
-			virtual void handle(Uint8  &v) {v = seeder.raw8 ();}
-			virtual void handle(Uint16 &v) {v = seeder.raw16();}
-			virtual void handle(Uint32 &v) {v = seeder.raw32();}
-			virtual void handle(Uint64 &v) {v = seeder.raw64();}
-			virtual void handle(float  &) {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			virtual void handle(double &) {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			virtual Uint32 get_properties() const {return FLAG_CLUMSY | FLAG_SEEDER;}
+			virtual void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
+			virtual void handle(Uint8  &v) override {v = seeder.raw8 ();}
+			virtual void handle(Uint16 &v) override {v = seeder.raw16();}
+			virtual void handle(Uint32 &v) override {v = seeder.raw32();}
+			virtual void handle(Uint64 &v) override {v = seeder.raw64();}
+			virtual void handle(float  &) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			virtual void handle(double &) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			virtual Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 	}
 	Uint32 randi_fast_implementation(Uint32 random_value, Uint32 max) {

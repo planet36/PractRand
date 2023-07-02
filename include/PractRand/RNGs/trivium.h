@@ -26,10 +26,10 @@ namespace PractRand {
 		namespace Polymorphic {
 			class trivium : public vRNG64 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(trivium)
-				void seed(Uint64 s);
-				void seed_fast(Uint64 s);
+				void seed(Uint64 s) override;
+				void seed_fast(Uint64 s) override;
 				void seed(const Uint8 *seed_and_iv, int length);//length should not exeed 18
-				void seed(vRNG *seeder_rng);
+				void seed(vRNG *seeder_rng) override;
 			};
 		}
 		PRACTRAND__LIGHT_WEIGHT_RNG(trivium)

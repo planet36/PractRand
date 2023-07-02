@@ -60,11 +60,11 @@ namespace PractRand {
 			class chacha : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(chacha)
 				chacha(Uint32 seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
-				void seed(Uint64 s);
+				void seed(Uint64 s) override;
 				void seed(Uint32 seed_and_iv[10], bool extend_cycle_ = false);
 				void seed_short(Uint32 seed_and_iv[6], bool extend_cycle_ = false);
-				void seek_forward128 (Uint64 how_far_low64, Uint64 how_far_high64);
-				void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64);
+				void seek_forward128 (Uint64 how_far_low64, Uint64 how_far_high64) override;
+				void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
 
 				//normally rounds is 8, 12, or 20, but lower and higher values are also possible
 				//default is 20

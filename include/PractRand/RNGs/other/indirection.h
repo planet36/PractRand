@@ -19,33 +19,33 @@ namespace PractRand {
 					Uint8 arr[256];
 					Uint8 a, b;
 				public:
-					Uint8 raw8();
-					std::string get_name() const;
+					Uint8 raw8() override;
+					std::string get_name() const override;
 					//void seed (Uint64 s);
-					void walk_state(StateWalkingObject *);
+					void walk_state(StateWalkingObject *) override;
 				};
 
 				//weaker variant of the classic cryptographic RNG
 				//(same state transitions, different output)
 				class rc4_weakenedA : public rc4 {
 				public:
-					Uint8 raw8();
-					std::string get_name() const;
+					Uint8 raw8() override;
+					std::string get_name() const override;
 				};
 				class rc4_weakenedB : public rc4 {
 				public:
-					Uint8 raw8();
-					std::string get_name() const;
+					Uint8 raw8() override;
+					std::string get_name() const override;
 				};
 				class rc4_weakenedC : public rc4 {
 				public:
-					Uint8 raw8();
-					std::string get_name() const;
+					Uint8 raw8() override;
+					std::string get_name() const override;
 				};
 				class rc4_weakenedD : public rc4 {
 				public:
-					Uint8 raw8();
-					std::string get_name() const;
+					Uint8 raw8() override;
+					std::string get_name() const override;
 				};
 
 
@@ -56,9 +56,9 @@ namespace PractRand {
 					Uint8 *table;
 					Uint8 a, b, left;
 				public:
-					Uint8 raw8();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
+					Uint8 raw8() override;
+					std::string get_name() const override;
+					void walk_state(StateWalkingObject *) override;
 					ibaa8(int table_size_L2_);
 					~ibaa8();
 				};
@@ -67,9 +67,9 @@ namespace PractRand {
 					Uint16 *table;
 					Uint16 a, b, left;
 				public:
-					Uint16 raw16();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
+					Uint16 raw16() override;
+					std::string get_name() const override;
+					void walk_state(StateWalkingObject *) override;
 					ibaa16(int table_size_L2_);
 					~ibaa16();
 				};
@@ -78,9 +78,9 @@ namespace PractRand {
 					Uint32 *table;
 					Uint32 a, b, left;
 				public:
-					Uint32 raw32();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
+					Uint32 raw32() override;
+					std::string get_name() const override;
+					void walk_state(StateWalkingObject *) override;
 					ibaa32(int table_size_L2_);
 					~ibaa32();
 				};
@@ -91,9 +91,9 @@ namespace PractRand {
 					Uint32 *table;
 					Uint32 a, b, c, left;
 				public:
-					Uint32 raw32();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
+					Uint32 raw32() override;
+					std::string get_name() const override;
+					void walk_state(StateWalkingObject *) override;
 					isaac32_varqual(int table_size_L2_);
 					~isaac32_varqual();
 				};
@@ -103,9 +103,9 @@ namespace PractRand {
 					Uint16 *table;
 					Uint16 a, b, c, left;
 				public:
-					Uint16 raw16();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
+					Uint16 raw16() override;
+					std::string get_name() const override;
+					void walk_state(StateWalkingObject *) override;
 					isaac16_varqual(int table_size_L2_);
 					~isaac16_varqual();
 				};
@@ -118,9 +118,9 @@ namespace PractRand {
 					Uint8 *indirection_table;
 					Uint8 a, b, c, i;
 				public:
-					Uint8 raw8();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					Uint8 raw8() override;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 					efiix8_varqual(int iteration_table_size_L2, int indirection_table_size_L2);
 					~efiix8_varqual();
 				};
@@ -135,9 +135,9 @@ namespace PractRand {
 					Uint8 raw4();
 					static Uint8 rotate4(Uint8 value, int bits);
 				public:
-					Uint8 raw8();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					Uint8 raw8() override;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 					efiix4_varqual(int iteration_table_size_L2, int indirection_table_size_L2);
 					~efiix4_varqual();
 				};
@@ -152,9 +152,9 @@ namespace PractRand {
 				public:
 					genindA(int size_L2);
 					~genindA();
-					Uint16 raw16();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					Uint16 raw16() override;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 				};
 				class genindB : public vRNG16 {
 					//efiix-style, single pool, irreversible
@@ -166,9 +166,9 @@ namespace PractRand {
 				public:
 					genindB(int size_L2);
 					~genindB();
-					Uint16 raw16();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					Uint16 raw16() override;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 				};
 				class genindC : public vRNG16 {
 					//split pool, bits fed in to the accumulator is limited to tsL2 per output
@@ -178,15 +178,15 @@ namespace PractRand {
 					Uint16 a;
 					int table_size_L2;
 				public:
-					Uint16 raw16() {
+					Uint16 raw16() override {
 						if (left >= 0) return table[left--];
 						else return refill();
 					}
 					genindC(int size_L2);
 					~genindC();
 					Uint16 refill();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 				};
 				class genindD : public vRNG16 {
 					//fairly solid, RC4-style
@@ -196,11 +196,11 @@ namespace PractRand {
 					Uint16 mask;
 					Uint16 table_size_L2;
 				public:
-					Uint16 raw16();
+					Uint16 raw16() override;
 					genindD(int size_L2);
 					~genindD();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 				};
 				class genindE : public vRNG16 {
 					//split pool
@@ -211,11 +211,11 @@ namespace PractRand {
 					Uint16 mask;
 					Uint16 table_size_L2;
 				public:
-					Uint16 raw16();
+					Uint16 raw16() override;
 					genindE(int size_L2);
 					~genindE();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 				};
 				class genindF : public vRNG16 {
 					//split pool
@@ -226,11 +226,11 @@ namespace PractRand {
 					Uint16 mask;
 					Uint16 table_size_L2;
 				public:
-					Uint16 raw16();
+					Uint16 raw16() override;
 					genindF(int size_L2);
 					~genindF();
-					void walk_state(StateWalkingObject *);
-					std::string get_name() const;
+					void walk_state(StateWalkingObject *) override;
+					std::string get_name() const override;
 				};
 			}
 		}

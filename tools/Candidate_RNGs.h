@@ -90,9 +90,9 @@ public:\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
 	polymorphic_ ## rng ## bits (Uint64 seed_value) {seed(seed_value);}\
 	ImplementationType implementation;\
-	Uint ## bits raw ## bits () {return implementation.raw ## bits ();}\
-	void walk_state(StateWalkingObject *walker) {implementation.walk_state(walker);}\
-	std::string get_name() const {return std::string(#rng) + #bits ;}\
+	Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
+	void walk_state(StateWalkingObject *walker) override {implementation.walk_state(walker);}\
+	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
 #define SEEDED_POLYMORPHIC_CANDIDATE(rng, bits) \
 class polymorphic_ ## rng ## bits : public PractRand::RNGs::vRNG ## bits {\
@@ -103,10 +103,10 @@ public:\
 	polymorphic_ ## rng ## bits(PractRand::SEED_NONE_TYPE) {}\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
 	polymorphic_ ## rng ## bits (Uint64 seed_value) {implementation.seed(seed_value);}\
-	void seed(Uint64 seed_value) {implementation.seed(seed_value);}\
-	Uint ## bits raw ## bits () {return implementation.raw ## bits ();}\
-	void walk_state(StateWalkingObject *walker) {implementation.walk_state(walker);}\
-	std::string get_name() const {return std::string(#rng) + #bits ;}\
+	void seed(Uint64 seed_value) override {implementation.seed(seed_value);}\
+	Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
+	void walk_state(StateWalkingObject *walker) override {implementation.walk_state(walker);}\
+	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
 
 template<typename Word, int LAG1, int LAG2, int SHIFT1, int SHIFT2, int SHIFT3>
@@ -828,9 +828,9 @@ public:
 	polymorphic_siphash(PractRand::SEED_AUTO_TYPE) { autoseed(); }
 	polymorphic_siphash(Uint64 seed_value) { seed(seed_value); }
 	ImplementationType implementation;
-	Uint64 raw64() { return implementation.raw64(); }
-	void walk_state(StateWalkingObject *walker) { implementation.walk_state(walker); }
-	std::string get_name() const { return implementation.get_name(); }
+	Uint64 raw64() override { return implementation.raw64(); }
+	void walk_state(StateWalkingObject *walker) override { implementation.walk_state(walker); }
+	std::string get_name() const override { return implementation.get_name(); }
 };
 
 

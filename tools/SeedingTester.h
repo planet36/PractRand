@@ -21,7 +21,7 @@ public:
 		current_seed = known_good.raw64();
 		record_seed(current_seed);
 	}
-	void seed(PractRand::Uint64 s) {
+	void seed(PractRand::Uint64 s) override {
 		known_good.seed(s);
 		current_seed = known_good.raw64();
 		record_seed(current_seed);
@@ -50,18 +50,18 @@ public:
 			}
 		}
 	}
-	Uint64 raw64() {
+	Uint64 raw64() override {
 		base_rng->seed(current_seed);
 		Uint64 rv = base_rng->raw64();
 		evolve_seed();
 		return rv;
 	}
-	std::string get_name() const {
+	std::string get_name() const override {
 		std::ostringstream tmp;
 		tmp << "SeedingTester(" << base_rng->get_name() << ")";
 		return tmp.str();
 	}
-	void walk_state(StateWalkingObject *) {}
+	void walk_state(StateWalkingObject *) override {}
 	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
 		if (params.size() != 1) {params.push_back("wrong number of parameters - should be SeedingTester(rng)"); return NULL; }
 		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
@@ -103,7 +103,7 @@ public:
 		current_seed.resize(len);
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
-	void seed(PractRand::Uint64 s) {
+	void seed(PractRand::Uint64 s) override {
 		known_good.seed(s);
 		int len = (min_length + max_length) / 2;
 		current_seed.resize(len);
@@ -222,17 +222,17 @@ public:
 			}
 		}
 	}
-	PractRand::Uint64 raw64() {
+	PractRand::Uint64 raw64() override {
 		PractRand::Uint64 rv = hash_message(current_seed);
 		evolve_seed();
 		return rv;
 	}
-	std::string get_name() const {
+	std::string get_name() const override {
 		std::ostringstream tmp;
 		tmp << "EntropyPoolingTester(" << base_entropy_pool->get_name() << "," << min_length << "to" << max_length << ")";
 		return tmp.str();
 	}
-	void walk_state(PractRand::StateWalkingObject *) {}
+	void walk_state(PractRand::StateWalkingObject *) override {}
 	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
 		if (params.size() != 3) { params.push_back("wrong number of parameters - should be EntropyPoolingTester(rng,minlength,maxlength)"); return NULL; }
 		int minlength = std::atoi(params[1].c_str());

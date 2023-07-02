@@ -83,7 +83,7 @@ public:
 		//buffer1.resize(max_buffer_amount + Tests::TestBaseclass::REPEATED_BLOCKS);
 		for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
 	}
-	void test(Uint64 num_blocks) {
+	void test(Uint64 num_blocks) override {
 		while (num_blocks) {
 			multithreaded_prep_blocks(num_blocks);
 			num_blocks -= main_blocks;
@@ -95,7 +95,7 @@ public:
 		}
 		wait_on_threads();
 	}
-	virtual void reset(PractRand::RNGs::vRNG *rng_ = NULL) {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
+	virtual void reset(PractRand::RNGs::vRNG *rng_ = NULL) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 		if (!freshly_created) for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->deinit();
 		freshly_created = false;
 		for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);

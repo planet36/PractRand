@@ -76,14 +76,14 @@ namespace PractRand {
 		RNG (vRNG *seeder) {seed(seeder);}\
 		RNG (SEED_AUTO_TYPE ) {autoseed();}\
 		RNG (SEED_NONE_TYPE ) {}\
-		Uint8  raw8 ();\
-		Uint16 raw16();\
-		Uint32 raw32();\
-		Uint64 raw64();\
+		Uint8  raw8 () override;\
+		Uint16 raw16() override;\
+		Uint32 raw32() override;\
+		Uint64 raw64() override;\
 		using vRNG::seed;\
-		Uint64 get_flags() const;\
-		std::string get_name() const;\
-		void walk_state(StateWalkingObject *walker);
+		Uint64 get_flags() const override;\
+		std::string get_name() const override;\
+		void walk_state(StateWalkingObject *walker) override;
 
 #if defined PRACTRAND_NO_LIGHT_WEIGHT_RNGS
 #define PRACTRAND__LIGHT_WEIGHT_RNG(RNG)

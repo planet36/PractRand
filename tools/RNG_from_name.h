@@ -25,41 +25,41 @@ namespace Special_RNGs {
 	};
 	class RNG_stdin : public PractRand::RNGs::vRNG8 {
 		_stdin_reader<PractRand::Uint8> source;
-		virtual PractRand::Uint8 raw8() {
+		virtual PractRand::Uint8 raw8() override {
 			return source.read();
 		}
-		virtual PractRand::Uint64 get_flags() const { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
-		virtual std::string get_name() const { return "RNG_stdin"; }
-		virtual int get_native_output_size() const {return -1;}
-		virtual void walk_state(PractRand::StateWalkingObject *) {}
+		virtual PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		virtual std::string get_name() const override { return "RNG_stdin"; }
+		virtual int get_native_output_size() const override {return -1;}
+		virtual void walk_state(PractRand::StateWalkingObject *) override {}
 	};
 	class RNG_stdin8 : public PractRand::RNGs::vRNG8 {
 		_stdin_reader<PractRand::Uint8> source;
-		virtual PractRand::Uint8 raw8() { return source.read(); }
-		virtual PractRand::Uint64 get_flags() const { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
-		virtual std::string get_name() const { return "RNG_stdin8"; }
-		virtual void walk_state(PractRand::StateWalkingObject *) {}
+		virtual PractRand::Uint8 raw8() override { return source.read(); }
+		virtual PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		virtual std::string get_name() const override { return "RNG_stdin8"; }
+		virtual void walk_state(PractRand::StateWalkingObject *) override {}
 	};
 	class RNG_stdin16 : public PractRand::RNGs::vRNG16 {
 		_stdin_reader<PractRand::Uint16> source;
-		virtual PractRand::Uint16 raw16() { return source.read(); }
-		virtual PractRand::Uint64 get_flags() const { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
-		virtual std::string get_name() const { return "RNG_stdin16"; }
-		virtual void walk_state(PractRand::StateWalkingObject *) {}
+		virtual PractRand::Uint16 raw16() override { return source.read(); }
+		virtual PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		virtual std::string get_name() const override { return "RNG_stdin16"; }
+		virtual void walk_state(PractRand::StateWalkingObject *) override {}
 	};
 	class RNG_stdin32 : public PractRand::RNGs::vRNG32 {
 		_stdin_reader<PractRand::Uint32> source;
-		virtual PractRand::Uint32 raw32() { return source.read(); }
-		virtual PractRand::Uint64 get_flags() const { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
-		virtual std::string get_name() const { return "RNG_stdin32"; }
-		virtual void walk_state(PractRand::StateWalkingObject *) {}
+		virtual PractRand::Uint32 raw32() override { return source.read(); }
+		virtual PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		virtual std::string get_name() const override { return "RNG_stdin32"; }
+		virtual void walk_state(PractRand::StateWalkingObject *) override {}
 	};
 	class RNG_stdin64 : public PractRand::RNGs::vRNG64 {
 		_stdin_reader<PractRand::Uint64> source;
-		virtual PractRand::Uint64 raw64() { return source.read(); }
-		virtual PractRand::Uint64 get_flags() const { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
-		virtual std::string get_name() const { return "RNG_stdin64"; }
-		virtual void walk_state(PractRand::StateWalkingObject *) {}
+		virtual PractRand::Uint64 raw64() override { return source.read(); }
+		virtual PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		virtual std::string get_name() const override { return "RNG_stdin64"; }
+		virtual void walk_state(PractRand::StateWalkingObject *) override {}
 	};
 }
 

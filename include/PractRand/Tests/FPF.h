@@ -12,14 +12,14 @@ namespace PractRand {
 			VariableSizeCount<Uint8> counts;
 		public:
 			FPF(int stride_bits_L2_ = 3, int sig_bits_ = 8, int exp_bits_ = 4);
-			virtual void init( PractRand::RNGs::vRNG *known_good );
-			virtual void deinit( );
-			virtual std::string get_name() const;
-			virtual void get_results ( std::vector<TestResult> &results );
+			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
+			virtual void deinit( ) override;
+			virtual std::string get_name() const override;
+			virtual void get_results ( std::vector<TestResult> &results ) override;
 			//virtual double get_result();
 		//	virtual double result_to_pvalue ( Uint64 blocks, double r );
 
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
 	}//Tests
 }//PractRand

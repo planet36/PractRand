@@ -89,7 +89,7 @@ public:
 	//constructor, if necessary
 	DummyRNG() : rng1(8) {}
 	//implement algorithm
-	Uint16 raw16() {
+	Uint16 raw16() override {
 		Uint16 v1 = rng1.raw16();
 		Uint16 v2 = rng2.raw16();
 		Uint16 x = v1 ^ v2;
@@ -109,7 +109,7 @@ public:
 	}
 	//allow PractRand to be aware of your internal state
 	//uses include: default seeding mechanism (individual PRNGs can override), state serialization/deserialization, maybe eventually some avalanche testing tools
-	void walk_state(PractRand::StateWalkingObject *walker) {
+	void walk_state(PractRand::StateWalkingObject *walker) override {
 		rng1.walk_state(walker);
 		rng2.walk_state(walker);
 		//walker->handle(s1);
@@ -120,13 +120,13 @@ public:
 	//seeding from integers
 	//not actually necessary, in the absence of such a method a default seeding-from-integer path will use walk_state to randomize the member variables
 	//note that a separate path exists for seeding-from-another-PRNG
-	void seed(Uint64 sv) {
+	void seed(Uint64 sv) override {
 		rng1.seed(sv);
 		rng2.seed(sv);
 //		s1 = s2 = s3 = s4 = sv;
 	}
 	//any name you want
-	std::string get_name() const {return "DummyRNG";}
+	std::string get_name() const override {return "DummyRNG";}
 };
 /*
 	The above class is enough to create a PRNG compatible with PractRand.  

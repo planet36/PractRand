@@ -6,12 +6,12 @@ namespace PractRand {
 			BRank ( 
 				Uint32 rate_hl2_ // 2 * log2(time units per KB)
 			);
-			virtual void init( PractRand::RNGs::vRNG *known_good );
-			virtual std::string get_name() const;
-			virtual void get_results ( std::vector<TestResult> &results );
-			virtual void deinit();
+			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
+			virtual std::string get_name() const override;
+			virtual void get_results ( std::vector<TestResult> &results ) override;
+			virtual void deinit() override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks);
+			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
 			Uint32 rate_hl2;
 			Uint64 rate;

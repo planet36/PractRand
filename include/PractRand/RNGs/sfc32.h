@@ -23,8 +23,8 @@ namespace PractRand {
 		namespace Polymorphic {
 			class sfc32 : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(sfc32)
-				void seed(Uint64 s);
-				void seed_fast(Uint64 s);
+				void seed(Uint64 s) override;
+				void seed_fast(Uint64 s) override;
 				void seed(Uint32 s1, Uint32 s2, Uint32 s3);
 			};
 		}
