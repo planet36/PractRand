@@ -38,7 +38,7 @@
 using namespace PractRand;
 
 static long double gap_probs(int first, int last, long double chance_of_not_gap1) {
-	return std::pow(chance_of_not_gap1, (long double)first) - std::pow(chance_of_not_gap1, (long double)last + 1);
+	return std::pow(chance_of_not_gap1, static_cast<long double>(first)) - std::pow(chance_of_not_gap1, static_cast<long double>(last) + 1);
 }
 static long double gap_expected(long double chance_of_gap1 = 1.0 / 65536) {
 	long double e = 0;
@@ -465,8 +465,8 @@ public:
 		if (current == ts.end()) return (--current)->second;
 		if (current == ts.begin() || current->first == blocks) return current->second;
 		std::map< Uint64, TestCalibrationData * >::iterator upper = current--;
-		double logblocks = std::log((double)blocks);
-		if (std::fabs(std::log((double)upper->first) - logblocks) < std::fabs(std::log((double)current->first) - logblocks)) return upper->second;
+		double logblocks = std::log(static_cast<double>(blocks));
+		if (std::fabs(std::log(static_cast<double>(upper->first)) - logblocks) < std::fabs(std::log(static_cast<double>(current->first)) - logblocks)) return upper->second;
 		else return current->second;
 	}
 };
@@ -5948,14 +5948,14 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	}
 	if (count > 1 && !(count & (count-1))) {
 		std::printf("\n");
-		std::printf("sum_log obs ofs: %+.10Lf\n", (long double)score_sum_log / count / std::sqrt(double(buffer_size - 2)) + expected_log_offset);
+		std::printf("sum_log obs ofs: %+.10Lf\n", static_cast<long double>(score_sum_log) / count / std::sqrt(double(buffer_size - 2)) + expected_log_offset);
 		std::printf("sum_log exp ofs: %+.10Lf\n", expected_log_offset);
-		std::printf("sum_log   delta: %+.12Lf\n", (long double)score_sum_log / count / std::sqrt((long double)(buffer_size - 2)));
+		std::printf("sum_log   delta: %+.12Lf\n", static_cast<long double>(score_sum_log) / count / std::sqrt(static_cast<long double>(buffer_size - 2)));
 		std::printf("revised obs ofs: %+.10Lf\n", score_sum_log / count / std::sqrt(double(buffer_size - 2)) + adjusted_expected_log2 - expected_log2);
 		std::printf("revised exp ofs: %+.10Lf\n", expected_log2 * expected_log_offset);
-		std::printf("sum_log obs dev: %.9Lf\n", (long double)std::sqrt(score_sum_log_sqr / count - (score_sum_log / count * score_sum_log / count)));
+		std::printf("sum_log obs dev: %.9Lf\n", static_cast<long double>(std::sqrt(score_sum_log_sqr / count - (score_sum_log / count * score_sum_log / count))));
 		std::printf("sum_log exp dev: %.9Lf\n", deviation);
-		std::printf("count: %.0Lf\n\n", (long double)(count));
+		std::printf("count: %.0Lf\n\n", static_cast<long double>(count));
 		//std::exit(0);
 	}
 }
@@ -6283,7 +6283,7 @@ PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_), in_pro
 		s.time_per = t*t*t * 256 + t*t * 256;// *very* rough approximation
 		s.reset();
 	}
-	rate = (Uint64) std::pow(2.0, 0.5 * rate_hl2);
+	rate = static_cast<Uint64>(std::pow(2.0, 0.5 * rate_hl2));
 	in_progress = NULL;
 }
 void PractRand::Tests::BRank::PerSize::reset() {
@@ -6746,10 +6746,10 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 		*/
 		Word *core;
 		if (false); 
-		else if (WORD_BITS == 8) core = (Word*)&data[0].as8[pos];
-		else if (WORD_BITS == 16) core = (Word*)&data[0].as16[pos];
-		else if (WORD_BITS == 32) core = (Word*)&data[0].as32[pos];
-		else if (WORD_BITS == 64) core = (Word*)&data[0].as64[pos];
+		else if (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
+		else if (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
+		else if (WORD_BITS == 32) core = reinterpret_cast<Word*>(&data[0].as32[pos]);
+		else if (WORD_BITS == 64) core = reinterpret_cast<Word*>(&data[0].as64[pos]);
 		else issue_error("NearS - what word size???");
 		int bucket_index = core_to_index(core);
 		if (bucket_index < 0) continue;
@@ -7251,10 +7251,10 @@ void PractRand::Tests::NearSeq2::test_blocks(TestBlock *data, int numblocks) {
 		*/
 		Word *core;
 		if (false);
-		else if (WORD_BITS == 8) core = (Word*)&data[0].as8[pos];
-		else if (WORD_BITS == 16) core = (Word*)&data[0].as16[pos];
-		else if (WORD_BITS == 32) core = (Word*)&data[0].as32[pos];
-		else if (WORD_BITS == 64) core = (Word*)&data[0].as64[pos];
+		else if (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
+		else if (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
+		else if (WORD_BITS == 32) core = reinterpret_cast<Word*>(&data[0].as32[pos]);
+		else if (WORD_BITS == 64) core = reinterpret_cast<Word*>(&data[0].as64[pos]);
 		else issue_error("NearS2 - what word size???");
 
 		_total_cores++;
@@ -7427,7 +7427,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult> &results
 		}
 	}*/
 	for (int x = EXP; x >= 9; x--) {
-		cat = Uint64(std::pow(3.0, (double)x));
+		cat = Uint64(std::pow(3.0, static_cast<double>(x)));
 		if (cat != K) {
 			int reduced = 0;
 			for (int i = cat; i < K; i++, reduced++) {
@@ -7582,7 +7582,7 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 		if (effective_EXP > EXP) effective_EXP = EXP;
 		effective_EXP = 3;////remove me
 
-		int effective_K = int(std::pow(3.0, (double)effective_EXP));
+		int effective_K = int(std::pow(3.0, static_cast<double>(effective_EXP)));
 		//double E = predicted_samples / effective_K;
 
 		PerLevel &pl = levels[level];
@@ -8241,9 +8241,9 @@ void PractRand::Tests::TripleMirrorFreq::test_blocks(TestBlock *data, int numblo
 				//Uint8 a = data[-BLOCK_STEP].as8[base_pos + 0], b = data[0].as8[base_pos + pos], c = data[-2 * BLOCK_STEP].as8[base_pos - pos];
 				Uint8 a = data[0].as8[base_pos - 0], b = data[0].as8[base_pos - ofs], c = data[0].as8[base_pos - ofs - ofs];// if BLOCK_STEP is used
 				//b -= a; a -= c; // nope.  these hurt more than they help, typically
-				index |= ((unsigned long)(a & ((1 << SIZE1) - 1))) << (SIZE2 + SIZE3);
-				index |= ((unsigned long)(b & ((1 << SIZE2) - 1))) << (SIZE3);
-				index |= ((unsigned long)(c & ((1 << SIZE3) - 1))) << (0);
+				index |= (static_cast<unsigned long>(a & ((1 << SIZE1) - 1))) << (SIZE2 + SIZE3);
+				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << (SIZE3);
+				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << (0);
 				counts.increment(index);
 			}
 		}
@@ -8465,9 +8465,9 @@ void PractRand::Tests::TripleMirrorCoup::test_blocks(TestBlock *data, int numblo
 				//Uint8 a = data[-BLOCK_STEP].as8[base_pos + 0], b = data[0].as8[base_pos + pos], c = data[-2 * BLOCK_STEP].as8[base_pos - pos];
 				Uint8 a = data->as8[base_pos - 0], b = data->as8[base_pos - ofs], c = data->as8[base_pos - ofs - ofs];// if BLOCK_STEP is used
 				//b -= a; a -= c; // nope.  these hurt more than they help, typically
-				index |= ((unsigned long)(a & ((1 << SIZE1) - 1))) << (SIZE2 + SIZE3);
-				index |= ((unsigned long)(b & ((1 << SIZE2) - 1))) << (SIZE3);
-				index |= ((unsigned long)(c & ((1 << SIZE3) - 1))) << (0);
+				index |= (static_cast<unsigned long>(a & ((1 << SIZE1) - 1))) << (SIZE2 + SIZE3);
+				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << (SIZE3);
+				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << (0);
 				counts.increment(index);
 				if (0 == ~(coup_masks[index >> 6] |= (index & 63))) {
 					//we *might* have completed a coupon set here
@@ -10951,13 +10951,13 @@ void PractRand::Tests::Transforms::Transform_Baseclass::flush(bool aggressive) {
 	int blocks_to_repeat = get_blocks_to_repeat();
 	int minblocks = aggressive ? 1 : flush_size;
 	int numblocks = buffered.size() - (leftovers?1:0);
-	int old = (blocks_already > blocks_to_repeat) ? blocks_to_repeat : (int)blocks_already;
+	int old = (blocks_already > blocks_to_repeat) ? blocks_to_repeat : static_cast<int>(blocks_already);
 	numblocks -= old;
 	if (numblocks < minblocks) return;
-	Transforms::multiplex::test_blocks((TestBlock*)&buffered[old], numblocks);
+	Transforms::multiplex::test_blocks(static_cast<TestBlock*>(&buffered[old]), numblocks);
 //	int newold = blocks_already;
 //	if (blocks_already > TestBaseclass::REPEATED_BLOCKS) newold = TestBaseclass::REPEATED_BLOCKS;
-	int newold = (blocks_already > blocks_to_repeat) ? blocks_to_repeat : (int)blocks_already;
+	int newold = (blocks_already > blocks_to_repeat) ? blocks_to_repeat : static_cast<int>(blocks_already);
 	int blocks_to_move = newold + (leftovers?1:0);
 	if (!blocks_to_move) return;
 	int how_far = buffered.size() - blocks_to_move;

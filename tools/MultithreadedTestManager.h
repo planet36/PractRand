@@ -29,7 +29,7 @@ class MultithreadedTestManager : public TestManager {
 			Threading::create_thread(_thread_func, this);
 		}
 		static THREADFUNC_RETURN_TYPE THREADFUNC_CALLING_CONVENTION _thread_func(void *param_) {
-			TestThread *param = (TestThread*)param_;
+			TestThread *param = static_cast<TestThread*>(param_);
 			param->lock.enter();
 			enum {MAX_BLOCKS_PER_CALL = 1ull << 18};
 			while (param->numblocks > MAX_BLOCKS_PER_CALL) {
@@ -37,7 +37,7 @@ class MultithreadedTestManager : public TestManager {
 				param->numblocks -= MAX_BLOCKS_PER_CALL;
 				param->base_block += MAX_BLOCKS_PER_CALL;
 			}
-			if (param->numblocks) param->test->test_blocks(param->base_block,(int)param->numblocks);
+			if (param->numblocks) param->test->test_blocks(param->base_block,static_cast<int>(param->numblocks));
 			param->finished = true;
 			param->lock.leave();
 			return nullptr;

@@ -266,17 +266,17 @@ namespace PractRand {
 			long double sum = 0, v = 0;
 
 			for (i=0; i<categories; ++i) {
-				sum += (long double) counts[i];
+				sum += static_cast<long double>(counts[i]);
 			}
 			for (i=0; i<categories; ++i)
 			{
 				long double expected = sum * prob_table[i];
-				long double diff = ((long double)counts[i]) - expected;
+				long double diff = static_cast<long double>(counts[i]) - expected;
 				diff = fabs(diff) - 0.5;
 				v += (diff*diff)/expected;
 			}
 		//	double normal = (V-(categories-1))/sqrt((double)(categories-1));
-			return (double)v;
+			return static_cast<double>(v);
 		}
 		double rarity_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
 			long double total = 0;
@@ -405,7 +405,7 @@ namespace PractRand {
 				if (observed) sum += observed * std::log(observed / prob_table[i]);
 			}
 			sum -= total * std::log(double(total));
-			return (double)sum * 2.0;
+			return static_cast<double>(sum) * 2.0;
 		}
 		double g_test_flat(unsigned long categories, const Uint64 *counts) {
 			long double total = 0;
@@ -416,7 +416,7 @@ namespace PractRand {
 				if (observed) sum += observed * std::log(observed);
 			}
 			sum -= total * std::log(double(total) / double(categories));
-			return (double)sum * 2.0;
+			return static_cast<double>(sum) * 2.0;
 		}
 		double g_test_flat_merge_normal(unsigned long categories, const Uint64 *counts, Uint64 total, double target_ratio) {
 			if (categories < 2) return 0;
@@ -704,7 +704,7 @@ namespace PractRand {
 					sum += std::pow(x,i) * inv;
 					inv /= (i+1);
 				}
-				return (double)sum;
+				return static_cast<double>(sum);
 			}
 			if (a == 0.5) return sqrt(3.14159265358979) * (1 - math_erf(sqrt(x)));
 		//	if (a == 0.0 && x>0) return -math_exponent_integral(-x)
@@ -723,7 +723,7 @@ namespace PractRand {
 			long double p = math_regularized_gamma_function(DoF / 2, chisquared / 2);
 			if (p < 0) p = 0;
 			if (p > 1) p = 1;
-			return (double)p;
+			return static_cast<double>(p);
 		}
 		double math_pvalue_to_chisquared ( double pvalue, double DoF ) {
 			double chisquared = 1.0;

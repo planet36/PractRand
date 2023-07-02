@@ -28,19 +28,19 @@ PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 
 #define h1(x,y) { \
 	Uint8 a,b,c,d; \
-	a = (Uint8) (x); \
-	b = (Uint8) ((x) >> 8); \
-	c = (Uint8) ((x) >> 16); \
-	d = (Uint8) ((x) >> 24); \
+	a = static_cast<Uint8>(x); \
+	b = static_cast<Uint8>((x) >> 8); \
+	c = static_cast<Uint8>((x) >> 16); \
+	d = static_cast<Uint8>((x) >> 24); \
 	(y) = Q[a]+Q[256+b]+Q[512+c]+Q[768+d]; \
 }
 
 #define h2(x,y) { \
 	Uint8 a,b,c,d; \
-	a = (Uint8) (x); \
-	b = (Uint8) ((x) >> 8); \
-	c = (Uint8) ((x) >> 16); \
-	d = (Uint8) ((x) >> 24); \
+	a = static_cast<Uint8>(x); \
+	b = static_cast<Uint8>((x) >> 8); \
+	c = static_cast<Uint8>((x) >> 16); \
+	d = static_cast<Uint8>((x) >> 24); \
 	(y) = P[a]+P[256+b]+P[512+c]+P[768+d]; \
 }
 #define step_A(u,v,a,b,c,d,m){ \

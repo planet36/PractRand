@@ -99,7 +99,7 @@ namespace PractRand {
 			bool sign = (tmp_exp & 1) ? true : false;
 			int exp = int(tmp_exp >> 1);
 			if (exp >= 0x4000) exp -= 0x8000;
-			v = (sign ? -1.0f : 1.0f) * float(std::ldexp((double)tmp_sig, exp-32));
+			v = (sign ? -1.0f : 1.0f) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
 		}
 		virtual void handle(double &v) {
 			Uint16 tmp_exp = pop16();
@@ -107,7 +107,7 @@ namespace PractRand {
 			bool sign = (tmp_exp & 1) ? true : false;
 			int exp = int(tmp_exp >> 1);
 			if (exp >= 0x4000) exp -= 0x8000;
-			v = (sign ? -1.0 : 1.0) * std::ldexp((double)tmp_sig, exp-64);
+			v = (sign ? -1.0 : 1.0) * std::ldexp(static_cast<double>(tmp_sig), exp-64);
 		}
 		virtual Uint32 get_properties() const {return 0;}
 	};
@@ -213,7 +213,7 @@ namespace PractRand {
 			AutoSeedingStateWalker([[maybe_unused]] const void *target) {
 				//get_autoseed_entropy(&seeder, target);
 				Uint32 seed_and_iv[10] = {0};
-				get_autoseed_fixed_entropy((Uint64*)&seed_and_iv[0], &seeder);
+				get_autoseed_fixed_entropy(reinterpret_cast<Uint64*>(&seed_and_iv[0]), &seeder);
 
 				//I would prefer ChaCha, but the license is not 100% clear atm
 				//PractRand::RNGs::Polymorphic::chacha bootstrap(seed_and_iv, false);
@@ -347,7 +347,7 @@ namespace PractRand {
 		long vRNG::serialize( char *buffer, long buffer_size ) {//returns serialized size, or zero on failure
 			SerializingStateWalker serializer(buffer, buffer_size);
 			walk_state(&serializer);
-			if (serializer.size_used <= (std::size_t)buffer_size) return serializer.size_used;
+			if (serializer.size_used <= static_cast<std::size_t>(buffer_size)) return serializer.size_used;
 			return 0;
 		}
 		char *vRNG::serialize( std::size_t *size_ ) {//returns malloced block, or NULL on error, sets *size to size of block
@@ -356,7 +356,7 @@ namespace PractRand {
 			std::size_t size = byte_counter.size_used;
 			*size_ = size;
 			if (!size) return NULL;
-			char *buffer = (char*)std::malloc(size);
+			char *buffer = static_cast<char*>(std::malloc(size));
 			SerializingStateWalker serializer(buffer, size);
 			if (serializer.size_used != size) {
 				std::free(buffer);
@@ -466,7 +466,7 @@ namespace PractRand {
 		void vRNG::add_entropy32(Uint32) {}
 		void vRNG::add_entropy64(Uint64) {}
 		void vRNG::add_entropy_N(const void *_data, std::size_t length) {
-			const Uint8 *data = (const Uint8*)_data;
+			const Uint8 *data = static_cast<const Uint8*>(_data);
 			for (unsigned long i = 0; i < length; i++) add_entropy8(data[i]);
 		}
 		bool vRNG::add_entropy_automatically(int milliseconds) {

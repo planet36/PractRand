@@ -45,10 +45,10 @@ namespace PractRand {
 		void handle(signed int       &v) {handle((unsigned int)v);}
 		void handle(signed long      &v) {handle((unsigned long)v);}
 		void handle(signed long long &v) {handle((unsigned long long)v);}*/
-		void handle(Sint8 &v) {handle((Uint8 &)v);}
-		void handle(Sint16&v) {handle((Uint16&)v);}
-		void handle(Sint32&v) {handle((Uint32&)v);}
-		void handle(Sint64&v) {handle((Uint64&)v);}
+		void handle(Sint8 &v) {handle(reinterpret_cast<Uint8 &>(v));}
+		void handle(Sint16&v) {handle(reinterpret_cast<Uint16&>(v));}
+		void handle(Sint32&v) {handle(reinterpret_cast<Uint32&>(v));}
+		void handle(Sint64&v) {handle(reinterpret_cast<Uint64&>(v));}
 
 		StateWalkingObject &operator<<(Uint8 &v) {handle(v);return *this;}
 		StateWalkingObject &operator<<(Uint16&v) {handle(v);return *this;}

@@ -27,7 +27,7 @@ std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return 
 PractRand::RNGs::Raw::isaac32x256::~isaac32x256() {std::memset(this, 0, sizeof(*this));}
 PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {std::memset(this, 0, sizeof(*this));}
 
-#define ind32(mm,x)  (*(Uint32 *)((Uint8 *)(mm) + ((x) & ((SIZE-1)<<2))))
+#define ind32(mm,x)  (*reinterpret_cast<Uint32 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((SIZE-1)<<2))))
 #define rngstep32(mix,a,b,mm,m,m2,r,x) \
 { \
   x = *m;  \
@@ -156,7 +156,7 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 
 
 
-#define ind64(mm,x)  (*(Uint64 *)((Uint8 *)(mm) + ((x) & ((SIZE-1)<<3))))
+#define ind64(mm,x)  (*reinterpret_cast<Uint64 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((SIZE-1)<<3))))
 #define rngstep64(mix,a,b,mm,m,m2,r,x) \
 { \
   x = *m;  \

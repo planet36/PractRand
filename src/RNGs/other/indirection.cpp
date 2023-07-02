@@ -187,7 +187,7 @@ namespace PractRand {
 				ibaa32::~ibaa32() {delete[] table;}
 
 				
-				#define ind32(mm,x)  (*(Uint32 *)(((Uint8 *)(mm)) + ((x) & ((MASK)<<2))))
+				#define ind32(mm,x)  (*reinterpret_cast<Uint32 *>((reinterpret_cast<Uint8 *>(mm)) + ((x) & ((MASK)<<2))))
 				#define rngstep32(mix,a,b,mm,m,m2,r,x) \
 				{ \
 				  x = *m;  \
@@ -261,7 +261,7 @@ namespace PractRand {
 
 
 				
-				#define ind16(mm,x)  (*(Uint16 *)((Uint8 *)(mm) + ((x) & ((MASK)<<1))))
+				#define ind16(mm,x)  (*reinterpret_cast<Uint16 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((MASK)<<1))))
 				#define rngstep16(mix,a,b,mm,m,m2,r,x) \
 				{ \
 				  x = *m;  \

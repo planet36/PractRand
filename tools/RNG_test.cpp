@@ -57,7 +57,7 @@ PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 #include <chrono>
 typedef std::chrono::system_clock::rep TimeUnit;
 TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
-double get_time_period() { return std::chrono::system_clock::period().num / (double)std::chrono::system_clock::period().den; }
+double get_time_period() { return std::chrono::system_clock::period().num / static_cast<double>(std::chrono::system_clock::period().den); }
 #else
 typedef std::clock_t TimeUnit;
 std::clock_t get_time() {return std::clock();}

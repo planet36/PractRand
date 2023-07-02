@@ -128,31 +128,31 @@ namespace Threading {
 	}
 	Lock::Lock() {
 		//InitializeCriticalSectionAndSpinCount((CRITICAL_SECTION*)&impl_data, 2000);
-		if (pthread_mutex_init( (pthread_mutex_t *)&impl_data, NULL )) {
+		if (pthread_mutex_init( reinterpret_cast<pthread_mutex_t *>(&impl_data), NULL )) {
 			_issue_pthread_error(errno, "Lock constructor: pthread_mutex_init failed");
 		}
 	}
 	Lock::~Lock() {
 		//DeleteCriticalSection((CRITICAL_SECTION*)&impl_data);
-		if (pthread_mutex_destroy( (pthread_mutex_t *)&impl_data )) {
+		if (pthread_mutex_destroy( reinterpret_cast<pthread_mutex_t *>(&impl_data) )) {
 			_issue_pthread_error(errno, "Lock destructor: pthread_mutex_destroy failed");
 		}
 	}
 	void Lock::enter() {
 		//EnterCriticalSection((CRITICAL_SECTION*)&impl_data);
-		if (pthread_mutex_lock( (pthread_mutex_t *)&impl_data )) {
+		if (pthread_mutex_lock( reinterpret_cast<pthread_mutex_t *>(&impl_data) )) {
 			_issue_pthread_error(errno, "Lock::enter: pthread_mutex_lock failed");
 		}
 	}
 	void Lock::leave() {
 		//LeaveCriticalSection((CRITICAL_SECTION*)&impl_data);
-		if (pthread_mutex_unlock( (pthread_mutex_t *)&impl_data )) {
+		if (pthread_mutex_unlock( reinterpret_cast<pthread_mutex_t *>(&impl_data) )) {
 			_issue_pthread_error(errno, "Lock::leave: pthread_mutex_unlock failed");
 		}
 	}
 	bool Lock::try_enter() {
 		//return TryEnterCriticalSection((CRITICAL_SECTION*)&impl_data) ? true : false;
-		return pthread_mutex_trylock( (pthread_mutex_t *)&impl_data ) ? false : true;
+		return pthread_mutex_trylock( reinterpret_cast<pthread_mutex_t *>(&impl_data) ) ? false : true;
 	}
 	//how to implement this in pthreads?
 	/*void Lock::_assert_is_held() {

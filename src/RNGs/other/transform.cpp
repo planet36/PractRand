@@ -132,11 +132,11 @@ namespace PractRand {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAsUnknown::~ReinterpretAsUnknown() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAsUnknown::refill() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -152,11 +152,11 @@ namespace PractRand {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs8::~ReinterpretAs8() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs8::refill() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -172,11 +172,11 @@ namespace PractRand {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs16::~ReinterpretAs16() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs16::refill() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -192,11 +192,11 @@ namespace PractRand {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs32::~ReinterpretAs32() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs32::refill() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -212,11 +212,11 @@ namespace PractRand {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs64::~ReinterpretAs64() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs64::refill() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -251,7 +251,7 @@ namespace PractRand {
 					buffer = &block->as16[0];
 					index = 8192 / INPUT_BITS;
 				}
-				void Discard16to8::refill() { PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer; block->fill(base_rng); index = 0; }
+				void Discard16to8::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				std::string Discard16to8::get_name() const { return std::string("Discard16to8(") + base_rng->get_name() + ")"; }
 				Uint8 Discard16to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
@@ -264,7 +264,7 @@ namespace PractRand {
 					index = 8192 / 32;
 				}
 				std::string Discard32to8::get_name() const { return std::string("Discard32to8(") + base_rng->get_name() + ")"; }
-				void Discard32to8::refill() { PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer; block->fill(base_rng); index = 0; }
+				void Discard32to8::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint8 Discard32to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -277,7 +277,7 @@ namespace PractRand {
 				}
 				std::string Discard64to8::get_name() const { return std::string("Discard64to8(") + base_rng->get_name() + ")"; }
 				void Discard64to8::refill() {
-					PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer; block->fill(base_rng); index = 0;
+					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0;
 				}
 				Uint8 Discard64to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
@@ -290,7 +290,7 @@ namespace PractRand {
 					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard32to16::get_name() const { return std::string("Discard32to16(") + base_rng->get_name() + ")"; }
-				void Discard32to16::refill() { PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer; block->fill(base_rng); index = 0; }
+				void Discard32to16::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint16 Discard32to16::raw16() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -302,7 +302,7 @@ namespace PractRand {
 					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to16::get_name() const { return std::string("Discard64to16(") + base_rng->get_name() + ")"; }
-				void Discard64to16::refill() { PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer; block->fill(base_rng); index = 0; }
+				void Discard64to16::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint16 Discard64to16::raw16() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -314,7 +314,7 @@ namespace PractRand {
 					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to32::get_name() const { return std::string("Discard64to32(") + base_rng->get_name() + ")"; }
-				void Discard64to32::refill() { PractRand::Tests::TestBlock *block = (PractRand::Tests::TestBlock*) buffer; block->fill(base_rng); index = 0; }
+				void Discard64to32::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint32 Discard64to32::raw32() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);

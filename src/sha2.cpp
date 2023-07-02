@@ -215,7 +215,7 @@ namespace PractRand {
 			//buffer any leftovers
 			if (input_left) {
 				std::memcpy(input_buffer.as_byte + leftover_input_bytes, input, input_left);
-				leftover_input_bytes += (int)input_left;
+				leftover_input_bytes += static_cast<int>(input_left);
 			}
 		}
 		void SHA2_512::process_final_block () {

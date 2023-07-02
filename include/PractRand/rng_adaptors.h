@@ -45,36 +45,36 @@ namespace PractRand {
 					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
 //						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
 					typedef base_rng base_rng_type;
-					Uint16 raw16() {return this->raw8()  + (((Uint16) this->raw8()) <<  8);}
-					Uint32 raw32() {return raw16() + (((Uint32)raw16()) << 16);}
-					Uint64 raw64() {return raw32() + (((Uint64)raw32()) << 32);}
+					Uint16 raw16() {return this->raw8()  + (static_cast<Uint16>(this->raw8()) <<  8);}
+					Uint32 raw32() {return raw16() + (static_cast<Uint32>(raw16()) << 16);}
+					Uint64 raw64() {return raw32() + (static_cast<Uint64>(raw32()) << 32);}
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 16> : public base_rng {
 				public:
 					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
 //						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
 					typedef base_rng base_rng_type;
-					Uint8  raw8()  {return (Uint8)this->raw16();}
-					Uint32 raw32() {return this->raw16() + (((Uint32)this->raw16()) << 16);}
-					Uint64 raw64() {return raw32() + (((Uint64)raw32()) << 32);}
+					Uint8  raw8()  {return static_cast<Uint8>(this->raw16());}
+					Uint32 raw32() {return this->raw16() + (static_cast<Uint32>(this->raw16()) << 16);}
+					Uint64 raw64() {return raw32() + (static_cast<Uint64>(raw32()) << 32);}
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 32> : public base_rng {
 				public:
 					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
 //						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
 					typedef base_rng base_rng_type;
-					Uint8  raw8()  {return (Uint8)this->raw32();}
-					Uint16 raw16() {return (Uint16)this->raw32();}
-					Uint64 raw64() {return this->raw32() + (((Uint64)this->raw32()) << 32);}
+					Uint8  raw8()  {return static_cast<Uint8>(this->raw32());}
+					Uint16 raw16() {return static_cast<Uint16>(this->raw32());}
+					Uint64 raw64() {return this->raw32() + (static_cast<Uint64>(this->raw32()) << 32);}
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 64> : public base_rng {
 				public:
 					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
 //						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
 					typedef base_rng base_rng_type;
-					Uint8  raw8()  {return (Uint8)this->raw64();}
-					Uint16 raw16() {return (Uint16)this->raw64();}
-					Uint32 raw32() {return (Uint32)this->raw64();}
+					Uint8  raw8()  {return static_cast<Uint8>(this->raw64());}
+					Uint16 raw16() {return static_cast<Uint16>(this->raw64());}
+					Uint32 raw32() {return static_cast<Uint32>(this->raw64());}
 				};
 
 
@@ -123,7 +123,7 @@ namespace PractRand {
 					float randf ( float m ) { return randf() * m; }
 					float randf ( float min, float max ) { return randf() * (max-min) + min; }
 
-					double randlf ( ) { return ((double)this->raw64()) * (double)(1.0 / 18446744073709551616.0); }
+					double randlf ( ) { return static_cast<double>(this->raw64()) * static_cast<double>(1.0 / 18446744073709551616.0); }
 					double randlf ( double m ) { return randlf() * m; }
 					double randlf ( double min, double max ) { return randlf() * (max-min) + min; }
 
