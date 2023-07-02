@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: Steven Ward
 # SPDX-License-Identifier: OSL-3.0
 
+export LC_ALL := C
+
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 
