@@ -144,8 +144,8 @@ namespace PractRand {
 				high = static_cast<Uint64*>(std::realloc(high, sizeof(Uint64) * size));
 				reset_counts();
 			}
-			VariableSizeCount() : size(0), low(NULL), high(NULL) {}
-			VariableSizeCount(int size_) : size(0), low(NULL), high(NULL) {set_size(size_);}
+			VariableSizeCount() : low(NULL), high(NULL), size(0) {}
+			VariableSizeCount(int size_) : low(NULL), high(NULL), size(0) {set_size(size_);}
 			void increment(int index) {if (!++low[index]) high[index] += 1ull << (8*sizeof(LowIntType));}
 			const Uint64 &operator[] (int index) {
 				high[index] += low[index];

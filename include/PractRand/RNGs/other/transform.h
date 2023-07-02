@@ -84,7 +84,7 @@ namespace PractRand {
 					void seed(Uint64 seed);
 					Uint64 get_flags() const;
 					std::string get_name() const ;
-					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), base_rng(rng), buf_count(0), buf_data(0), name(name_) {}
+					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), buf_data(0), buf_count(0), name(name_), base_rng(rng) {}
 					~GeneralizedTableTransform();
 					void walk_state(StateWalkingObject *);
 					Uint8 raw8();

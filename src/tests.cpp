@@ -3883,7 +3883,7 @@ static unsigned long count_low_zeroes64(Uint64 value) {
 }
 #endif
 
-PractRand::Tests::FPF::FPF(int stride_bits_L2_ , int sig_bits_ , int exp_bits_ ) : stride_bits_L2(stride_bits_L2_), sig_bits(sig_bits_), exp_bits(exp_bits_) {
+PractRand::Tests::FPF::FPF(int stride_bits_L2_ , int sig_bits_ , int exp_bits_ ) : sig_bits(sig_bits_), exp_bits(exp_bits_), stride_bits_L2(stride_bits_L2_) {
 	if (sig_bits > MAX_SIG_BITS) issue_error();
 	if (exp_bits > 6) issue_error();
 	for (int i = 0; i <= 32; i++) {
