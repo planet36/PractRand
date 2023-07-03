@@ -3495,9 +3495,9 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 				double samples = blocks_tested * TestBlock::SIZE * pow(0.5, level+unitsL2) - tbits + 1;
 				int reduced_size = simplify_prob_table(COUNTS2_SIZE, samples / 40., &probs[1], &counts2_dup[1], true, false);
 				double tr = g_test(reduced_size, &probs[1], &counts2_dup[1]);
-				double n = math_chisquared_to_normal(tr, reduced_size-1);
+				double n_ = math_chisquared_to_normal(tr, reduced_size-1);
 				//double p = math_chisquared_to_pvalue(tr, reduced_size - 1);
-				double p2 = math_normaldist_to_pvalue(-n / 1.6);
+				double p2 = math_normaldist_to_pvalue(-n_ / 1.6);
 				std::ostringstream name;
 				name << "BCFN_FF(" << unitsL2 << "+" << level << "):freq";
 				double w;
@@ -3505,9 +3505,9 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 				else w = std::pow(0.5, double((unitsL2 + level + 2)/2));
 				if (w > 0.375) w = 0.375;
 				if (!level) w += 0.125;
-				//results.push_back(TestResult(name.str(), n, n, TestResult::TYPE_RAW_NORMAL, w*0.1 ) );
-				results.push_back(TestResult(name.str(), n, p2, TestResult::TYPE_BAD_P, w*0.05 ) );
-				//results.push_back(TestResult(name.str(), n, p, TestResult::TYPE_GOOD_P, w*0.1 ) );
+				//results.push_back(TestResult(name.str(), n_, n_, TestResult::TYPE_RAW_NORMAL, w*0.1 ) );
+				results.push_back(TestResult(name.str(), n_, p2, TestResult::TYPE_BAD_P, w*0.05 ) );
+				//results.push_back(TestResult(name.str(), n_, p, TestResult::TYPE_GOOD_P, w*0.1 ) );
 			}
 		}
 	}
@@ -6950,20 +6950,20 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 		}
 	}
 	else if (!(WORD_BITS % BITS_PER_BLOCK)) {//blocks align to word boundaries
-		int index;
+		int index_;
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 			analyze_block(w, core_bucket, bucket_bit++, h);
 			w >>= BITS_PER_BLOCK;
 		}
-		for (index = 1; index < CORE_WORDS - 1; index++) {
-			w = core[index];
+		for (index_ = 1; index_ < CORE_WORDS - 1; index_++) {
+			w = core[index_];
 			for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 				analyze_block(w, core_bucket, bucket_bit++, h);
 				w >>= BITS_PER_BLOCK;
 			}
 		}
-		w = core[index];
+		w = core[index_];
 		for (int i = 0; i < BLOCKS_PER_CORE - (CORE_WORDS - 1) * (WORD_BITS / BITS_PER_BLOCK); i++) {
 			analyze_block(w, core_bucket, bucket_bit++, h);
 			w >>= BITS_PER_BLOCK;
@@ -6978,11 +6978,11 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 			analyze_block(w, core_bucket, bucket_bit++, h);
 			w >>= BITS_PER_BLOCK;
 		}
-		int index = 1;
+		int index_ = 1;
 		constexpr int WORD_LEFTOVERS = WORD_BITS % BITS_PER_BLOCK;
 		int usable_bits = WORD_LEFTOVERS;
-		while (index < CORE_WORDS - 1) {//middle words
-			Word w2 = core[index++];
+		while (index_ < CORE_WORDS - 1) {//middle words
+			Word w2 = core[index_++];
 			w |= w2 << usable_bits;
 			for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 				analyze_block(w, core_bucket, bucket_bit++, h);
@@ -6998,7 +6998,7 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 		}
 		//last word
 		constexpr int INDEX = CORE_WORDS - 1;
-		if (index != INDEX) issue_error("NearSeq2::analyze_core - internal error");
+		if (index_ != INDEX) issue_error("NearSeq2::analyze_core - internal error");
 		constexpr int USABLE_BITS = ((CORE_WORDS - 1) * WORD_BITS) % BITS_PER_BLOCK;
 		if (usable_bits != USABLE_BITS) issue_error("NearSeq2::analyze_core - internal error 2");
 		constexpr int FINAL_WORD_BITS = WORD_BITS - EXTRA_PARTIAL_WORD_BITS;

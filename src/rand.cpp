@@ -304,12 +304,12 @@ namespace PractRand {
 			for (int i = 0; i < 10; i++) {
 				seed = known_good->raw64();
 				rng->seed(seed);
-				Sint64 how_far = known_good->raw64();
-				while (how_far == 0x8000000000000000ull) how_far = known_good->raw64();//we can't negate this value, so the code would fail
-				if (how_far > 0) rng->seek_forward(how_far);
-				else if (how_far < 0) rng->seek_backward(-how_far);
+				Sint64 how_far_ = known_good->raw64();
+				while (how_far_ == 0x8000000000000000ull) how_far_ = known_good->raw64();//we can't negate this value, so the code would fail
+				if (how_far_ > 0) rng->seek_forward(how_far_);
+				else if (how_far_ < 0) rng->seek_backward(-how_far_);
 				a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
-				Sint64 delta = how_far;
+				Sint64 delta = how_far_;
 				rng->seed(seed);
 				while (delta) {
 					if (delta > 0) {

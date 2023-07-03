@@ -1322,10 +1322,10 @@ namespace PractRand {
 					if (y == virtual_h) {
 						if (last_ranks_found != ranks_found) {//time for a sweep
 							//because we need to search past the end of the stuff that is usable atm
-							for (int y = virtual_h; y < h; y++) {
+							for (int y_ = virtual_h; y_ < h; y_++) {
 								for (int rank = last_ranks_found; rank < ranks_found; rank++) {
 									int x2 = rank_x[rank-last_ranks_found];
-									if (read_position(x2,y)) xor_rows_skip_start(y, rank, shortened);
+									if (read_position(x2,y_)) xor_rows_skip_start(y_, rank, shortened);
 								}
 							}
 							last_ranks_found = ranks_found;
