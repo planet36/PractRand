@@ -24,7 +24,7 @@ namespace PractRand {
 		}
 		
 		namespace Polymorphic {
-			class trivium : public vRNG64 {
+			class trivium final : public vRNG64 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(trivium)
 				void seed(Uint64 s) override;
 				void seed_fast(Uint64 s) override;

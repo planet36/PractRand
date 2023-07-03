@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class Gap16 : public TestBaseclass {
+		class Gap16 final : public TestBaseclass {
 		public:
 			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
 			virtual std::string get_name() const override;// {return std::string("Gap16");}

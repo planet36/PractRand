@@ -25,7 +25,7 @@ namespace PractRand {
 		}
 		
 		namespace Polymorphic {
-			class xsm32 : public vRNG32 {
+			class xsm32 final : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(xsm32)
 				void seed(Uint64 s) override; // no two seeds within 2**63 of each other on the same cycle
 				void seed(vRNG *seeder_rng) override; // no two seeds within 2**48 of each other on the same cycle (2**79 possible seeded states)

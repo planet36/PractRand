@@ -2,7 +2,7 @@
 
 namespace PractRand {
 	namespace Tests {
-		class NearSeq : public TestBaseclass {
+		class NearSeq final : public TestBaseclass {
 		protected:
 			typedef Uint64 Word;
 				/*
@@ -65,7 +65,7 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-		class NearSeq2 : public TestBaseclass {
+		class NearSeq2 final : public TestBaseclass {
 		protected:
 			typedef Uint32 Word;
 				/*

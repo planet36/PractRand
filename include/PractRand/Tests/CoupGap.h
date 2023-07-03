@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class CoupGap : public TestBaseclass {
+		class CoupGap final : public TestBaseclass {
 			//enum {MAX_OLDEST_AGE = 256 * 16};
 			enum {MAX_CURRENT_AGE = 256 * 2};
 

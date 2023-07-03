@@ -1,7 +1,7 @@
 namespace PractRand {
 	namespace Tests {
 		//class BitMatrix;
-		class BRank : public TestBaseclass {
+		class BRank final : public TestBaseclass {
 		public:
 			BRank ( 
 				Uint32 rate_hl2_ // 2 * log2(time units per KB)

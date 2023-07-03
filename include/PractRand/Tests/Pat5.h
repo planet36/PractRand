@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class Pat5 : public TestBaseclass {
+		class Pat5 final : public TestBaseclass {
 		public:
 			Pat5();
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;

@@ -1,7 +1,7 @@
 namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
-			class sha2_based_pool : public vRNG8 {
+			class sha2_based_pool final : public vRNG8 {
 			public:
 				enum {
 					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL,

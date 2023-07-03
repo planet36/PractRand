@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class Coup16 : public TestBaseclass {
+		class Coup16 final : public TestBaseclass {
 		protected:
 			enum { S = 65536 / 32 };
 			Uint32 flags[S];

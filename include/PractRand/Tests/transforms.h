@@ -28,7 +28,7 @@ namespace PractRand {
 				//virtual std::string get_child_name  (int index) const;
 				//virtual double      get_child_result(int index);
 			};
-			class switching : public multiplex {
+			class switching final : public multiplex {
 				std::vector<Uint64> lengths;
 				std::vector<Uint64> blocks_already_per;
 				Uint64 total_length;
@@ -78,7 +78,7 @@ namespace PractRand {
 				virtual std::string get_name() const override;
 				virtual void test_blocks(TestBlock *data, int numblocks) override;
 			};
-			class lowbits : public Transform_Baseclass {
+			class lowbits final : public Transform_Baseclass {
 			protected:
 				int lowbitsL;//0 = 1 bit of output per input word, 1 = 2 bits of output per input word, 2=4,3=8,4=15,5=32
 				int unitsL;//-1= 4 bit input words, 0= 8 bit input words, 1 = 16 bit input words, 2 = 32, 3 = 64
@@ -102,7 +102,7 @@ namespace PractRand {
 				virtual std::string get_name() const;
 				virtual void test_blocks(TestBlock *data, int numblocks);
 			};*/
-			class FirstNofM : public Transform_Baseclass {
+			class FirstNofM final : public Transform_Baseclass {
 			protected:
 				int bytes_used;
 				int bytes_stride;

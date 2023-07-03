@@ -247,7 +247,7 @@ namespace PractRand {
 					void walk_state(StateWalkingObject *) override;
 				};
 
-				class tyche : public vRNG32 {
+				class tyche final : public vRNG32 {
 					Uint32 a, b, c, d;
 				public:
 					Uint32 raw32() override;

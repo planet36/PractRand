@@ -23,7 +23,7 @@ namespace PractRand {
 		}
 		
 		namespace Polymorphic {
-			class jsf32 : public vRNG32 {
+			class jsf32 final : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(jsf32)
 				void seed(Uint64 s) override;
 				void seed_fast(Uint64 s) override;

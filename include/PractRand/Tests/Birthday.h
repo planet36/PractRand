@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class Birthday32 : public TestBaseclass {
+		class Birthday32 final : public TestBaseclass {
 			static constexpr int BUFFER_SIZE_L2 = 12; // must be at least 8
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
 			static constexpr int MAX_DUPLICATES = 32;
@@ -17,7 +17,7 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-		class Birthday64 : public TestBaseclass {
+		class Birthday64 final : public TestBaseclass {
 			static constexpr int BUFFER_SIZE_L2 = 23; // must be at least 7
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
 			static constexpr int MAX_DUPLICATES = 64;
@@ -124,7 +124,7 @@ namespace PractRand {
 		public:
 			;
 		};*/
-		class BirthdaySystematic128 : public BirthdayLamda1 {
+		class BirthdaySystematic128 final : public BirthdayLamda1 {
 			// similar to BirthdayLambda1 above
 			// but if a result is requested before the first sample is ready, it will return a result for a partial buffer
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
@@ -145,7 +145,7 @@ namespace PractRand {
 			virtual void get_results(std::vector<TestResult> &results) override;
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-		class BirthdayAlt : public TestBaseclass {
+		class BirthdayAlt final : public TestBaseclass {
 			//as for BirthdayLambda1, but: 
 			// keep all bits regardless of buffer size, just count an adjusting range of near deltas as if they were exact matches (or score them based upon how exact they are?)
 			// try filtering the initial samples range, as if it was a small part of a larger sort buffer

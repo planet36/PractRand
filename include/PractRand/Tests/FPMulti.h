@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class FPMulti : public TestBaseclass {
+		class FPMulti final : public TestBaseclass {
 			/*
 				can a stride shorter than 64 bits really work for this?  it works fine for FPF, but... other subtests may be a lot more sensitive to the resulting issues
 

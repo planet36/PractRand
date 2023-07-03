@@ -249,7 +249,7 @@ namespace PractRand {
 					std::string get_name() const override;
 				};
 
-				class BaysDurhamShuffle64 : public Transform64 {
+				class BaysDurhamShuffle64 final : public Transform64 {
 					Uint64 table[256];
 					Uint8 prev;
 					Uint8 index_mask;
@@ -262,7 +262,7 @@ namespace PractRand {
 					BaysDurhamShuffle64(vRNG64 *rng, int table_size_L2, int shift=0) 
 						: Transform64(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
-				class BaysDurhamShuffle32 : public Transform32 {
+				class BaysDurhamShuffle32 final : public Transform32 {
 					Uint32 table[256];
 					Uint8 prev;
 					Uint8 index_mask;
@@ -275,7 +275,7 @@ namespace PractRand {
 					BaysDurhamShuffle32(vRNG32 *rng, int table_size_L2, int shift=0) 
 						: Transform32(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
-				class BaysDurhamShuffle16 : public Transform16 {
+				class BaysDurhamShuffle16 final : public Transform16 {
 					Uint16 table[256];
 					Uint8 prev;
 					Uint8 index_mask;
@@ -288,7 +288,7 @@ namespace PractRand {
 					BaysDurhamShuffle16(vRNG16 *rng, int table_size_L2, int shift=0) 
 						: Transform16(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
-				class BaysDurhamShuffle8 : public Transform8 {
+				class BaysDurhamShuffle8 final : public Transform8 {
 					Uint8 table[256];
 					Uint8 prev;
 					Uint8 index_mask;

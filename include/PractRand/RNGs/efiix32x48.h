@@ -29,7 +29,7 @@ namespace PractRand {
 		}
 
 		namespace Polymorphic {
-			class efiix32x48 : public vRNG32 {
+			class efiix32x48 final : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(efiix32x48)
 				//void seed(const Uint32 *seeds, int num_seeds, int seeding_quality=4) {implementation.seed(seeds, num_seeds, seeding_quality);}
 				void seed(Uint64 s) override;

@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class DistFreq4 : public TestBaseclass {
+		class DistFreq4 final : public TestBaseclass {
 		public:
 			DistFreq4(int blocks_per_) : blocks_per(blocks_per_) {}
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;
@@ -24,7 +24,7 @@ namespace PractRand {
 			int blocks_per;
 			FixedSizeCount<Uint8, 1 << TOTAL_INDEX_BITS> counts;
 		};
-		class TripleFreq : public TestBaseclass {
+		class TripleFreq final : public TestBaseclass {
 		public:
 			TripleFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;
@@ -54,7 +54,7 @@ namespace PractRand {
 			// reordered order:                (pos2 aka region), (pos3), (window1), (window2), (window3)
 			// index order, from high to low:  (pos2 aka region), (window1), (window2), (pos3), (window3)
 		};
-		class TripleMirrorFreq : public TestBaseclass {
+		class TripleMirrorFreq final : public TestBaseclass {
 		public:
 			TripleMirrorFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;
@@ -112,7 +112,7 @@ namespace PractRand {
 			FixedSizeCount<Uint16, MAX_LEVELS << TOTAL_INDEX_BITS> counts;
 			// index order, from high to low:  (pos), (window1), (window2), (window3)
 		};
-		class TripleMirrorCoup : public TestBaseclass {
+		class TripleMirrorCoup final : public TestBaseclass {
 		public:
 			TripleMirrorCoup(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;
@@ -175,7 +175,7 @@ namespace PractRand {
 			// reordered order:                (pos2 aka region), (pos3), (window1), (window2), (window3)
 			// index order, from high to low:  (pos2 aka region), (window1), (window2), (pos3), (window3)
 		};
-		class LPerm16 : public TestBaseclass {//not yet implemented
+		class LPerm16 final : public TestBaseclass {//not yet implemented
 		public:
 			LPerm16(int word_bits_, int passes_at_once_ = 0, int blocks_per_pass_ = 1) : word_bits(word_bits_), blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;

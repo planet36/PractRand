@@ -35,7 +35,7 @@ namespace PractRand {
 		}
 		
 		namespace Polymorphic {
-			class mt19937 : public vRNG32 {
+			class mt19937 final : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(mt19937)
 				mt19937 (Uint32 s[], int seed_length) {seed(s, seed_length);}
 				void seed(Uint64 s) override;

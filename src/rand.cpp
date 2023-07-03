@@ -31,7 +31,7 @@ namespace PractRand {
 	void hook_error_handler(void (*callback)(const char *msg)) {
 		error_callback = callback;
 	}
-	class SerializingStateWalker : public StateWalkingObject {
+	class SerializingStateWalker final : public StateWalkingObject {
 	public:
 		char *buffer;
 		std::size_t max_size;

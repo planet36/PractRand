@@ -1,6 +1,6 @@
 namespace PractRand {
 	namespace Tests {
-		class FPF : public TestBaseclass {
+		class FPF final : public TestBaseclass {
 		protected:
 			enum {
 				MAX_SIG_BITS = 16,

@@ -9,7 +9,7 @@ namespace PractRand {
 				//BCFN_MT - MUCH slower, but hopefully more powerful?
 					not really implemented yet
 		*/
-		class BCFN : public TestBaseclass {
+		class BCFN final : public TestBaseclass {
 		protected:
 			enum { LEVELS = 32 };
 			VariableSizeCount<Uint16> counts[LEVELS];
@@ -35,7 +35,7 @@ namespace PractRand {
 			void handle_high_levels_balanced   ( long level, long bits );
 			void handle_high_levels_unbalanced ( long level, long bits );
 		};
-		class BCFN_FF : public TestBaseclass {
+		class BCFN_FF final : public TestBaseclass {
 		protected:
 			enum { LEVELS = 32 };
 			VariableSizeCount<Uint16> counts[LEVELS];

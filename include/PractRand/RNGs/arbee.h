@@ -37,7 +37,7 @@ namespace PractRand {
 		}
 		
 		namespace Polymorphic {
-			class arbee : public vRNG64 {
+			class arbee final : public vRNG64 {
 			public:
 				enum {
 					FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION

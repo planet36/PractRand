@@ -37,7 +37,7 @@ namespace PractRand {
 		}
 		
 		namespace Polymorphic {
-			class isaac64x256 : public vRNG64 {
+			class isaac64x256 final : public vRNG64 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(isaac64x256)
 				void seed(Uint64 s) override;
 				void seed(vRNG *seeder_rng) override;

@@ -200,7 +200,7 @@ namespace PractRand {
 					void walk_state(StateWalkingObject *) override;
 				};
 
-				class pcg32 : public vRNG32 {
+				class pcg32 final : public vRNG32 {
 					Uint64 state, inc;
 				public:
 					pcg32() : state(0x853c49e6748fea9bULL), inc(0xda3e39cb94b95bdbULL) {}
@@ -209,7 +209,7 @@ namespace PractRand {
 					void seed(Uint64 s) override;
 					void walk_state(StateWalkingObject *) override;
 				};
-				class pcg32_norot : public vRNG32 {
+				class pcg32_norot final : public vRNG32 {
 					Uint64 state, inc;
 				public:
 					pcg32_norot() : state(0x853c49e6748fea9bULL), inc(0xda3e39cb94b95bdbULL) {}
@@ -227,7 +227,7 @@ namespace PractRand {
 					void seed(Uint64 s) override;
 					void walk_state(StateWalkingObject *) override;
 				};
-				class xsh_lcg_bad : public vRNG32 {//name was xorwowPlus, I changed it because I wasn't sure it actually qualified as an xorwow
+				class xsh_lcg_bad final : public vRNG32 {//name was xorwowPlus, I changed it because I wasn't sure it actually qualified as an xorwow
 					Uint64 lcg, x0, x1, x2, x3;
 					Uint32 raw32() override;
 					std::string get_name() const override;

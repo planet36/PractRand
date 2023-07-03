@@ -48,7 +48,7 @@ namespace PractRand {
 			void advance_index ( int bit_count ) {
 				last_index = _advance_index(last_index, lookup_table[bit_count]);}
 		};
-		class DistC7 : public DistC6 {
+		class DistC7 final : public DistC6 {
 		public:
 			DistC7(int length_ = 9, int unitsL_ = 0,
 				int bits_clipped_0_ = 1,

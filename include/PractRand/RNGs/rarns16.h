@@ -21,7 +21,7 @@ namespace PractRand {
 		}
 
 		namespace Polymorphic {
-			class rarns16 : public vRNG16 {
+			class rarns16 final : public vRNG16 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(rarns16)
 				void seed(Uint64 s) override;
 				void seed(Uint16 s1, Uint16 s2, Uint16 s3);

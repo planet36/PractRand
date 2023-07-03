@@ -82,7 +82,7 @@ For #3, sfc_alternative looks better than the current sfc.
 
 */
 #define POLYMORPHIC_CANDIDATE(rng, bits) \
-class polymorphic_ ## rng ## bits : public PractRand::RNGs::vRNG ## bits {\
+class polymorphic_ ## rng ## bits final : public PractRand::RNGs::vRNG ## bits {\
 public:\
 	typedef raw_ ## rng ## bits ImplementationType;\
 	enum {OUTPUT_BITS = ImplementationType ::OUTPUT_BITS,FLAGS = ImplementationType ::FLAGS};\
@@ -95,7 +95,7 @@ public:\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
 #define SEEDED_POLYMORPHIC_CANDIDATE(rng, bits) \
-class polymorphic_ ## rng ## bits : public PractRand::RNGs::vRNG ## bits {\
+class polymorphic_ ## rng ## bits final : public PractRand::RNGs::vRNG ## bits {\
 public:\
 	typedef raw_ ## rng ## bits ImplementationType;\
 	enum {OUTPUT_BITS = ImplementationType ::OUTPUT_BITS,FLAGS = ImplementationType ::FLAGS};\
@@ -820,7 +820,7 @@ public:
 		walker->handle(counter);
 	}
 };
-class polymorphic_siphash : public PractRand::RNGs::vRNG64 {
+class polymorphic_siphash final : public PractRand::RNGs::vRNG64 {
 public:
 	typedef raw_siphash ImplementationType;
 	enum { OUTPUT_BITS = ImplementationType::OUTPUT_BITS, FLAGS = ImplementationType::FLAGS };
