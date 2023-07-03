@@ -1227,8 +1227,8 @@ namespace PractRand {
 		}
 		bool BitMatrix::read_position(int x, int y) const {
 			int index = (x >> WORD_BITS_L2)+y*ww;
-			Word w = data[index];
-			Word w2 = w >> (x & WORD_BITS_MASK);
+			Word w_ = data[index];
+			Word w2 = w_ >> (x & WORD_BITS_MASK);
 			bool bit = w2 & 1;
 			return bit;
 			//return (data[(x >> WORD_BITS_L2)+y*ww] >> (x & WORD_BITS_MASK)) & 1;

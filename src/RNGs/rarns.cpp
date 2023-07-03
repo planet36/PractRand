@@ -31,11 +31,11 @@ void PractRand::RNGs::Polymorphic::rarns16::seed(Uint64 s) { implementation.seed
 std::string PractRand::RNGs::Polymorphic::rarns16::get_name() const { return "rarns16"; }
 
 //raw:
-static char s1 = 3, s2 = 7, s3 = 8;
+static char _s1 = 3, _s2 = 7, _s3 = 8;
 void _set_shift_values(int shift1, int shift2, int shift3) {
-	s1 = shift1;
-	s2 = shift2;
-	s3 = shift3;
+	_s1 = shift1;
+	_s2 = shift2;
+	_s3 = shift3;
 }
 Uint16 PractRand::RNGs::Raw::rarns16::raw16() {
 	enum {
@@ -45,13 +45,13 @@ Uint16 PractRand::RNGs::Raw::rarns16::raw16() {
 		OUTROT = 5
 	};
 	Uint16 rv = rotate16(xs1 + xs3, OUTROT);
-	Uint16 old = xs1 >> s1;
+	Uint16 old = xs1 >> _s1;
 	xs3 ^= xs1;
 	xs1 ^= xs2;
 	xs2 ^= xs3;
 	xs1 ^= old;
-	xs3 = rotate16(xs3, s2);
-	xs1 = rotate16(xs1, s3);
+	xs3 = rotate16(xs3, _s2);
+	xs1 = rotate16(xs1, _s3);
 	rv += xs1;
 	return rv;
 }

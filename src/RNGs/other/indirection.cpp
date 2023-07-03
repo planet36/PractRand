@@ -629,7 +629,7 @@ namespace PractRand {
 				void genindD::walk_state(StateWalkingObject *walker) {
 					walker->handle(i);
 					walker->handle(a);
-					for (int i = 0; i <= mask; i++) walker->handle(table[i]);
+					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table[i_]);
 				}
 				std::string genindD::get_name() const {
 					std::stringstream buf;
@@ -668,8 +668,8 @@ namespace PractRand {
 					walker->handle(i);
 					i &= mask;
 					walker->handle(a);
-					for (int i = 0; i <= mask; i++) walker->handle(table1[i]);
-					for (int i = 0; i <= mask; i++) walker->handle(table2[i]);
+					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table1[i_]);
+					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table2[i_]);
 				}
 				std::string genindE::get_name() const {
 					std::stringstream buf;
@@ -705,8 +705,8 @@ namespace PractRand {
 					walker->handle(i);
 					i &= mask;
 					walker->handle(a);
-					for (int i = 0; i <= mask; i++) walker->handle(table1[i]);
-					for (int i = 0; i <= mask; i++) walker->handle(table2[i]);
+					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table1[i_]);
+					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table2[i_]);
 				}
 				std::string genindF::get_name() const {
 					std::stringstream buf;

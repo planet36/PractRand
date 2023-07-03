@@ -1673,28 +1673,28 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	double lopped = 0;
 	double inv_total_samples = 1.0 / (blocks_tested * (TestBlock::SIZE/2.));
 	for (int i = 0; i < TSIZE; i++) {
-		int first, last;
+		int first, last_;
 		if (i < SIZE1) {
 			first = i << SET1_SHIFT;
-			last = first + (1 << SET1_SHIFT) - 1;
+			last_ = first + (1 << SET1_SHIFT) - 1;
 		}
 		else if (i < SIZE1+SIZE2) {
 			int tmp = i - SIZE1;
 			first = (SIZE1 << SET1_SHIFT) + (tmp << SET2_SHIFT);
-			last = first + (1 << SET2_SHIFT) - 1;
+			last_ = first + (1 << SET2_SHIFT) - 1;
 		}
 		else if (i < TSIZE-1) {
 			int tmp = i - SIZE1 - SIZE2;
 			first = (SIZE1 << SET1_SHIFT) + (SIZE2 << SET2_SHIFT) + (tmp << SET3_SHIFT);
-			last = first + (1 << SET3_SHIFT) - 1;
+			last_ = first + (1 << SET3_SHIFT) - 1;
 		}
 		else {
 			first = (SIZE1 << SET1_SHIFT) + (SIZE2 << SET2_SHIFT) + ((SIZE3-1) << SET3_SHIFT);
-			last = 123456789;
+			last_ = 123456789;
 		}
-		double fraction = ((first+last)/2.+1.) * inv_total_samples;
+		double fraction = ((first+last_)/2.+1.) * inv_total_samples;
 		if (fraction > 1) fraction = 1;
-		double p = gap_probs(first, last, baseprob);
+		double p = gap_probs(first, last_, baseprob);
 		lopped += p * fraction;
 		probs[i] = p * (1 - fraction);
 	}
@@ -11082,19 +11082,19 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		data += MAX_BLOCKS_AT_ONCE;
 		numblocks -= MAX_BLOCKS_AT_ONCE;
 	}
-	int max, lowbits;
+	int max, lowbits_;
 	if (unitsL != -1) {
 		max = numblocks * (TestBlock::SIZE >> unitsL);
-		lowbits = 1 << lowbitsL;
+		lowbits_ = 1 << lowbitsL;
 	}
 	else {
 		max = numblocks * TestBlock::SIZE;
-		lowbits = 2 << lowbitsL;
+		lowbits_ = 2 << lowbitsL;
 	}
 	Uint32 *dest_ptr;
 	if (1) {//allocate space in vector:
 		int spare_words = (TestBlock::SIZE/4 - leftovers) & (TestBlock::SIZE/4-1);
-		int words_to_use = (max * lowbits) / 32;
+		int words_to_use = (max * lowbits_) / 32;
 		int needed_words = words_to_use - spare_words;
 		if (needed_words < 0) needed_words = 0;
 		int needed_blocks = (needed_words + TestBlock::SIZE/4 - 1) / (TestBlock::SIZE/4);
@@ -11121,7 +11121,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 			int i = 0;
 			while (i < max) {
 				Uint32 word = table[data->as8[i++]];
-				for (int j = lowbits; j < 32; j+=lowbits) {
+				for (int j = lowbits_; j < 32; j+=lowbits_) {
 					word |= Uint32(table[data->as8[i++]]) << j;
 				}
 				*dest_ptr = word;
@@ -11130,11 +11130,11 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		}
 		break;
 		case 0: {//8 bit words
-			Uint32 mask = (1 << lowbits) - 1;
+			Uint32 mask = (1 << lowbits_) - 1;
 			int i = 0;
 			while (i < max) {
 				Uint32 word = data->as8[i++] & mask;
-				for (int j = lowbits; j < 32; j+=lowbits) {
+				for (int j = lowbits_; j < 32; j+=lowbits_) {
 					word |= Uint32(data->as8[i++] & mask) << j;
 				}
 				*dest_ptr = word;
@@ -11143,11 +11143,11 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		}
 		break;
 		case 1: {//16 bit words
-			Uint32 mask = (1 << lowbits) - 1;
+			Uint32 mask = (1 << lowbits_) - 1;
 			int i = 0;
 			while (i < max) {
 				Uint32 word = data->as16[i++] & mask;
-				for (int j = lowbits; j < 32; j+=lowbits) {
+				for (int j = lowbits_; j < 32; j+=lowbits_) {
 					word |= Uint32(data->as16[i++] & mask) << j;
 				}
 				*dest_ptr = word;
@@ -11156,11 +11156,11 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		}
 		break;
 		case 2: {//32 bit words
-			Uint32 mask = (1 << lowbits) - 1;
+			Uint32 mask = (1 << lowbits_) - 1;
 			int i = 0;
 			while (i < max) {
 				Uint32 word = data->as32[i++] & mask;
-				for (int j = lowbits; j < 32; j+=lowbits) {
+				for (int j = lowbits_; j < 32; j+=lowbits_) {
 					word |= Uint32(data->as32[i++] & mask) << j;
 				}
 				*dest_ptr = word;
@@ -11169,11 +11169,11 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		}
 		break;
 		case 3: {//64 bit words
-			Uint32 mask = Uint32((Uint64(1) << lowbits) - 1);
+			Uint32 mask = Uint32((Uint64(1) << lowbits_) - 1);
 			int i = 0;
 			while (i < max) {
 				Uint32 word = Uint32(data->as64[i++]) & mask;
-				for (int j = lowbits; j < 32; j+=lowbits) {
+				for (int j = lowbits_; j < 32; j+=lowbits_) {
 					word |= (Uint32(data->as64[i++]) & mask) << j;
 				}
 				*dest_ptr = word;
