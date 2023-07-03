@@ -3467,34 +3467,34 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 			if (total > 64) {
 				std::vector<double> pdf, cdf;
 				get_hamming_weight_chances(1 << num_bits_L2, pdf, cdf);
-				double probs[COUNTS2_SIZE+2];
+				double probs_[COUNTS2_SIZE+2];
 				Uint64 counts2_dup[COUNTS2_SIZE+2];
 				for (int i = 0; i < COUNTS2_SIZE; i++) {
 					counts2_dup[i+1] = counts2[level][i];
 					int min = (i - COUNTS2_SIZE/2) << shifts[level];
 					int max = min + (1 << shifts[level]) - 1;
-					if (max < -n || min > n) probs[i+1] = 0;
+					if (max < -n || min > n) probs_[i+1] = 0;
 					else {
 						double p = 0;
 						for (int j = min; j <= max; j++) p += abs(j) <= n ? pdf[n-abs(j)] : 0;
-						probs[i+1] = p;
+						probs_[i+1] = p;
 					}
 				}
 				/*if (COUNTS2_SIZE << shifts[level] >= num_bits) {
-					probs[0] = 0;
+					probs_[0] = 0;
 					counts2_dup[0] = 0;
-					probs[COUNTS2_SIZE+1] = 0;
+					probs_[COUNTS2_SIZE+1] = 0;
 					counts2_dup[COUNTS2_SIZE+1] = 0;
 				}
 				else {
-					probs[0] = pdf[((-COUNTS2_SIZE/2) << shifts[level]) + n - 1];
-					probs[COUNTS2_SIZE+1] = pdf[((-COUNTS2_SIZE/2) << shifts[level]) + n - 1];
+					probs_[0] = pdf[((-COUNTS2_SIZE/2) << shifts[level]) + n - 1];
+					probs_[COUNTS2_SIZE+1] = pdf[((-COUNTS2_SIZE/2) << shifts[level]) + n - 1];
 					Uint64 lc = 0, hc = 0;
 					for (
 				}*/
 				double samples = blocks_tested * TestBlock::SIZE * pow(0.5, level+unitsL2) - tbits + 1;
-				int reduced_size = simplify_prob_table(COUNTS2_SIZE, samples / 40., &probs[1], &counts2_dup[1], true, false);
-				double tr = g_test(reduced_size, &probs[1], &counts2_dup[1]);
+				int reduced_size = simplify_prob_table(COUNTS2_SIZE, samples / 40., &probs_[1], &counts2_dup[1], true, false);
+				double tr = g_test(reduced_size, &probs_[1], &counts2_dup[1]);
 				double n_ = math_chisquared_to_normal(tr, reduced_size-1);
 				//double p = math_chisquared_to_pvalue(tr, reduced_size - 1);
 				double p2 = math_normaldist_to_pvalue(-n_ / 1.6);
