@@ -200,6 +200,7 @@ void PractRand::RNGs::Raw::salsa::set_rounds(int rounds_) {
 	rounds = rounds_;
 	//_core();
 }
+/*
 static void test_salsa ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_seed, Uint32 expected0, Uint32 index, Uint32 expected1) {
 	PractRand::RNGs::Raw::salsa rng;
 	rng.set_rounds(rounds);
@@ -217,6 +218,7 @@ static void test_salsa ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_se
 		PractRand::issue_error("Salsa CSPRNG failed self-test");
 	}
 }
+*/
 void PractRand::RNGs::Raw::salsa::self_test() {
 	PractRand::RNGs::Raw::salsa engine;
 	Uint32 seed_and_iv[10] = {0};

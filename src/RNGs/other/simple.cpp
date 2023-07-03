@@ -660,11 +660,13 @@ namespace PractRand {
 					walker->handle(d);
 				}
 
+				/*
 				static Uint64 shift_array64(Uint64 vec[2], unsigned long bits) {
 					bits -= 64;
 					if (!(bits % 64)) return vec[bits / 64];
 					return (vec[bits / 64] << (bits & 63)) | (vec[1 + bits / 64] >> (64 - (bits & 63)));
 				}
+				*/
 				Uint32 trivium_weakenedA::raw32() {
 					Uint32 tmp_a = Uint32(b >> 2) ^ Uint32(b >> 17);
 					Uint32 tmp_b = Uint32(a >> 2) ^ Uint32(a >> 23);

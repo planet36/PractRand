@@ -349,6 +349,7 @@ Uint32 PractRand::RNGs::Raw::efiix32x48::raw32() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(32, 13)
 }
+/*
 static void mix4x32(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
 	b ^= a + (a << 13);
 	c += b ^ (b >> 5);
@@ -359,6 +360,7 @@ static void mix4x32(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
 	d ^= c + b;
 	a += d ^ ((c << 8) | (c >> 24));
 }
+*/
 void PractRand::RNGs::Raw::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
 	EFIIX_SEED(32)
 }

@@ -40,6 +40,7 @@ using namespace PractRand;
 static long double gap_probs(int first, int last, long double chance_of_not_gap1) {
 	return std::pow(chance_of_not_gap1, static_cast<long double>(first)) - std::pow(chance_of_not_gap1, static_cast<long double>(last) + 1);
 }
+/*
 static long double gap_expected(long double chance_of_gap1 = 1.0 / 65536) {
 	long double e = 0;
 	long double t = 0;
@@ -51,6 +52,8 @@ static long double gap_expected(long double chance_of_gap1 = 1.0 / 65536) {
 	}
 	return e;
 }
+*/
+/*
 static long double gap_variance(long double chance_of_gap1 = 1.0 / 65536) {
 	long double e = gap_expected(chance_of_gap1);
 	long double var = 0;
@@ -64,6 +67,8 @@ static long double gap_variance(long double chance_of_gap1 = 1.0 / 65536) {
 	}
 	return var;
 }
+*/
+/*
 static long double gap_log2_expected(long double chance_of_gap1 = 1.0 / 65536) {
 	long double Le = 0;
 	long double t = 0;
@@ -85,6 +90,8 @@ static long double gap_log2_expected(long double chance_of_gap1 = 1.0 / 65536) {
 	t += partial_t;
 	return Le;
 }
+*/
+/*
 static long double gap_log2_variance(long double chance_of_gap1 = 1.0 / 65536) {
 	long double Le = gap_log2_expected(chance_of_gap1);
 	long double var = 0;
@@ -108,6 +115,7 @@ static long double gap_log2_variance(long double chance_of_gap1 = 1.0 / 65536) {
 	t += partial_t;
 	return var;
 }
+*/
 
 double PractRand::TestResult::pvalue_to_suspicion(double pvalue) {
 	if (pvalue > 0.5) return -1 * pvalue_to_suspicion(1 - pvalue);
@@ -3835,12 +3843,14 @@ static const Uint8 count_high_zeroes_table[256] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//14
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//15
 };
+/*
 static unsigned long count_high_zeroes32(Uint32 value) {
 	Uint8 count = 0;
 	if (!(value >> 16)) {count += 16; value <<= 16;}
 	if (!(value >> 24)) {count += 8; value <<= 8;}
 	return count_high_zeroes_table[value >> 24] + count;
 }
+*/
 #if defined _MSC_VER && _MSC_VER >= 1400 && (defined _M_IX86 || defined _M_X64) && 0
 // is this actually a good idea?  I'm not sure this helps performance any
 #include <intrin.h>
@@ -7369,8 +7379,8 @@ static Uint8 mod3_table[1024] = {
 		0,	1,	2,	0,	1,	2,	0,	1,	2,	0,	1,	2,	0,	1,	2,	0, // 63
 };
 static Uint8 combine_mod3s(Uint8 a, Uint8 b) { return mod3_table[a + b]; }
-static Uint8 combine_mod3s(Uint8 a, Uint8 b, Uint8 c) { return mod3_table[a + b + c]; }
-static Uint8 combine_mod3s(Uint8 a, Uint8 b, Uint8 c, Uint8 d) { return mod3_table[a + b + c + d]; }
+//static Uint8 combine_mod3s(Uint8 a, Uint8 b, Uint8 c) { return mod3_table[a + b + c]; }
+//static Uint8 combine_mod3s(Uint8 a, Uint8 b, Uint8 c, Uint8 d) { return mod3_table[a + b + c + d]; }
 static Uint8 u8_mod3(Uint8 v) { return mod3_table[v]; }
 //static Uint8 u16_mod3(Uint16 v) { return combine_mod3s(mod3_table[Uint8(v)], mod3_table[v >> 8]); }
 static Uint8 u16_mod3(Uint16 v) { return mod3_table[(v & 255) + (v >> 8)]; }
