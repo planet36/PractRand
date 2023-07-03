@@ -26,6 +26,7 @@ public:
 		current_seed = known_good.raw64();
 		record_seed(current_seed);
 	}
+	using vRNG::seed;
 	bool record_seed(Uint64 new_seed) {
 		if (!unordered_history.insert(new_seed).second) return false;
 		current_seed = new_seed;
@@ -109,6 +110,7 @@ public:
 		current_seed.resize(len);
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
+	using vRNG::seed;
 	Transform pick_random_transform(const std::vector<Uint8> &message) {
 		while (true) {
 			if (known_good.randf() < 0.96) {//toggle bit

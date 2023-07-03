@@ -207,6 +207,7 @@ namespace PractRand {
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class pcg32_norot final : public vRNG32 {
@@ -216,6 +217,7 @@ namespace PractRand {
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class cmrg32of192 : public vRNG32 {//I originally encountered this under the name lecuyer3by2b
@@ -225,6 +227,7 @@ namespace PractRand {
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class xsh_lcg_bad final : public vRNG32 {//name was xorwowPlus, I changed it because I wasn't sure it actually qualified as an xorwow
@@ -232,6 +235,7 @@ namespace PractRand {
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;// I also changed the seeding function, because the original permitted the bad all-zeroes state
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 				};
 

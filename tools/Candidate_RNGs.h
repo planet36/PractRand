@@ -104,6 +104,7 @@ public:\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
 	polymorphic_ ## rng ## bits (Uint64 seed_value) {implementation.seed(seed_value);}\
 	void seed(Uint64 seed_value) override {implementation.seed(seed_value);}\
+	using vRNG::seed; \
 	Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
 	void walk_state(StateWalkingObject *walker) override {implementation.walk_state(walker);}\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\

@@ -125,6 +125,7 @@ public:
 		rng2.seed(sv);
 //		s1 = s2 = s3 = s4 = sv;
 	}
+	using vRNG::seed;
 	//any name you want
 	std::string get_name() const override {return "DummyRNG";}
 };

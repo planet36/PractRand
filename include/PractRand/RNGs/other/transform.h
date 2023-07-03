@@ -11,6 +11,7 @@ namespace PractRand {
 				public:
 					vRNG *base_rng;
 					void seed(Uint64 seed) override;
+					using vRNG::seed;
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform64(vRNG *rng) : base_rng(rng) {}
@@ -20,6 +21,7 @@ namespace PractRand {
 				public:
 					vRNG *base_rng;
 					void seed(Uint64 seed) override;
+					using vRNG::seed;
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform32(vRNG *rng) : base_rng(rng) {}
@@ -29,6 +31,7 @@ namespace PractRand {
 				public:
 					vRNG *base_rng;
 					void seed(Uint64 seed) override;
+					using vRNG::seed;
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform16(vRNG *rng) : base_rng(rng) {}
@@ -38,6 +41,7 @@ namespace PractRand {
 				public:
 					vRNG *base_rng;
 					void seed(Uint64 seed) override;
+					using vRNG::seed;
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform8(vRNG *rng) : base_rng(rng) {}
@@ -82,6 +86,7 @@ namespace PractRand {
 					std::string name;
 					vRNG *base_rng;
 					void seed(Uint64 seed) override;
+					using vRNG::seed;
 					Uint64 get_flags() const override;
 					std::string get_name() const override;
 					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), buf_data(0), buf_count(0), name(name_), base_rng(rng) {}
@@ -257,6 +262,7 @@ namespace PractRand {
 				public:
 					Uint64 raw64() override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
 					BaysDurhamShuffle64(vRNG64 *rng, int table_size_L2, int shift=0) 
@@ -270,6 +276,7 @@ namespace PractRand {
 				public:
 					Uint32 raw32() override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
 					BaysDurhamShuffle32(vRNG32 *rng, int table_size_L2, int shift=0) 
@@ -283,6 +290,7 @@ namespace PractRand {
 				public:
 					Uint16 raw16() override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
 					BaysDurhamShuffle16(vRNG16 *rng, int table_size_L2, int shift=0) 
@@ -296,6 +304,7 @@ namespace PractRand {
 				public:
 					Uint8 raw8() override;
 					void seed(Uint64 s) override;
+					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
 					BaysDurhamShuffle8(vRNG8 *rng, int table_size_L2, int shift=0) 

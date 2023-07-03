@@ -253,6 +253,7 @@ namespace PractRand {
 					Uint32 raw32() override;
 					void seed(Uint64 s) override;
 					void seed(Uint64 s, Uint32 idx);
+					using vRNG::seed;
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
