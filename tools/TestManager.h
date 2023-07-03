@@ -27,7 +27,7 @@ public:
 
 	virtual void test(Uint64 blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
 
-	virtual void get_results( std::vector<PractRand::TestResult> &result_vec );//gets the results
+	virtual void get_results( std::vector<PractRand::TestResult> &result_vec ) final;//gets the results
 };
 
 TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_) {

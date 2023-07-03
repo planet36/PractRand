@@ -32,7 +32,7 @@ namespace PractRand {
 			Uint32 last_index;
 			VariableSizeCount<Uint8> counts;
 			//internal helpers:
-			virtual int transform_bitcount ( int bit_count ) const ;
+			virtual int transform_bitcount ( int bit_count ) const final;
 			static Uint32 _reorder_bits ( Uint32 rcode, int bits_per_sample, int length ) ;
 			Uint32 reorder_bits( Uint32 rcode ) const {return _reorder_bits(rcode, bits_per_sample, length);}
 			Uint32 unreorder_bits ( Uint32 rbcode ) const {return _reorder_bits(rbcode, length, bits_per_sample);}
