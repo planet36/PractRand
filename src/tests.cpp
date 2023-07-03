@@ -1627,21 +1627,21 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 		a = *(base++);
 		prior = last[a];
 		last[a] = ++ofs;
-		lag = Uint32(ofs - prior - 1);
+		lag = ofs - prior - 1;
 		if (lag < (SIZE1 << SET1_SHIFT)) counts.increment(lag >> SET1_SHIFT);
 		else increment_lag(lag);
 
 		a = *(base++);
 		prior = last[a];
 		last[a] = ++ofs;
-		lag = Uint32(ofs - prior - 1);
+		lag = ofs - prior - 1;
 		if (lag < (SIZE1 << SET1_SHIFT)) counts.increment(lag >> SET1_SHIFT);
 		else increment_lag(lag);
 
 		a = *(base++);
 		prior = last[a];
 		last[a] = ++ofs;
-		lag = Uint32(ofs - prior - 1);
+		lag = ofs - prior - 1;
 		if (lag < (SIZE1 << SET1_SHIFT)) counts.increment(lag >> SET1_SHIFT);
 		else increment_lag(lag);
 	}
@@ -1651,7 +1651,7 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 		if (warmup) autofail = true;
 		for (int i = 0; i < 65536; i++) {
 			Uint32 n = last[i];
-			if (Uint32(ofs - n) > 0x18000000) {
+			if (ofs - n > 0x18000000) {
 				autofail = true;
 			}
 		}
@@ -5205,7 +5205,7 @@ void PractRand::Tests::BirthdayHelpers::radix_sort_and_copy(i128 *buffer, i128 *
 		i128 *tmp = buffer; buffer = dest; dest = tmp;
 	}
 	// now the copy and recursive sorting in case that wasn't enough:
-	Uint64 sorted_mask = Uint64(0) - Uint64((1ull << (64 - SORT_HELPER_BITS * COMBINED_PASSES - bits_already)) - 1);
+	Uint64 sorted_mask = Uint64(0) - ((1ull << (64 - SORT_HELPER_BITS * COMBINED_PASSES - bits_already)) - 1);
 	Uint64 run_value = buffer[0].high & sorted_mask;
 	Uint64 run_length = 0;
 	for (long i = 1; i < (1 << SORT_HELPER_BITS); i++) {
@@ -6749,7 +6749,7 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 		else if (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
 		else if (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
 		else if (WORD_BITS == 32) core = reinterpret_cast<Word*>(&data[0].as32[pos]);
-		else if (WORD_BITS == 64) core = reinterpret_cast<Word*>(&data[0].as64[pos]);
+		else if (WORD_BITS == 64) core = &data[0].as64[pos];
 		else issue_error("NearS - what word size???");
 		int bucket_index = core_to_index(core);
 		if (bucket_index < 0) continue;
@@ -7253,7 +7253,7 @@ void PractRand::Tests::NearSeq2::test_blocks(TestBlock *data, int numblocks) {
 		if (false);
 		else if (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
 		else if (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
-		else if (WORD_BITS == 32) core = reinterpret_cast<Word*>(&data[0].as32[pos]);
+		else if (WORD_BITS == 32) core = &data[0].as32[pos];
 		else if (WORD_BITS == 64) core = reinterpret_cast<Word*>(&data[0].as64[pos]);
 		else issue_error("NearS2 - what word size???");
 
@@ -10954,7 +10954,7 @@ void PractRand::Tests::Transforms::Transform_Baseclass::flush(bool aggressive) {
 	int old = (blocks_already > blocks_to_repeat) ? blocks_to_repeat : static_cast<int>(blocks_already);
 	numblocks -= old;
 	if (numblocks < minblocks) return;
-	Transforms::multiplex::test_blocks(static_cast<TestBlock*>(&buffered[old]), numblocks);
+	Transforms::multiplex::test_blocks(&buffered[old], numblocks);
 //	int newold = blocks_already;
 //	if (blocks_already > TestBaseclass::REPEATED_BLOCKS) newold = TestBaseclass::REPEATED_BLOCKS;
 	int newold = (blocks_already > blocks_to_repeat) ? blocks_to_repeat : static_cast<int>(blocks_already);
@@ -11135,7 +11135,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 			while (i < max) {
 				Uint32 word = data->as8[i++] & mask;
 				for (int j = lowbits_; j < 32; j+=lowbits_) {
-					word |= Uint32(data->as8[i++] & mask) << j;
+					word |= (data->as8[i++] & mask) << j;
 				}
 				*dest_ptr = word;
 				dest_ptr++;
@@ -11148,7 +11148,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 			while (i < max) {
 				Uint32 word = data->as16[i++] & mask;
 				for (int j = lowbits_; j < 32; j+=lowbits_) {
-					word |= Uint32(data->as16[i++] & mask) << j;
+					word |= (data->as16[i++] & mask) << j;
 				}
 				*dest_ptr = word;
 				dest_ptr++;
@@ -11161,7 +11161,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 			while (i < max) {
 				Uint32 word = data->as32[i++] & mask;
 				for (int j = lowbits_; j < 32; j+=lowbits_) {
-					word |= Uint32(data->as32[i++] & mask) << j;
+					word |= (data->as32[i++] & mask) << j;
 				}
 				*dest_ptr = word;
 				dest_ptr++;

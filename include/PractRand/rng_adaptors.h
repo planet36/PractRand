@@ -123,7 +123,7 @@ namespace PractRand {
 					float randf ( float m ) { return randf() * m; }
 					float randf ( float min, float max ) { return randf() * (max-min) + min; }
 
-					double randlf ( ) { return static_cast<double>(this->raw64()) * static_cast<double>(1.0 / 18446744073709551616.0); }
+					double randlf ( ) { return static_cast<double>(this->raw64()) * (1.0 / 18446744073709551616.0); }
 					double randlf ( double m ) { return randlf() * m; }
 					double randlf ( double min, double max ) { return randlf() * (max-min) + min; }
 

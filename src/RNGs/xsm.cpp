@@ -45,7 +45,7 @@ Uint32 PractRand::RNGs::Raw::xsm32::raw32() {
 	//const Uint32 K =	0x01002045;  //	00000001000000000010000001000101 363  157 - lowest quality version tested
 
 	Uint32 tmp = lcg_high ^ rotate(lcg_high + lcg_low, 9); tmp ^= rotate(tmp + lcg_adder_high, 19);
-	tmp *= Uint32(0xD251CF2D);
+	tmp *= 0xD251CF2D;
 	step_forwards();
 	tmp = tmp ^ rotate(tmp + lcg_high, 16);
 	tmp *= Uint32(0x299529B5);

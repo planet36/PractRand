@@ -146,7 +146,7 @@ Uint32 PractRand::RNGs::Polymorphic::arbee::raw32() {
 	return Uint32(implementation.raw64());
 }
 Uint64 PractRand::RNGs::Polymorphic::arbee::raw64() {
-	return Uint64(implementation.raw64());
+	return implementation.raw64();
 }
 void PractRand::RNGs::Polymorphic::arbee::add_entropy_N(const void *data, size_t length) {
 	implementation.add_entropy_N(data, length);

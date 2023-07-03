@@ -723,10 +723,10 @@ public:
 		//Word fx;
 		//Word offset;
 		void initstate() {
-			v[0] = Word(0x736f6d6570736575ULL);
-			v[1] = Word(0x646f72616e646f6dULL);
-			v[2] = Word(0x6c7967656e657261ULL);
-			v[3] = Word(0x7465646279746573ULL);
+			v[0] = 0x736f6d6570736575ULL;
+			v[1] = 0x646f72616e646f6dULL;
+			v[2] = 0x6c7967656e657261ULL;
+			v[3] = 0x7465646279746573ULL;
 		}
 		void kseed(Word k1, Word k2) {
 			initstate();

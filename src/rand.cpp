@@ -65,7 +65,7 @@ namespace PractRand {
 			v = std::fabs(v);
 			int exp;
 			double n = std::frexp(v, &exp);
-			Uint32 tmp_exp = Uint32(exp + (sign?0x80000000:0));
+			Uint32 tmp_exp = exp + (sign?0x80000000:0);
 			handle(tmp_exp);
 			Uint64 tmp_sig = Uint64(std::ldexp(n - 0.5, 64));
 			handle(tmp_sig);
@@ -97,7 +97,7 @@ namespace PractRand {
 			Uint16 tmp_exp = pop16();
 			Uint32 tmp_sig = pop32();
 			bool sign = (tmp_exp & 1) ? true : false;
-			int exp = int(tmp_exp >> 1);
+			int exp = tmp_exp >> 1;
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0f : 1.0f) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
 		}
@@ -105,7 +105,7 @@ namespace PractRand {
 			Uint16 tmp_exp = pop16();
 			Uint64 tmp_sig = pop64();
 			bool sign = (tmp_exp & 1) ? true : false;
-			int exp = int(tmp_exp >> 1);
+			int exp = tmp_exp >> 1;
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0 : 1.0) * std::ldexp(static_cast<double>(tmp_sig), exp-64);
 		}

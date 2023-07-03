@@ -1,7 +1,7 @@
 //#include <vector>
 
-#define PRACTRAND__RANDF_IMPLEMENTATION(RNG)  {return  float(((RNG).raw32() & ((PractRand::Uint32(1) << 24)-1)) *  float(1.0/16777216.0));}
-#define PRACTRAND__RANDLF_IMPLEMENTATION(RNG)  {return double(((RNG).raw64() & ((PractRand::Uint64(1) << 53)-1)) * double(1.0/9007199254740992.0));}
+#define PRACTRAND__RANDF_IMPLEMENTATION(RNG)  {return  ((RNG).raw32() & ((PractRand::Uint32(1) << 24)-1)) *  float(1.0/16777216.0);}
+#define PRACTRAND__RANDLF_IMPLEMENTATION(RNG)  {return ((RNG).raw64() & ((PractRand::Uint64(1) << 53)-1)) * (1.0/9007199254740992.0);}
 
 #define PRACTRAND__RANDI_IMPLEMENTATION(max)     \
 	Uint32 mask, tmp;\
@@ -61,7 +61,7 @@
 #define PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(RNG) \
 	Uint8  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return Uint8 (implementation.raw32());}\
 	Uint16 PractRand::RNGs::Polymorphic:: RNG ::raw16() {return Uint16(implementation.raw32());}\
-	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {return Uint32(implementation.raw32());}\
+	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {return implementation.raw32();}\
 	Uint64 PractRand::RNGs::Polymorphic:: RNG ::raw64() {\
 		Uint64 r = implementation.raw32();\
 		return (r << 32) | implementation.raw32();\

@@ -207,16 +207,16 @@ public:
 #define EFIIX_SEED(BITS) \
 	PractRand::RNGs::Raw::arbee seeder;\
 	seeder.seed(s1, s2, s3, s4);\
-	for (unsigned long w=0; w < INDIRECTION_SIZE; w++) indirection_table[w] = Word(seeder.raw64());\
-	i = Word(seeder.raw64());\
-	for (unsigned long w=0; w < ITERATION_SIZE  ; w++) iteration_table  [(w+i)%ITERATION_SIZE] = Word(seeder.raw64());\
-	a = Word(seeder.raw64());\
-	b = Word(seeder.raw64());\
-	c = Word(seeder.raw64());\
+	for (unsigned long w=0; w < INDIRECTION_SIZE; w++) indirection_table[w] = seeder.raw64();\
+	i = seeder.raw64();\
+	for (unsigned long w=0; w < ITERATION_SIZE  ; w++) iteration_table  [(w+i)%ITERATION_SIZE] = seeder.raw64();\
+	a = seeder.raw64();\
+	b = seeder.raw64();\
+	c = seeder.raw64();\
 	for (unsigned long w=0; w < 64; w++) raw ## BITS();\
 	seeder.raw64(); s1 += seeder.raw64(); s2 += seeder.raw64(); s3 += seeder.raw64();\
 	seeder.seed(s1^a, s2^b, s3^c, ~s4);\
-	for (unsigned long w=0; w < INDIRECTION_SIZE; w++) indirection_table[w] ^= Word(seeder.raw64());\
+	for (unsigned long w=0; w < INDIRECTION_SIZE; w++) indirection_table[w] ^= seeder.raw64();\
 	for (unsigned long w=0; w < ITERATION_SIZE+16; w++) raw ## BITS();
 /*	on seeding:
 		two different seedings of seeder are needed because:

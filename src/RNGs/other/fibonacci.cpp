@@ -80,7 +80,7 @@ namespace PractRand {
 					for (int i = 0; i < n; i++) walker->handle(state[i]);
 				}
 				bigbadlcg32X::bigbadlcg32X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint32 bigbadlcg32X::raw32() { return Uint32(base_lcg.raw32()); }
+				Uint32 bigbadlcg32X::raw32() { return base_lcg.raw32(); }
 				std::string bigbadlcg32X::get_name() const {
 					std::ostringstream str;
 					str << "bigbadlcgX(32," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";

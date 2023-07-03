@@ -967,7 +967,7 @@ int main(int argc, char **argv) {
 		blocks_tested += blocks_to_test;
 		already_shown = false;
 
-		double clocks_passed = TimeUnit(get_time() - start_clock) * get_time_period();//may wrap too quickly
+		double clocks_passed = (get_time() - start_clock) * get_time_period();//may wrap too quickly
 		int seconds_passed = std::time(NULL) - start_time;
 		if (seconds_passed >= 1000 || seconds_passed > clocks_passed + 2.0) time_passed = seconds_passed;
 		else time_passed = clocks_passed;

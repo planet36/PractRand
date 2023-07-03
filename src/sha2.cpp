@@ -228,10 +228,10 @@ namespace PractRand {
 				process_block();
 				std::memset(input_buffer.as_byte, 0, Constants::INPUT_SIZE - EXTRAS + 1);
 			}
-			input_buffer.as_word[Constants::INPUT_WORDS-1] = endianness_word(Word(length << 3));
+			input_buffer.as_word[Constants::INPUT_WORDS-1] = endianness_word(length << 3);
 			if (sizeof(Word) < sizeof(Uint64)) {
 				input_buffer.as_word[Constants::INPUT_WORDS-2] = 
-					endianness_word(Word(length>>(sizeof(Word)*8-3)));
+					endianness_word(length>>(sizeof(Word)*8-3));
 			}
 			else input_buffer.as_word[Constants::INPUT_WORDS-2] = 0;
 			endianness_input();
