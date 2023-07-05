@@ -7854,7 +7854,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 		double f = c / total;
 		double p = math_normaldist_pdf((ei - expected_mean) * inv_dev) * inv_dev;
 		probs[i] = p;
-		double error = std::abs(f - p);
+		//double error = std::abs(f - p);
 		//double weight = -std::log(p);
 		//total_error += error;
 		//weighted_error -= error * std::log(p);
