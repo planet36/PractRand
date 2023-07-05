@@ -272,7 +272,7 @@ namespace PractRand {
 			{
 				long double expected = sum * prob_table[i];
 				long double diff = static_cast<long double>(counts[i]) - expected;
-				diff = fabs(diff) - 0.5;
+				diff = std::abs(diff) - 0.5;
 				v += (diff*diff)/expected;
 			}
 		//	double normal = (V-(categories-1))/sqrt((double)(categories-1));
