@@ -1034,7 +1034,7 @@ namespace PractRand {
 
 			return rv;
 		}
-		double test_table_uniformity( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
+		double test_table_uniformity( unsigned long categories, [[maybe_unused]] const double *prob_table, const Uint64 *counts ) {
 			//long double prob_sum = 0;
 			long double total = 0;
 			for (unsigned long i = 0; i < categories; i++) total += counts[i];
