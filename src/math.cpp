@@ -1044,7 +1044,7 @@ namespace PractRand {
 			//double prior = 0;
 			//double DoF = 0;
 			for (unsigned long i = 0; i < categories; i++) {
-				double cur_prob = prob_table[i];
+				//double cur_prob = prob_table[i];
 				if (counts[i]) {
 					double c = counts[i];
 					//DoF += c; //c > 2 ? 2 : 1;
