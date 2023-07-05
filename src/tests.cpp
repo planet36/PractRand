@@ -2069,12 +2069,12 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult> &results) {
 	for (i = 0; i < (1 << bits_per_sample); i++) _tprobs[i] = 0;
 	for (i = 0; i < NP; i++) _tprobs[transform_bitcount(i)] += _probs[i];
 
-	long double sum1 = 0;
-	for (i = 0; i < NP; i++) sum1 += _probs[i];
+	//long double sum1 = 0;
+	//for (i = 0; i < NP; i++) sum1 += _probs[i];
 //	sum1 = sqrt(sum1);
 //	for (i = 0; i < (1 << bits_per_sample); i++) _probs[i] /= sum1;
-	sum1 = 0;
-	for (i = 0; i < (1 << bits_per_sample); i++) sum1 += _tprobs[i];
+	//sum1 = 0;
+	//for (i = 0; i < (1 << bits_per_sample); i++) sum1 += _tprobs[i];
 
 	//duplicate counts and applying probabilities
 	std::vector<Uint64> tmp_counts; tmp_counts.resize(size);
@@ -4029,8 +4029,8 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		if (calib) results.push_back(TestResult(get_name() + ":all2", sum_s, -calib->sample_to_suspicion(sum_s), TestResult::TYPE_GOOD_S, 0.1));
 		else results.push_back(TestResult(get_name() + ":all2", sum_s, sum_s, TestResult::TYPE_RAW_NORMAL, 0.1));
 	}
-	double actual_samples = 0;
-	for (int e = 0; e <= max_exp; e++) actual_samples += inter_counts[e];
+	//double actual_samples = 0;
+	//for (int e = 0; e <= max_exp; e++) actual_samples += inter_counts[e];
 	if (samples >= 1000) {
 		for (int e = 0; e <= max_exp; e++) inter_probs[e] = std::pow(0.5, e+1.0+(e==max_exp?-1:0));
 		int bins = simplify_prob_table(max_exp+1, samples/40.0, &inter_probs[0], &inter_counts[0], true, true);
