@@ -284,7 +284,8 @@ namespace PractRand {
 			Uint8 a1, a2, a3, b1, b2, b3;
 			//basic check
 			rng->seed(seed);
-			a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
+			//a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
+			(void)rng->raw8(); (void)rng->raw8(); (void)rng->raw8();
 			a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
 			rng->seed(seed);
 			rng->seek_forward(3);

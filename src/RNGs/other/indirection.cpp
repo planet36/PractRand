@@ -204,7 +204,7 @@ namespace PractRand {
 					Uint32 *base = &table[MASK+1];
 					Uint32 *m, *m2, *mend, *r;
 					Uint32 x, y;
-					m = base;
+					//m = base;
 					r = table;
 					b += ++c;
 					if (table_size_L2 != 2) {
@@ -278,7 +278,7 @@ namespace PractRand {
 					Uint16 *base = &table[MASK+1];
 					Uint16 *m, *m2, *mend, *r;
 					Uint16 x, y;
-					m = base;
+					//m = base;
 					r = table;
 					b += ++c;
 					if (table_size_L2 != 2) {

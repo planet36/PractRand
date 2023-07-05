@@ -38,7 +38,7 @@ PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {std::memset(this, 0, sizeof(*
 void PractRand::RNGs::Raw::isaac32x256::_advance_state() {//do not change
 	Uint32 *m, *m2, *mend, *r;
 	Uint32 x, y;
-	m = state;
+	//m = state;
 	r = results;
 	b += ++c;
 	for (m = state, mend = m2 = m+(SIZE/2); m<mend; )
@@ -167,7 +167,7 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 void PractRand::RNGs::Raw::isaac64x256::_advance_state() {//do not change
 	Uint64 *m, *m2, *mend, *r;
 	Uint64 x, y;
-	m = state;
+	//m = state;
 	r = results;
 	b += ++c;
 	for (m = state, mend = m2 = m+(SIZE/2); m<mend; )
