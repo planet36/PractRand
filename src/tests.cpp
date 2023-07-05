@@ -7834,8 +7834,8 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 	const double expected_deviation = 79.81665;// plus or minus about 0.001? - these valuse were obtained from a 1280 TB test run
 	//double eebar = 0.001;
 
-	double total_error = 0;
-	double weighted_error = 0;
+	//double total_error = 0;
+	//double weighted_error = 0;
 	double inv_dev = 1.0 / expected_deviation;
 	double total = blocks_tested / 128;
 	if (total < 1) return;
@@ -7856,8 +7856,8 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 		probs[i] = p;
 		double error = std::abs(f - p);
 		//double weight = -std::log(p);
-		total_error += error;
-		weighted_error -= error * std::log(p);
+		//total_error += error;
+		//weighted_error -= error * std::log(p);
 	}
 	//results.push_back(TestResult(get_name() + ":A", weighted_error, weighted_error, TestResult::TYPE_RAW_NORMAL, 0.01));
 	if (total > 1) {
