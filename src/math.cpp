@@ -1035,7 +1035,7 @@ namespace PractRand {
 			return rv;
 		}
 		double test_table_uniformity( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
-			long double prob_sum = 0;
+			//long double prob_sum = 0;
 			long double total = 0;
 			for (unsigned long i = 0; i < categories; i++) total += counts[i];
 			if (!total) return 0;
@@ -1055,7 +1055,7 @@ namespace PractRand {
 					}
 					//prior = prob_sum + cur_prob - delta * 0.5;
 				}
-				prob_sum += cur_prob;
+				//prob_sum += cur_prob;
 			}
 			//sum = sum - adjusted_total * 1.578 + 0.3;
 			//return sum / std::sqrt(total);
