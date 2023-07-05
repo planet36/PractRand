@@ -7974,7 +7974,7 @@ void PractRand::Tests::DistFreq4::test_blocks(TestBlock *data, int numblocks) {
 			Uint32 first = data[0].as32[bits_used >> 5] >> (bits_used & 31);
 			Uint32 base_index = (pos1 << (TOTAL_INDEX_BITS - POSITIONS1_L2)) + ((first & ((1 << SIZE1) - 1)) << (TOTAL_INDEX_BITS - POSITIONS1_L2 - SIZE1));
 			bits_used += SIZE1;
-			if (ALIGNMENT1 % ALIGNMENT2 || SIZE1 % ALIGNMENT2) { bits_used = bits_used + ALIGNMENT2 - 1; bits_used &= 65535 ^ (ALIGNMENT2 - 1); }
+			if ((ALIGNMENT1 % ALIGNMENT2) | (SIZE1 % ALIGNMENT2)) { bits_used = bits_used + ALIGNMENT2 - 1; bits_used &= 65535 ^ (ALIGNMENT2 - 1); }
 			enum { ALIGNMENTS_PER_WORD = 32 / ALIGNMENT2 };
 			int end_index = base_index + (1 << (TOTAL_INDEX_BITS - POSITIONS1_L2 - SIZE1));
 			if (bits_used & 31) {//partial word
