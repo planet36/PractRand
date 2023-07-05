@@ -16,11 +16,11 @@ namespace PractRand {
 			protected:
 				Uint32 outbuf[16];
 				Uint32 state[12];
-				Uint32 used;
-				Uint32 position_overflow;
+				Uint32 used{};
+				Uint32 position_overflow{};
 				Uint8 rounds;
-				bool extend_cycle;//true allows carries from the position field to overflow in to the upper word of the IV
-				bool short_seed;
+				bool extend_cycle{};//true allows carries from the position field to overflow in to the upper word of the IV
+				bool short_seed{};
 				Uint8 padding[5];//just to make the size a round number
 
 				void _advance_1();
