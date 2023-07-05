@@ -556,7 +556,7 @@ namespace PractRand {
 			if (x < 2) return (1 - math_erf(x)) * std::exp(x * x);
 			double x2 = x * x;
 			double a = 0, b /*= x2*/, c = x2, d = 0, e = 0, f = x2;
-			for (double i = 1; i < 500; i += 1.0) {
+			for (int i = 1; i < 500; i += 1) {
 				a = i - 0.5;
 				b = 1;
 				d = 1 / (b + a * d);
