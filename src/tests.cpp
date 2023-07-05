@@ -7850,8 +7850,8 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 	std::vector<double> probs; probs.resize(3000);
 	for (int i = 0; i < 3000; i++) {
 		int ei = i + 40000;
-		double c = count[ei];
-		double f = c / total;
+		//double c = count[ei];
+		//double f = c / total;
 		double p = math_normaldist_pdf((ei - expected_mean) * inv_dev) * inv_dev;
 		probs[i] = p;
 		//double error = std::abs(f - p);
