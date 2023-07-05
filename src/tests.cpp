@@ -137,7 +137,7 @@ double PractRand::TestResult::get_pvalue() const {
 double PractRand::TestResult::get_suspicion() const {
 	if (type == TYPE_RAW) return 0;
 	else if (type == TYPE_RAW_NORMAL) {
-		double m = std::fabs(raw);
+		double m = std::abs(raw);
 		double s = (raw < 0) ? 1 : -1;//backwards to make normal failures occur at p=0 instead of p=1
 		if (m < 8) return s * m * 0.5;
 		else if (m < 12) return ((m - 8) * .75 + 4) * s;
@@ -474,7 +474,7 @@ public:
 		if (current == ts.begin() || current->first == blocks) return current->second;
 		std::map< Uint64, TestCalibrationData * >::iterator upper = current--;
 		double logblocks = std::log(static_cast<double>(blocks));
-		if (std::fabs(std::log(static_cast<double>(upper->first)) - logblocks) < std::fabs(std::log(static_cast<double>(current->first)) - logblocks)) return upper->second;
+		if (std::abs(std::log(static_cast<double>(upper->first)) - logblocks) < std::abs(std::log(static_cast<double>(current->first)) - logblocks)) return upper->second;
 		else return current->second;
 	}
 };
@@ -2581,7 +2581,7 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult> &results) {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
 			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
 			double rn = math_chisquared_to_normal(rv, (1<<tbits)-1);
-			results.push_back(TestResult(name.str(), rn, std::fabs(rn) > 25, TestResult::TYPE_PASSFAIL, w ) );
+			results.push_back(TestResult(name.str(), rn, std::abs(rn) > 25, TestResult::TYPE_PASSFAIL, w ) );
 		}
 	}*/
 }
@@ -2739,7 +2739,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
 			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
 			double rn = math_chisquared_to_normal(rv, (1<<tbits)-1);
-			results.push_back(TestResult(name.str(), rn, std::fabs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w ) );
+			results.push_back(TestResult(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w ) );
 		}
 	}
 	if (overall_bins) {
@@ -3454,7 +3454,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
 			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
 			double rn = math_chisquared_to_normal(rv, (1 << tbits) - 1);
-			results.push_back(TestResult(name.str(), rn, std::fabs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w));
+			results.push_back(TestResult(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w));
 		}
 	}
 	if (overall_bins) {
@@ -3989,7 +3989,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 				if (stride_bits_L2 + e < 2 ) calib = NULL;
 				if (calib) {
 					double suspicioun = -calib->sample_to_suspicion(norm);
-					sum_s += suspicioun * suspicioun;//std::pow(2.0, std::fabs(suspicioun));
+					sum_s += suspicioun * suspicioun;//std::pow(2.0, std::abs(suspicioun));
 					num_s++;
 					results.push_back(TestResult(namestr.str() + ")", norm, suspicioun, TestResult::TYPE_GOOD_S, ebits * 0.00625 / sig_bits));
 				}
@@ -7854,7 +7854,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 		double f = c / total;
 		double p = math_normaldist_pdf((ei - expected_mean) * inv_dev) * inv_dev;
 		probs[i] = p;
-		double error = std::fabs(f - p);
+		double error = std::abs(f - p);
 		//double weight = -std::log(p);
 		total_error += error;
 		weighted_error -= error * std::log(p);
@@ -7895,7 +7895,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 		double f = c / total;
 		double p = math_normaldist_pdf((i - avg) / dev) / dev;
 		if (c) std::printf("%5d: %.15f    %.15f\n", i, f, p);
-		total_error += std::fabs(f - p);
+		total_error += std::abs(f - p);
 		sum_p += p;
 	}
 	std::printf("total: %.0f    mean: %.7f   dev: %.9f   err: %.9f\n", total, avg, dev, total_error);
@@ -8204,7 +8204,7 @@ void PractRand::Tests::TripleMirrorFreq::get_results(std::vector<TestResult> &re
 	for (int pos = 0; pos < (1 << POSITIONS_L2); pos++) {
 		double chisquared = g_test_flat(cat, &counts_[pos << (SIZE1 + SIZE2 + SIZE3)]);
 		double n = math_chisquared_to_normal(chisquared, cat);
-		if (std::fabs(n) >= std::fabs(worst_n)) {
+		if (std::abs(n) >= std::abs(worst_n)) {
 			worst_n = n;
 			worst_position = pos;
 		}
@@ -8310,7 +8310,7 @@ void PractRand::Tests::TripleMirrorFreqN::get_results(std::vector<TestResult> &r
 	for (int pos = 0; pos < (1 << POSITIONS_L2); pos++) {
 		double chisquared = g_test_flat(cat, &counts_[pos << (SIZE1 + SIZE2 + SIZE3)]);
 		double n = math_chisquared_to_normal(chisquared, cat);
-		if (std::fabs(n) >= std::fabs(worst_n)) {
+		if (std::abs(n) >= std::abs(worst_n)) {
 			worst_n = n;
 			worst_position = pos;
 		}
@@ -8427,7 +8427,7 @@ void PractRand::Tests::TripleMirrorCoup::get_results(std::vector<TestResult> &re
 	for (int pos = 0; pos < (1 << POSITIONS_L2); pos++) {
 		double chisquared = g_test_flat(cat, &counts_[pos << (SIZE1 + SIZE2 + SIZE3)]);
 		double n = math_chisquared_to_normal(chisquared, cat);
-		if (std::fabs(n) >= std::fabs(worst_n)) {
+		if (std::abs(n) >= std::abs(worst_n)) {
 			worst_n = n;
 			worst_position = pos;
 		}
@@ -10713,7 +10713,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 		int odds = high_odds - low_odds;
 		//if (odds < 0) { continue; odds = -odds; observed_ratio = 1 - observed_ratio; }
 		//std::printf("%f\n", observed_ratio);
-		if (std::fabs(observed_ratio - 0.5) > 0.2) {
+		if (std::abs(observed_ratio - 0.5) > 0.2) {
 			std::printf("");
 		}
 		odds += 30;

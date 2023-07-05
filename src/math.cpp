@@ -589,7 +589,7 @@ namespace PractRand {
 			double e = base;
 			double multiplier = 3;
 			int i = 1;
-			while (std::fabs(old - iterative) > 0.00000000000001) {
+			while (std::abs(old - iterative) > 0.00000000000001) {
 				double tmp = -product / e;
 				e *= base; product *= multiplier; multiplier += 2;
 				tmp += product / e;

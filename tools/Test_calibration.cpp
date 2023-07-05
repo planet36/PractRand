@@ -782,7 +782,7 @@ double generate_gaussian( RNG &rng ) {
 		unsigned long stripe = rng.raw16() & (TABLE_SIZE-1);
 		if (stripe < TABLE_SIZE-2) {//middle stripes
 			double x = rng.randf(-1,1) * table_x[stripe+1];
-			if (std::fabs(x) < table_x[stripe]) return x;
+			if (std::abs(x) < table_x[stripe]) return x;
 			double y = rng.randf(table_y[stripe], table_y[stripe+1]);
 			if (y < gaussian_PDF(x)) return x;
 		}
@@ -794,7 +794,7 @@ double generate_gaussian( RNG &rng ) {
 		}
 		else if (stripe == TABLE_SIZE-1) {//bottom stripe
 			double x = rng.randf(-1, 1) * tail_scale;
-			if (std::fabs(x) < table_x[TABLE_SIZE-2]) return x;
+			if (std::abs(x) < table_x[TABLE_SIZE-2]) return x;
 			double p = rng.randf() * tail_p; 
 			double n = Tests::math_pvalue_to_normaldist(p);
 			if (x < 0) return n;

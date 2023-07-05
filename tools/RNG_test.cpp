@@ -154,11 +154,11 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 		double raw = result.get_raw();
 		if (raw > 99999.0) std::printf("R>+99999  ");
 		else if (raw < -99999.0) std::printf("R<-99999  ");
-		else if (std::fabs(raw) < 999.95) std::printf("R=%+6.1f  ", raw);
+		else if (std::abs(raw) < 999.95) std::printf("R=%+6.1f  ", raw);
 		else std::printf("R=%+6.0f  ", raw);
-		//if (std::fabs(raw) < 99999.5) std::printf(" ");
-		//if (std::fabs(raw) < 999999.5) std::printf(" ");
-		//if (std::fabs(raw) < 9999999.5) std::printf(" ");
+		//if (std::abs(raw) < 99999.5) std::printf(" ");
+		//if (std::abs(raw) < 999999.5) std::printf(" ");
+		//if (std::abs(raw) < 9999999.5) std::printf(" ");
 	}
 
 	//RESULT AS A NUMERICAL "SUSPICION LEVEL" (log of distance from pvalue to closest extrema)
@@ -191,11 +191,11 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 			std::printf("              ");
 		else if (result.type == result.TYPE_BAD_P || result.type == result.TYPE_GOOD_P || result.type == result.TYPE_RAW_NORMAL) {
 			double p = result.get_pvalue();
-			double a = std::fabs(p-0.5);
+			double a = std::abs(p-0.5);
 			std::printf((result.type != result.TYPE_GOOD_P) ? "p~= " : "p = ");
 			if (a > 0.49) {
 				double s = result.get_suspicion();
-				double ns = std::fabs(s) + 1;
+				double ns = std::abs(s) + 1;
 				double dec = ns / (std::log(10.0) / std::log(2.0));
 				double dig = std::ceil(dec);
 				double sig = std::floor(std::pow(0.1, dec - dig));
@@ -217,7 +217,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 			std::printf((result.type == result.TYPE_BAD_S || result.type == result.TYPE_RAW_NORMAL) ? "p~=" : "p =");
 			if (p >= 0.01 && p <= 0.99) std::printf(" %.3f     ", p);
 			else {
-				double ns = std::fabs(s) + 1;
+				double ns = std::abs(s) + 1;
 				double dec = ns / (std::log(10.0) / std::log(2.0));
 				double dig = std::ceil(dec);
 				double sig = std::pow(0.1, dec - dig);
@@ -239,10 +239,10 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	}
 
 	double dec = std::log(2.) / std::log(10.0);
-	double as = (std::fabs(result.get_suspicion()) + 1 - 1) * dec;// +1 for suspicion conversion, -1 to account for there being 2 failure regions (near-zero and near-1)
+	double as = (std::abs(result.get_suspicion()) + 1 - 1) * dec;// +1 for suspicion conversion, -1 to account for there being 2 failure regions (near-zero and near-1)
 	double wmod = std::log(result.get_weight()) / std::log(0.5) * dec;
 	double rs = as - wmod;
-	//double ap = std::fabs(0.5 - result.get_pvalue());
+	//double ap = std::abs(0.5 - result.get_pvalue());
 	//MESSAGE DESCRIBING RESULT IN ENGLISH
 	if (true) {// 17 characters?
 		/*
@@ -330,11 +330,11 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	for (int i = 0; i < results.size(); i++) {
 		results[i].set_weight(results[i].get_weight() / total_weight);
 		if (!smart_thresholds) {
-			if (std::fabs(0.5 - results[i].get_pvalue()) < 0.5 - threshold) continue;
+			if (std::abs(0.5 - results[i].get_pvalue()) < 0.5 - threshold) continue;
 		}
 		else {
 			double T = threshold * results[i].get_weight() * 0.5;
-			if (std::fabs(0.5 - results[i].get_pvalue()) < (0.5 - T)) continue;
+			if (std::abs(0.5 - results[i].get_pvalue()) < (0.5 - T)) continue;
 		}
 		marked.push_back(i);
 	}

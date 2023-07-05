@@ -51,7 +51,7 @@ namespace PractRand {
 		virtual void handle(float  &v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
-			v = std::fabs(v);
+			v = std::abs(v);
 			int exp;
 			double n = std::frexp(v, &exp);
 			Uint16 tmp_exp = Uint16( (exp<<1) + (sign?1:0));
@@ -62,7 +62,7 @@ namespace PractRand {
 		virtual void handle(double &v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
-			v = std::fabs(v);
+			v = std::abs(v);
 			int exp;
 			double n = std::frexp(v, &exp);
 			Uint32 tmp_exp = exp + (sign?0x80000000:0);
