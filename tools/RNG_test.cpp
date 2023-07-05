@@ -178,8 +178,8 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 			printed = true;
 		}
 		if (printed) {
-			if (fabs(susp) < 9999.95) std::printf(" ");
-			if (fabs(susp) < 999.95) std::printf(" ");
+			if (std::abs(susp) < 9999.95) std::printf(" ");
+			if (std::abs(susp) < 999.95) std::printf(" ");
 		}
 	}
 

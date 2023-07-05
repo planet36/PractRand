@@ -695,7 +695,7 @@ namespace PractRand {
 		}
 		static double math_upper_incomplete_gamma(double a, double x) {
 			if (a == 1) return std::exp(-x);
-			if (fabs(floor(a+.5)-a) <= 0.00000000001) {
+			if (std::abs(floor(a+.5)-a) <= 0.00000000001) {
 				if (!x) return math_factorial(a-1);
 				int max = int(floor(a+.5) - 1);
 				long double sum = 0;
@@ -717,8 +717,8 @@ namespace PractRand {
 		double math_chisquared_to_pvalue ( double chisquared, double DoF ) {
 			if (DoF == 2) return 1 - std::exp(chisquared*-.5);
 			//long double n = math_chisquared_to_normal(chisquared, DoF);
-			//if (fabs(n) > 100) return (n > 0) ? 1 : 0;
-			//if (fabs(chisquared) > 100) return math_normaldist_to_pvalue(n);
+			//if (std::abs(n) > 100) return (n > 0) ? 1 : 0;
+			//if (std::abs(chisquared) > 100) return math_normaldist_to_pvalue(n);
 			//long double p = math_lower_incomplete_gamma(DoF/2,chisquared/2) / math_gamma_function(DoF/2);
 			long double p = math_regularized_gamma_function(DoF / 2, chisquared / 2);
 			if (p < 0) p = 0;

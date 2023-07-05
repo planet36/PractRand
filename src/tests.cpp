@@ -1741,8 +1741,8 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 //	double p2 = math_chisquared_to_pvalue(r2, reduced_size-1);
 	r2 = math_chisquared_to_normal(r2, reduced_size-1);
 	//double r;
-	//if (r1 + 2.0 > fabs(r2)) r = r1 - 1;
-	//else if (r1 - 2.0 < -fabs(r2)) r = r1 + 1;
+	//if (r1 + 2.0 > std::abs(r2)) r = r1 - 1;
+	//else if (r1 - 2.0 < -std::abs(r2)) r = r1 + 1;
 	//else r = r2;
 	//return r;
 	TestCalibrationData *calib1 = calibration_manager.get_calibration_data("Gap-16:A", blocks_tested);

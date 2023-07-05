@@ -651,7 +651,7 @@ void verify_test_distributions() {
 						double p = calib.get_percentile(sum);
 						std::printf("blah = %f of (%f:%f:%f)\n", sum, calib.get_result_by_percentile(.05), calib.get_result_by_percentile(.5), calib.get_result_by_percentile(.95));
 						std::printf("p = %f\n", p);
-						if (fabs(p-.5) > 0.499) std::printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						if (std::abs(p-.5) > 0.499) std::printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					}
 					std::printf("\n");
 				}
