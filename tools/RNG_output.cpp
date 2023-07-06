@@ -13,7 +13,7 @@
 //#include <map>
 #include <signal.h>     /* signal, sig_atomic_t */
 
-#ifdef WIN32 // needed to allow binary stdout on windows
+#ifdef _WIN32 // needed to allow binary stdout on windows
 #include <fcntl.h>
 #include <io.h>
 #endif
@@ -82,7 +82,7 @@ void signal_handler(int param)
 #include "SeedingTester.h"
 
 int main(int argc, char **argv) {
-#ifdef WIN32
+#ifdef _WIN32
 	_setmode( _fileno(stdout), _O_BINARY); // needed to allow binary stdout on windows
 #endif
 	if (argc < 3 || argc > 4) print_usage(argv[0]);

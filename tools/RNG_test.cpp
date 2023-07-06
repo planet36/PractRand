@@ -30,7 +30,7 @@
 #include "PractRand/RNGs/other/indirection.h"
 #include "PractRand/RNGs/other/special.h"
 
-#ifdef WIN32 // needed to allow binary stdin on windows
+#ifdef _WIN32 // needed to allow binary stdin on windows
 #include <fcntl.h>
 #include <io.h>
 #endif
@@ -495,7 +495,7 @@ int lookup_te_value(int te) {
 int main(int argc, char **argv) {
 	PractRand::initialize_PractRand();
 	std::printf("RNG_test using PractRand version %s\n", PractRand::version_str);
-#ifdef WIN32 // needed to allow binary stdin on windows
+#ifdef _WIN32 // needed to allow binary stdin on windows
 	_setmode( _fileno(stdin), _O_BINARY);
 #endif
 	if (argc <= 1) {

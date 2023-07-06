@@ -1,7 +1,7 @@
 
 //the interface:
 
-#if defined WIN32
+#if defined _WIN32
 #define THREADFUNC_CALLING_CONVENTION __stdcall
 #define THREADFUNC_RETURN_TYPE unsigned long
 #else 
@@ -37,8 +37,8 @@ namespace Threading {
 
 //the implementation details:
 
-#if defined WIN32
-#include <Windows.h>
+#if defined _WIN32
+#include <windows.h>
 namespace Threading {
 	//compile time assert that Lock is big enough:
 	typedef char compile_time_assertion[(sizeof(Lock) >= sizeof(CRITICAL_SECTION)) ? 1 : -1];
