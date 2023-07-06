@@ -5917,7 +5917,7 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	BirthdayHelpers::_sorted_deltas_of_sorted_values(buffer, buffer_size_L2, sort_helper_counts);
 	for (int i = 0; i < (1 << SORT_HELPER_BITS); i++) sort_helper_counts[i] = 0;
 
-	long double expected_log_offset, expected_log_samples, deviation/*, uncertainty*/;
+	long double expected_log_offset{}, expected_log_samples, deviation/*, uncertainty*/;
 	_lookup_constants(buffer_size_L2, &expected_log_offset, &deviation, &expected_log_samples);
 
 	long double sum_log = 0, sum_log2 = 0;
