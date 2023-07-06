@@ -36,7 +36,10 @@ install: $(BINS)
 clean:
 	@$(RM) --verbose -- $(LIB_DEPS) $(LIB_OBJS) $(LIB) $(BINS) $(addsuffix .d,$(BINS))
 
+lint:
+	-clang-tidy --quiet $(LIB_SRCS) tools/RNG_*.cpp -- $(CPPFLAGS) $(CXXFLAGS)
+
 # https://www.gnu.org/software/make/manual/make.html#Phony-Targets
-.PHONY: all clean install
+.PHONY: all clean install lint
 
 -include $(LIB_DEPS)
