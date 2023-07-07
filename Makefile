@@ -13,7 +13,7 @@ LIB = libPractRand.a
 
 BIN_SRCS = $(wildcard tools/RNG_*.cpp)
 BIN_DEPS = $(BIN_SRCS:.cpp=.d)
-BINS = $(basename $(notdir $(BIN_SRCS)))
+BINS = $(basename $(BIN_SRCS))
 
 CPPFLAGS += -MMD -MP
 CPPFLAGS += -Iinclude
@@ -29,7 +29,7 @@ $(LIB): $(LIB_OBJS)
 
 # https://www.gnu.org/software/make/manual/html_node/Static-Usage.html
 # Static Pattern Rule
-$(BINS): RNG_% : tools/RNG_%.cpp $(LIB)
+$(BINS): tools/RNG_% : tools/RNG_%.cpp $(LIB)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $< $(LIB)
 
 install: $(BINS)
