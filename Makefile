@@ -10,7 +10,10 @@ LIB_SRCS = $(wildcard src/*.cpp src/RNGs/*.cpp src/RNGs/other/*.cpp)
 LIB_DEPS = $(LIB_SRCS:.cpp=.d)
 LIB_OBJS = $(LIB_SRCS:.cpp=.o)
 LIB = libPractRand.a
-BINS = RNG_benchmark RNG_output RNG_test
+
+BIN_SRCS = $(wildcard tools/RNG_*.cpp)
+BIN_DEPS = $(BIN_SRCS:.cpp=.d)
+BINS = $(basename $(notdir $(BIN_SRCS)))
 
 CPPFLAGS += -MMD -MP
 CPPFLAGS += -Iinclude
@@ -34,12 +37,12 @@ install: $(BINS)
 	@cp -v -f -- $(BINS) $(DESTDIR)$(BINDIR)
 
 clean:
-	@$(RM) --verbose -- $(LIB_DEPS) $(LIB_OBJS) $(LIB) $(BINS) $(addsuffix .d,$(BINS))
+	@$(RM) --verbose -- $(LIB_DEPS) $(LIB_OBJS) $(LIB) $(BIN_DEPS) $(BINS)
 
 lint:
-	-clang-tidy --quiet $(LIB_SRCS) tools/RNG_*.cpp -- $(CPPFLAGS) $(CXXFLAGS)
+	-clang-tidy --quiet $(LIB_SRCS) $(BIN_SRCS) -- $(CPPFLAGS) $(CXXFLAGS)
 
 # https://www.gnu.org/software/make/manual/make.html#Phony-Targets
 .PHONY: all clean install lint
 
--include $(LIB_DEPS)
+-include $(LIB_DEPS) $(BIN_DEPS)
