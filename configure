@@ -37,7 +37,7 @@ clean:
 
 EOF
 
-for cpp in tools/RNG_test.cpp src/*.cpp src/RNGs/*.cpp src/RNGs/other/*.cpp; do
+for cpp in src/*.cpp src/RNGs/*.cpp src/RNGs/other/*.cpp tools/RNG_test.cpp; do
     o="${cpp%*.cpp}".o
     $CXX -Iinclude -pthread -MM -MT$o $cpp >>Makefile
     obj="$(printf '%s \\\n %s' "$obj" $o)"
