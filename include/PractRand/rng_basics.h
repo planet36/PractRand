@@ -41,7 +41,7 @@ namespace PractRand {
 			void autoseed();
 			long serialize( char *buffer, long buffer_size );//returns serialized size, or zero on failure
 			char *serialize( size_t *size );//returns malloced block, or NULL on error, sets *size to size of block
-			bool deserialize( const char *buffer, long size );//returns true on success, false on failure
+			bool deserialize( const char *buffer, size_t size );//returns true on success, false on failure
 			std::string print_state();//returns RNG state as a comma-delimited sequence of numbers
 			virtual void walk_state(StateWalkingObject *) = 0;
 

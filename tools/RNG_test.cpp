@@ -317,7 +317,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	std::vector<PractRand::TestResult> results;
 	tman->get_results(results);
 	double total_weight = 0, min_weight = 9999999;
-	for (int i = 0; i < results.size(); i++) {
+	for (unsigned int i = 0; i < results.size(); i++) {
 		double weight = results[i].get_weight();
 		total_weight += weight;
 		if (weight < min_weight) min_weight = weight;
@@ -327,7 +327,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 		std::exit(1);
 	}
 	std::vector<int> marked;
-	for (int i = 0; i < results.size(); i++) {
+	for (unsigned int i = 0; i < results.size(); i++) {
 		results[i].set_weight(results[i].get_weight() / total_weight);
 		if (!smart_thresholds) {
 			if (std::abs(0.5 - results[i].get_pvalue()) < 0.5 - threshold) continue;
@@ -339,7 +339,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 		marked.push_back(i);
 	}
 	double biggest_decimal_suspicion = 0;
-	for (int i = 0; i < marked.size(); i++) {
+	for (unsigned int i = 0; i < marked.size(); i++) {
 		double decimal_suspicion = print_result(results[marked[i]], i == 0);
 		if (decimal_suspicion > biggest_decimal_suspicion) biggest_decimal_suspicion = decimal_suspicion;
 	}
@@ -358,7 +358,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 double interpret_length(const std::string &lengthstr, bool normal_mode) {
 	//(0-9)*[.(0-9)*][((K|M|G|T|P)[B])|(s|m|h|d)]
 	int mode_factor = normal_mode ? 1 : 8;
-	int pos = 0;
+	unsigned int pos = 0;
 	double value = 0;
 	for (; pos < lengthstr.size(); pos++) {
 		char c = lengthstr[pos];
@@ -433,7 +433,7 @@ double interpret_length(const std::string &lengthstr, bool normal_mode) {
 bool interpret_seed(const std::string &seedstr, Uint64 &seed) {
 	//would prefer strtol, but that is insufficiently portable when it has to handle 64 bit values
 	Uint64 value = 0;
-	int position = 0;
+	unsigned int position = 0;
 	if (seedstr.length() >= 3 && seedstr[0] == '0' && seedstr[1] == 'x') position = 2;
 	while (position < seedstr.length()) {
 		int c = seedstr[position++];

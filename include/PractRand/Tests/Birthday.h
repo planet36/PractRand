@@ -130,7 +130,7 @@ namespace PractRand {
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
 			virtual Uint64 flush_buffer() override;
 			static Uint64 get_target_num_at_bufsize(int bufsize_L2_);
-			int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold 
+			unsigned int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold 
 
 			double score;//for scoring method 2
 			static double evaluate_score(double lambda, Uint64 duplicates);

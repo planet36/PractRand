@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+#include <limits>
 
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
@@ -306,7 +307,7 @@ namespace PractRand {
 				seed = known_good->raw64();
 				rng->seed(seed);
 				Sint64 how_far_ = known_good->raw64();
-				while (how_far_ == 0x8000000000000000ull) how_far_ = known_good->raw64();//we can't negate this value, so the code would fail
+				while (how_far_ == std::numeric_limits<decltype(how_far_)>::min()) how_far_ = known_good->raw64();//we can't negate this value, so the code would fail
 				if (how_far_ > 0) rng->seek_forward(how_far_);
 				else if (how_far_ < 0) rng->seek_backward(-how_far_);
 				a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
@@ -370,7 +371,7 @@ namespace PractRand {
 			walk_state(&printer);
 			return printer.get_string();
 		}
-		bool vRNG::deserialize( const char *buffer, long size ) {//returns number of bytes used, or zero on error
+		bool vRNG::deserialize( const char *buffer, size_t size ) {//returns number of bytes used, or zero on error
 			DeserializingStateWalker deserializer(buffer, size);
 			walk_state(&deserializer);
 			return deserializer.size_used == size;

@@ -4,7 +4,7 @@ protected:
 	PractRand::RNGs::vRNG *rng;
 	PractRand::RNGs::vRNG *known_good;
 	PractRand::Tests::ListOfTests *tests;
-	int max_buffer_amount;
+	unsigned int max_buffer_amount;
 	int prefix_blocks;
 	int main_blocks;
 	int blocks_to_repeat;

@@ -230,14 +230,14 @@ namespace PractRand {
 					MultiplexTransformRNG::refill();
 					PractRand::Tests::TestBlock tmp;
 					buffer->fill(source_rngs[0]);
-					for (int sri = 1; sri < source_rngs.size(); sri++) {
+					for (unsigned int sri = 1; sri < source_rngs.size(); sri++) {
 						tmp.fill(source_rngs[sri]);
 						for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 8; i++) buffer->as64[i] ^= tmp.as64[i];
 					}
 				}
 				std::string Xor::get_name() const {
 					std::string rv = "xor(";
-					for (int sri = 0; sri < source_rngs.size(); sri++) {
+					for (unsigned int sri = 0; sri < source_rngs.size(); sri++) {
 						if (sri) rv += ",";
 						rv += source_rngs[sri]->get_name();
 					}

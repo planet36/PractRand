@@ -58,7 +58,7 @@ public:
 	//RNGs::vRNG *rng;
 	//RNGs::vRNG *known_good;
 	//Tests::ListOfTests *tests;
-	//int max_buffer_amount;
+	//unsigned int max_buffer_amount;
 	//int prefix_blocks;
 	//int main_blocks;
 	//Uint64 blocks_so_far;

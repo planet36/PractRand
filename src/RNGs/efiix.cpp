@@ -249,7 +249,7 @@ void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint
 	iteration_table[0] = 0;
 	indirection_table[0] = 0;
 	//for (int x = 0; x < INDIRECTION_SIZE; x++) indirection_table[x] = x;
-	for (int x = 0; x < 1 + (64 / (8 * sizeof(Word))); x++) {
+	for (unsigned int x = 0; x < 1 + (64 / (8 * sizeof(Word))); x++) {
 		a += Word(s1); b += Word(s2); c += Word(s3); iteration_table[0] += Word(s4);
 		s1 >>= 8 * sizeof(Word); s2 >>= 8 * sizeof(Word); s3 >>= sizeof(Word); s4 >>= sizeof(Word);
 		enum { LESSER_SIZE = ITERATION_SIZE > INDIRECTION_SIZE ? INDIRECTION_SIZE : ITERATION_SIZE };

@@ -33,7 +33,7 @@ namespace PractRand {
 				std::vector<Uint64> blocks_already_per;
 				Uint64 total_length;
 				Uint64 phase;
-				int which;
+				unsigned int which;
 			public:
 				switching( const char *name_, const ListOfTests &testlist, 
 					std::vector<Uint64> lengths_ );
