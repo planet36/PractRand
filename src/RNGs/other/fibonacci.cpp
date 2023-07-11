@@ -613,7 +613,7 @@ namespace PractRand {
 					for (int i = 0; i < LAG1; i++) buffer[i] |= 1;
 				}
 				Uint32 fibmul32of64::raw32() {
-					if (position) return Uint32(buffer[--position] >> 32);
+					if (position) return Uint32(buffer[--position]);
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = buffer[i+LAG1-LAG1] * buffer[i+LAG1-LAG2];
 					}
@@ -621,7 +621,7 @@ namespace PractRand {
 						buffer[i] = buffer[i] * buffer[i-LAG2];
 					}
 					position = LAG1;
-					return Uint32(buffer[--position] >> 32);
+					return Uint32(buffer[--position]);
 				}
 				std::string fibmul32of64::get_name() const {return "fibmul32of64";}
 				void fibmul32of64::walk_state(StateWalkingObject *walker) {
