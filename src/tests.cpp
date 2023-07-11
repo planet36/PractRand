@@ -6798,9 +6798,9 @@ void PractRand::Tests::NearSeq2::init(PractRand::RNGs::vRNG *known_good) {
 	_total_invalid_cores = 0;
 	if (!lookup_table1) {
 		if (BITS_PER_BLOCK <= MAX_LOOKUP_L2) {//index directly with block value
-			lookup_table1 = new Sint8[1 << BITS_PER_BLOCK];
-			lookup_table2 = new Uint8[1 << BITS_PER_BLOCK];
-			for (unsigned int i = 0; i < (1 << BITS_PER_BLOCK); i++) {
+			lookup_table1 = new Sint8[1UL << BITS_PER_BLOCK];
+			lookup_table2 = new Uint8[1UL << BITS_PER_BLOCK];
+			for (unsigned int i = 0; i < (1UL << BITS_PER_BLOCK); i++) {
 				int h = std::popcount(i);
 				int v1, v2;
 				if (h >= BITS_PER_BLOCK - MAX_HDIST_PER_BLOCK) {
