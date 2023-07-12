@@ -6019,11 +6019,8 @@ void PractRand::Tests::BirthdayAlt::test_blocks(TestBlock *data, int numblocks) 
 
 
 
-PractRand::Tests::Pat5::Pat5()
-//:
-//	lifespan(1<<16),
-{
-}
+PractRand::Tests::Pat5::Pat5() = default;
+
 void PractRand::Tests::Pat5::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	counts.reset_counts();
 	for (int pi = 0; pi < (1 << PATTERN_INDEX_BITS); pi++) patterns[pi].total_count = -1;

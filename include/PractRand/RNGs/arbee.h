@@ -55,7 +55,7 @@ namespace PractRand {
 				arbee(vRNG *seeder) {seed(seeder);}
 				arbee(SEED_AUTO_TYPE ) {autoseed();}
 				arbee(SEED_NONE_TYPE ) {}
-				arbee() {}
+				arbee() = default;
 				Uint8  raw8 () override;
 				Uint16 raw16() override;
 				Uint32 raw32() override;

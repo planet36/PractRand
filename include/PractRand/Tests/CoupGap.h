@@ -22,7 +22,7 @@ namespace PractRand {
 			Uint32 autofail;
 			Uint64 blocks;
 		public:
-			CoupGap() {}
+			CoupGap() = default;
 
 			virtual void init( RNGs::vRNG *known_good ) override;
 			virtual std::string get_name() const override;

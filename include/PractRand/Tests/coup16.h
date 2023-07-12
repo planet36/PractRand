@@ -9,7 +9,7 @@ namespace PractRand {
 			FixedSizeCount<Uint8, 65536> counts;
 			//to do: also measure sequential correlation, or do something like BCFN on whether or not each sample is >= the expected value
 		public:
-			Coup16() {}
+			Coup16() = default;
 			virtual void init(PractRand::RNGs::vRNG *known_good) override;
 			virtual std::string get_name() const override;
 			virtual void get_results(std::vector<TestResult> &results) override;
