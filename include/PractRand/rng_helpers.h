@@ -5,7 +5,7 @@
 namespace PractRand {
 	class StateWalkingObject {
 	public:
-		virtual ~StateWalkingObject() {}
+		virtual ~StateWalkingObject() = default;
 		virtual void handle(bool  &) = 0;
 		/*virtual void handle(unsigned char &) = 0;
 		virtual void handle(unsigned short &) = 0;

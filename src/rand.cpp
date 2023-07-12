@@ -345,7 +345,7 @@ namespace PractRand {
 		}
 	}
 	namespace RNGs {
-		vRNG::~vRNG() {}
+		vRNG::~vRNG() = default;
 		long vRNG::serialize( char *buffer, long buffer_size ) {//returns serialized size, or zero on failure
 			SerializingStateWalker serializer(buffer, buffer_size);
 			walk_state(&serializer);

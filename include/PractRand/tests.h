@@ -49,7 +49,7 @@ namespace PractRand {
 		public:
 			virtual void init(PractRand::RNGs::vRNG *known_good);
 			virtual void deinit() {}
-			virtual ~TestBaseclass()   {}
+			virtual ~TestBaseclass() = default;
 			virtual std::string get_name() const = 0;
 
 			//1.  Maximum length per test_blocks() call is about 512MB (numblocks==1<<19)
