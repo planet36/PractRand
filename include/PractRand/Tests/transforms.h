@@ -1,3 +1,4 @@
+#pragma once
 
 #include "PractRand/test_batteries.h"
 

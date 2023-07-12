@@ -1,3 +1,5 @@
+#pragma once
+
 class TestManager {
 protected:
 	std::vector<PractRand::Tests::TestBlock> buffer;

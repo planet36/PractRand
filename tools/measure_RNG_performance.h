@@ -1,3 +1,5 @@
+#pragma once
+
 //template<typename RNG> double measure_RNG_performance();
 //returns megabytes per second, of calls to raw64() on 64 bit RNGs or raw32 on other RNGs
 

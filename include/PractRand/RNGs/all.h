@@ -1,3 +1,4 @@
+#pragma once
 
 #include "arbee.h"
 #include "chacha.h"

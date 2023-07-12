@@ -1,3 +1,5 @@
+#pragma once
+
 namespace PractRand {
 	namespace Tests {
 		class Gap16 final : public TestBaseclass {

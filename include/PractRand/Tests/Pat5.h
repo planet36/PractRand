@@ -1,3 +1,5 @@
+#pragma once
+
 namespace PractRand {
 	namespace Tests {
 		class Pat5 final : public TestBaseclass {

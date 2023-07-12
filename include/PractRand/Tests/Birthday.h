@@ -1,3 +1,5 @@
+#pragma once
+
 namespace PractRand {
 	namespace Tests {
 		class Birthday32 final : public TestBaseclass {

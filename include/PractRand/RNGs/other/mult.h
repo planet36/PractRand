@@ -1,3 +1,4 @@
+#pragma once
 
 #include "PractRand/rng_helpers.h"
 

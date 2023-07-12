@@ -1,3 +1,5 @@
+#pragma once
+
 #include <bit>
 
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {

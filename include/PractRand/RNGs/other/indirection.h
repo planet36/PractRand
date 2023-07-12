@@ -1,3 +1,4 @@
+#pragma once
 
 /*
 RNGs in the mediocre directory are not intended for real world use
