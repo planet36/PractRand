@@ -103,7 +103,7 @@ namespace Threading {
 	//compile time assert that Lock is big enough:
 	typedef char compile_time_assertion[(sizeof(Lock) >= sizeof(pthread_mutex_t)) ? 1 : -1];
 	static void _issue_pthread_error(int number, const char *msg) {
-		std::fprintf(stderr, "errno = %d: %s", number, std::strerror(number));
+		(void)std::fprintf(stderr, "errno = %d: %s", number, std::strerror(number));
 		issue_error(msg);
 	}
 	void sleep(int milliseconds) {

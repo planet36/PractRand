@@ -5,7 +5,7 @@ namespace Special_RNGs {
 	template<typename Word>
 	class _stdin_reader {
 		static void read_failed() {
-			std::fprintf(stderr, "error reading standard input\n");
+			(void)std::fprintf(stderr, "error reading standard input\n");
 			std::exit(0);
 		}
 		enum { BUFF_SIZE = 4096 / sizeof(Word) };

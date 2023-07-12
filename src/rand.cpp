@@ -25,7 +25,7 @@ namespace PractRand {
 	void issue_error ( const char *msg) {
 		if (error_callback) error_callback(msg);
 		else {
-			if (msg) std::fprintf(stderr, "%s\n", msg);
+			if (msg) (void)std::fprintf(stderr, "%s\n", msg);
 			std::exit(1);
 		}
 	}

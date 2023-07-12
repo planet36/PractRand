@@ -86,12 +86,12 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		if ((f = std::fopen("/dev/urandom", "rb"))) {
 			if (std::fread(buf,N64*sizeof(buf[0]),1,f) == 1) {
 				for (int i = 0; i < N64; i++) rng->add_entropy64(buf[i]);
-				std::fclose(f);
+				(void)std::fclose(f);
 				rng->flush_buffers();
 				std::memset(buf, 0, sizeof(buf));
 				return true;
 			}
-			std::fclose(f);
+			(void)std::fclose(f);
 		}
 	}
 #endif
