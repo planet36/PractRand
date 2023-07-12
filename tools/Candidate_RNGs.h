@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RNG_from_name.h"
+
 namespace Candidates {
 
 
@@ -839,7 +841,6 @@ public:
 
 
 }//namespace Candidates
-#if defined RNG_from_name_h
 namespace RNG_Factories {
 	void register_candidate_RNGs() {
 		RNG_factory_index["sfc_alternative64"] = _generic_recommended_RNG_factory<Candidates::polymorphic_sfc_alternative64>;
@@ -862,4 +863,3 @@ namespace RNG_Factories {
 		RNG_factory_index["siphash"] = _generic_recommended_RNG_factory<Candidates::polymorphic_siphash>;
 	}
 }
-#endif

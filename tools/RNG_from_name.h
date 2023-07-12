@@ -1,5 +1,17 @@
-#ifndef RNG_from_name_h
-#define RNG_from_name_h
+#pragma once
+
+#include "PractRand/RNGs/other/fibonacci.h"
+#include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/simple.h"
+#include "PractRand/RNGs/other/transform.h"
+#include "PractRand/rng_basics.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <map>
+#include <string>
+#include <vector>
 
 namespace Special_RNGs {
 	template<typename Word>
@@ -653,5 +665,3 @@ namespace RNG_Factories {
 #undef REGISTER_RNG_2
 	}
 }
-
-#endif//RNG_from_name_h
