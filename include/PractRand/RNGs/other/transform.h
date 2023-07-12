@@ -65,7 +65,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject *walker) override;
 					MultiplexTransformRNG(const std::vector<vRNG*> &sources);
 					~MultiplexTransformRNG();
-					virtual int get_native_output_size() const override;
+					int get_native_output_size() const override;
 				};
 
 				class GeneralizedTableTransform : public vRNG8 {//written for self-shrinking-generators, but also useful for other transforms
@@ -108,7 +108,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 raw8() override;
 					//to do: fix endianness issues
 					std::string get_name() const override;
-					virtual int get_native_output_size() const override {return -1;}
+					int get_native_output_size() const override {return -1;}
 				};
 				class ReinterpretAs8 : public Transform8 {
 					Uint8 *buffer;//don't feel like requiring a header for TestBlock
@@ -152,7 +152,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 
 				class Xor : public MultiplexTransformRNG {
-					virtual void refill() override;
+					void refill() override;
 				public:
 					Xor(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
 					std::string get_name() const override;

@@ -110,34 +110,34 @@ namespace PractRand {
 		class vRNG8 : public vRNG {
 		public:
 			enum {OUTPUT_BITS = 8};
-			virtual Uint16 raw16() override;
-			virtual Uint32 raw32() override;
-			virtual Uint64 raw64() override;
-			virtual int get_native_output_size() const override;
+			Uint16 raw16() override;
+			Uint32 raw32() override;
+			Uint64 raw64() override;
+			int get_native_output_size() const override;
 		};
 		class vRNG16 : public vRNG {
 		public:
 			enum {OUTPUT_BITS = 16};
-			virtual Uint8  raw8 () override;
-			virtual Uint32 raw32() override;
-			virtual Uint64 raw64() override;
-			virtual int get_native_output_size() const override;
+			Uint8  raw8 () override;
+			Uint32 raw32() override;
+			Uint64 raw64() override;
+			int get_native_output_size() const override;
 		};
 		class vRNG32 : public vRNG {
 		public:
 			enum {OUTPUT_BITS = 32};
-			virtual Uint8  raw8 () override;
-			virtual Uint16 raw16() override;
-			virtual Uint64 raw64() override;
-			virtual int get_native_output_size() const override;
+			Uint8  raw8 () override;
+			Uint16 raw16() override;
+			Uint64 raw64() override;
+			int get_native_output_size() const override;
 		};
 		class vRNG64 : public vRNG {
 		public:
 			enum {OUTPUT_BITS = 64};
-			virtual Uint8  raw8 () override;
-			virtual Uint16 raw16() override;
-			virtual Uint32 raw32() override;
-			virtual int get_native_output_size() const override;
+			Uint8  raw8 () override;
+			Uint16 raw16() override;
+			Uint32 raw32() override;
+			int get_native_output_size() const override;
 		};
 		namespace OUTPUT_TYPES {enum {
 	//		SIMPLE_1 = 0,     //one of 8,16,32,64 as _raw()

@@ -7,11 +7,11 @@ namespace PractRand::Tests {
 		*/
 		class mod3_simple : public TestBaseclass {
 		public:
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
 			typedef Uint32 Word;
 			static constexpr int WORD_BITS = 8 * sizeof(Word);
@@ -28,11 +28,11 @@ namespace PractRand::Tests {
 		class mod3n : public TestBaseclass {
 		public:
 			mod3n(int block_fraction_);//0 is all, 1 is half, 2 is a quarter, 3 is an 8th, etc
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
 			int block_fraction;
 			int block_scale;

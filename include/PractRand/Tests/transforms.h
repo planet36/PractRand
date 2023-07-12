@@ -10,17 +10,17 @@ namespace PractRand::Tests::Transforms {
 				Uint64 blocks_already;//# of blocks outputed to subtests
 			public:
 				multiplex ( const char *name_, const ListOfTests &testlist );
-				virtual void init( RNGs::vRNG *known_good ) override;
+				void init( RNGs::vRNG *known_good ) override;
 
 				//virtual double get_result();
-				virtual void get_results ( std::vector<TestResult> &results ) override;
+				void get_results ( std::vector<TestResult> &results ) override;
 
 				virtual bool recommend_subtest_tree_descent() const;
-				virtual void deinit() override;
+				void deinit() override;
 				virtual ~multiplex ( );
-				virtual std::string get_name() const override;
-				virtual void test_blocks(TestBlock *data, int numblocks) override;
-				virtual int get_blocks_to_repeat() const override;
+				std::string get_name() const override;
+				void test_blocks(TestBlock *data, int numblocks) override;
+				int get_blocks_to_repeat() const override;
 
 				virtual int get_num_children() const;
 				virtual TestBaseclass *get_child(int index) const;
@@ -40,10 +40,10 @@ namespace PractRand::Tests::Transforms {
 					std::vector<Uint64> lengths_ );
 				switching( const char *name_, const ListOfTests &testlist, 
 					Uint64 length );
-				virtual void init( RNGs::vRNG *known_good ) override;
-				virtual void test_blocks(TestBlock *data, int numblocks) override;
+				void init( RNGs::vRNG *known_good ) override;
+				void test_blocks(TestBlock *data, int numblocks) override;
 			//	virtual double get_result();
-				virtual Uint64 get_blocks_passed_through(int index) const override;
+				Uint64 get_blocks_passed_through(int index) const override;
 			};
 			class Transform_Baseclass : public multiplex {
 			private:
@@ -55,10 +55,10 @@ namespace PractRand::Tests::Transforms {
 				Transform_Baseclass( const char *name_, const ListOfTests &testlist, int flush_size_ = 4*1024 ) :
 					multiplex(name_, testlist), flush_size(flush_size_)
 				{}
-				virtual void init( RNGs::vRNG *known_good ) override;
-				virtual void test_blocks(TestBlock *data, int numblocks) override = 0;
+				void init( RNGs::vRNG *known_good ) override;
+				void test_blocks(TestBlock *data, int numblocks) override = 0;
 				//virtual double get_result() {flush(true);return Transforms::multiplex::get_result();}
-				virtual void get_results ( std::vector<TestResult> &results ) override {flush(true); Transforms::multiplex::get_results(results);}
+				void get_results ( std::vector<TestResult> &results ) override {flush(true); Transforms::multiplex::get_results(results);}
 				virtual void flush(bool aggressive = true) final;
 			};
 			class shrink : public Transform_Baseclass {
@@ -75,9 +75,9 @@ namespace PractRand::Tests::Transforms {
 					outbitsL(outbitsL_), 
 					unitsL(unitsL_)
 				{}
-				virtual void init( RNGs::vRNG *known_good ) override;
-				virtual std::string get_name() const override;
-				virtual void test_blocks(TestBlock *data, int numblocks) override;
+				void init( RNGs::vRNG *known_good ) override;
+				std::string get_name() const override;
+				void test_blocks(TestBlock *data, int numblocks) override;
 			};
 			class lowbits final : public Transform_Baseclass {
 			protected:
@@ -90,9 +90,9 @@ namespace PractRand::Tests::Transforms {
 					lowbitsL(lowbitsL_), 
 					unitsL(unitsL_)
 				{}
-				virtual void init( RNGs::vRNG *known_good ) override;
-				virtual std::string get_name() const override;
-				virtual void test_blocks(TestBlock *data, int numblocks) override;
+				void init( RNGs::vRNG *known_good ) override;
+				std::string get_name() const override;
+				void test_blocks(TestBlock *data, int numblocks) override;
 			};
 			/*class bitsyr8x8 : public Transform_Baseclass {
 			public:
@@ -115,8 +115,8 @@ namespace PractRand::Tests::Transforms {
 					bytes_used(bytes_used_), 
 					bytes_stride(bytes_stride_)
 				{}
-				virtual void init( RNGs::vRNG *known_good ) override;
-				virtual std::string get_name() const override;
-				virtual void test_blocks(TestBlock *data, int numblocks) override;
+				void init( RNGs::vRNG *known_good ) override;
+				std::string get_name() const override;
+				void test_blocks(TestBlock *data, int numblocks) override;
 			};
 }//PractRand

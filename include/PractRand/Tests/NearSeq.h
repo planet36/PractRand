@@ -59,12 +59,12 @@ namespace PractRand::Tests {
 			int get_extra_distance(const Word *core, int bucket_index) const;
 		public:
 			NearSeq();
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual void deinit() override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			void deinit() override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		class NearSeq2 final : public TestBaseclass {
 		protected:
@@ -149,11 +149,11 @@ namespace PractRand::Tests {
 			void count_bits_distribution(Word bits, Uint64 *counts, int num = WORD_BITS);
 		public:
 			NearSeq2();
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual void deinit() override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			void deinit() override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 }//PractRand

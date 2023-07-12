@@ -28,14 +28,14 @@ namespace PractRand::Tests {
 			Uint64 blocks;
 		public:
 			BCFN(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
-			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
-			virtual void deinit( ) override;
-			virtual std::string get_name() const override;
+			void init( PractRand::RNGs::vRNG *known_good ) override;
+			void deinit( ) override;
+			std::string get_name() const override;
 			//virtual double get_result();
 			//virtual double result_to_pvalue ( Uint64 blocks, double r );
-			virtual void get_results ( std::vector<TestResult> &results ) override;
+			void get_results ( std::vector<TestResult> &results ) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 			void handle_high_levels_balanced   ( long level, long bits );
 			void handle_high_levels_unbalanced ( long level, long bits );
 		};
@@ -62,14 +62,14 @@ namespace PractRand::Tests {
 			Uint64 blocks;
 		public:
 			BCFN_FF(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
-			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
-			virtual void deinit( ) override;
-			virtual std::string get_name() const override;
+			void init( PractRand::RNGs::vRNG *known_good ) override;
+			void deinit( ) override;
+			std::string get_name() const override;
 			//virtual double get_result();
 			//virtual double result_to_pvalue ( Uint64 blocks, double r );
-			virtual void get_results ( std::vector<TestResult> &results ) override;
+			void get_results ( std::vector<TestResult> &results ) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 			void handle_high_levels ( int level, int bits );
 		};
 }//PractRand

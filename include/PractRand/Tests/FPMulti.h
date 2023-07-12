@@ -72,11 +72,11 @@ namespace PractRand::Tests {
 			void process(Uint64 position, unsigned long exp, unsigned long sig);
 		public:
 			FPMulti();// (int stride_bits_L2_ = 6, int skip_platters_ = 6);
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual void deinit() override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			void deinit() override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 }//PractRand

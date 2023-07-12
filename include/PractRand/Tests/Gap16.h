@@ -3,13 +3,13 @@
 namespace PractRand::Tests {
 		class Gap16 final : public TestBaseclass {
 		public:
-			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
-			virtual std::string get_name() const override;// {return std::string("Gap16");}
+			void init( PractRand::RNGs::vRNG *known_good ) override;
+			std::string get_name() const override;// {return std::string("Gap16");}
 			//virtual double get_result();
 			//virtual double result_to_pvalue ( Uint64 blocks, double r );
-			virtual void get_results ( std::vector<TestResult> &results ) override;
+			void get_results ( std::vector<TestResult> &results ) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
 			enum { 
 				SIZE1 = 1<<18, //handles the common case, tracks sets of (1 << SET1_SHIFT) gaps
@@ -28,11 +28,11 @@ namespace PractRand::Tests {
 		};
 		class Rep16 : public TestBaseclass {
 		public:
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
 			FixedSizeCount<Uint8, 65536 * 2> counts;
 		};

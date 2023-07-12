@@ -33,8 +33,8 @@ namespace PractRand::RNGs {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(xsm32)
 				void seed(Uint64 s) override; // no two seeds within 2**63 of each other on the same cycle
 				void seed(vRNG *seeder_rng) override; // no two seeds within 2**48 of each other on the same cycle (2**79 possible seeded states)
-				virtual void seek_forward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
-				virtual void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
+				void seek_forward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
+				void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(xsm32)

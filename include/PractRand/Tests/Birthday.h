@@ -11,12 +11,12 @@ namespace PractRand::Tests {
 			void flush_buffer();
 		public:
 			Birthday32();
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		class Birthday64 final : public TestBaseclass {
 			static constexpr int BUFFER_SIZE_L2 = 23; // must be at least 7
@@ -33,12 +33,12 @@ namespace PractRand::Tests {
 			void flush_buffer();
 		public:
 			Birthday64();
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		namespace BirthdayHelpers {
 			constexpr int SORT_HELPER_BITS = 8;
@@ -98,12 +98,12 @@ namespace PractRand::Tests {
 		public:
 			BirthdayLamda1(int buffer_size_L2_ = 26);
 			virtual ~BirthdayLamda1();
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		/*
 		class BirthdaySystematic64 {
@@ -129,7 +129,7 @@ namespace PractRand::Tests {
 			// similar to BirthdayLambda1 above
 			// but if a result is requested before the first sample is ready, it will return a result for a partial buffer
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
-			virtual Uint64 flush_buffer() override;
+			Uint64 flush_buffer() override;
 			static Uint64 get_target_num_at_bufsize(int bufsize_L2_);
 			unsigned int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold 
 
@@ -141,10 +141,10 @@ namespace PractRand::Tests {
 			double incomplete_expected_duplicates;
 		public:
 			BirthdaySystematic128(int max_bufsize_L2_ = 28);
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		class BirthdayAlt final : public TestBaseclass {
 			//as for BirthdayLambda1, but: 
@@ -171,11 +171,11 @@ namespace PractRand::Tests {
 		public:
 			BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
 			~BirthdayAlt();
-			virtual void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			virtual std::string get_name() const override;
-			virtual void get_results(std::vector<TestResult> &results) override;
+			std::string get_name() const override;
+			void get_results(std::vector<TestResult> &results) override;
 
-			virtual void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock *data, int numblocks) override;
 		};//*/
 }//PractRand
