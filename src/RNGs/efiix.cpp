@@ -266,6 +266,7 @@ void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint
 					a = b + i++;
 					b = c + indirect;
 					c = old + rotate8(c, 3);
+					if (y + mask + 1 >= INDIRECTION_SIZE) continue;
 					indirection_table[y + mask + 1] = b ^ iterated;
 				}
 				mask = (mask << 1) | 1;
