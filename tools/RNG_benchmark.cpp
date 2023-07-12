@@ -42,8 +42,8 @@ double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	PractRand::RNGs::vRNG *rng = &_rng;
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.1 + 0.5)};
 	PractRand::RNGs::LightWeight::sfc64 known_fast(13);
-	int clock0 = clock();
-	int clock1, clock2;
+	long clock0 = clock();
+	long clock1, clock2;
 	while ((clock1 = clock()) == clock0) ;
 
 	Uint64 sum = 0;
@@ -140,8 +140,8 @@ union DataBlock {
 };
 #define DECLARE_EP_BENCH_FUNC(bits) double benchmark_entropy_pool_ ## bits (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};\
-	int clock0 = clock();\
-	int clock1, clock2;\
+	long clock0 = clock();\
+	long clock1, clock2;\
 	while ((clock1 = clock()) == clock0) ;\
 	int j = 0;\
 	do {\
@@ -162,8 +162,8 @@ DECLARE_EP_BENCH_FUNC(32)
 DECLARE_EP_BENCH_FUNC(64)
 double benchmark_entropy_pool_N (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};
-	int clock0 = clock();
-	int clock1, clock2;
+	long clock0 = clock();
+	long clock1, clock2;
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
