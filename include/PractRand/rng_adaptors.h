@@ -3,9 +3,7 @@
 #include "PractRand/rng_basics.h"
 
 #if 1
-namespace PractRand {
-	namespace RNGs {
-		namespace Adaptors {
+namespace PractRand::RNGs::Adaptors {
 			template<class base_rng> class NORMALIZE_OUTPUT;
 			template<class base_rng> class NORMALIZE_SEEDING;
 			template<class base_rng> class NORMALIZE_DISTRIBUTIONS;
@@ -187,7 +185,5 @@ namespace PractRand {
 			//to do:
 			//template<class base_rng> class RAW_TO_POLYMORPHIC_RNG;
 			//template<class base_rng> class NORMAL_TO_POLYMORPHIC_RNG;
-		}//namespace Adaptors
-	}//namespace RNGs
 }//namespace PractRand
 #endif

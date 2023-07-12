@@ -7,10 +7,7 @@
 //RNGs in the "other" directory are not intended for real world use
 //only for research; as such they may get pretty sloppy in some areas
 //and are usually not optimized
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Transform64 : public vRNG64 {
 				public:
 					vRNG *base_rng;
@@ -315,7 +312,4 @@ namespace PractRand {
 						: Transform8(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				vRNG *apply_BaysDurhamShuffle(vRNG *base_rng, int table_size_L2=8, int shift=-1);
-			}
-		}
-	}
 }

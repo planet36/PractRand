@@ -10,10 +10,7 @@
 using namespace PractRand;
 using namespace PractRand::Internals;
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				bigbadlcg64X::bigbadlcg64X(int discard_bits_, int shift_bits_) : discard_bits(discard_bits_) {
 					int max_discard_bits = MAX_N * 64 - 64;
 					if (discard_bits_ < 0 || discard_bits_ > max_discard_bits) issue_error("bigbadlcg64 - discard_bits out of range (0 <= discard_bits <= ?960?)");
@@ -667,7 +664,4 @@ namespace PractRand {
 				void mt19937_unhashed::walk_state(StateWalkingObject *walker) {
 					implementation.walk_state(walker);
 				}
-			}
-		}
-	}
 }

@@ -4,8 +4,7 @@
 #include <cmath>
 #include <vector>
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		//categories = old # of entries in tables
 		//return value = new # of entries in tables
 		//combines adjacent entries
@@ -249,5 +248,4 @@ namespace PractRand {
 			double pvalue_to_sample(double pvalue) const { return index_to_sample(pvalue_to_index(pvalue, limit)); }
 			double sample_to_pvalue(double sample) const { return index_to_pvalue(sample_to_index(sample), limit); }
 		};
-	}//Tests
 }//PractRand

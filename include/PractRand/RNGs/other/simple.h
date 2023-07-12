@@ -10,10 +10,7 @@ This set is of RNGs that do not make any significant use of:
 	multiplication/division, arrays, flow control, complex math functions
 */
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class xsalta16x3 : public vRNG16 {
 					Uint16 a, b, c;
 				public:
@@ -484,7 +481,4 @@ namespace PractRand {
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
-			}
-		}
-	}
 }

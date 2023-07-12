@@ -2,8 +2,7 @@
 
 #include "PractRand/config.h"
 
-namespace PractRand {
-	namespace Crypto {
+namespace PractRand::Crypto {
 		class SHA2_512 {
 			typedef Uint64 Word;
 			Word state[8];
@@ -26,5 +25,4 @@ namespace PractRand {
 			void finish(Uint8 destination[RESULT_LENGTH]);
 			SHA2_512() {reset();}
 		};
-	}//Crypto
 }//PractRand

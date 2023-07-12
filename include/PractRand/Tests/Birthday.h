@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class Birthday32 final : public TestBaseclass {
 			static constexpr int BUFFER_SIZE_L2 = 12; // must be at least 8
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
@@ -179,5 +178,4 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};//*/
-	}//Tests
 }//PractRand

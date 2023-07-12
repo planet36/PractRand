@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class CoupGap final : public TestBaseclass {
 			//enum {MAX_OLDEST_AGE = 256 * 16};
 			enum {MAX_CURRENT_AGE = 256 * 2};
@@ -29,5 +28,4 @@ namespace PractRand {
 			virtual void get_results ( std::vector<TestResult> &results ) override;
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-	}//Tests
 }//PractRand

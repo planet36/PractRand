@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 
 		//these are disabled for the moment
 
@@ -71,5 +70,4 @@ namespace PractRand {
 				}
 			}
 		};*/
-	}//Tests
 }//PractRand

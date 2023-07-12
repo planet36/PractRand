@@ -2,10 +2,7 @@
 
 #include "PractRand/test_batteries.h"
 
-namespace PractRand {
-	namespace Tests {
-		class ListOfTests;
-		namespace Transforms {
+namespace PractRand::Tests::Transforms {
 			class multiplex : public TestBaseclass {
 			protected:
 				ListOfTests subtests;
@@ -122,6 +119,4 @@ namespace PractRand {
 				virtual std::string get_name() const override;
 				virtual void test_blocks(TestBlock *data, int numblocks) override;
 			};
-		}//Transforms
-	}//Tests
 }//PractRand

@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class FPMulti final : public TestBaseclass {
 			/*
 				can a stride shorter than 64 bits really work for this?  it works fine for FPF, but... other subtests may be a lot more sensitive to the resulting issues
@@ -80,5 +79,4 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-	}//Tests
 }//PractRand

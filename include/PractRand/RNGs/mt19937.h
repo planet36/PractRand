@@ -3,8 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 
-namespace PractRand {
-	namespace RNGs {
+namespace PractRand::RNGs {
 		namespace Raw {
 			class mt19937 {
 			public:
@@ -49,5 +48,4 @@ namespace PractRand {
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(mt19937)
-	}
 }

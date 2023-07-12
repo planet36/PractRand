@@ -7,11 +7,8 @@
 #include <sstream>
 #include <string>
 
-namespace PractRand {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 	using namespace Internals;
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
 				Uint32 lcg32of64_varqual::raw32() {
 					state = state * 1103515245 + 12345;
 					return Uint32(state >> outshift);
@@ -867,8 +864,4 @@ namespace PractRand {
 					walker->handle(b);
 					walker->handle(count);
 				}
-
-			}
-		}
-	}
 }

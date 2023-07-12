@@ -11,9 +11,7 @@
 using namespace PractRand;
 using namespace PractRand::Internals;
 
-namespace PractRand {
-	namespace Testing {
-		namespace RNG_Sets{
+namespace PractRand::Testing::RNG_Sets {
 			const char *recommended_rngs[] = {
 				"hc256", "trivium",
 				"efiix64x384", "efiix32x384", "efiix16x384", "efiix8x384",
@@ -44,8 +42,6 @@ namespace PractRand {
 				//"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16", 
 				nullptr
 			};
-		}
-	}
 }
 
 

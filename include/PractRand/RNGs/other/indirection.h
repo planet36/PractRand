@@ -10,10 +10,7 @@ This set is of RNGs that:
 3. are likely to have detectable bias
 */
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//the classic cryptographic RNG
 				class rc4 : public vRNG8 {
 				protected:
@@ -233,7 +230,4 @@ namespace PractRand {
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
 				};
-			}
-		}
-	}
 }

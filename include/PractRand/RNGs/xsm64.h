@@ -3,8 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 
-namespace PractRand {
-	namespace RNGs {
+namespace PractRand::RNGs {
 		namespace Raw {
 			//implemented in RNGs/xsm.cpp
 			class xsm64 {
@@ -41,5 +40,4 @@ namespace PractRand {
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(xsm64)
-	}
 }

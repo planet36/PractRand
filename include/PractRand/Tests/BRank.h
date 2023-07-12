@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		//class BitMatrix;
 		class BRank final : public TestBaseclass {
 		public:
@@ -45,5 +44,4 @@ namespace PractRand {
 			std::vector<PerSize> ps;
 
 		};
-	}//Tests
 }//PractRand

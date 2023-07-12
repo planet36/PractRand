@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class DistC6 : public TestBaseclass {
 		public:
 			DistC6 ( int length_ = 9, int unitsL_ = 0, 
@@ -70,5 +69,4 @@ namespace PractRand {
 			VariableSizeCount<Uint8> odd_counts;
 			//internal helpers:
 		};
-	}//Tests
 }//PractRand

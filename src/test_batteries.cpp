@@ -31,9 +31,7 @@
 #include <vector>
 
 
-namespace PractRand {
-	namespace Tests {
-		namespace Batteries {
+namespace PractRand::Tests::Batteries {
 			void destruct_tests(ListOfTests &tests) {
 				for (unsigned i = 0; i < tests.tests.size(); i++) {
 					delete tests.tests[i];
@@ -198,6 +196,4 @@ namespace PractRand {
 			ListOfTests get_expanded_folded_tests() {
 				return apply_extended_foldings(get_expanded_core_tests);
 			}
-		}//Batteries
-	}//Tests
 }//PractRand

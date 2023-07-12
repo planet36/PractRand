@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class DistFreq4 final : public TestBaseclass {
 		public:
 			DistFreq4(int blocks_per_) : blocks_per(blocks_per_) {}
@@ -196,5 +195,4 @@ namespace PractRand {
 			int passes_at_once;
 			FixedSizeCount<Uint16, LPERM_BUCKETS> lperm_counts;//consider: also doing longer range tests on the comparisons done here
 		};
-	}//Tests
 }//PractRand

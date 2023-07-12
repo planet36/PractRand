@@ -13,10 +13,7 @@ This set is of RNGs that:
 4. are likely to have easily detectable bias
 */
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//similar to the classic LCGs, but with a longer period
 				class lcg16of32_extended : public vRNG16 {
 					Uint32 state, add;
@@ -454,7 +451,4 @@ namespace PractRand {
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
-			}
-		}
-	}
 }

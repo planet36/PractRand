@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class Coup16 final : public TestBaseclass {
 		protected:
 			enum { S = 65536 / 32 };
@@ -15,5 +14,4 @@ namespace PractRand {
 			virtual void get_results(std::vector<TestResult> &results) override;
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-	}//Tests
 }//PractRand

@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		/*
 			to do:
 				consider more complex forms, like a BCFN-equivalent or somesuch
@@ -58,5 +57,4 @@ namespace PractRand {
 			static unsigned long update_index(unsigned long index, Uint8 remainder);
 			void handle_level(int level, Uint8 remainder);
 		};
-	}//Tests
 }//PractRand

@@ -8,10 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void Transform64::seed(Uint64 s) {base_rng->seed(s);}
 				Uint64 Transform64::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform64::walk_state(StateWalkingObject *walker) {base_rng->walk_state(walker);}
@@ -522,7 +519,4 @@ namespace PractRand {
 					issue_error();
 					return nullptr;//just to quiet the warnings
 				}
-			}
-		}
-	}
 }

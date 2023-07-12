@@ -18,8 +18,7 @@
 	currently the only non-uniform distribution supported is the Gaussian distribution
 */
 
-namespace PractRand {
-	namespace Internals {
+namespace PractRand::Internals {
 
 		/*
 			Gaussian/Normal distribution implementation
@@ -70,5 +69,4 @@ namespace PractRand {
 			rv += primary_gaussian_cdf_table[index];
 			return rv;
 		}
-	}
 }

@@ -3,8 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 
-namespace PractRand {
-	namespace RNGs {
+namespace PractRand::RNGs {
 		namespace Raw {
 			class isaac64x256 {
 			public:
@@ -50,5 +49,4 @@ namespace PractRand {
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(isaac64x256)
-	}
 }

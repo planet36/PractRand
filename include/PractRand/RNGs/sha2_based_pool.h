@@ -2,9 +2,7 @@
 
 #include "PractRand/rng_basics.h"
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
+namespace PractRand::RNGs::Polymorphic {
 			class sha2_based_pool final : public vRNG8 {
 			public:
 				enum {
@@ -45,6 +43,4 @@ namespace PractRand {
 				void empty_input_buffer();
 				void refill_output_buffer();
 			};
-		}
-	}
 }

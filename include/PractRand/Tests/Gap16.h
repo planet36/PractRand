@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class Gap16 final : public TestBaseclass {
 		public:
 			virtual void init( PractRand::RNGs::vRNG *known_good ) override;
@@ -37,5 +36,4 @@ namespace PractRand {
 		protected:
 			FixedSizeCount<Uint8, 65536 * 2> counts;
 		};
-	}//Tests
 }//PractRand

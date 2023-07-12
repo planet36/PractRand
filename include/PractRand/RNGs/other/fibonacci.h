@@ -10,10 +10,7 @@ This set is of RNGs that:
 3. are likely to have easily detectable bias
 */
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//large-state LCGs with very poor constants
 				class bigbadlcg64X : public vRNG64 {
 					enum { MAX_N = 16 };
@@ -309,7 +306,4 @@ namespace PractRand {
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
-			}
-		}
-	}
 }

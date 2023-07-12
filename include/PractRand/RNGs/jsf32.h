@@ -3,8 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 
-namespace PractRand {
-	namespace RNGs {
+namespace PractRand::RNGs {
 		namespace Raw {
 			//implemented in RNGs/jsf.cpp
 			class jsf32 {
@@ -35,5 +34,4 @@ namespace PractRand {
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(jsf32)
-	}
 }

@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class FPF final : public TestBaseclass {
 		protected:
 			enum {
@@ -23,5 +22,4 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-	}//Tests
 }//PractRand

@@ -75,9 +75,7 @@ namespace Special_RNGs {
 	};
 }
 
-namespace PractRand {
-	//namespace Testing {
-		namespace RNG_Sets {
+namespace PractRand::RNG_Sets {
 			const char *recommended_rngs[] = {
 				"hc256", "trivium",
 				"efiix64x384", "efiix32x384", "efiix16x384", "efiix8x384",
@@ -142,8 +140,6 @@ namespace PractRand {
 				nullptr
 			};
 			const int num_nonrecommended_indirect = sizeof(nonrecommended_indirect) / sizeof(nonrecommended_indirect[0]) - 1;
-		}
-	//}
 }
 
 

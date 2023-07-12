@@ -6,11 +6,8 @@
 #include <sstream>
 #include <string>
 
-namespace PractRand {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 	using namespace Internals;
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
 				Uint16 xsalta16x3::raw16() {//slightly more complex output function
 					Uint16 tmp, old;
 					tmp = a + c + ((b >> 11) | (b << 5));
@@ -970,8 +967,4 @@ namespace PractRand {
 					walker->handle(c);
 					walker->handle(counter);
 				}
-
-			}
-		}
-	}
 }

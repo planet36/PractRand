@@ -10,13 +10,7 @@ This set is of RNGs that use at least one of the following:
 3. anything else not covered by simple.h, mult.h, indirection.h, or fibonacci.h
 */
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//class icg32_16;
 				//class eicg32_16;
-			}
-		}
-	}
 }

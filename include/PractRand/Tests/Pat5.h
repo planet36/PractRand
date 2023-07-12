@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class Pat5 final : public TestBaseclass {
 		public:
 			Pat5();
@@ -45,5 +44,4 @@ namespace PractRand {
 			int transform_bitcount_secondary(int bit_count) const;
 			int transform_bitcount_tertiary(int bit_count) const;
 		};
-	}//Tests
 }//PractRand

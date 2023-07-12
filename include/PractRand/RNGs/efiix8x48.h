@@ -3,8 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 
-namespace PractRand {
-	namespace RNGs {
+namespace PractRand::RNGs {
 		namespace Raw {
 			class efiix8x48 {
 			public:
@@ -43,5 +42,4 @@ namespace PractRand {
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(efiix8x48)
-	}
 }

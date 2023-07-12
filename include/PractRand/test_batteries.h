@@ -1,7 +1,6 @@
 #pragma once
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class TestBaseclass;
 
 		class ListOfTests {
@@ -66,5 +65,4 @@ namespace PractRand {
 			ListOfTests apply_extended_foldings(ListOfTests(*base_tests)());
 
 		}//Batteries
-	}//Tests
 }//PractRand

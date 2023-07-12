@@ -3,8 +3,7 @@
 #include "PractRand/test_helpers.h"
 #include "PractRand/tests.h"
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		/*
 			BCFN now has a 3rd parameter.  Set to false it acts like the BCFN in versions 0.90 and earlier.  
 				Set to false it acts in a broadly similar manner, but is faster.  I don't *think* it's any worse, but am not sure.  
@@ -73,5 +72,4 @@ namespace PractRand {
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 			void handle_high_levels ( int level, int bits );
 		};
-	}//Tests
 }//PractRand

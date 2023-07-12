@@ -3,8 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 
-namespace PractRand {
-	namespace RNGs {
+namespace PractRand::RNGs {
 		namespace Raw {
 			class arbee {
 			public:
@@ -76,5 +75,4 @@ namespace PractRand {
 		namespace LightWeight {
 			using Raw::arbee;
 		};
-	}
 }

@@ -2,8 +2,7 @@
 
 #include <bit>
 
-namespace PractRand {
-	namespace Tests {
+namespace PractRand::Tests {
 		class NearSeq final : public TestBaseclass {
 		protected:
 			typedef Uint64 Word;
@@ -157,5 +156,4 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks) override;
 		};
-	}//Tests
 }//PractRand

@@ -3,8 +3,7 @@
 #include "PractRand/sha2.h"
 #include <cstring>
 
-namespace PractRand {
-	namespace Crypto {
+namespace PractRand::Crypto {
 		class SHA2_512_constants {
 		public:
 			typedef Uint64 Word;
@@ -243,7 +242,6 @@ namespace PractRand {
 			endianness_state();
 			std::memcpy(destination, state, RESULT_LENGTH);
 		}
-	}//Crypto
 }//PractRand
 
 

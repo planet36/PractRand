@@ -11,10 +11,7 @@
 
 using namespace PractRand::Internals;
 
-namespace PractRand {
-	namespace RNGs {
-		namespace Polymorphic {
-			namespace NotRecommended {
+namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint8 rc4::raw8() {
 					b += arr[a];
 					Uint8 tmp = arr[b];
@@ -712,8 +709,4 @@ namespace PractRand {
 					buf << "genindF(" << table_size_L2 << ")";
 					return buf.str();
 				}
-
-			}//NotRecommended
-		}//Polymorphic
-	}//RNGs
 }//PractRand
