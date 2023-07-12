@@ -2081,7 +2081,7 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult> &results) {
 	std::vector<double> probs; probs.resize(size);
 	//retaining the reordered ordering
 	const Uint64 *count_ = counts.get_array();
-	if (1) {
+	if (true) {
 		for (i = 0; i < size; i++) {
 			//int x = reorder_bits(i);
 			int x = 0;
@@ -4362,7 +4362,7 @@ void PractRand::Tests::FPMulti::process(Uint64 position, unsigned long e, unsign
 	Platter &p = platter[e];
 	p.total_count++;
 
-	if (1) {
+	if (true) {
 		unsigned long gap_sig = sig >> (BASE_SIG_BITS - GAP_SIG_BITS);
 		Uint64 old_pos = p.gap_global_history[gap_sig];
 		p.gap_global_history[gap_sig] = position;// & 0x7FffFFffFFffFFffull;
@@ -4443,7 +4443,7 @@ std::string PractRand::Tests::FPMulti::get_name() const {
 void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 	//Uint64 total_samples = 0;
 
-	if (1) {// gap test preliminary work checking for autofail
+	if (true) {// gap test preliminary work checking for autofail
 		for (int e = 0; e <= MAX_EXP && !autofail; e++) {
 			Platter &p = platter[e];
 			//if (std::isinf(p.gap_product)) issue_error("FPMulti::get_results - gap product is infinite");
@@ -4463,7 +4463,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 		return;
 	}
 
-	if (1) {// full gap test
+	if (true) {// full gap test
 		enum { NUM_PRECALCED = 29 };
 		static const double precalced_per_sample_variance[NUM_PRECALCED] = {
 			// I printed lots of precision, but the actual calculations weren't that accurate.  I think it's all at least as good as single-precision though.  
@@ -7052,7 +7052,7 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 	double total_block_prob = 0;
 	for (int i = 0; i <= MAX_HDIST_PER_BLOCK; i++) total_block_prob += block_probs[i];
 	for (int i = 0; i <= MAX_HDIST_PER_BLOCK; i++) block_probs[i] /= total_block_prob;
-	if (1) {//populate core_probs
+	if (true) {//populate core_probs
 		for (int i = 0; i <= MAX_TOTAL_HDIST; i++) core_probs[i] = 0;
 		int block_h[BLOCKS_PER_CORE];
 		for (int i = 0; i < BLOCKS_PER_CORE; i++) block_h[i] = 0;
@@ -11099,7 +11099,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		lowbits_ = 2 << lowbitsL;
 	}
 	Uint32 *dest_ptr;
-	if (1) {//allocate space in vector:
+	if (true) {//allocate space in vector:
 		int spare_words = (TestBlock::SIZE/4 - leftovers) & (TestBlock::SIZE/4-1);
 		int words_to_use = (max * lowbits_) / 32;
 		int needed_words = words_to_use - spare_words;

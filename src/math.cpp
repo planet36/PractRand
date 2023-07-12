@@ -50,7 +50,7 @@ namespace PractRand {
 			convert128_64to32(value_low, value_high, value);
 			convert128_64to32(mul_low, mul_high, mul);
 			convert128_64to32(add_low, add_high, add);
-			while (1) {
+			while (true) {
 				if (how_far_low & 1) {
 					multiply_128(value, mul, value);
 					add_128(value, add, value);
@@ -70,7 +70,7 @@ namespace PractRand {
 			return;
 		}
 		Uint64 fast_forward_lcg64 ( Uint64 how_far, Uint64 val, Uint64 mul, Uint64 add ) {
-			while (1) {
+			while (true) {
 				if (how_far & 1) val = val * mul + add;
 				how_far >>= 1;
 				if (how_far == 0) break;
@@ -80,7 +80,7 @@ namespace PractRand {
 			return val;
 		}
 		Uint32 fast_forward_lcg32 ( Uint32 how_far, Uint32 val, Uint32 mul, Uint32 add ) {
-			while (1) {
+			while (true) {
 				if (how_far & 1) val = val * mul + add;
 				how_far >>= 1;
 				if (how_far == 0) break;
@@ -113,7 +113,7 @@ namespace PractRand {
 			if (mul >= mod) mul %= mod;
 			if (add >= mod) add %= mod;
 			if (how_far >= mod) how_far %= mod;
-			while (1) {
+			while (true) {
 				if (how_far & 1) {
 					val = Uint32((Uint64(val) * mul + add) % mod);
 				}
@@ -611,7 +611,7 @@ namespace PractRand {
 			}
 			double min = 0;
 			double emin = 0, emax = math_erf(max);
-			while (1) {
+			while (true) {
 				double mid = (min+max)/2;
 				if (emin == emax) return mid;
 				double emid = math_erf(mid);

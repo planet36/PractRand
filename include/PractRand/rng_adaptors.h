@@ -94,7 +94,7 @@ namespace PractRand::RNGs::Adaptors {
 						mask = max;
 						mask |= mask >> 1; mask |= mask >>  2; mask |= mask >> 4;
 						mask |= mask >> 8; mask |= mask >> 16;
-						while (1) {
+						while (true) {
 							tmp = this->raw32() & mask;
 							if (tmp <= max) return tmp;
 						}
@@ -107,7 +107,7 @@ namespace PractRand::RNGs::Adaptors {
 						mask = max;
 						mask |= mask >> 1; mask |= mask >>  2; mask |= mask >>  4;
 						mask |= mask >> 8; mask |= mask >> 16; mask |= mask >> 32;
-						while (1) {
+						while (true) {
 							tmp = this->raw64() & mask;
 							if (tmp <= max) return tmp;
 						}
