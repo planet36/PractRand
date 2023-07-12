@@ -1,7 +1,7 @@
 //template<typename RNG> double measure_RNG_performance();
 //returns megabytes per second, of calls to raw64() on 64 bit RNGs or raw32 on other RNGs
 
-template<typename RNG> double _measure_RNG_performance_16(RNG *rng) {
+template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .5) + 1};
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint16 buffy[1024];
@@ -25,7 +25,7 @@ template<typename RNG> double _measure_RNG_performance_16(RNG *rng) {
 
 	return rate;
 }
-template<typename RNG> double _measure_RNG_performance_32(RNG *rng) {
+template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1};
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint32 buffy[1024] = {0};
@@ -49,7 +49,7 @@ template<typename RNG> double _measure_RNG_performance_32(RNG *rng) {
 
 	return rate;
 }
-template<typename RNG> double _measure_RNG_performance_64(RNG *rng) {
+template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1};
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint64 buffy[1024] = {0};
@@ -75,6 +75,6 @@ template<typename RNG> double _measure_RNG_performance_64(RNG *rng) {
 }
 template<typename RNG> double measure_RNG_performance() {
 	RNG rng(PractRand::SEED_AUTO);
-	if (RNG::OUTPUT_BITS == 64) return _measure_RNG_performance_64(&rng);
-	else return _measure_RNG_performance_32(&rng);
+	if (RNG::OUTPUT_BITS == 64) return measure_RNG_performance_64(&rng);
+	else return measure_RNG_performance_32(&rng);
 }

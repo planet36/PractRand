@@ -34,7 +34,7 @@ enum { POS_INDEX0 = 12 - 4, POS_INDEX1 = 13 - 4, IV_INDEX0 = 14 - 4, IV_INDEX1 =
 enum { POSITION_OVERFLOW_INDEX = 0};
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(chacha)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(chacha)
 std::string PractRand::RNGs::Polymorphic::chacha::get_name() const {
 	std::ostringstream tmp;
 	tmp << "chacha(" << implementation.get_rounds() << ")";

@@ -30,13 +30,13 @@ namespace PractRand {
 
 		namespace Polymorphic {
 			class efiix32x48 final : public vRNG32 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(efiix32x48)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(efiix32x48)
 				//void seed(const Uint32 *seeds, int num_seeds, int seeding_quality=4) {implementation.seed(seeds, num_seeds, seeding_quality);}
 				void seed(Uint64 s) override;
 				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
 				void seed(vRNG *source_rng) override;
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(efiix32x48)
+		PRACTRAND_LIGHT_WEIGHT_RNG(efiix32x48)
 	}
 }

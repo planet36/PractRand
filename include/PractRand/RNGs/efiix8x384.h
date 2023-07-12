@@ -31,12 +31,12 @@ namespace PractRand {
 		
 		namespace Polymorphic {
 			class efiix8x384 : public vRNG8 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(efiix8x384)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(efiix8x384)
 				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
 				void seed(Uint64 s);
 				void seed(vRNG *source_rng);
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(efiix8x384)
+		PRACTRAND_LIGHT_WEIGHT_RNG(efiix8x384)
 	}
 }

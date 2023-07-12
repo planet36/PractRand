@@ -1,9 +1,6 @@
-#ifndef _practrand_rng_helpers_h
-#define _practrand_rng_helpers_h
+#pragma once
 
-#ifndef __PRACTRAND_CONFIG_H__
 #include "PractRand/config.h"
-#endif //__PRACTRAND_CONFIG_H__
 
 namespace PractRand {
 	class StateWalkingObject {
@@ -69,7 +66,7 @@ namespace PractRand {
 	StateWalkingObject *vrng_to_rng_seeder(RNGs::vRNG *);//must be deleted after use
 	StateWalkingObject *get_autoseeder(const void *);//must be deleted after use
 }
-#define PRACTRAND__POLYMORPHIC_RNG_BASICS_H(RNG) public:\
+#define PRACTRAND_POLYMORPHIC_RNG_BASICS_H(RNG) public:\
 		enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL,OUTPUT_BITS = Raw:: RNG ::OUTPUT_BITS,FLAGS = Raw:: RNG ::FLAGS};\
 		Raw:: RNG implementation;\
 		RNG (Uint64 s) {seed(s);}\
@@ -86,17 +83,12 @@ namespace PractRand {
 		void walk_state(StateWalkingObject *walker) override;
 
 #if defined PRACTRAND_NO_LIGHT_WEIGHT_RNGS
-#define PRACTRAND__LIGHT_WEIGHT_RNG(RNG)
-#define PRACTRAND__LIGHT_WEIGHT_ENTROPY_POOL(RNG)
+#define PRACTRAND_LIGHT_WEIGHT_RNG(RNG)
+#define PRACTRAND_LIGHT_WEIGHT_ENTROPY_POOL(RNG)
 #else // ! PRACTRAND_NO_LIGHT_WEIGHT_RNGS
-#ifndef __PRACTRAND_RNG_ADAPTORS_H__
 #include "rng_adaptors.h"
-#endif//__PRACTRAND_RNG_ADAPTORS_H__
-#define PRACTRAND__LIGHT_WEIGHT_RNG(RNG) 	\
+#define PRACTRAND_LIGHT_WEIGHT_RNG(RNG) 	\
 	namespace LightWeight {\
 		typedef PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG<PractRand::RNGs::Raw:: RNG > RNG;\
 	}
 #endif//PRACTRAND_PROVIDE_LIGHT_WEIGHT_RNGS
-
-
-#endif //_practrand_rng_helpers_h

@@ -1,5 +1,4 @@
-#ifndef __PRACTRAND_CONFIG_H__
-#define __PRACTRAND_CONFIG_H__
+#pragma once
 /*
 Things to configure in this file:
 1.  Endianness (usually CPU dependent)
@@ -100,6 +99,3 @@ way to allow a sane interface.
 #if defined _MSC_VER
 #define PRACTRAND_ALIGN_128 __declspec(align(16))
 #endif//defined _MSC_VER && _M_IX86_FP > 0
-
-
-#endif //__PRACTRAND_CONFIG_H__

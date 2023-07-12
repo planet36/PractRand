@@ -10,7 +10,7 @@
 using namespace PractRand;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(mt19937)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(mt19937)
 void PractRand::RNGs::Polymorphic::mt19937::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::mt19937::seed(Uint32 s[], int seed_length) {implementation.seed(s, seed_length);}
 void PractRand::RNGs::Polymorphic::mt19937::flush_buffers() {implementation.flush_buffers();}

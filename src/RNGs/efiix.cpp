@@ -16,23 +16,23 @@
 using namespace PractRand;
 using namespace PractRand::Internals;
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C8(efiix8x48)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(efiix8x48)
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix8x48::get_name() const { return "efiix8x48"; }
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C16(efiix16x48)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(efiix16x48)
 void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix16x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix16x48::get_name() const { return "efiix16x48"; }
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(efiix32x48)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(efiix32x48)
 void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix32x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 //void PractRand::RNGs::Polymorphic::efiix32x48::seed(const Uint32 *seeds, int num_seeds, int quality) {implementation.seed(seeds, num_seeds, quality);}
 void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix32x48::get_name() const { return "efiix32x48"; }
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(efiix64x48)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(efiix64x48)
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }

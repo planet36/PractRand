@@ -40,13 +40,13 @@ namespace PractRand {
 		
 		namespace Polymorphic {
 			class hc256 final : public vRNG32 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(hc256)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(hc256)
 				void seed(Uint64 s) override;
 				void seed(Uint32 seed_and_iv[16]);
 				void seed(vRNG *seeder_rng) override;
 				void flush_buffers() override;
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(hc256)
+		PRACTRAND_LIGHT_WEIGHT_RNG(hc256)
 	}
 }

@@ -1,5 +1,4 @@
-#ifndef __PRACTRAND_TEST_BATTERIES_H__
-#define __PRACTRAND_TEST_BATTERIES_H__
+#pragma once
 
 namespace PractRand {
 	namespace Tests {
@@ -69,5 +68,3 @@ namespace PractRand {
 		}//Batteries
 	}//Tests
 }//PractRand
-
-#endif //__PRACTRAND_TEST_BATTERIES_H__

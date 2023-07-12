@@ -12,7 +12,7 @@ using namespace PractRand;
 
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(trivium)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(trivium)
 void PractRand::RNGs::Polymorphic::trivium::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::trivium::seed_fast(Uint64 s) { implementation.seed_fast(s, s); }
 void PractRand::RNGs::Polymorphic::trivium::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }

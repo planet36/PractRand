@@ -1,5 +1,4 @@
-#ifndef __PRACTRAND_RNG_ADAPTORS_H__
-#define __PRACTRAND_RNG_ADAPTORS_H__
+#pragma once
 
 #if 1
 namespace PractRand {
@@ -10,13 +9,13 @@ namespace PractRand {
 			template<class base_rng> class NORMALIZE_DISTRIBUTIONS;
 
 
-			template<class base_rng> class _NORMALIZE;
+			template<class base_rng> class NORMALIZE;
 			template<class base_rng> class _NORMALIZE_OUTPUT;
 		//	template<class base_rng> class _TEMPLATIZE_OUTPUT;
 			template<class base_rng> class _NORMALIZE_SEEDING;
 			template<class base_rng> class _NORMALIZE_DISTRIBUTIONS;
 
-			namespace _Internal {
+			namespace Internal {
 				template<class base_rng, int bits> class ADAPT_OUTPUT_1_TO_ALL;
 
 				template<class base_rng, bool needs_int_seeding> class ADAPT_SEEDING;
@@ -147,11 +146,11 @@ namespace PractRand {
 				};
 
 //*/
-			}//namespace _Internal
+			}//namespace Internal
 
 			template<class base_rng> class _NORMALIZE_SEEDING {
 			public: typedef typename 
-				_Internal::ADAPT_SEEDING<
+				Internal::ADAPT_SEEDING<
 					base_rng, (base_rng::FLAGS & RNGs::FLAG::NEEDS_GENERIC_SEEDING) ? true : false
 				> t;
 			//public:typedef typename base_rng t;
@@ -159,24 +158,24 @@ namespace PractRand {
 			template<class base_rng> class NORMALIZE_SEEDING : public _NORMALIZE_SEEDING<base_rng>::t {};
 
 			template<class base_rng> class _NORMALIZE_OUTPUT {
-				public:typedef typename _Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t t;
+				public:typedef typename Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t t;
 			};
 			template<class base_rng> class NORMALIZE_OUTPUT : public _NORMALIZE_OUTPUT<base_rng>::t {};
 
 			template<class base_rng> class _NORMALIZE_DISTRIBUTIONS {
-				//public:typedef typename _Internal::_NORMALIZE_DISTRUBTIONS_HELPER<base_rng,bool(base_rng::DISTRUBTIONS_TYPE & DISTRIBUTIONS_TYPE__NORMAL)>::t t;
-				public:typedef _Internal::ADD_DISTRIBUTIONS<base_rng> t;
+				//public:typedef typename Internal::_NORMALIZE_DISTRUBTIONS_HELPER<base_rng,bool(base_rng::DISTRUBTIONS_TYPE & DISTRIBUTIONS_TYPE__NORMAL)>::t t;
+				public:typedef Internal::ADD_DISTRIBUTIONS<base_rng> t;
 			};
 			template<class base_rng> class NORMALIZE_DISTRIBUTIONS : public _NORMALIZE_DISTRIBUTIONS<base_rng>::t {};
 
-			template<class base_rng> class _NORMALIZE {
+			template<class base_rng> class NORMALIZE {
 				public:typedef typename _NORMALIZE_SEEDING<
 					typename _NORMALIZE_DISTRIBUTIONS<
 						typename _NORMALIZE_OUTPUT<base_rng>::t
 					>::t
 				>::t t;
 			};
-			template<class base_rng> class RAW_TO_LIGHT_WEIGHT_RNG : public _NORMALIZE<base_rng>::t {
+			template<class base_rng> class RAW_TO_LIGHT_WEIGHT_RNG : public NORMALIZE<base_rng>::t {
 			public:
 				RAW_TO_LIGHT_WEIGHT_RNG(SEED_AUTO_TYPE) {this->autoseed();}
 				RAW_TO_LIGHT_WEIGHT_RNG(SEED_NONE_TYPE) {}
@@ -190,5 +189,3 @@ namespace PractRand {
 	}//namespace RNGs
 }//namespace PractRand
 #endif
-
-#endif //__PRACTRAND_RNG_ADAPTORS_H__

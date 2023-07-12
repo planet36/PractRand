@@ -12,19 +12,19 @@ using namespace PractRand;
 using namespace PractRand::Internals;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(sfc64)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(sfc64)
 void PractRand::RNGs::Polymorphic::sfc64::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::sfc64::seed_fast(Uint64 s) {implementation.seed_fast(s);}
 void PractRand::RNGs::Polymorphic::sfc64::seed(Uint64 s1, Uint64 s2, Uint64 s3) {implementation.seed(s1,s2,s3);}
 std::string PractRand::RNGs::Polymorphic::sfc64::get_name() const {return "sfc64";}
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(sfc32)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(sfc32)
 void PractRand::RNGs::Polymorphic::sfc32::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::sfc32::seed_fast(Uint64 s) {implementation.seed_fast(s);}
 void PractRand::RNGs::Polymorphic::sfc32::seed(Uint32 s1, Uint32 s2, Uint32 s3) {implementation.seed(s1,s2,s3);}
 std::string PractRand::RNGs::Polymorphic::sfc32::get_name() const {return "sfc32";}
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C16(sfc16)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(sfc16)
 void PractRand::RNGs::Polymorphic::sfc16::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::sfc16::seed_fast(Uint64 s) {implementation.seed_fast(s);}
 void PractRand::RNGs::Polymorphic::sfc16::seed(Uint16 s1, Uint16 s2, Uint16 s3) {implementation.seed(s1,s2,s3);}

@@ -111,7 +111,7 @@ public:\
 };
 
 template<typename Word, int LAG1, int LAG2, int SHIFT1, int SHIFT2, int SHIFT3>
-class _RanrotVariant {
+class RanrotVariant {
 public:
 	enum {
 		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
@@ -157,17 +157,17 @@ public:
 		if (position > LAG1) position = 0;
 	}
 };
-class raw_ranrot_variant64 : public _RanrotVariant<Uint64,45,24,0,0,29> {public: Uint64 raw64() {return _raw_native();}};
-class raw_ranrot_variant32 : public _RanrotVariant<Uint32,45,24,0,0,13> {public: Uint32 raw32() {return _raw_native();}};
-class raw_ranrot_variant16 : public _RanrotVariant<Uint16,45,24,0,0, 5> {public: Uint16 raw16() {return _raw_native();}};
-class raw_ranrot_variant8  : public _RanrotVariant<Uint8 ,45,24,0,0, 3> {public: Uint8  raw8 () {return _raw_native();}};
+class raw_ranrot_variant64 : public RanrotVariant<Uint64,45,24,0,0,29> {public: Uint64 raw64() {return _raw_native();}};
+class raw_ranrot_variant32 : public RanrotVariant<Uint32,45,24,0,0,13> {public: Uint32 raw32() {return _raw_native();}};
+class raw_ranrot_variant16 : public RanrotVariant<Uint16,45,24,0,0, 5> {public: Uint16 raw16() {return _raw_native();}};
+class raw_ranrot_variant8  : public RanrotVariant<Uint8 ,45,24,0,0, 3> {public: Uint8  raw8 () {return _raw_native();}};
 POLYMORPHIC_CANDIDATE(ranrot_variant, 64)
 POLYMORPHIC_CANDIDATE(ranrot_variant, 32)
 POLYMORPHIC_CANDIDATE(ranrot_variant, 16)
 POLYMORPHIC_CANDIDATE(ranrot_variant,  8)
 
 template<typename Word, int ROTATE, int RSHIFT, int LSHIFT>
-class _VeryFast {
+class VeryFast {
 public:
 	enum {
 		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
@@ -177,7 +177,7 @@ public:
 	Word a, b, c;
 	Word table[256];
 	static Word rotate(Word value, int bits) {return ((value << bits) | (value >> (OUTPUT_BITS - bits)));}
-	_VeryFast() {
+	VeryFast() {
 		PractRand::RNGs::Polymorphic::hc256 good(PractRand::SEED_AUTO);
 		for (int i = 0; i < 256; i++) table[i] = Word(good.raw64());
 	}
@@ -264,10 +264,10 @@ public:
 		walker->handle(c);
 	}
 };
-class raw_VeryFast64 : public _VeryFast<Uint64,29,9,3> {public: Uint64 raw64() {return _raw_native();}};
-class raw_VeryFast32 : public _VeryFast<Uint32,13,7,3> {public: Uint32 raw32() {return _raw_native();}};
-class raw_VeryFast16 : public _VeryFast<Uint16, 7,3,2> {public: Uint16 raw16() {return _raw_native();}};
-class raw_VeryFast8  : public _VeryFast<Uint8 , 3,2,2> {public: Uint8  raw8 () {return _raw_native();}};
+class raw_VeryFast64 : public VeryFast<Uint64,29,9,3> {public: Uint64 raw64() {return _raw_native();}};
+class raw_VeryFast32 : public VeryFast<Uint32,13,7,3> {public: Uint32 raw32() {return _raw_native();}};
+class raw_VeryFast16 : public VeryFast<Uint16, 7,3,2> {public: Uint16 raw16() {return _raw_native();}};
+class raw_VeryFast8  : public VeryFast<Uint8 , 3,2,2> {public: Uint8  raw8 () {return _raw_native();}};
 POLYMORPHIC_CANDIDATE(VeryFast, 64)
 POLYMORPHIC_CANDIDATE(VeryFast, 32)
 POLYMORPHIC_CANDIDATE(VeryFast, 16)
@@ -388,8 +388,8 @@ public:
 		return result;//*/
 
 		//??? speed, 16 bit version failed @ ? GB (16 GB w/o counter), 32 bit @ ?
-		enum { _SHIFT1 = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 10 : -1)) };
-		enum { _SHIFT2 = (OUTPUT_BITS == 64) ? 25 : ((OUTPUT_BITS == 32) ?  9 : ((OUTPUT_BITS == 16) ?  7 : -1)) };
+		//enum { _SHIFT1 = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 10 : -1)) };
+		//enum { _SHIFT2 = (OUTPUT_BITS == 64) ? 25 : ((OUTPUT_BITS == 32) ?  9 : ((OUTPUT_BITS == 16) ?  7 : -1)) };
 
 
 		//a += b; b -= c;

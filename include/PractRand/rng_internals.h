@@ -1,9 +1,9 @@
 //#include <vector>
 
-#define PRACTRAND__RANDF_IMPLEMENTATION(RNG)  {return  ((RNG).raw32() & ((PractRand::Uint32(1) << 24)-1)) *  float(1.0/16777216.0);}
-#define PRACTRAND__RANDLF_IMPLEMENTATION(RNG)  {return ((RNG).raw64() & ((PractRand::Uint64(1) << 53)-1)) * (1.0/9007199254740992.0);}
+#define PRACTRAND_RANDF_IMPLEMENTATION(RNG)  {return  ((RNG).raw32() & ((PractRand::Uint32(1) << 24)-1)) *  float(1.0/16777216.0);}
+#define PRACTRAND_RANDLF_IMPLEMENTATION(RNG)  {return ((RNG).raw64() & ((PractRand::Uint64(1) << 53)-1)) * (1.0/9007199254740992.0);}
 
-#define PRACTRAND__RANDI_IMPLEMENTATION(max)     \
+#define PRACTRAND_RANDI_IMPLEMENTATION(max)     \
 	Uint32 mask, tmp;\
 	max -= 1;\
 	mask = max;\
@@ -13,7 +13,7 @@
 		tmp = raw32() & mask;\
 	} while (tmp > max);\
 	return tmp;
-#define PRACTRAND__RANDLI_IMPLEMENTATION(max)     \
+#define PRACTRAND_RANDLI_IMPLEMENTATION(max)     \
 	Uint64 mask, tmp;\
 	max -= 1;\
 	mask = max;\
@@ -24,7 +24,7 @@
 	} while (tmp > max);\
 	return tmp;
 
-#define PRACTRAND__POLYMORPHIC_RNG_BASICS_C8(RNG) \
+#define PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(RNG) \
 	Uint8  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return implementation.raw8();}\
 	Uint16 PractRand::RNGs::Polymorphic:: RNG ::raw16() {Uint16 r = implementation.raw8(); return (Uint16(implementation.raw8()) << 8) | r;}\
 	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {\
@@ -41,7 +41,7 @@
 	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
 		implementation.walk_state(walker);\
 	}
-#define PRACTRAND__POLYMORPHIC_RNG_BASICS_C16(RNG) \
+#define PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(RNG) \
 	Uint8  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return Uint8(implementation.raw16());}\
 	Uint16 PractRand::RNGs::Polymorphic:: RNG ::raw16() {return implementation.raw16();}\
 	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {\
@@ -58,7 +58,7 @@
 	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
 		implementation.walk_state(walker);\
 	}
-#define PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(RNG) \
+#define PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(RNG) \
 	Uint8  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return Uint8 (implementation.raw32());}\
 	Uint16 PractRand::RNGs::Polymorphic:: RNG ::raw16() {return Uint16(implementation.raw32());}\
 	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {return implementation.raw32();}\
@@ -70,7 +70,7 @@
 	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
 		implementation.walk_state(walker);\
 	}
-#define PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(RNG) \
+#define PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(RNG) \
 	Uint8  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return Uint8 (implementation.raw64());}\
 	Uint16 PractRand::RNGs::Polymorphic:: RNG ::raw16() {return Uint16(implementation.raw64());}\
 	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {return Uint32(implementation.raw64());}\

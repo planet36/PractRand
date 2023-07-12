@@ -12,30 +12,30 @@ using namespace PractRand;
 using namespace PractRand::Internals;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(rarns64)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(rarns64)
 void PractRand::RNGs::Polymorphic::rarns64::seed(Uint64 s) { implementation.seed(s); }
 //void PractRand::RNGs::Polymorphic::rarns64::seed_fast(Uint64 s) { implementation.seed_fast(s); }
 //void PractRand::RNGs::Polymorphic::rarns64::seed(Uint64 s1, Uint64 s2, Uint64 s3) { implementation.seed(s1, s2, s3); }
 std::string PractRand::RNGs::Polymorphic::rarns64::get_name() const { return "rarns64"; }
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(rarns32)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(rarns32)
 void PractRand::RNGs::Polymorphic::rarns32::seed(Uint64 s) { implementation.seed(s); }
 //void PractRand::RNGs::Polymorphic::rarns32::seed_fast(Uint64 s) { implementation.seed_fast(s); }
 //void PractRand::RNGs::Polymorphic::rarns32::seed(Uint32 s1, Uint32 s2, Uint32 s3) { implementation.seed(s1, s2, s3); }
 std::string PractRand::RNGs::Polymorphic::rarns32::get_name() const { return "rarns32"; }
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C16(rarns16)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(rarns16)
 void PractRand::RNGs::Polymorphic::rarns16::seed(Uint64 s) { implementation.seed(s); }
 //void PractRand::RNGs::Polymorphic::rarns16::seed_fast(Uint64 s) { implementation.seed_fast(s); }
 //void PractRand::RNGs::Polymorphic::rarns16::seed(Uint16 s1, Uint16 s2, Uint16 s3) { implementation.seed(s1, s2, s3); }
 std::string PractRand::RNGs::Polymorphic::rarns16::get_name() const { return "rarns16"; }
 
 //raw:
-static char _s1 = 3, _s2 = 7, _s3 = 8;
-void _set_shift_values(int shift1, int shift2, int shift3) {
-	_s1 = shift1;
-	_s2 = shift2;
-	_s3 = shift3;
+static char global_s1 = 3, global_s2 = 7, global_s3 = 8;
+void set_shift_values(int shift1, int shift2, int shift3) {
+	global_s1 = shift1;
+	global_s2 = shift2;
+	global_s3 = shift3;
 }
 Uint16 PractRand::RNGs::Raw::rarns16::raw16() {
 	enum {
@@ -45,13 +45,13 @@ Uint16 PractRand::RNGs::Raw::rarns16::raw16() {
 		OUTROT = 5
 	};
 	Uint16 rv = rotate16(xs1 + xs3, OUTROT);
-	Uint16 old = xs1 >> _s1;
+	Uint16 old = xs1 >> global_s1;
 	xs3 ^= xs1;
 	xs1 ^= xs2;
 	xs2 ^= xs3;
 	xs1 ^= old;
-	xs3 = rotate16(xs3, _s2);
-	xs1 = rotate16(xs1, _s3);
+	xs3 = rotate16(xs3, global_s2);
+	xs1 = rotate16(xs1, global_s3);
 	rv += xs1;
 	return rv;
 }

@@ -1,9 +1,6 @@
-#ifndef __PRACTRAND_ENDIAN_H__
-#define __PRACTRAND_ENDIAN_H__
+#pragma once
 
-#ifndef __PRACTRAND_CONFIG_H__
 #include "config.h"
-#endif
 
 #if defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN && defined PRACTRAND_TARGET_IS_BIG_ENDIAN
 	#error "PractRand has conflicting endianness settings, see PractRand/config.h"
@@ -81,5 +78,3 @@ namespace PractRand {
 	};
 #endif
 }
-
-#endif //__PRACTRAND_ENDIAN_H__

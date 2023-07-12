@@ -15,14 +15,14 @@ using namespace PractRand;
 using namespace PractRand::Internals;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(xsm32)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(xsm32)
 void PractRand::RNGs::Polymorphic::xsm32::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::xsm32::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::xsm32::seek_forward128(Uint64 how_far_low64, [[maybe_unused]] Uint64 how_far_high64) { implementation.seek_forward(how_far_low64); }
 void PractRand::RNGs::Polymorphic::xsm32::seek_backward128(Uint64 how_far_low64, [[maybe_unused]] Uint64 how_far_high64) {implementation.seek_backward(how_far_low64);}
 std::string PractRand::RNGs::Polymorphic::xsm32::get_name() const {return "xsm32";}
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(xsm64)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(xsm64)
 void PractRand::RNGs::Polymorphic::xsm64::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::xsm64::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 void PractRand::RNGs::Polymorphic::xsm64::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }

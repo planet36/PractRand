@@ -1,6 +1,4 @@
-#ifndef __PRACTRAND_TESTS_H__
-#define __PRACTRAND_TESTS_H__
-
+#pragma once
 
 namespace PractRand {
 	namespace RNGs { class vRNG; }
@@ -73,5 +71,3 @@ namespace PractRand {
 		};
 	}//Tests
 }//PractRand
-
-#endif //__PRACTRAND_TESTS_H__

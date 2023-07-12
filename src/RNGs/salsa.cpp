@@ -30,7 +30,7 @@ enum { CONST_INDEX_0 = 0, CONST_INDEX_1 = 5, CONST_INDEX_2 = 10, CONST_INDEX_3 =
 enum { POSITION_OVERFLOW_INDEX = CONST_INDEX_0};
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(salsa)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(salsa)
 std::string PractRand::RNGs::Polymorphic::salsa::get_name() const {
 	std::ostringstream tmp;
 	tmp << "salsa(" << implementation.get_rounds() << ")";

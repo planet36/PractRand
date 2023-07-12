@@ -11,13 +11,13 @@
 using namespace PractRand;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(isaac32x256)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(isaac32x256)
 void PractRand::RNGs::Polymorphic::isaac32x256::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::isaac32x256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac32x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac32x256::get_name() const {return "isaac32x256";}
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(isaac64x256)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(isaac64x256)
 void PractRand::RNGs::Polymorphic::isaac64x256::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::isaac64x256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac64x256::flush_buffers() { implementation.flush_buffers(); }

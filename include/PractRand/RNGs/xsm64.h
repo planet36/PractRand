@@ -27,7 +27,7 @@ namespace PractRand {
 
 		namespace Polymorphic {
 			class xsm64 final : public vRNG64 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(xsm64)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(xsm64)
 				void seed(Uint64 s) override; // no two seeds on the same cycle
 				void seed(Uint64 seed_low, Uint64 seed_high); // no two seeds within 2**127 of each other on the same cycle
 				void seed(vRNG *seeder_rng) override; // no two distinct seeded states within 2**95 of each other on the same cycle (2**160 distinct seeded states possible)
@@ -35,6 +35,6 @@ namespace PractRand {
 				virtual void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(xsm64)
+		PRACTRAND_LIGHT_WEIGHT_RNG(xsm64)
 	}
 }

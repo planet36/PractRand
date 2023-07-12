@@ -58,7 +58,7 @@ namespace PractRand {
 		}
 		namespace Polymorphic {
 			class chacha final : public vRNG32 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(chacha)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(chacha)
 				chacha(Uint32 seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
 				void seed(Uint64 s) override;
 				void seed(Uint32 seed_and_iv[10], bool extend_cycle_ = false);
@@ -74,6 +74,6 @@ namespace PractRand {
 				int get_rounds() const;
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(chacha)
+		PRACTRAND_LIGHT_WEIGHT_RNG(chacha)
 	}
 }

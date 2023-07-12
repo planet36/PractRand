@@ -1,10 +1,7 @@
-#ifndef _practrand_rng_basics_h
-#define _practrand_rng_basics_h
+#pragma once
 
 #include <string>
-#ifndef __PRACTRAND_CONFIG_H__
 #include "PractRand/config.h"
-#endif //__PRACTRAND_CONFIG_H__
 
 namespace PractRand {
 	extern const char *version_str;//like "0.91", for PractRand 0.91
@@ -209,4 +206,3 @@ namespace PractRand {
 	}//namespace RNGs
 	namespace Tests { union TestBlock; }
 }//namespace PractRand
-#endif//_practrand_rng_basics_h

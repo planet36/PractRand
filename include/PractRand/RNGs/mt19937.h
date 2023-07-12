@@ -36,13 +36,13 @@ namespace PractRand {
 		
 		namespace Polymorphic {
 			class mt19937 final : public vRNG32 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(mt19937)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(mt19937)
 				mt19937 (Uint32 s[], int seed_length) {seed(s, seed_length);}
 				void seed(Uint64 s) override;
 				void seed(Uint32 s[], int seed_length);//alternate seeding algorithm added to MT in 2002
 				void flush_buffers() override;
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(mt19937)
+		PRACTRAND_LIGHT_WEIGHT_RNG(mt19937)
 	}
 }

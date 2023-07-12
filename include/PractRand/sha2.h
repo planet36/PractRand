@@ -1,9 +1,6 @@
-#ifndef __PRACTRAND_SHA2_H__
-#define __PRACTRAND_SHA2_H__
+#pragma once
 
-#ifndef __PRACTRAND_CONFIG_H__
 #include "PractRand/config.h"
-#endif //__PRACTRAND_CONFIG_H__
 
 namespace PractRand {
 	namespace Crypto {
@@ -31,6 +28,3 @@ namespace PractRand {
 		};
 	}//Crypto
 }//PractRand
-
-#endif /* __PRACTRAND_SHA2_H__ */
-

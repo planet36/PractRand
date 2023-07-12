@@ -21,11 +21,11 @@ namespace PractRand {
 
 		namespace Polymorphic {
 			class rarns64 final : public vRNG64 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(rarns64)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(rarns64)
 				void seed(Uint64 s) override;
 				void seed(Uint64 s1, Uint16 s2);
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(rarns64)
+		PRACTRAND_LIGHT_WEIGHT_RNG(rarns64)
 	}
 }

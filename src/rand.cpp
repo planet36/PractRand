@@ -397,16 +397,16 @@ namespace PractRand {
 			flush_buffers();
 		}
 		Uint32 vRNG::randi(Uint32 max) {
-			PRACTRAND__RANDI_IMPLEMENTATION(max)
+			PRACTRAND_RANDI_IMPLEMENTATION(max)
 		}
 		Uint64 vRNG::randli(Uint64 max) {
-			PRACTRAND__RANDLI_IMPLEMENTATION(max)
+			PRACTRAND_RANDLI_IMPLEMENTATION(max)
 		}
 		Uint32 vRNG::randi_fast(Uint32 max) {
 			return randi_fast_implementation(raw32(), max);
 		}
-		float vRNG::randf() {PRACTRAND__RANDF_IMPLEMENTATION(*this)}
-		double vRNG::randlf() {PRACTRAND__RANDLF_IMPLEMENTATION(*this)}
+		float vRNG::randf() {PRACTRAND_RANDF_IMPLEMENTATION(*this)}
+		double vRNG::randlf() {PRACTRAND_RANDLF_IMPLEMENTATION(*this)}
 		double vRNG::gaussian() { return Internals::generate_gaussian_fast(raw64()); }
 		Uint64 vRNG::get_flags() const {return 0;}
 		void vRNG::seek_forward128 (Uint64, Uint64) {}

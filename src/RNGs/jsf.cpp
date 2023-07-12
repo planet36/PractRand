@@ -12,12 +12,12 @@
 using namespace PractRand;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(jsf64)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(jsf64)
 void PractRand::RNGs::Polymorphic::jsf64::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::jsf64::seed_fast(Uint64 s) {implementation.seed_fast(s);}
 std::string PractRand::RNGs::Polymorphic::jsf64::get_name() const {return "jsf64";}
 
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(jsf32)
+PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(jsf32)
 void PractRand::RNGs::Polymorphic::jsf32::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::jsf32::seed_fast(Uint64 s) {implementation.seed_fast(s);}
 std::string PractRand::RNGs::Polymorphic::jsf32::get_name() const {return "jsf32";}

@@ -22,12 +22,12 @@ namespace PractRand {
 		
 		namespace Polymorphic {
 			class sfc16 final : public vRNG16 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(sfc16)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(sfc16)
 				void seed(Uint64 s) override;
 				void seed_fast(Uint64 s) override;
 				void seed(Uint16 s1, Uint16 s2, Uint16 s3);
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(sfc16)
+		PRACTRAND_LIGHT_WEIGHT_RNG(sfc16)
 	}
 }

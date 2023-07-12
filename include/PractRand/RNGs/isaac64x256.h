@@ -38,12 +38,12 @@ namespace PractRand {
 		
 		namespace Polymorphic {
 			class isaac64x256 final : public vRNG64 {
-				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(isaac64x256)
+				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(isaac64x256)
 				void seed(Uint64 s) override;
 				void seed(vRNG *seeder_rng) override;
 				void flush_buffers() override;
 			};
 		}
-		PRACTRAND__LIGHT_WEIGHT_RNG(isaac64x256)
+		PRACTRAND_LIGHT_WEIGHT_RNG(isaac64x256)
 	}
 }

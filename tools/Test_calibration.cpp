@@ -360,7 +360,7 @@ void blah_fpf() {
 	}
 }
 
-void _set_shift_values(int shift1, int shift2, int shift3);
+void set_shift_values(int shift1, int shift2, int shift3);
 struct CharPoly {
 	enum { WORDS = 3 };
 	typedef Uint16 Word;
@@ -399,7 +399,7 @@ void blah_rarns_search_shifts() {
 	int shift1 = MIN_SHIFT1, shift2 = MIN_SHIFT2, shift3 = MIN_SHIFT3;
 	while (true) {
 		PractRand::RNGs::Raw::rarns16 rarns;
-		_set_shift_values(shift1, shift2, shift3);
+		set_shift_values(shift1, shift2, shift3);
 		rarns.seed(0);
 
 		if (++shift1 > MAX_SHIFT1) {

@@ -8516,7 +8516,7 @@ std::string PractRand::Tests::LPerm16::get_name() const {
 	buf << ")";
 	return buf.str();
 }
-static int _lperm16_8(const Uint8 data[16]) {
+static int lperm16_8(const Uint8 data[16]) {
 	//single words
 	int bit0 = (data[ 0] < data[ 1]), bit1 = (data[ 2] < data[ 3]), bit3 = (data[ 4] < data[ 5]), bit4 = (data[ 6] < data[ 7]);
 	int bit7 = (data[ 8] < data[ 9]), bit8 = (data[10] < data[11]), bit10 = (data[12] < data[13]), bit11 = (data[14] < data[15]);
@@ -8526,7 +8526,7 @@ static int _lperm16_8(const Uint8 data[16]) {
 	int bit6 = (data[ 3] < data[ 7]), bit13 = (data[11] < data[15]), bit14 = (data[7] < data[15]);
 	return bit0 | (bit1 << 1) | (bit2 << 2) | (bit3 << 3) | (bit4 << 4) | (bit5 << 5) | (bit6 << 6) | (bit7 << 7) | (bit8 << 8) | (bit9 << 9) | (bit10 << 10) | (bit11 << 11) | (bit12 << 12) | (bit13 << 13) | (bit14 << 14);
 }
-static int _lperm16_16(const Uint16 data[16]) {
+static int lperm16_16(const Uint16 data[16]) {
 	//single words
 	int bit0 = (data[ 0] < data[ 1]), bit1 = (data[ 2] < data[ 3]), bit3 = (data[ 4] < data[ 5]), bit4 = (data[ 6] < data[ 7]);
 	int bit7 = (data[ 8] < data[ 9]), bit8 = (data[10] < data[11]), bit10 = (data[12] < data[13]), bit11 = (data[14] < data[15]);
@@ -8536,7 +8536,7 @@ static int _lperm16_16(const Uint16 data[16]) {
 	int bit6 = (data[ 3] < data[ 7]), bit13 = (data[11] < data[15]), bit14 = (data[7] < data[15]);
 	return bit0 | (bit1 << 1) | (bit2 << 2) | (bit3 << 3) | (bit4 << 4) | (bit5 << 5) | (bit6 << 6) | (bit7 << 7) | (bit8 << 8) | (bit9 << 9) | (bit10 << 10) | (bit11 << 11) | (bit12 << 12) | (bit13 << 13) | (bit14 << 14);
 }
-static int _lperm16_32(const Uint32 data[16]) {
+static int lperm16_32(const Uint32 data[16]) {
 	//single words
 	int bit0 = (data[ 0] < data[ 1]), bit1 = (data[ 2] < data[ 3]), bit3 = (data[ 4] < data[ 5]), bit4 = (data[ 6] < data[ 7]);
 	int bit7 = (data[ 8] < data[ 9]), bit8 = (data[10] < data[11]), bit10 = (data[12] < data[13]), bit11 = (data[14] < data[15]);
@@ -8546,7 +8546,7 @@ static int _lperm16_32(const Uint32 data[16]) {
 	int bit6 = (data[ 3] < data[ 7]), bit13 = (data[11] < data[15]), bit14 = (data[7] < data[15]);
 	return bit0 | (bit1 << 1) | (bit2 << 2) | (bit3 << 3) | (bit4 << 4) | (bit5 << 5) | (bit6 << 6) | (bit7 << 7) | (bit8 << 8) | (bit9 << 9) | (bit10 << 10) | (bit11 << 11) | (bit12 << 12) | (bit13 << 13) | (bit14 << 14);
 }
-static int _lperm16_64(const Uint64 data[16]) {
+static int lperm16_64(const Uint64 data[16]) {
 	//single words
 	int bit0 = (data[ 0] < data[ 1]), bit1 = (data[ 2] < data[ 3]), bit3 = (data[ 4] < data[ 5]), bit4 = (data[ 6] < data[ 7]);
 	int bit7 = (data[ 8] < data[ 9]), bit8 = (data[10] < data[11]), bit10 = (data[12] < data[13]), bit11 = (data[14] < data[15]);
@@ -8556,7 +8556,7 @@ static int _lperm16_64(const Uint64 data[16]) {
 	int bit6 = (data[ 3] < data[ 7]), bit13 = (data[11] < data[15]), bit14 = (data[7] < data[15]);
 	return bit0 | (bit1 << 1) | (bit2 << 2) | (bit3 << 3) | (bit4 << 4) | (bit5 << 5) | (bit6 << 6) | (bit7 << 7) | (bit8 << 8) | (bit9 << 9) | (bit10 << 10) | (bit11 << 11) | (bit12 << 12) | (bit13 << 13) | (bit14 << 14);
 }
-static int _lperm8_8(const Uint8 data[8]) {
+static int lperm8_8(const Uint8 data[8]) {
 	//single words
 	int bit0 = (data[0] < data[1]), bit1 = (data[2] < data[3]), bit3 = (data[4] < data[5]), bit4 = (data[6] < data[7]);
 	//double words
@@ -10654,7 +10654,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 			rawperm[x] = td;
 		}
 		if (used != 255) std::printf("duplicated values\n");
-		int limited = _lperm8_8(rawperm);
+		int limited = lperm8_8(rawperm);
 		lperm8_chances[limited] += 1.0 / fact8;
 	}
 	for (int i = 0; i < 128; i++) {
@@ -10765,25 +10765,25 @@ void PractRand::Tests::LPerm16::test_blocks(TestBlock *data, int numblocks) {
 		int perms_per_block = !passes_at_once ? (8 * TestBlock::SIZE / word_bits / 16) : passes_at_once;
 		if (word_bits == 8) {
 			for (int pos = 0; pos < perms_per_block; pos++) {
-				int code = _lperm16_8(&data[0].as8[pos * 16]);
+				int code = lperm16_8(&data[0].as8[pos * 16]);
 				lperm_counts.increment(code);
 			}
 		}
 		if (word_bits == 16) {
 			for (int pos = 0; pos < perms_per_block; pos++) {
-				int code = _lperm16_16(&data[0].as16[pos * 16]);
+				int code = lperm16_16(&data[0].as16[pos * 16]);
 				lperm_counts.increment(code);
 			}
 		}
 		if (word_bits == 32) {
 			for (int pos = 0; pos < perms_per_block; pos++) {
-				int code = _lperm16_32(&data[0].as32[pos * 16]);
+				int code = lperm16_32(&data[0].as32[pos * 16]);
 				lperm_counts.increment(code);
 			}
 		}
 		if (word_bits == 64) {
 			for (int pos = 0; pos < perms_per_block; pos++) {
-				int code = _lperm16_64(&data[0].as64[pos * 16]);
+				int code = lperm16_64(&data[0].as64[pos * 16]);
 				lperm_counts.increment(code);
 			}
 		}
