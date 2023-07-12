@@ -78,8 +78,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const Entry *table;
 
 					//for buffering fractional bytes of output
-					Uint32 buf_data;
-					Uint32 buf_count;
+					Uint32 buf_data{};
+					Uint32 buf_count{};
 
 					//for buffering full bytes of output
 					std::deque<Uint8> finished_bytes;
@@ -90,7 +90,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					Uint64 get_flags() const override;
 					std::string get_name() const override;
-					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), buf_data(0), buf_count(0), name(name_), base_rng(rng) {}
+					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), name(name_), base_rng(rng) {}
 					~GeneralizedTableTransform();
 					void walk_state(StateWalkingObject *) override;
 					Uint8 raw8() override;

@@ -201,9 +201,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 
 				class pcg32 final : public vRNG32 {
-					Uint64 state, inc;
+					Uint64 state{0x853c49e6748fea9bULL}, inc{0xda3e39cb94b95bdbULL};
 				public:
-					pcg32() : state(0x853c49e6748fea9bULL), inc(0xda3e39cb94b95bdbULL) {}
+					pcg32() {}
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;
@@ -211,9 +211,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject *) override;
 				};
 				class pcg32_norot final : public vRNG32 {
-					Uint64 state, inc;
+					Uint64 state{0x853c49e6748fea9bULL}, inc{0xda3e39cb94b95bdbULL};
 				public:
-					pcg32_norot() : state(0x853c49e6748fea9bULL), inc(0xda3e39cb94b95bdbULL) {}
+					pcg32_norot() {}
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;

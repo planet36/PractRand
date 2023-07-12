@@ -22,7 +22,7 @@ namespace Special_RNGs {
 		}
 		enum { BUFF_SIZE = 4096 / sizeof(Word) };
 		Word *pos, *end;
-		bool ended;
+		bool ended{false};
 		Word buffer[BUFF_SIZE];
 		void refill() {
 			std::size_t n = std::fread(&buffer[0], sizeof(Word), BUFF_SIZE, stdin);
@@ -32,7 +32,7 @@ namespace Special_RNGs {
 			end = &buffer[n];
 		}
 	public:
-		_stdin_reader() : ended(false) { refill(); }
+		_stdin_reader() { refill(); }
 		Word read() { if (pos == end) refill(); return *(pos++); }
 	};
 	class RNG_stdin : public PractRand::RNGs::vRNG8 {

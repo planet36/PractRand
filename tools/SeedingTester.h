@@ -10,9 +10,9 @@ public:
 
 	std::set<Uint64> unordered_history;
 	std::deque<Uint64> history;
-	unsigned int history_limit;
+	unsigned int history_limit{1024};
 
-	Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : known_good(PractRand::SEED_NONE), history_limit(1024) {
+	Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : known_good(PractRand::SEED_NONE) {
 		base_rng = base_rng_;
 		//current_seed = known_good.raw64();
 		//record_seed(current_seed);
@@ -81,7 +81,7 @@ public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG *base_entropy_pool;
 	unsigned int min_length, max_length;
-	unsigned int history_length;
+	unsigned int history_length{16384};
 	std::vector<Uint8> current_seed;
 	Transform last_transform;
 	std::multiset<Uint64> unordered_history;//hashes only
@@ -92,7 +92,7 @@ public:
 	//std::deque<std::pair<std::map<Uint64,Uint64>::iterator,Transform> > history;//hashes first, then transform applied - newest at front
 	//Uint64 position;//starts at 0, incremented after every entropy string
 
-	EntropyPool_MetaRNG(PractRand::RNGs::vRNG *base_entropy_pool_, int min_length_, int max_length_) : known_good(PractRand::SEED_NONE), base_entropy_pool(base_entropy_pool_), min_length(min_length_), max_length(max_length_), history_length(16384) {
+	EntropyPool_MetaRNG(PractRand::RNGs::vRNG *base_entropy_pool_, int min_length_, int max_length_) : known_good(PractRand::SEED_NONE), base_entropy_pool(base_entropy_pool_), min_length(min_length_), max_length(max_length_) {
 		//int len = (min_length + max_length) / 2;
 		current_seed.reserve(max_length);
 		//current_seed.resize(len);

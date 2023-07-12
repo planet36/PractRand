@@ -6273,7 +6273,7 @@ void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
 
 
 
-PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_), in_progress(nullptr) {
+PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_) {
 	static Uint32 sizes[] = { 
 		128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6<<10, 8<<10, 12<<10, 16<<10, 24<<10, 32<<10, 48<<10, 64<<10, 0
 	};

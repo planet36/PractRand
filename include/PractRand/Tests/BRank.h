@@ -23,7 +23,7 @@ namespace PractRand::Tests {
 			Uint64 saved_time;
 
 			//partially complete matrix:
-			BitMatrix *in_progress;
+			BitMatrix *in_progress{nullptr};
 			Uint32 blocks_in_progress;
 			int size_index;//which PerSize is active atm?
 

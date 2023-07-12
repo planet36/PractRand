@@ -22,7 +22,7 @@ namespace PractRand::RNGs {
 				Uint32 state[12];
 				Uint32 used{};
 				Uint32 position_overflow{};
-				Uint8 rounds;
+				Uint8 rounds{20};
 				bool extend_cycle{};//true allows carries from the position field to overflow in to the upper word of the IV
 				bool short_seed{};
 				Uint8 padding[5];//just to make the size a round number
@@ -35,7 +35,7 @@ namespace PractRand::RNGs {
 				void _core();
 				Uint32 _refill_and_raw32();
 			public:
-				chacha() : rounds(20) {}
+				chacha() {}
 				~chacha();
 				Uint32 raw32() {
 					if (used < 16) return outbuf[used++];

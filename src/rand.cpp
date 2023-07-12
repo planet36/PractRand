@@ -36,9 +36,9 @@ namespace PractRand {
 	public:
 		char *buffer;
 		std::size_t max_size;
-		std::size_t size_used;
+		std::size_t size_used{};
 		SerializingStateWalker( char *buffer_, std::size_t max_size_ )
-			: buffer(buffer_), max_size(max_size_), size_used(0)
+			: buffer(buffer_), max_size(max_size_)
 		{}
 		void push(Uint8 value) {
 			std::size_t index = size_used++;
@@ -77,9 +77,9 @@ namespace PractRand {
 	public:
 		const char *buffer;
 		std::size_t max_size;
-		std::size_t size_used;
+		std::size_t size_used{};
 		DeserializingStateWalker( const char *buffer_, std::size_t max_size_ ) 
-			: buffer(buffer_), max_size(max_size_), size_used(0)
+			: buffer(buffer_), max_size(max_size_)
 		{}
 		Uint8 pop8() {
 			std::size_t index = size_used++;
@@ -114,13 +114,13 @@ namespace PractRand {
 	};
 	class PrintingStateWalker : public StateWalkingObject {
 		std::ostringstream outbuf;
-		bool first;
+		bool first{true};
 		void pre() {
 			if (first) first = false;
 			else outbuf << ",";
 		}
 	public:
-		PrintingStateWalker() : first(true) {}
+		PrintingStateWalker() {}
 		virtual void handle(bool   &v) override { pre(); outbuf << v; }
 		virtual void handle(Uint8  &v) override { pre(); outbuf << v; }
 		virtual void handle(Uint16 &v) override { pre(); outbuf << v; }

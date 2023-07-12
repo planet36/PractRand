@@ -8,7 +8,7 @@ class MultithreadedTestManager : public TestManager {
 		PractRand::Tests::TestBaseclass *test;
 		Uint64 numblocks;
 		Threading::Lock lock;
-		bool finished;
+		bool finished{false};
 	public:
 		bool retire() {
 			lock.enter();
@@ -26,8 +26,7 @@ class MultithreadedTestManager : public TestManager {
 		:
 			base_block(base_block_),
 			test(test_),
-			numblocks(numblocks_),
-			finished(false)
+			numblocks(numblocks_)
 		{
 			//_thread_func(this);
 			Threading::create_thread(_thread_func, this);

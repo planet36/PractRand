@@ -63,15 +63,15 @@ namespace PractRand::Tests {
 		class SampleSet {
 		public:
 			std::vector<double> rs;
-			Uint32 duplicates;
-			double sum;
-			double sum_sqr;
+			Uint32 duplicates{};
+			double sum{};
+			double sum_sqr{};
 			void _count_duplicates();
 			double _get_index ( double other_result ) const;//interpolates
 		public:
 			void _normalize();
 			void _add(double result) {rs.push_back(result); sum += result; sum_sqr += result * result;}
-			SampleSet() : duplicates(0), sum(0), sum_sqr(0) {}
+			SampleSet() {}
 			void add(const SampleSet &other) {
 				for (unsigned int i = 0; i < other.rs.size(); i++) _add(other.rs[i]);
 				_normalize();
