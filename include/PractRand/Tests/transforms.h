@@ -17,7 +17,7 @@ namespace PractRand::Tests::Transforms {
 
 				virtual bool recommend_subtest_tree_descent() const;
 				void deinit() override;
-				virtual ~multiplex ( );
+				~multiplex ( ) override;
 				std::string get_name() const override;
 				void test_blocks(TestBlock *data, int numblocks) override;
 				int get_blocks_to_repeat() const override;

@@ -97,7 +97,7 @@ namespace PractRand::Tests {
 			int bits_to_use;
 		public:
 			BirthdayLamda1(int buffer_size_L2_ = 26);
-			virtual ~BirthdayLamda1();
+			~BirthdayLamda1() override;
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
 			std::string get_name() const override;
