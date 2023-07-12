@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include "PractRand/config.h"
+#include <string>
 
 namespace PractRand {
 	extern const char *version_str;//like "0.91", for PractRand 0.91

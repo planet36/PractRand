@@ -1,17 +1,16 @@
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <cmath>
-#include <ctime>
 #include <cstring>
-#include <string>
-#include <map>
-#include <vector>
-#include <set>
-#include <list>
+#include <ctime>
 #include <iostream>
-#include <sstream>
-//#include <map>
+#include <list>
+#include <map>
+#include <set>
 #include <signal.h>     /* signal, sig_atomic_t */
+#include <sstream>
+#include <string>
+#include <vector>
 
 #ifdef _WIN32 // needed to allow binary stdout on windows
 #include <fcntl.h>
@@ -28,12 +27,12 @@
 //specific RNG algorithms, to produce (pseudo-)random numbers
 #include "PractRand/RNGs/all.h"
 
-#include "PractRand/RNGs/other/transform.h"
-#include "PractRand/RNGs/other/mult.h"
-#include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/fibonacci.h"
 #include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/special.h"
+#include "PractRand/RNGs/other/transform.h"
 
 //not actually part of the library headers, just some inline code for an abstract factory for PractRand RNG name -> in
 #include "RNG_from_name.h"

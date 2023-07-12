@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PractRand/rng_basics.h"
+
 #if 1
 namespace PractRand {
 	namespace RNGs {

@@ -1,14 +1,13 @@
-#include <string>
-#include <sstream>
-#include <cstdlib>
+#include "PractRand/RNGs/arbee.h"
+#include "PractRand/RNGs/other/indirection.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
-
-#include "PractRand/RNGs/other/indirection.h"
-#include "PractRand/RNGs/arbee.h"
 //#include "PractRand/test_helpers.h"
+#include <cstdlib>
+#include <sstream>
+#include <string>
 
 using namespace PractRand::Internals;
 

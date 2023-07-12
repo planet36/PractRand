@@ -1,16 +1,15 @@
+#include <algorithm>
 #include <bit>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <cmath>
-#include <ctime>
 #include <cstring>
-#include <string>
-#include <map>
-#include <vector>
+#include <ctime>
 #include <list>
+#include <map>
 #include <sstream>
-#include <algorithm>
-//#include <map>
+#include <string>
+#include <vector>
 
 
 //master header, includes everything in PractRand for both 
@@ -23,31 +22,30 @@
 
 //specific testing algorithms, to detect bias in supposedly random numbers
 #include "PractRand/Tests/BCFN.h"
-#include "PractRand/Tests/Gap16.h"
-#include "PractRand/Tests/DistC6.h"
-#include "PractRand/Tests/transforms.h"
-#include "PractRand/Tests/FPF.h"
-#include "PractRand/Tests/FPMulti.h"
 #include "PractRand/Tests/BRank.h"
 #include "PractRand/Tests/CoupGap.h"
+#include "PractRand/Tests/DistC6.h"
+#include "PractRand/Tests/FPF.h"
+#include "PractRand/Tests/FPMulti.h"
+#include "PractRand/Tests/Gap16.h"
 #include "PractRand/Tests/mod3.h"
+#include "PractRand/Tests/transforms.h"
 
 //specific RNG algorithms, to produce (pseudo-)random numbers
 #include "PractRand/RNGs/all.h"
-#include "PractRand/RNGs/other/transform.h"
-#include "PractRand/RNGs/other/mult.h"
-#include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/fibonacci.h"
 #include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/special.h"
+#include "PractRand/RNGs/other/transform.h"
 
 using namespace PractRand;
 using namespace PractRand::Tests;
 
 //some helpers for the sample programs:
-#include "multithreading.h"
-#include "TestManager.h"
 #include "MultithreadedTestManager.h"
+#include "TestManager.h"
 
 
 

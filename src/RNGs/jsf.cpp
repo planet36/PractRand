@@ -1,13 +1,12 @@
-#include <string>
+//#include "PractRand/RNGs/jsf16.h"
+//#include "PractRand/RNGs/jsf8.h"
+#include "PractRand/RNGs/jsf32.h"
+#include "PractRand/RNGs/jsf64.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
-
-//#include "PractRand/RNGs/jsf8.h"
-//#include "PractRand/RNGs/jsf16.h"
-#include "PractRand/RNGs/jsf32.h"
-#include "PractRand/RNGs/jsf64.h"
+#include <string>
 
 using namespace PractRand;
 

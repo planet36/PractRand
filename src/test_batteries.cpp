@@ -1,34 +1,34 @@
-#include <string>
-//#include <ostream>
-#include <sstream>
-#include <vector>
-#include <list>
-#include <set>
-#include <map>
-#include <cmath>
-#include <cstdlib>
-
+#include "PractRand/Tests/BCFN.h"
+#include "PractRand/Tests/BCFN_MT.h"
+#include "PractRand/Tests/BRank.h"
+#include "PractRand/Tests/Birthday.h"
+#include "PractRand/Tests/CoupGap.h"
+#include "PractRand/Tests/DistC6.h"
+#include "PractRand/Tests/DistFreq4.h"
+#include "PractRand/Tests/FPF.h"
+#include "PractRand/Tests/FPMulti.h"
+#include "PractRand/Tests/Gap16.h"
+#include "PractRand/Tests/NearSeq.h"
+#include "PractRand/Tests/Pat5.h"
+#include "PractRand/Tests/coup16.h"
+#include "PractRand/Tests/mod3.h"
+#include "PractRand/Tests/transforms.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/tests.h"
-#include "PractRand/test_helpers.h"
 #include "PractRand/test_batteries.h"
-#include "PractRand/Tests/Gap16.h"
-#include "PractRand/Tests/DistC6.h"
-#include "PractRand/Tests/Pat5.h"
-#include "PractRand/Tests/BCFN.h"
-#include "PractRand/Tests/BCFN_MT.h"
-#include "PractRand/Tests/FPF.h"
-#include "PractRand/Tests/FPMulti.h"
-#include "PractRand/Tests/Birthday.h"
-#include "PractRand/Tests/CoupGap.h"
-#include "PractRand/Tests/BRank.h"
-#include "PractRand/Tests/mod3.h"
-#include "PractRand/Tests/NearSeq.h"
-#include "PractRand/Tests/coup16.h"
-#include "PractRand/Tests/DistFreq4.h"
-#include "PractRand/Tests/transforms.h"
+#include "PractRand/test_helpers.h"
+#include "PractRand/tests.h"
+
+#include <cmath>
+#include <cstdlib>
+#include <list>
+#include <map>
+//#include <ostream>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
 
 
 namespace PractRand {

@@ -1,3 +1,6 @@
+
+#include "PractRand/test_batteries.h"
+
 namespace PractRand {
 	namespace Tests {
 		class ListOfTests;

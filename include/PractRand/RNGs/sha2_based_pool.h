@@ -1,3 +1,6 @@
+
+#include "PractRand/rng_basics.h"
+
 namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {

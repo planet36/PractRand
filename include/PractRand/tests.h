@@ -1,5 +1,9 @@
 #pragma once
 
+#include "PractRand/config.h"
+#include <string>
+#include <vector>
+
 namespace PractRand {
 	namespace RNGs { class vRNG; }
 	class TestResult {

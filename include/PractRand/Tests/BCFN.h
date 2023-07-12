@@ -1,3 +1,7 @@
+
+#include "PractRand/test_helpers.h"
+#include "PractRand/tests.h"
+
 namespace PractRand {
 	namespace Tests {
 		/*

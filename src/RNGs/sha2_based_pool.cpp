@@ -1,13 +1,11 @@
-#include <cstring>
-#include <string>
+#include "PractRand/RNGs/sha2_based_pool.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
-
 #include "PractRand/sha2.h"
-
-#include "PractRand/RNGs/sha2_based_pool.h"
+#include <cstring>
+#include <string>
 
 
 using namespace PractRand;

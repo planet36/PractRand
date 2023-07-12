@@ -1,13 +1,12 @@
-#include <string>
-#include <sstream>
-#include <vector>
+#include "PractRand/RNGs/other/transform.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 #include "PractRand/tests.h"
-
-#include "PractRand/RNGs/other/transform.h"
+#include <sstream>
+#include <string>
+#include <vector>
 
 namespace PractRand {
 	namespace RNGs {

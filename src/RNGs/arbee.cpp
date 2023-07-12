@@ -1,11 +1,10 @@
-#include <string>
+#include "PractRand/RNGs/arbee.h"
 #include "PractRand/config.h"
+#include "PractRand/endian.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
-#include "PractRand/endian.h"
-
-#include "PractRand/RNGs/arbee.h"
+#include <string>
 
 using namespace PractRand;
 using namespace PractRand::Internals;

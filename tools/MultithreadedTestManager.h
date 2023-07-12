@@ -1,3 +1,6 @@
+
+#include "multithreading.h"
+
 class MultithreadedTestManager : public TestManager {
 	class TestThread {
 		PractRand::Tests::TestBlock *base_block;

@@ -96,9 +96,9 @@ namespace Threading {
 	}
 }
 #else //unix????
-#include <unistd.h>
 #include <pthread.h>
 #include <time.h>
+#include <unistd.h>
 namespace Threading {
 	//compile time assert that Lock is big enough:
 	typedef char compile_time_assertion[(sizeof(Lock) >= sizeof(pthread_mutex_t)) ? 1 : -1];

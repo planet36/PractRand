@@ -1,12 +1,11 @@
-#include <string>
-#include <sstream>
+#include "PractRand/RNGs/other/mult.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
-
-#include "PractRand/RNGs/other/mult.h"
 //#include "PractRand/test_helpers.h"
+#include <sstream>
+#include <string>
 
 namespace PractRand {
 	using namespace Internals;

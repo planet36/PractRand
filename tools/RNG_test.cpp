@@ -1,15 +1,15 @@
 
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <cmath>
-#include <ctime>
 #include <cstring>
-#include <string>
-#include <map>
-#include <vector>
-#include <set>
+#include <ctime>
 #include <list>
+#include <map>
+#include <set>
 #include <sstream>
+#include <string>
+#include <vector>
 
 //master header, includes everything in PractRand for both 
 //  practical usage and research... 
@@ -23,12 +23,12 @@
 #include "PractRand/RNGs/all.h"
 
 //specific algorithms: non-recommended RNGs
-#include "PractRand/RNGs/other/transform.h"
-#include "PractRand/RNGs/other/mult.h"
-#include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/fibonacci.h"
 #include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/special.h"
+#include "PractRand/RNGs/other/transform.h"
 
 #ifdef _WIN32 // needed to allow binary stdin on windows
 #include <fcntl.h>
@@ -48,7 +48,6 @@ PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
 #include "TestManager.h"
 #ifdef MULTITHREADING_SUPPORTED
-#include "multithreading.h"
 #include "MultithreadedTestManager.h"
 #endif
 #include "Candidate_RNGs.h"
@@ -449,9 +448,9 @@ bool interpret_seed(const std::string &seedstr, Uint64 &seed) {
 }
 
 #include "PractRand/Tests/Birthday.h"
-#include "PractRand/Tests/FPMulti.h"
-#include "PractRand/Tests/FPF.h"
 #include "PractRand/Tests/DistFreq4.h"
+#include "PractRand/Tests/FPF.h"
+#include "PractRand/Tests/FPMulti.h"
 #include "PractRand/Tests/Gap16.h"
 PractRand::Tests::ListOfTests testset_BirthdaySystematic() {
 	//return PractRand::Tests::ListOfTests(new PractRand::Tests::BirthdayAlt(10), new PractRand::Tests::Birthday32());

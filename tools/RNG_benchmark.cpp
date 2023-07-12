@@ -1,13 +1,12 @@
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <cmath>
 #include <ctime>
-#include <string>
-#include <sstream>
-//#include <map>
-//#include <vector>
 //#include <list>
 //#include <map>
+#include <sstream>
+#include <string>
+//#include <vector>
 
 
 //master header, includes everything in PractRand for both 

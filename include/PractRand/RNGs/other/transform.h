@@ -1,5 +1,8 @@
 
+#include "PractRand/rng_helpers.h"
+
 #include <deque>
+#include <vector>
 //RNGs in the "other" directory are not intended for real world use
 //only for research; as such they may get pretty sloppy in some areas
 //and are usually not optimized

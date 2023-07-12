@@ -9,16 +9,16 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
-#include <string>
-#include <ctime>
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
-
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <string>
 
 
 

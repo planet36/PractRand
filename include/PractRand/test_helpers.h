@@ -1,4 +1,8 @@
 
+#include "PractRand/rng_basics.h"
+#include <cmath>
+#include <vector>
+
 namespace PractRand {
 	namespace Tests {
 		//categories = old # of entries in tables

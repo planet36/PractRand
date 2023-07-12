@@ -1,13 +1,12 @@
 
-#include <cstring>
-#include <string>
-#include <sstream>
+#include "PractRand/RNGs/chacha.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
-
-#include "PractRand/RNGs/chacha.h"
+#include <cstring>
+#include <sstream>
+#include <string>
 
 #ifndef PRACTRAND_NO_SIMD
 #if defined _MSC_VER && _M_IX86_FP == 2
