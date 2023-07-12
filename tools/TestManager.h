@@ -17,7 +17,7 @@ public:
 	const PractRand::RNGs::vRNG *get_rng() const {return rng;}//RNG being tested
 	Uint64 get_blocks_so_far() {return blocks_so_far;}//number of blocks tested
 
-	TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_=NULL, int max_buffer_amount_ = 1 << (25-10));
+	TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));
 	//rng_ = RNG to test
 	//tests_ = list of tests use on the RNG
 	//known_good_ = sometimes the tests or test manager need good random numbers for some reason
@@ -25,7 +25,7 @@ public:
 
 	virtual ~TestManager();//destructor (destroys the tests in the ListOfTests)
 
-	virtual void reset(PractRand::RNGs::vRNG *rng_ = NULL);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
+	virtual void reset(PractRand::RNGs::vRNG *rng_ = nullptr);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 
 	virtual void test(Uint64 blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
 
@@ -33,7 +33,7 @@ public:
 };
 
 TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_) {
-	rng = NULL;
+	rng = nullptr;
 	tests = tests_;
 	known_good = known_good_;
 	if (!known_good) known_good = new PractRand::RNGs::Polymorphic::hc256(PractRand::SEED_AUTO);

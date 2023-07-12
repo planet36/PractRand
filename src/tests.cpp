@@ -466,9 +466,9 @@ public:
 	}
 	TestCalibrationData *get_calibration_data(std::string name, Uint64 blocks) {
 		std::map<std::string, std::map< Uint64, TestCalibrationData * > >::iterator dit = data.find(name);
-		if (dit == data.end()) return NULL;
+		if (dit == data.end()) return nullptr;
 		std::map< Uint64, TestCalibrationData * > &ts = dit->second;
-		if (ts.empty()) return NULL;
+		if (ts.empty()) return nullptr;
 		std::map< Uint64, TestCalibrationData * >::iterator current = ts.lower_bound(blocks);
 		if (current == ts.end()) return (--current)->second;
 		if (current == ts.begin() || current->first == blocks) return current->second;
@@ -1338,7 +1338,7 @@ checkpoint @ 65536
 	{"BRank", 1024, 151552, 113766, { -3.959, -3.785, -3.634, -3.530, -3.343, -3.146, -3.005, -2.786, -2.487, -2.260, -2.002, -1.843, -1.717, -1.616, -1.534, -1.459, -1.392, -1.330, -1.273, -1.218, -1.167, -1.121, -1.075, -1.033, -0.993, -0.953, -0.916, -0.880, -0.845, -0.808, -0.774, -0.741, -0.709, -0.677, -0.647, -0.619, -0.590, -0.561, -0.531, -0.503, -0.474, -0.448, -0.420, -0.392, -0.366, -0.339, -0.313, -0.288, -0.262, -0.237, -0.213, -0.188, -0.163, -0.139, -0.114, -0.088, -0.063, -0.038, -0.013, +0.012, +0.037, +0.061, +0.086, +0.111, +0.136, +0.162, +0.187, +0.212, +0.238, +0.265, +0.290, +0.318, +0.344, +0.370, +0.398, +0.425, +0.452, +0.480, +0.509, +0.538, +0.569, +0.599, +0.631, +0.663, +0.695, +0.727, +0.761, +0.795, +0.832, +0.867, +0.905, +0.942, +0.986, +1.030, +1.076, +1.122, +1.171, +1.226, +1.284, +1.344, +1.414, +1.489, +1.576, +1.669, +1.785, +1.919, +2.104, +2.398, +2.660, +2.992, +3.219, +3.454, +3.665, +3.882, +4.103, +4.295, +4.483},  -0.000,  -0.013,   0.998},
 	{"BRank", 1365, 151552, 102087, { -4.196, -4.037, -3.760, -3.584, -3.336, -3.150, -2.987, -2.784, -2.514, -2.274, -2.019, -1.856, -1.732, -1.625, -1.538, -1.463, -1.397, -1.335, -1.276, -1.223, -1.171, -1.121, -1.078, -1.034, -0.995, -0.955, -0.918, -0.882, -0.846, -0.812, -0.778, -0.745, -0.713, -0.681, -0.651, -0.622, -0.592, -0.564, -0.534, -0.506, -0.478, -0.450, -0.422, -0.395, -0.367, -0.342, -0.315, -0.289, -0.264, -0.238, -0.212, -0.187, -0.163, -0.139, -0.113, -0.088, -0.062, -0.037, -0.012, +0.013, +0.038, +0.063, +0.088, +0.114, +0.139, +0.164, +0.190, +0.215, +0.240, +0.266, +0.293, +0.320, +0.347, +0.374, +0.402, +0.429, +0.458, +0.486, +0.515, +0.544, +0.573, +0.603, +0.634, +0.666, +0.698, +0.731, +0.764, +0.800, +0.836, +0.872, +0.910, +0.948, +0.989, +1.033, +1.078, +1.125, +1.176, +1.230, +1.282, +1.346, +1.410, +1.484, +1.568, +1.664, +1.779, +1.915, +2.102, +2.395, +2.654, +2.989, +3.247, +3.451, +3.672, +3.827, +3.953, +4.182, +4.243},  -0.001,  -0.012,   1.001},
 
-	{ NULL, 0,  0,  0, {0}}
+	{ nullptr, 0,  0,  0, {0}}
 };
 PractRand::Tests::RawTestCalibrationData_129 raw_calibration_data_array129[] = {
 	{ "mod3_simple(1)",  1, 151552, 150223, { -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.40856, -1.392, -1.375, -1.375, -1.340, -1.340, -1.324, -1.307, -1.307, -1.272, -1.255, -1.255, -1.240, -1.205, -1.205, -1.169, -1.169, -1.140, -1.136, -1.122, -1.122, -1.070, -1.048, -1.032, -1.032, -1.006, -0.982, -0.982, -0.970, -0.900, -0.900, -0.893, -0.860, -0.856, -0.838, -0.795, -0.795, -0.785, -0.703, -0.703, -0.696, -0.672, -0.654, -0.637, -0.573, -0.566, -0.566, -0.510, -0.478, -0.459, -0.456, -0.413, -0.402, -0.316, -0.312, -0.267, -0.241, -0.219, -0.205, -0.187, -0.133, -0.026, -0.025, +0.006, +0.024, +0.076, +0.078, +0.169, +0.172, +0.286, +0.296, +0.323, +0.396, +0.405, +0.505, +0.579, +0.611, +0.655, +0.674, +0.834, +0.895, +0.932, +1.021, +1.058, +1.244, +1.280, +1.328, +1.478, +1.629, +1.700, +1.824, +2.020, +2.166, +2.417, +2.578, +2.823, +3.145, +3.551, +4.111, +5.059, +6.05266, +7.26830, +8.10110, +9.24054, +10.46029, +11.52307, +12.46241, +13.83951, +14.53474, +15.40526, +15.70480, +15.70480, +15.70480, +15.70480, +15.70480 }, -0.456, +0.001, 1.410, 0 },
@@ -1453,7 +1453,7 @@ PractRand::Tests::RawTestCalibrationData_129 raw_calibration_data_array129[] = {
 
 	{"mod3_simple(11)",  4194304, 16384,   1, {  -7.79303,  -7.79303,  -7.79303,  -7.79303,  -7.79303,  -7.79303,  -7.79303,  -7.79303,  -7.73913,  -7.53041,  -6.84429,  -6.47741,  -6.17558,  -5.73858,  -5.18767, -4.548, -4.005, -3.712, -3.476, -3.254, -3.079, -2.929, -2.789, -2.665, -2.543, -2.431, -2.329, -2.240, -2.147, -2.055, -1.974, -1.893, -1.808, -1.744, -1.684, -1.610, -1.540, -1.470, -1.407, -1.340, -1.284, -1.218, -1.155, -1.099, -1.040, -0.980, -0.934, -0.875, -0.824, -0.770, -0.717, -0.663, -0.612, -0.561, -0.507, -0.451, -0.398, -0.348, -0.295, -0.243, -0.193, -0.142, -0.092, -0.040, +0.001, +0.055, +0.100, +0.155, +0.204, +0.246, +0.297, +0.350, +0.397, +0.455, +0.504, +0.555, +0.607, +0.669, +0.715, +0.769, +0.820, +0.875, +0.926, +0.982, +1.050, +1.112, +1.168, +1.230, +1.293, +1.351, +1.413, +1.479, +1.539, +1.607, +1.681, +1.751, +1.824, +1.908, +1.978, +2.057, +2.150, +2.244, +2.349, +2.443, +2.547, +2.652, +2.785, +2.927, +3.095, +3.306, +3.543, +3.801, +4.135, +4.688,  +5.21634,  +5.72814,  +6.14076,  +6.59557,  +7.33163,  +8.11925,  +8.67769,  +8.89508,  +8.89508,  +8.89508,  +8.89508,  +8.89508,  +8.89508,  +8.89508,  +8.89508},  +0.001,  +0.007,   1.991, 0},
 
-	{ NULL, 0, 0, 0, { 0.0 }, 0.0, 0.0, 0.0, 0 }
+	{ nullptr, 0, 0, 0, { 0.0 }, 0.0, 0.0, 0.0, 0 }
 };
 
 TestCalibrationManager calibration_manager(raw_calibration_data_array117, raw_calibration_data_array129);
@@ -2549,7 +2549,7 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult> &results) {
 		if (samples < 16 * 1024 && level) continue;
 		if (effective_bits > tbits) effective_bits = tbits;
 
-		TestCalibrationData *calib = NULL;
+		TestCalibrationData *calib = nullptr;
 		if (effective_bits == 4) {
 			if (samples > 1<<13) calib = calibration_manager.get_calibration_data("BCFN-4/4", samples / ref_chance / (1024/4));
 			else calib = calibration_manager.get_calibration_data("_BCFN-4/4", samples / ref_chance / (1024/4));
@@ -2673,7 +2673,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 		else if (level || samples < 768) continue; else effective_bits = 4;
 		if (effective_bits > tbits) effective_bits = tbits;
 
-		TestCalibrationData *calib = NULL;
+		TestCalibrationData *calib = nullptr;
 		if (effective_bits == 4) {
 			if (adjusted_samples > 1<<13) calib = calibration_manager.get_calibration_data("BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024/4));
 			else calib = calibration_manager.get_calibration_data("_BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024/4));
@@ -3388,7 +3388,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		else if (level || samples < 768) continue; else effective_bits = 4;
 		if (effective_bits > tbits) effective_bits = tbits;
 
-		TestCalibrationData *calib = NULL;
+		TestCalibrationData *calib = nullptr;
 		if (effective_bits == 4) {
 			if (adjusted_samples > 1 << 13) calib = calibration_manager.get_calibration_data("BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024 / 4));
 			else calib = calibration_manager.get_calibration_data("_BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024 / 4));
@@ -3986,7 +3986,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 				teststr << "FPF/16(" << ebits << ")";
 				TestCalibrationData *calib = calibration_manager.get_calibration_data( teststr.str(), samples / 512.0 + 0.5 );
 				if (!calib && ebits > 14 && ebits <= 16) calib = calibration_manager.get_calibration_data( "FPF/16(14)", samples / 512.0 + 0.5 );
-				if (stride_bits_L2 + e < 2 ) calib = NULL;
+				if (stride_bits_L2 + e < 2 ) calib = nullptr;
 				if (calib) {
 					double suspicioun = -calib->sample_to_suspicion(norm);
 					sum_s += suspicioun * suspicioun;//std::pow(2.0, std::abs(suspicioun));
@@ -4002,7 +4002,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		double over_norm = math_chisquared_to_normal(over_raw, over_bins-1);
 		//double over_p = math_normaldist_to_pvalue(over_norm);
 		TestCalibrationData *calib = calibration_manager.get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
-		if (stride_bits_L2 < 2 || sig_bits != 14 || exp_bits < 4) calib = NULL;
+		if (stride_bits_L2 < 2 || sig_bits != 14 || exp_bits < 4) calib = nullptr;
 		if (calib && samples >= 3000)
 			results.push_back( TestResult(get_name() + ":all", over_norm, -calib->sample_to_suspicion(over_norm),  TestResult::TYPE_GOOD_S, .25));
 		else results.push_back(TestResult(get_name() + ":all", over_norm, over_norm,  TestResult::TYPE_RAW_NORMAL, .25));
@@ -4603,7 +4603,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 			if (ebits < FREQ_SIG_BITS) {
 				counts_vec.resize(1 << FREQ_SIG_BITS);
 				for (int i = 0; i < 1 << FREQ_SIG_BITS; i++) counts_vec[i] = counts[i];
-				truncate_table_bits(&counts_vec[0], NULL, FREQ_SIG_BITS, ebits);
+				truncate_table_bits(&counts_vec[0], nullptr, FREQ_SIG_BITS, ebits);
 				counts = &counts_vec[0];
 			}
 			else ebits = FREQ_SIG_BITS;
@@ -4632,7 +4632,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 			freq_all_sum *= 2;
 			double all_norm = math_chisquared_to_normal(freq_all_sum, freq_all_bins - 1);
 			double all_p = math_normaldist_to_pvalue(all_norm);
-			TestCalibrationData *calib = NULL;//calibration_manager.get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
+			TestCalibrationData *calib = nullptr;//calibration_manager.get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
 			if (calib && total_samples >= 3000)
 				results.push_back(TestResult(get_name() + ":F:all", all_norm, -calib->sample_to_suspicion(all_norm), TestResult::TYPE_GOOD_S, .25));
 			else results.push_back(TestResult(get_name() + ":F:all", all_norm, all_norm, TestResult::TYPE_RAW_NORMAL, .25));
@@ -5828,11 +5828,11 @@ void PractRand::Tests::BirthdaySystematic128::test_blocks(TestBlock *data, int n
 
 PractRand::Tests::BirthdayAlt::BirthdayAlt(int buffer_size_L2_, int filter_bits_) : buffer_size_L2(buffer_size_L2_), filter_bits(filter_bits_) {
 	if (buffer_size_L2 < 6 || buffer_size_L2 > 29) issue_error("BirthdayAlt - bad buffer_size_L2");
-	buffer = NULL;
+	buffer = nullptr;
 }
 PractRand::Tests::BirthdayAlt::~BirthdayAlt() {
 	delete[] buffer;
-	buffer = NULL;
+	buffer = nullptr;
 }
 void PractRand::Tests::BirthdayAlt::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	if (!buffer) buffer = new i128[1 << buffer_size_L2];
@@ -5903,7 +5903,7 @@ void PractRand::Tests::BirthdayAlt::get_results(std::vector<TestResult> &results
 	if (!count) return;
 	//long buffer_size = 1 << buffer_size_L2;
 	long double dev, _sample_size/*, uncertainty*/;
-	_lookup_constants(buffer_size_L2, NULL, &dev, &_sample_size);
+	_lookup_constants(buffer_size_L2, nullptr, &dev, &_sample_size);
 
 	double score = score_sum_log / std::sqrt(double(count)) / dev;
 
@@ -5950,7 +5950,7 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	if (count == 1) {
 		for (int i = 6; i <= 29; i++) {
 			long double old;
-			_lookup_constants(i, &old, NULL, NULL);
+			_lookup_constants(i, &old, nullptr, nullptr);
 			//Uint64 bufsize = 1ull << i;
 			//long double preadj = std::pow(2.0, 128.0 - i) / (bufsize - 1);
 			//long double revised = ;
@@ -6273,7 +6273,7 @@ void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
 
 
 
-PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_), in_progress(NULL) {
+PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_), in_progress(nullptr) {
 	static Uint32 sizes[] = { 
 		128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6<<10, 8<<10, 12<<10, 16<<10, 24<<10, 32<<10, 48<<10, 64<<10, 0
 	};
@@ -6291,7 +6291,7 @@ PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_), in_pro
 		s.reset();
 	}
 	rate = static_cast<Uint64>(std::pow(2.0, 0.5 * rate_hl2));
-	in_progress = NULL;
+	in_progress = nullptr;
 }
 void PractRand::Tests::BRank::PerSize::reset() {
 	total = 0;
@@ -6301,13 +6301,13 @@ void PractRand::Tests::BRank::PerSize::reset() {
 }
 void PractRand::Tests::BRank::deinit( ) {
 	if (in_progress) delete in_progress;
-	in_progress = NULL;
+	in_progress = nullptr;
 }
 void PractRand::Tests::BRank::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 	for (unsigned int i = 0; i < ps.size(); i++) ps[i].reset();
 	saved_time = 0;
 	if (in_progress) delete in_progress;
-	in_progress = NULL;
+	in_progress = nullptr;
 	pick_next_size();
 }
 std::string PractRand::Tests::BRank::get_name( ) const {
@@ -6437,7 +6437,7 @@ void PractRand::Tests::BRank::finish_matrix() {
 		return;
 	}
 	delete in_progress;
-	in_progress = NULL;
+	in_progress = nullptr;
 	pick_next_size();
 }
 void PractRand::Tests::BRank::test_blocks(TestBlock *data, int numblocks) {
@@ -6484,7 +6484,7 @@ PractRand::Tests::NearSeq::NearSeq() {
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
 	//else if (BITS_PER_BLOCK == 5) verify_NearSeq_byte_code5x2(NearSeq_byte_code5x2);
 	//else issue_error("NearSeq: what block size?");
-	lookup_table = NULL;
+	lookup_table = nullptr;
 }
 void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 	if (SEQUENCE_BITS < CORE_SEQUENCE_BITS) issue_error("NearSeq - bad settings");
@@ -6782,8 +6782,8 @@ PractRand::Tests::NearSeq2::NearSeq2() {
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
 	//else if (BITS_PER_BLOCK == 5) verify_NearSeq_byte_code5x2(NearSeq_byte_code5x2);
 	//else issue_error("NearSeq: what block size?");
-	lookup_table1 = NULL;
-	lookup_table2 = NULL;
+	lookup_table1 = nullptr;
+	lookup_table2 = nullptr;
 
 	if (EXTRA_FULL_WORDS & 1) issue_error("NearSeq2 - odd number of extra words");
 	if (EXTRA_PARTIAL_WORD_BITS < 0 || EXTRA_PARTIAL_WORD_BITS >= WORD_BITS) issue_error("NearSeq2 - EXTRA_PARTIAL_WORD_BITS value outside of range");
@@ -6848,8 +6848,8 @@ void PractRand::Tests::NearSeq2::Bucket::reset() {
 void PractRand::Tests::NearSeq2::deinit() {
 	delete[] lookup_table1;
 	delete[] lookup_table2;
-	lookup_table1 = NULL;
-	lookup_table2 = NULL;
+	lookup_table1 = nullptr;
+	lookup_table2 = nullptr;
 	TestBaseclass::deinit();
 }
 std::string PractRand::Tests::NearSeq2::get_name() const {
@@ -11024,7 +11024,7 @@ void PractRand::Tests::Transforms::FirstNofM::test_blocks(TestBlock *data, int n
 		int blocks_more = (alloc_more + TestBlock::SIZE - 1) / TestBlock::SIZE;
 		buffered.resize(old_blocks + blocks_more);
 	}
-	Uint8 *outptr = total_out ? (&buffered[old_blocks].as8[0] - leftovers) : NULL;
+	Uint8 *outptr = total_out ? (&buffered[old_blocks].as8[0] - leftovers) : nullptr;
 
 	if (begin_out) std::memcpy(outptr, inptr, begin_out);
 	outptr += begin_out;

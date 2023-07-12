@@ -282,7 +282,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 
 #include "SeedingTester.h"
 
-const char *seed_str = NULL;
+const char *seed_str = nullptr;
 
 void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
 	std::printf("rng=%s", tman->get_rng()->get_name().c_str());
@@ -482,7 +482,7 @@ UnfoldedTestSet test_sets[] = {
 	{ 1, PractRand::Tests::Batteries::get_expanded_core_tests, "expanded" },
 	{ 10, testset_BirthdaySystematic, "special (Birthday)" },
 	{ 20, testset_experimental, "experimental" },
-	{ -1, NULL, NULL }
+	{ -1, nullptr, nullptr }
 };
 int lookup_te_value(int te) {
 	for (int i = 0; true; i++) {
@@ -801,7 +801,7 @@ int main(int argc, char **argv) {
 	if (do_self_test) PractRand::self_test_PractRand();
 
 
-	std::time_t start_time = std::time(NULL);
+	std::time_t start_time = std::time(nullptr);
 	TimeUnit start_clock = get_time();
 
 	Uint64 seed = known_good.raw32();//64 bit space, as that's what the interface accepts, but 32 bit random value so that by default it's not too onerous to record/compare/whatever the value by hand
@@ -887,7 +887,7 @@ int main(int argc, char **argv) {
 
 	std::printf("\n\n");
 
-	Tests::ListOfTests tests( (Tests::TestBaseclass*)NULL);
+	Tests::ListOfTests tests( (Tests::TestBaseclass*)nullptr);
 	if (test_set_index == -1) { std::printf("internal error\n"); std::exit(1); }
 	if (false) ;
 	else if (folding == 0) tests = test_sets[test_set_index].callback();
@@ -967,7 +967,7 @@ int main(int argc, char **argv) {
 		already_shown = false;
 
 		double clocks_passed = (get_time() - start_clock) * get_time_period();//may wrap too quickly
-		int seconds_passed = std::time(NULL) - start_time;
+		int seconds_passed = std::time(nullptr) - start_time;
 		if (seconds_passed >= 1000 || seconds_passed > clocks_passed + 2.0) time_passed = seconds_passed;
 		else time_passed = clocks_passed;
 	}

@@ -64,44 +64,44 @@ namespace PractRand {
 					//new Tests::DistFreq4(1),  //		?? s/GB
 					//new Tests::QuadFreq(8,1),  //		?? s/GB
 					//new Tests::NearSeq(),  //			?? s/GB
-					NULL // 0.8 s/GB in isolation
+					nullptr // 0.8 s/GB in isolation
 				);
 			}
 			static Tests::ListOfTests standard_foldings_generic(ListOfTests (*base_tests)()) {
 				Tests::ListOfTests l = base_tests();
-				l.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, 0));
-				//l.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 1, 1));
+				l.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, 0));
+				//l.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 1, 1));
 				Tests::ListOfTests sub4of32 = base_tests();
-				sub4of32.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, -1));
-				l.tests.push_back(new Tests::Transforms::lowbits(NULL, sub4of32, 2, 2));
+				sub4of32.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, -1));
+				l.tests.push_back(new Tests::Transforms::lowbits(nullptr, sub4of32, 2, 2));
 				return l;
 			}
 			static Tests::ListOfTests standard_foldings8(ListOfTests (*base_tests)()) {
 				Tests::ListOfTests l = base_tests();
-				l.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, 0));
+				l.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, 0));
 				return l;
 			}
 			static Tests::ListOfTests standard_foldings16(ListOfTests (*base_tests)()) {
 				Tests::ListOfTests l = base_tests();
 				Tests::ListOfTests sub4 = base_tests();
-				sub4.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, -1));
-				//sub4.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 1, -1));
-				l.tests.push_back(new Tests::Transforms::lowbits(NULL, sub4, 2, 1));
+				sub4.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, -1));
+				//sub4.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 1, -1));
+				l.tests.push_back(new Tests::Transforms::lowbits(nullptr, sub4, 2, 1));
 				return l;
 			}
 			static Tests::ListOfTests standard_foldings32(ListOfTests (*base_tests)()) {
 				Tests::ListOfTests l = base_tests();
-				l.tests.push_back(new Tests::Transforms::lowbits(NULL, standard_foldings8(base_tests), 3, 2));
+				l.tests.push_back(new Tests::Transforms::lowbits(nullptr, standard_foldings8(base_tests), 3, 2));
 				return l;
 			}
 			static Tests::ListOfTests standard_foldings64(ListOfTests (*base_tests)()) {
 				Tests::ListOfTests l = base_tests();
 				Tests::ListOfTests sub16 = base_tests();
 				Tests::ListOfTests sub4 = base_tests();
-				sub4.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, -1));
-				//sub4.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 1, -1));
-				sub16.tests.push_back(new Tests::Transforms::lowbits(NULL, sub4, 2, 1));
-				l.tests.push_back(new Tests::Transforms::lowbits(NULL, sub16, 4, 3));
+				sub4.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, -1));
+				//sub4.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 1, -1));
+				sub16.tests.push_back(new Tests::Transforms::lowbits(nullptr, sub4, 2, 1));
+				l.tests.push_back(new Tests::Transforms::lowbits(nullptr, sub16, 4, 3));
 				return l;
 			}
 			Tests::ListOfTests apply_standard_foldings( int bits, ListOfTests (*base_tests)() ) {
@@ -121,15 +121,15 @@ namespace PractRand {
 			}
 			ListOfTests apply_extended_foldings(ListOfTests (*base_tests)()) {
 				ListOfTests rv = base_tests();
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, 0));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, 1));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, 2));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 0, 3));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 2, 1));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 2, 2));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 2, 3));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 3, 2));
-				rv.tests.push_back(new Tests::Transforms::lowbits(NULL, base_tests(), 3, 3));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, 0));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, 1));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, 2));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 0, 3));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 2, 1));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 2, 2));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 2, 3));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 3, 2));
+				rv.tests.push_back(new Tests::Transforms::lowbits(nullptr, base_tests(), 3, 3));
 				return rv;
 			}
 			ListOfTests get_folded_tests() {
@@ -189,7 +189,7 @@ namespace PractRand {
 					//new Tests::NearSeq2(),  //			???
 					//new Tests::Coup16(),  //			???
 					//new Tests::CoupGap(), //			???
-					NULL
+					nullptr
 				);
 			}
 			ListOfTests get_expanded_standard_tests(const RNGs::vRNG *rng) {

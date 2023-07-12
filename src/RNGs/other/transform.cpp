@@ -520,7 +520,7 @@ namespace PractRand {
 					vRNG64 *tmp64 = dynamic_cast<vRNG64*>(base_rng);
 					if (tmp64) return new BaysDurhamShuffle64(tmp64, table_size_L2, shift >= 0 ? shift : 64-table_size_L2);
 					issue_error();
-					return NULL;//just to quiet the warnings
+					return nullptr;//just to quiet the warnings
 				}
 			}
 		}

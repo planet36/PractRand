@@ -21,7 +21,7 @@ namespace PractRand {
 	const char *version_str = "0.95";
 	SEED_AUTO_TYPE SEED_AUTO;
 	SEED_NONE_TYPE SEED_NONE;
-	void (*error_callback)(const char *) = NULL;
+	void (*error_callback)(const char *) = nullptr;
 	void issue_error ( const char *msg) {
 		if (error_callback) error_callback(msg);
 		else {
@@ -189,12 +189,12 @@ namespace PractRand {
 			//I think the combination of an address and a non-zero time span guarantees uniqueness on a per-run basis
 			//but it requires blocking on the time span
 			std::clock_t start_clock = std::clock();
-			std::time_t start_time = std::time(NULL);
+			std::time_t start_time = std::time(nullptr);
 			std::clock_t end_clock;
 			std::time_t end_time;
 			while (true) {
 				end_clock = std::clock();
-				end_time = std::time(NULL);
+				end_time = std::time(nullptr);
 				if (start_clock != end_clock) break;
 				if (start_time  != end_time) break;
 			}
@@ -353,16 +353,16 @@ namespace PractRand {
 			return 0;
 		}
 		char *vRNG::serialize( std::size_t *size_ ) {//returns malloced block, or NULL on error, sets *size to size of block
-			SerializingStateWalker byte_counter(NULL, 0);
+			SerializingStateWalker byte_counter(nullptr, 0);
 			walk_state(&byte_counter);
 			std::size_t size = byte_counter.size_used;
 			*size_ = size;
-			if (!size) return NULL;
+			if (!size) return nullptr;
 			char *buffer = static_cast<char*>(std::malloc(size));
 			SerializingStateWalker serializer(buffer, size);
 			if (serializer.size_used != size) {
 				std::free(buffer);
-				return NULL;
+				return nullptr;
 			}
 			return buffer;
 		}

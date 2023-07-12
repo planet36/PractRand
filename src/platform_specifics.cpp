@@ -113,7 +113,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 #if 1
 	{//libc
 		//not much entropy, but we take what we can get
-		rng->add_entropy64(static_cast<Uint64>(std::time(NULL)));
+		rng->add_entropy64(static_cast<Uint64>(std::time(nullptr)));
 		rng->add_entropy64(static_cast<Uint64>(std::clock()));
 		rng->add_entropy64(reinterpret_cast<Uint64>(rng));
 		Uint64 *p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
@@ -153,12 +153,12 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		//Probably ought to be a transaction,
 		//  but that would require Vista as a minimum Windows version, 
 		//  and I want to support 2k and XP also
-		HKEY key = NULL;
+		HKEY key = nullptr;
 		for (int tries = 0; tries < 3; tries++) {
 			//printf("attempt %d\n", tries);
 			if (key) {
 				RegCloseKey(key);
-				key = NULL;
+				key = nullptr;
 			}
 			DWORD d;
 			long r;
@@ -166,10 +166,10 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 				HKEY_CURRENT_USER,
 				"Software\\PractRand",
 				0,
-				NULL,
+				nullptr,
 				REG_OPTION_NON_VOLATILE,
 				KEY_QUERY_VALUE | KEY_SET_VALUE,
-				NULL,
+				nullptr,
 				&key,
 				&d
 			);
@@ -180,7 +180,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 			DWORD size = BUFFER_SIZE;
 			DWORD type;
 			//to do: use different seed names for different EntropyPool algorithms
-			r = RegQueryValueExA(key, "seed", NULL, &type, buffer, &size);
+			r = RegQueryValueExA(key, "seed", nullptr, &type, buffer, &size);
 			if (r == ERROR_MORE_DATA || type != REG_BINARY) {
 				r = ERROR_FILE_NOT_FOUND;
 				d = REG_CREATED_NEW_KEY;
@@ -208,7 +208,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		}
 		if (key) {
 			RegCloseKey(key);
-			key = NULL;
+			key = nullptr;
 		}
 	}
 #endif //_WIN32 (registry)

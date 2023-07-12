@@ -10,10 +10,10 @@ namespace PractRand {
 			ListOfTests ( ) = default;
 			ListOfTests ( TestBaseclass **tests_ );
 			ListOfTests ( 
-				TestBaseclass *test1, TestBaseclass *test2=NULL, TestBaseclass *test3=NULL, TestBaseclass *test4=NULL, 
-				TestBaseclass *test5=NULL, TestBaseclass *test6=NULL, TestBaseclass *test7=NULL, TestBaseclass *test8=NULL,
-				TestBaseclass *test9=NULL, TestBaseclass *test10=NULL, TestBaseclass *test11=NULL, TestBaseclass *test12=NULL,
-				TestBaseclass *test13=NULL, TestBaseclass *test14=NULL, TestBaseclass *test15=NULL, TestBaseclass *test16=NULL
+				TestBaseclass *test1, TestBaseclass *test2=nullptr, TestBaseclass *test3=nullptr, TestBaseclass *test4=nullptr, 
+				TestBaseclass *test5=nullptr, TestBaseclass *test6=nullptr, TestBaseclass *test7=nullptr, TestBaseclass *test8=nullptr,
+				TestBaseclass *test9=nullptr, TestBaseclass *test10=nullptr, TestBaseclass *test11=nullptr, TestBaseclass *test12=nullptr,
+				TestBaseclass *test13=nullptr, TestBaseclass *test14=nullptr, TestBaseclass *test15=nullptr, TestBaseclass *test16=nullptr
 			);
 		};
 

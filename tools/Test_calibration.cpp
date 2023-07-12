@@ -418,7 +418,7 @@ void blah_avalanche_grid() {
 
 
 void find_test_distributions() {
-	std::time_t start_time = std::time(NULL);
+	std::time_t start_time = std::time(nullptr);
 	std::clock_t start_clock = std::clock();
 
 	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
@@ -597,7 +597,7 @@ static void simple_chisquare_test( PractRand::RNGs::vRNG *known_good ) {
 	std::printf("simple_chisquare_test: %.4f  %.4f\n", calib.get_percentile(Tests::test_uniformity(ssA)), calib.get_percentile(Tests::test_uniformity(ssB)));
 }
 void verify_test_distributions() {
-	std::time_t start_time = std::time(NULL);
+	std::time_t start_time = std::time(nullptr);
 	std::clock_t start_clock = std::clock();
 
 	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);

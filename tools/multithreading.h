@@ -47,10 +47,10 @@ namespace Threading {
 		enum { BUFSIZE = 256 };
 		TCHAR buf[BUFSIZE];
 		FormatMessage(
-			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
+			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr,
 			number,
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),// languageid
-			buf, BUFSIZE, NULL
+			buf, BUFSIZE, nullptr
 		);
 		std::fprintf(stderr, "GetLastError() = %d: %s", number, buf);
 		issue_error(msg);
@@ -60,7 +60,7 @@ namespace Threading {
 	}
 	void create_thread( unsigned long (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
 	//void create_thread( THREADFUNC_RETURN_TYPE (*func)(THREADFUNC_CALLING_CONVENTION *), void *param ) {
-		HANDLE h = CreateThread( NULL, 32768, func, param, 0, NULL);
+		HANDLE h = CreateThread( nullptr, 32768, func, param, 0, nullptr);
 		//if (!h) issue_error("create_thread: CreateThread faild", )
 		if (!h) {
 			std::fprintf(stderr, "failed to create thread");
@@ -115,11 +115,11 @@ namespace Threading {
 			milliseconds -= ts.tv_sec * 1000;
 		}
 		ts.tv_nsec = milliseconds * 1000 + 1;
-		nanosleep(&ts, NULL);
+		nanosleep(&ts, nullptr);
 	}
 	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
 		pthread_t thread;
-		if (pthread_create(&thread, NULL, func, param)) {
+		if (pthread_create(&thread, nullptr, func, param)) {
 			_issue_pthread_error(errno, "Threading::create_thread: pthread_create failed");
 
 		}
@@ -129,7 +129,7 @@ namespace Threading {
 	}
 	Lock::Lock() {
 		//InitializeCriticalSectionAndSpinCount((CRITICAL_SECTION*)&impl_data, 2000);
-		if (pthread_mutex_init( reinterpret_cast<pthread_mutex_t *>(&impl_data), NULL )) {
+		if (pthread_mutex_init( reinterpret_cast<pthread_mutex_t *>(&impl_data), nullptr )) {
 			_issue_pthread_error(errno, "Lock constructor: pthread_mutex_init failed");
 		}
 	}
