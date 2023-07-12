@@ -203,7 +203,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class pcg32 final : public vRNG32 {
 					Uint64 state{0x853c49e6748fea9bULL}, inc{0xda3e39cb94b95bdbULL};
 				public:
-					pcg32() {}
+					pcg32() = default;
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;
@@ -213,7 +213,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class pcg32_norot final : public vRNG32 {
 					Uint64 state{0x853c49e6748fea9bULL}, inc{0xda3e39cb94b95bdbULL};
 				public:
-					pcg32_norot() {}
+					pcg32_norot() = default;
 					Uint32 raw32() override;
 					std::string get_name() const override;
 					void seed(Uint64 s) override;

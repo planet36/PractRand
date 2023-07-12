@@ -30,7 +30,7 @@ namespace PractRand::RNGs {
 				void _core();
 				Uint32 _refill_and_raw32();
 			public:
-				salsa() {}
+				salsa() = default;
 				~salsa();
 				Uint32 raw32() {
 					if (used < 16) return outbuf[used++];

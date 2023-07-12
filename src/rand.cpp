@@ -120,7 +120,7 @@ namespace PractRand {
 			else outbuf << ",";
 		}
 	public:
-		PrintingStateWalker() {}
+		PrintingStateWalker() = default;
 		virtual void handle(bool   &v) override { pre(); outbuf << v; }
 		virtual void handle(Uint8  &v) override { pre(); outbuf << v; }
 		virtual void handle(Uint16 &v) override { pre(); outbuf << v; }

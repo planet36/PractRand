@@ -71,7 +71,7 @@ namespace PractRand::Tests {
 		public:
 			void _normalize();
 			void _add(double result) {rs.push_back(result); sum += result; sum_sqr += result * result;}
-			SampleSet() {}
+			SampleSet() = default;
 			void add(const SampleSet &other) {
 				for (unsigned int i = 0; i < other.rs.size(); i++) _add(other.rs[i]);
 				_normalize();
