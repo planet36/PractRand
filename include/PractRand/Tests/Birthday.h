@@ -170,7 +170,7 @@ namespace PractRand::Tests {
 			static void _lookup_constants(int buffer_size_L2, long double *offset, long double *deviation, long double *samples);
 		public:
 			BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
-			~BirthdayAlt();
+			~BirthdayAlt() override;
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
 			std::string get_name() const override;

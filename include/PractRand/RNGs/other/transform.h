@@ -16,7 +16,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform64(vRNG *rng) : base_rng(rng) {}
-					~Transform64();
+					~Transform64() override;
 				};
 				class Transform32 : public vRNG32 {
 				public:
@@ -26,7 +26,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform32(vRNG *rng) : base_rng(rng) {}
-					~Transform32();
+					~Transform32() override;
 				};
 				class Transform16 : public vRNG16 {
 				public:
@@ -36,7 +36,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform16(vRNG *rng) : base_rng(rng) {}
-					~Transform16();
+					~Transform16() override;
 				};
 				class Transform8 : public vRNG8 {
 				public:
@@ -46,7 +46,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					Transform8(vRNG *rng) : base_rng(rng) {}
-					~Transform8();
+					~Transform8() override;
 				};
 				class MultiplexTransformRNG : public vRNG {
 				public:
@@ -64,7 +64,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
 					MultiplexTransformRNG(const std::vector<vRNG*> &sources);
-					~MultiplexTransformRNG();
+					~MultiplexTransformRNG() override;
 					int get_native_output_size() const override;
 				};
 
@@ -91,7 +91,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 get_flags() const override;
 					std::string get_name() const override;
 					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), name(name_), base_rng(rng) {}
-					~GeneralizedTableTransform();
+					~GeneralizedTableTransform() override;
 					void walk_state(StateWalkingObject *) override;
 					Uint8 raw8() override;
 				};
@@ -104,7 +104,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void refill();
 				public:
 					ReinterpretAsUnknown( vRNG *rng );
-					~ReinterpretAsUnknown();
+					~ReinterpretAsUnknown() override;
 					Uint8 raw8() override;
 					//to do: fix endianness issues
 					std::string get_name() const override;
@@ -116,7 +116,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void refill();
 				public:
 					ReinterpretAs8( vRNG *rng );
-					~ReinterpretAs8();
+					~ReinterpretAs8() override;
 					Uint8 raw8() override;
 					std::string get_name() const override;
 				};
@@ -126,7 +126,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void refill();
 				public:
 					ReinterpretAs16( vRNG *rng );
-					~ReinterpretAs16();
+					~ReinterpretAs16() override;
 					Uint16 raw16() override;
 					std::string get_name() const override;
 				};
@@ -136,7 +136,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void refill();
 				public:
 					ReinterpretAs32( vRNG *rng );
-					~ReinterpretAs32();
+					~ReinterpretAs32() override;
 					Uint32 raw32() override;
 					std::string get_name() const override;
 				};
@@ -146,7 +146,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void refill();
 				public:
 					ReinterpretAs64( vRNG *rng );
-					~ReinterpretAs64();
+					~ReinterpretAs64() override;
 					Uint64 raw64() override;
 					std::string get_name() const override;
 				};

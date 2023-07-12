@@ -17,7 +17,7 @@ public:
 		//current_seed = known_good.raw64();
 		//record_seed(current_seed);
 	}
-	~Seeder_MetaRNG() { delete base_rng; }
+	~Seeder_MetaRNG() override { delete base_rng; }
 	void autoseed() {
 		known_good.autoseed();
 		current_seed = known_good.raw64();
@@ -99,7 +99,7 @@ public:
 		//for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 		//last_transform = ???;
 	}
-	~EntropyPool_MetaRNG() { delete base_entropy_pool; }
+	~EntropyPool_MetaRNG() override { delete base_entropy_pool; }
 	void autoseed() {
 		known_good.autoseed();
 		int len = (min_length + max_length) / 2;

@@ -22,7 +22,7 @@ namespace PractRand::RNGs::Polymorphic {
 				sha2_based_pool(SEED_AUTO_TYPE ) {autoseed();}
 				sha2_based_pool(SEED_NONE_TYPE ) {reset_state();}
 				sha2_based_pool() {reset_state();}
-				~sha2_based_pool();
+				~sha2_based_pool() override;
 
 				std::string get_name() const override;
 				Uint64 get_flags() const override;
