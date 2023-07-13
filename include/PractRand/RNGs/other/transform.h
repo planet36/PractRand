@@ -266,7 +266,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
-					BaysDurhamShuffle64(vRNG64 *rng, int table_size_L2, int shift=0) 
+					BaysDurhamShuffle64(vRNG64 *rng, int table_size_L2, int shift=0)
 						: Transform64(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle32 final : public Transform32 {
@@ -280,7 +280,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
-					BaysDurhamShuffle32(vRNG32 *rng, int table_size_L2, int shift=0) 
+					BaysDurhamShuffle32(vRNG32 *rng, int table_size_L2, int shift=0)
 						: Transform32(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle16 final : public Transform16 {
@@ -294,7 +294,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
-					BaysDurhamShuffle16(vRNG16 *rng, int table_size_L2, int shift=0) 
+					BaysDurhamShuffle16(vRNG16 *rng, int table_size_L2, int shift=0)
 						: Transform16(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle8 final : public Transform8 {
@@ -308,7 +308,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					void walk_state(StateWalkingObject *) override;
 					std::string get_name() const override;
-					BaysDurhamShuffle8(vRNG8 *rng, int table_size_L2, int shift=0) 
+					BaysDurhamShuffle8(vRNG8 *rng, int table_size_L2, int shift=0)
 						: Transform8(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				vRNG *apply_BaysDurhamShuffle(vRNG *base_rng, int table_size_L2=8, int shift=-1);

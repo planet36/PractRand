@@ -39,7 +39,7 @@ namespace PractRand::RNGs {
 				//static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class arbee final : public vRNG64 {
 			public:

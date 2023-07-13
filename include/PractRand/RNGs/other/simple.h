@@ -184,7 +184,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
-				
+
 				//the low quality variant of the FLEA RNG by Robert Jenkins
 				//(he named this variant flea0)
 				class flea32x1 : public vRNG32 {

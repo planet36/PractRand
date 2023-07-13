@@ -48,9 +48,9 @@ void PractRand::RNGs::Raw::jsf32::seed(Uint64 s) {//LOCKED, do not change
 		6: 2**35
 		7: >= 2**42
 		conclusion:
-			The 20 outputs skipped by the standard algorithm are more than sufficient.  
-			8 should be enough for most purposes, 
-			12 should be enough for any purpose that could possibly be satisfied by seeding from a 64 bit integer.  
+			The 20 outputs skipped by the standard algorithm are more than sufficient.
+			8 should be enough for most purposes,
+			12 should be enough for any purpose that could possibly be satisfied by seeding from a 64 bit integer.
 			(this PRNG won't be secure no matter how good seeding is, so the best we can do is 2**64 seeds producing uncorrelated results)
 	*/
 }
@@ -68,7 +68,7 @@ void PractRand::RNGs::Raw::jsf32::seed(vRNG *seeder_rng) {//custom seeding
 }
 void PractRand::RNGs::Raw::jsf32::seed(Uint32 seed1, Uint32 seed2, Uint32 seed3, Uint32 seed4) {//custom seeding
 		//LOCKED, do not change
-	//exception to the locked status - 
+	//exception to the locked status -
 	//   when more bad cycles are found, more code might be added to prohibit them
 	//exception: changed in 0.87 to to reduce correlation between similar seeds
 	a = seed1;
@@ -87,7 +87,7 @@ void PractRand::RNGs::Raw::jsf32::seed(Uint32 seed1, Uint32 seed2, Uint32 seed3,
 }
 void PractRand::RNGs::Raw::jsf32::walk_state(StateWalkingObject *walker) {
 	//LOCKED, do not change
-	//exception to the locked status - 
+	//exception to the locked status -
 	//   when more bad cycles are found, more code might be added to prohibit them
 	//exception: in 0.87 changed how the all-zeroes case is handled for consistency
 	walker->handle(a);

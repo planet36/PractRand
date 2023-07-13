@@ -31,7 +31,7 @@ namespace PractRand::RNGs {
 				void walk_state(StateWalkingObject *walker);
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class efiix64x384 : public vRNG64 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(efiix64x384)

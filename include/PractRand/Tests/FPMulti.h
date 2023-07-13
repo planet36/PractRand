@@ -11,13 +11,13 @@ namespace PractRand::Tests {
 					individual FP values - good stuff
 					exponent only - easy, probably a good idea if only as a sanity check for everything else
 					EVALUATION: is this really the right place to do this?  it prefers a smaller stride than gap tests, right?
-				gap - 
+				gap -
 					intraplatter - probably worthless? and would you index by platter hits or by global position?
 					individual FP values - probably worthwhile
 					exponent only - may be redundant with individual FP values, may not be
 					note that space for recording individual spacings is too expensive, so probably we calculate the geometric mean of gaps & expected value, in the spirit of Mauer's Universal Test
 					EVALUATION: good idea
-				coupon collecting - 
+				coupon collecting -
 					intraplatter - easy, and it might even be worthwhile.  probably not really, but if they're giving rotating results on FP frequency, this could keep them honest.  Maybe.
 					individual FP values - ...I don't think a coupon test on assympetric probs is a good idea, harder to evaluate at the very least
 					exponent only - ...I don't think a coupon test on assympetric probs is a good idea, harder to evaluate at the very least

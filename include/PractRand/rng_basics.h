@@ -9,9 +9,9 @@ namespace PractRand {
 	bool initialize_PractRand(); //returns true normally
 	//will return false if it failed to find a good source of entropy
 	//  in which case the autoseeding mechanism may have trouble
-	//  Usually not catastrophic, but some programs might want to abort if that happens.  
+	//  Usually not catastrophic, but some programs might want to abort if that happens.
 	//NOTE: initialize_PractRand() is NOT threadsafe, it should be called before threads get spun off
-	
+
 	void self_test_PractRand();
 	void issue_error(const char *msg = nullptr);//PractRand calls this any time there is an internal error
 	void hook_error_handler(void(*callback)(const char *));//this can be used to replace the default behavior of issue_error
@@ -86,7 +86,7 @@ namespace PractRand {
 			virtual void add_entropy16(Uint16);
 			virtual void add_entropy32(Uint32);
 			virtual void add_entropy64(Uint64);
-			//note that "add_entropy_N(&byte_buffer[0], 13)" will typically NOT produce the same state transition 
+			//note that "add_entropy_N(&byte_buffer[0], 13)" will typically NOT produce the same state transition
 			//  as "add_entropy_N(&byte_buffer[0], 7);add_entropy_N(&byte_buffer[0], 6);"
 			virtual void add_entropy_N(const void *, size_t length);
 

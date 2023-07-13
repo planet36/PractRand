@@ -36,9 +36,9 @@ namespace PractRand::Tests::Transforms {
 				Uint64 phase;
 				unsigned int which;
 			public:
-				switching( const char *name_, const ListOfTests &testlist, 
+				switching( const char *name_, const ListOfTests &testlist,
 					std::vector<Uint64> lengths_ );
-				switching( const char *name_, const ListOfTests &testlist, 
+				switching( const char *name_, const ListOfTests &testlist,
 					Uint64 length );
 				void init( RNGs::vRNG *known_good ) override;
 				void test_blocks(TestBlock *data, int numblocks) override;
@@ -72,7 +72,7 @@ namespace PractRand::Tests::Transforms {
 				:
 					Transform_Baseclass(name_, testlist),
 					pattern(pattern_),
-					outbitsL(outbitsL_), 
+					outbitsL(outbitsL_),
 					unitsL(unitsL_)
 				{}
 				void init( RNGs::vRNG *known_good ) override;
@@ -86,8 +86,8 @@ namespace PractRand::Tests::Transforms {
 			public:
 				lowbits ( const char *name_, const ListOfTests &testlist, int lowbitsL_=1, int unitsL_=0 )
 				:
-					Transform_Baseclass(name_, testlist), 
-					lowbitsL(lowbitsL_), 
+					Transform_Baseclass(name_, testlist),
+					lowbitsL(lowbitsL_),
 					unitsL(unitsL_)
 				{}
 				void init( RNGs::vRNG *known_good ) override;
@@ -111,8 +111,8 @@ namespace PractRand::Tests::Transforms {
 			public:
 				FirstNofM ( const char *name_, const ListOfTests &testlist, int bytes_used_, int bytes_stride_ )
 				:
-					Transform_Baseclass(name_, testlist), 
-					bytes_used(bytes_used_), 
+					Transform_Baseclass(name_, testlist),
+					bytes_used(bytes_used_),
 					bytes_stride(bytes_stride_)
 				{}
 				void init( RNGs::vRNG *known_good ) override;

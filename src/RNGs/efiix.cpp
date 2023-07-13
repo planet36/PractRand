@@ -123,8 +123,8 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 ---
 *	efiix8x(1+1)     4/1/1/1    > 8 TB      > 4 TB      pass        pass?
 *	efiix8x(1+2)     5/1/1/1    > 2 TB      > 1 TB      pass        pass?
-*	efiix8x(2+1)     ?/1/1/1                
-*	efiix8x(2+2)     ?/2/2/2    
+*	efiix8x(2+1)     ?/1/1/1
+*	efiix8x(2+2)     ?/2/2/2
 
 *	efiix4x(2+2)     0/0/0/0    2 GB*       256 MB      2/?/?       pass
 *	efiix4x(1+4)     0/0/0/0    1 GB*       64 MB       3/?/?       128 Mb
@@ -135,7 +135,7 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 *	efiix8x(1+1)     4/1/1/1    > 8 TB*     > 4 TB      pass        pass?
 
 
-It looks like quality is suffering with 4 bit words... 
+It looks like quality is suffering with 4 bit words...
 	one possibly is how few shift constants are possible... maybe they all suck
 
 Some oddities related to empirical quality vs parameterization visible there at 4 bit
@@ -146,11 +146,11 @@ Some oddities related to empirical quality vs parameterization visible there at 
 
 
 /*	on the algorithm:
-		examining small windows of the output is never sufficient to learn anything significant, 
+		examining small windows of the output is never sufficient to learn anything significant,
 			due to relatively large FIFO "iteration_table"
 		examining small windows at a stride of ITERATION_SIZE apart might be sufficient, but...
 			if the indirection pattern is not predicted/guessed that is meaningless
-			if the indirection pattern is predicted/guessed, 
+			if the indirection pattern is predicted/guessed,
 				if it doesn't reach back ITERATION_SIZE elements
 					that will simply add more unknowns
 				if it does reach back ITERATION_SIZE elements
@@ -165,14 +165,14 @@ Some oddities related to empirical quality vs parameterization visible there at 
 		to figure out all the same information at the next position
 		it might look like we have it almost cracked - we can predict important future (partial) states with relatively high probabilities
 		but that's useless if we can't TELL if our guesses were right
-		1. 
+		1.
 			which we can't do from a short output window
 				because we need the output to figure out "iterated" values feeding in
 			so we keep guessing that the indirection index remains constant, ITERATIONS_SIZE times in a row
 			THEN we can start to confirm our guesses
 			but that's already on the order of 2**(W*5+ITERATION_SIZE*L) operations to get a success
 			W is word size, in bits; L is log2(INDIRECTION_SIZE)
-		2. 
+		2.
 			which we can't do from a single short output window
 			...so we have to skip forward roughly ITERATION_SIZE positions to a 2nd window
 			and do the whole thing over again (but we don't have to guess "i" again)
@@ -181,7 +181,7 @@ Some oddities related to empirical quality vs parameterization visible there at 
 			and then we can START confirming our guesses
 			at region1 we guessed (a,b,c) and "i" and "indirect"
 			at region2 we guessed (a,b,c) and "indirect"
-		3. 
+		3.
 			we check if the "iterated" values observed actually match the constant-indirection-index required
 			but even if they appear to, that doesn't do us much good, as it's still far more likely to be a false positive than a true positive
 			unless they appear to for a very long sequence... but the chances of such a region even existing in a cyphertext length <2**64 is very small
@@ -189,7 +189,7 @@ Some oddities related to empirical quality vs parameterization visible there at 
 	I don't have much confidence in the 8 or 16 bit variants though
 */
 
-#define EFIIX_SEED3(WORD_BITS, SEEDING_ITER, SEEDING_IND) 
+#define EFIIX_SEED3(WORD_BITS, SEEDING_ITER, SEEDING_IND)
 
 /*class efiix8_seeding_helper {
 public:

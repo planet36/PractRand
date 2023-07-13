@@ -26,7 +26,7 @@ namespace PractRand::RNGs {
 				static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class trivium final : public vRNG64 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(trivium)

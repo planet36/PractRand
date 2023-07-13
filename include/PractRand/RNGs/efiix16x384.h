@@ -32,7 +32,7 @@ namespace PractRand {
 				void walk_state(StateWalkingObject *walker);
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class efiix16x384 : public vRNG16 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(efiix16x384)

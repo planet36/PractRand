@@ -23,7 +23,7 @@ namespace PractRand::RNGs {
 				void walk_state(StateWalkingObject *walker);
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class sfc16 final : public vRNG16 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(sfc16)

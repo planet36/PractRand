@@ -9,18 +9,18 @@
 //#include <vector>
 
 
-//master header, includes everything in PractRand for both 
-//  practical usage and research... 
+//master header, includes everything in PractRand for both
+//  practical usage and research...
 //  EXCEPT it does not include specific algorithms
 #include "PractRand.h"
 
 
 /*
-	Take a bunch of RNG algorithms, measure how fast they are.  
-	The RNGs include all the PractRand recommended RNGs plus a few candidates 
-		implemented here.  The non-recommended RNGs from the "other" directory are 
-		not included, as they are implemented in a fashion that is not intended for 
-		high performance, only for easy testing.  
+	Take a bunch of RNG algorithms, measure how fast they are.
+	The RNGs include all the PractRand recommended RNGs plus a few candidates
+		implemented here.  The non-recommended RNGs from the "other" directory are
+		not included, as they are implemented in a fashion that is not intended for
+		high performance, only for easy testing.
 */
 
 
@@ -34,7 +34,7 @@ using namespace PractRand;
 #include "measure_RNG_performance.h"
 
 
-template<typename RNG> 
+template<typename RNG>
 double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	//no real point to benchmarking non-polymorphic RNGs - seeding is sufficiently slow that the overhead will be insignificant
 	RNG _rng(PractRand::SEED_AUTO);

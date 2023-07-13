@@ -204,17 +204,17 @@ double PractRand::Tests::RawTestCalibrationData_117::index_to_pvalue(double inde
 	return low + (high - low) * scale;
 }
 const double PractRand::Tests::RawTestCalibrationData_117::ref_p[117] = {
-	0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 
-	0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 
-	0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 
-	0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30, 
-	0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40, 
-	0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50, 
-	0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60, 
-	0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.70, 
-	0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80, 
-	0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90, 
-	0.91, 0.92, 0.93, 0.94, 0.95, 0.96,	0.97, 0.98, 0.99, 
+	0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005,
+	0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10,
+	0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20,
+	0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30,
+	0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40,
+	0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50,
+	0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60,
+	0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.70,
+	0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80,
+	0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90,
+	0.91, 0.92, 0.93, 0.94, 0.95, 0.96,	0.97, 0.98, 0.99,
 	0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999, 0.99995, 0.99998, 0.99999
 };
 double PractRand::Tests::RawTestCalibrationData_129::sample_to_index(double sample) const {
@@ -262,8 +262,8 @@ double PractRand::Tests::RawTestCalibrationData_129::index_to_pvalue(double inde
 	return low + (high - low) * scale;
 }
 const double PractRand::Tests::RawTestCalibrationData_129::ref_p[129] = {
-	0.0000001, 0.0000002, 0.0000005, 
-	0.000001, 0.000002, 0.000005, 0.00001, 0.00002, 0.00005, 
+	0.0000001, 0.0000002, 0.0000005,
+	0.000001, 0.000002, 0.000005, 0.00001, 0.00002, 0.00005,
 	0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005,
 	0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10,
 	0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20,
@@ -275,8 +275,8 @@ const double PractRand::Tests::RawTestCalibrationData_129::ref_p[129] = {
 	0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80,
 	0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90,
 	0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99,
-	0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999, 
-	0.99995, 0.99998, 0.99999, 0.999995, 0.999998, 0.999999, 
+	0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999,
+	0.99995, 0.99998, 0.99999, 0.999995, 0.999998, 0.999999,
 	0.9999995, 0.9999998, 0.9999999
 };
 PractRand::Tests::RawTestCalibrationData_129 *PractRand::Tests::RawTestCalibrationData_129::convert117to129(const PractRand::Tests::RawTestCalibrationData_117 *old) {
@@ -480,7 +480,7 @@ public:
 };
 PractRand::Tests::RawTestCalibrationData_117 raw_calibration_data_array117[] = {
 	/*	This is raw calibration data - I take known good RNGs and run them through tests a bunch of times.
-	Which produced an empirically determined distribution.  
+	Which produced an empirically determined distribution.
 	Anyway:
 		the format for the distribution here is {name, # of blocks per sample, # of samples tested, { empirically determined samples at reference p-values points }, mean, median, standard deviation }
 		the "reference p-values points" can be found below in PractRand::Tests::RawTestCalibrationData_117::ref_p
@@ -489,7 +489,7 @@ PractRand::Tests::RawTestCalibrationData_117 raw_calibration_data_array117[] = {
 		if you draw a graph with x=log(1-p) and y=sample(1-p):
 			the far left side should tend towards increasingly negative slope (more vertical)
 		if you draw a graph with x=p and y=sample(p) the middle of the graph should mostly look contiguous
-		the code demands at least 16 samples, but I wouldn't even consider using this approach with less than 64, 
+		the code demands at least 16 samples, but I wouldn't even consider using this approach with less than 64,
 			and I wouldn't put much faith in any resulting p-values without 1024+ samples
 */
 
@@ -1539,8 +1539,8 @@ void Tests::TestBlock::fill(RNGs::vRNG *rng, unsigned long numblocks) {
 Tests::ListOfTests::ListOfTests(TestBaseclass **tests_) {
 	for (int i = 0; tests_[i]; i++) tests.push_back(tests_[i]);
 }
-Tests::ListOfTests::ListOfTests( 
-	TestBaseclass *test1, TestBaseclass *test2, TestBaseclass *test3, TestBaseclass *test4, 
+Tests::ListOfTests::ListOfTests(
+	TestBaseclass *test1, TestBaseclass *test2, TestBaseclass *test3, TestBaseclass *test4,
 	TestBaseclass *test5, TestBaseclass *test6, TestBaseclass *test7, TestBaseclass *test8,
 	TestBaseclass *test9, TestBaseclass *test10, TestBaseclass *test11, TestBaseclass *test12,
 	TestBaseclass *test13, TestBaseclass *test14, TestBaseclass *test15, TestBaseclass *test16
@@ -1724,16 +1724,16 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 
 	double r1, r2;
 	int reduced_size = simplify_prob_table(
-		TSIZE, 
-		(blocks_tested * TestBlock::SIZE/2.) / 40., 
+		TSIZE,
+		(blocks_tested * TestBlock::SIZE/2.) / 40.,
 		&probs[0], &count[0], true, true
 	);
 	r1 = g_test(reduced_size, &probs[0], &count[0]);
 //	double p1 = math_chisquared_to_pvalue(r1, reduced_size-1);
 	r1 = math_chisquared_to_normal(r1, reduced_size-1);
 	reduced_size = simplify_prob_table(
-		reduced_size, 
-		sqrt(blocks_tested * TestBlock::SIZE/2.), 
+		reduced_size,
+		sqrt(blocks_tested * TestBlock::SIZE/2.),
 		&probs[0], &count[0], true, true
 	);
 	r2 = g_test(reduced_size, &probs[0], &count[0]);
@@ -1819,11 +1819,11 @@ void  PractRand::Tests::Rep16::get_results([[maybe_unused]] std::vector<TestResu
 
 
 
-PractRand::Tests::DistC6::DistC6 ( 
-	int length_, 
-	int unitsL_, 
-	int bits_clipped_0_, 
-	int bits_clipped_1_, 
+PractRand::Tests::DistC6::DistC6 (
+	int length_,
+	int unitsL_,
+	int bits_clipped_0_,
+	int bits_clipped_1_,
 	int bits_clipped_2_
 )
 :
@@ -1836,7 +1836,7 @@ PractRand::Tests::DistC6::DistC6 (
 //	mode = mode_;
 
 	bits_per_sample = 3 + unitsL - bits_clipped_0 - bits_clipped_1 - bits_clipped_2;
-	size = 1 << (bits_per_sample * length); 
+	size = 1 << (bits_per_sample * length);
 
 	generate_reorder_codes();
 	mask_pre = Uint32(-1);
@@ -1898,10 +1898,10 @@ void PractRand::Tests::DistC6::init([[maybe_unused]] PractRand::RNGs::vRNG *know
 }
 std::string PractRand::Tests::DistC6::get_name() const {
 	std::ostringstream tmp;
-	tmp << "DC6-" << length << "x" << (1<<unitsL) << "Bytes-" << 
+	tmp << "DC6-" << length << "x" << (1<<unitsL) << "Bytes-" <<
 		(bits_clipped_0 + 10 * bits_clipped_1 + 100 * bits_clipped_2);
 	return tmp.str();
-//	return make_string("DC6:%dx%dByte:%d", length, 1 << unitsL, 
+//	return make_string("DC6:%dx%dByte:%d", length, 1 << unitsL,
 //		bits_clipped_0 + 10 * bits_clipped_1 + 100 * bits_clipped_2
 //	);
 }
@@ -2022,7 +2022,7 @@ void PractRand::Tests::DistC6::generate_reorder_codes ( ) {
 		_probs[i] = _probs[i-1] * double(NP - i) / double(i);
 		_probs[NP-i-1] = _probs[i];
 	}
-	
+
 	//probabilities of codes
 	for (i = 0; i < (1 << bits_per_sample); i++) _tprobs[i] = 0;
 	for (i = 0; i < NP; i++) _tprobs[transform_bitcount(i)] += _probs[i];
@@ -2558,7 +2558,7 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult> &results) {
 			internal_name << "_BCFN-" << effective_bits << "/4";
 			calib = calibration_manager.get_calibration_data(internal_name.str(), samples / ref_chance / (1024/4));
 		}
-		
+
 		std::ostringstream name;
 		name << "BCFN(";
 		//double w = 0.5 / (1.0 + level * 0.25 + level * level * 0.05);
@@ -2682,7 +2682,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 			internal_name << "_BCFN-" << effective_bits << "/4";
 			calib = calibration_manager.get_calibration_data(internal_name.str(), adjusted_samples / ref_chance_unbalanced / (1024/4));
 		}
-		
+
 		std::ostringstream name;
 		name << "BCFN(";
 		//double w = 0.5 / (1.0 + level * 0.25 + level * level * 0.05);
@@ -3961,7 +3961,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		inter_counts[e] += intra_counts[i & max_sig] = counts_[i];
 		if ((i & max_sig) == max_sig && inter_counts[e]) {
 			double expected = std::pow(0.5, e+1.0+(e==max_exp?-1:0)) * samples;
-			
+
 			double _ebits = std::log(expected) / std::log(2.0) - 4;
 			int ebits = int(std::floor(_ebits * 0.75 + 0.1));
 			if (ebits > sig_bits) ebits = sig_bits;
@@ -4038,7 +4038,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		//double p = math_normaldist_to_pvalue(norm);
 		std::ostringstream str; str << get_name() << ":cross";
 		TestCalibrationData *calib = calibration_manager.get_calibration_data( "FPF-14+6/16:cross", samples / 512.0 + 0.5 );
-		if (calib) 
+		if (calib)
 			results.push_back(TestResult(str.str(), norm, -calib->sample_to_suspicion(norm),  samples >= 4000 ? TestResult::TYPE_GOOD_S : TestResult::TYPE_BAD_S, 0.25));
 		else results.push_back(TestResult(str.str(), norm, norm,  TestResult::TYPE_RAW_NORMAL, 0.25));
 	}
@@ -4292,7 +4292,7 @@ PractRand::Tests::FPMulti::FPMulti() //(int stride_bits_L2_, int skip_platters_)
 	//stride_bits_L2(stride_bits_L2_)
 {
 	static const double gap_L2_expected_lookup[30] = {
-		// I printed lots of precision, but the actual calculations weren't that accurate.  I'm pretty sure it's all at least as good as single-precision, probably better.  
+		// I printed lots of precision, but the actual calculations weren't that accurate.  I'm pretty sure it's all at least as good as single-precision, probably better.
 		0.732649482117484,
 		1.537438290932739,
 		2.401606811975667,
@@ -4351,7 +4351,7 @@ void PractRand::Tests::FPMulti::Platter::reset([[maybe_unused]] PractRand::RNGs:
 	gap_product_extracted_L2 = 1;
 	gap_hits = 0;
 	gap_warmed_up = false;
-	
+
 	//for (int i = 0; i < COUP_MASK_SIZE; i++) coup_mask[i] = 0;
 	//freq_count.reset_counts();
 	//coup_count.reset_counts();
@@ -4465,7 +4465,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 	if (true) {// full gap test
 		enum { NUM_PRECALCED = 29 };
 		static const double precalced_per_sample_variance[NUM_PRECALCED] = {
-			// I printed lots of precision, but the actual calculations weren't that accurate.  I think it's all at least as good as single-precision though.  
+			// I printed lots of precision, but the actual calculations weren't that accurate.  I think it's all at least as good as single-precision though.
 			0.689767784941473,
 			1.337738769110027,
 			1.901334686734523,
@@ -4571,7 +4571,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 		dev = std::sqrt(dev - avg * avg);
 		avg += baseline;
 		for (int p = skip_platters; p <= MAX_EXP; p++) {
-			//double expected_samples = 
+			//double expected_samples =
 			double samples = platter[p].total_count - platter[p].gap_negative_count1;
 			if (samples < 8000) continue;
 			double observed_avg = platter[p].gap_sum1 / samples;
@@ -4898,7 +4898,7 @@ void PractRand::Tests::Birthday32::test_blocks(TestBlock *data, int numblocks) {
 		else {
 			std::memcpy(&buffer[num_buffered], &data[0].as32[0], TestBlock::SIZE);
 			num_buffered += TestBlock::SIZE / sizeof(Uint32);
-		}		
+		}
 		if (num_buffered == BUFFER_SIZE) flush_buffer();
 		numblocks--;
 		data++;
@@ -5115,8 +5115,8 @@ void PractRand::Tests::Birthday64::flush_buffer() {
 	}
 	/*
 	for (int i = 0; i < repeated_values.size(); i++) {
-		//if (repeated_values[i].second > 2 || repeated_values[i].first > 1ull << (41 + 2) || repeated_values[i].first < 1ull << (41 - 10)) 
-		if (repeated_values[i].second > 2) 
+		//if (repeated_values[i].second > 2 || repeated_values[i].first > 1ull << (41 + 2) || repeated_values[i].first < 1ull << (41 - 10))
+		if (repeated_values[i].second > 2)
 			std::printf("  num = %2d   log2(value) = %.6f   value = %13.0f\n\n", int(repeated_values[i].second), double(std::log2(repeated_values[i].first)), double(repeated_values[i].first));
 		//auto it = dup_value_counts.find()
 		Uint64 total = dup_value_counts[repeated_values[i].first] += repeated_values[i].second + (1ull << 32);
@@ -5769,7 +5769,7 @@ double PractRand::Tests::BirthdaySystematic128::evaluate_score(double lambda, Ui
 Uint64 PractRand::Tests::BirthdaySystematic128::flush_buffer() {
 	Uint64 dups = BirthdayLamda1::flush_buffer();
 	if (autofail) return dups;
-	
+
 	if (expected_duplicates == 1) score = 0;
 	score += evaluate_score(1.0, dups);//scoring method 2
 	return dups;
@@ -6272,7 +6272,7 @@ void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
 
 
 PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_) {
-	static Uint32 sizes[] = { 
+	static Uint32 sizes[] = {
 		128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6<<10, 8<<10, 12<<10, 16<<10, 24<<10, 32<<10, 48<<10, 64<<10, 0
 	};
 	for (int i = 0; true; i++) {
@@ -6363,7 +6363,7 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 		//if (s.total >= 4096) {
 		//	results.push_back(TestResult(name.str(), score, Tests::math_normaldist_pdf(score), TestResult::TYPE_GOOD_P, 0.25 / ps.size()));
 		//}
-		//else 
+		//else
 		if (s.total >= 3) {
 			TestCalibrationData *calib = calibration_manager.get_calibration_data("BRank", s.total);
 			if (s.total >= 3 && (score > 0 || s.total >= 32)) {
@@ -6712,7 +6712,7 @@ int  PractRand::Tests::NearSeq::get_extra_distance(const Word *core, int bucket_
 		enum { INDEX = CORE_SEQUENCE_BITS / WORD_BITS };
 		extra_distance += std::popcount((core[INDEX] ^ buckets[bucket_index].sequence[INDEX + SEQUENCE_WORD_OFFSET]) >> (CORE_SEQUENCE_BITS % WORD_BITS));
 	}
-	for (int i = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS; i < SEQUENCE_BITS / WORD_BITS - SEQUENCE_WORD_OFFSET; i++) 
+	for (int i = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS; i < SEQUENCE_BITS / WORD_BITS - SEQUENCE_WORD_OFFSET; i++)
 		extra_distance += std::popcount(core[i] ^ buckets[bucket_index].sequence[i +  SEQUENCE_WORD_OFFSET]);
 	return extra_distance;
 }
@@ -6729,7 +6729,7 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 		bucketing bits		8			8			16			8			4			4			2			2			4			6 - 16
 		is_word_codable		12.9		20.5 K		1845		43			143			41 K		12			202			6.5			1, or 20 - 50 K
 		is_near_ideal		20.5 K		1.67 B		281 T		16.7 M		40.9 K		268 M		202			16 K		4.0 K		10 K - 1 B
-		looks nice?						.						*			.			.						
+		looks nice?						.						*			.			.
 
 		not perfectly aligned, no tails:
 
@@ -6750,7 +6750,7 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 		looks nice?					.		*						*						*		*
 		*/
 		Word *core;
-		if (false); 
+		if (false);
 		else if (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
 		else if (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
 		else if (WORD_BITS == 32) core = reinterpret_cast<Word*>(&data[0].as32[pos]);
@@ -7467,10 +7467,10 @@ void PractRand::Tests::mod3_simple::update_index(Word value) {
 	else if (WORD_BITS == 64) value = u64_mod3(value);
 	index += index << 1;
 	index += value;
-	const unsigned long table[4] = { 
-		0, 
-		((P2 * 1) / K)*K, 
-		((P2 * 2) / K)*K, 
+	const unsigned long table[4] = {
+		0,
+		((P2 * 1) / K)*K,
+		((P2 * 2) / K)*K,
 		((P2 * 3) / K)*K
 	};
 	index -= table[index >> BITS];
@@ -8031,10 +8031,10 @@ std::string PractRand::Tests::TripleFreq::get_name() const {
 }
 void PractRand::Tests::TripleFreq::get_results(std::vector<TestResult> &results) {
 	const Uint64 *counts_ = counts.get_array();
-	enum { 
+	enum {
 		SECTOR_SIZE = 1 << SIZE3,
 		PATTERN_SIZE = 1 << (SIZE3 + SIZE2 + SIZE1),
-		REGION_SIZE = 1 << REGION_INDEX_BITS, 
+		REGION_SIZE = 1 << REGION_INDEX_BITS,
 		TOTAL_SIZE = 1 << TOTAL_INDEX_BITS
 	};
 	/*
@@ -8132,10 +8132,10 @@ void PractRand::Tests::TripleFreq::test_blocks(TestBlock *data, int numblocks) {
 		numblocks -= blocks_till_next_pass;
 		for (int pos1 = 0; pos1 < passes_at_once; pos1++) {
 			Uint64 window1 = read_64_misaligned(data[0].as64, pos1 * BASE_ALIGNMENT);
-			
+
 			int p2i = regions_tested & ((1 << POSITIONS2_L2) - 1);
 			Uint64 window2 = read_64_misaligned(data[0].as64, pos1 * BASE_ALIGNMENT + SIZE1 + p2i * WINDOW_ALIGNMENT);
-			
+
 			Uint32 base_index = p2i;
 			base_index <<= SIZE1; base_index |= window1 & ((1 << SIZE1) - 1);
 			base_index <<= SIZE2; base_index |= window2 & ((1 << SIZE2) - 1);
@@ -10677,7 +10677,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 		int which = i >> 14;
 		lperm16_chances[i] = lperm8_chances[low] * lperm8_chances[high];
 		double ratio = (lperm8_chances[meta] / (lperm8_chances[meta] + lperm8_chances[meta ^ 64]));
-		lperm16_chances[i] *= ratio;// 
+		lperm16_chances[i] *= ratio;//
 	}
 	double sum = 0;
 	for (int i = 0; i < 128; i++) sum += lperm8_chances[i];
@@ -10892,8 +10892,8 @@ Uint64 PractRand::Tests::Transforms::switching::get_blocks_passed_through(int in
 
 
 PractRand::Tests::Transforms::switching::switching(
-	const char *name_, 
-	const ListOfTests &testlist, 
+	const char *name_,
+	const ListOfTests &testlist,
 	std::vector<Uint64> lengths_)
 :
 	multiplex(name_, testlist),
@@ -10909,8 +10909,8 @@ PractRand::Tests::Transforms::switching::switching(
 	for (unsigned long i = 0; i < blocks_already_per.size(); i++) total_length += lengths[i];
 }
 PractRand::Tests::Transforms::switching::switching(
-	const char *name_, 
-	const ListOfTests &testlist, 
+	const char *name_,
+	const ListOfTests &testlist,
 	Uint64 length)
 :
 	multiplex(name_, testlist)
@@ -10945,7 +10945,7 @@ void PractRand::Tests::Transforms::switching::test_blocks( TestBlock *data, int 
 }
 //double PractRand::Tests::Transforms::switching::get_result() {
 //}
-	
+
 void PractRand::Tests::Transforms::Transform_Baseclass::init( RNGs::vRNG *known_good ) {
 	Transforms::multiplex::init(known_good);
 	leftovers = 0;

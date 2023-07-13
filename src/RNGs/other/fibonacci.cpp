@@ -232,7 +232,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(carry);
 					for (auto & i : cbuf) walker->handle(i);
 				}
-				
+
 				//
 				Uint32 cbuf_accum::raw32() {
 					Uint32 tmp = cbuf[--index];

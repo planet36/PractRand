@@ -182,7 +182,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				ibaa32::~ibaa32() {delete[] table;}
 
-				
+
 				#define ind32(mm,x)  (*reinterpret_cast<Uint32 *>((reinterpret_cast<Uint8 *>(mm)) + ((x) & ((MASK)<<2))))
 				#define rngstep32(mix,a,b,mm,m,m2,r,x) \
 				{ \
@@ -256,7 +256,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				#undef rngstep32
 
 
-				
+
 				#define ind16(mm,x)  (*reinterpret_cast<Uint16 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((MASK)<<1))))
 				#define rngstep16(mix,a,b,mm,m,m2,r,x) \
 				{ \
@@ -343,7 +343,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					i++;
 					return b ^ iterated;//*/
 
-					//1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42, 
+					//1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ];
 					Uint8 indirect = indirection_table[c & indirection_table_size_m1];
 					indirection_table[c & indirection_table_size_m1] = iterated ^ a;
@@ -353,7 +353,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					b = c ^ indirect;
 					c = old + rotate( c, 3 );
 					return b;//*/
-					
+
 					//"^b" - 1+1: 38, 1+2: >36
 					//"^a" - 1+1: 38
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ a;
@@ -366,7 +366,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					c = old ^ rotate( c, 3 );
 					i++; return old;//*/
 
-					//1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35, 
+					//1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
 					Uint8 indirect = indirection_table[c & indirection_table_size_m1] + a;
 					indirection_table[c & indirection_table_size_m1] = iterated;
@@ -419,7 +419,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					i++;
 					return b ^ iterated;//*/
 
-					//8 - 1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42, 
+					//8 - 1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ];
 					Uint8 indirect = indirection_table[c & indirection_table_size_m1];
 					indirection_table[c & indirection_table_size_m1] = iterated ^ a;
@@ -429,14 +429,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					b = c ^ indirect;
 					c = old + rotate4( c, 2 );
 					return b;//*/
-					
+
 					//8 "^b" - 1+1: 38, 1+2: >36
 					/*
 					"^b" / "^a" on iterated, at 4 bit, shift 3
 								1		2		4		8		16
 						1		19/21	23/26	24/28	27/29	31/31
 						2		26/23	29/29	30/30	32/31	34/35
-						4		31/32	32/33	34/36	36/36	
+						4		31/32	32/33	34/36	36/36
 						8		39/42-43
 					"^b" / "^a" on iterated, at 4 bit, shift 2
 								1		2		4		8		16
@@ -461,7 +461,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					c = old ^ rotate4( c, 3 );
 					i++; return old;//*/
 
-					//8 - 1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35, 
+					//8 - 1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
 					Uint8 indirect = indirection_table[c & indirection_table_size_m1] + a;
 					indirection_table[c & indirection_table_size_m1] = iterated;

@@ -5,7 +5,7 @@
 #if defined _WIN32
 #define THREADFUNC_CALLING_CONVENTION __stdcall
 #define THREADFUNC_RETURN_TYPE unsigned long
-#else 
+#else
 #define THREADFUNC_CALLING_CONVENTION
 #define THREADFUNC_RETURN_TYPE void *
 #endif
@@ -13,7 +13,7 @@ namespace Threading {
 	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *threadfunc)(void*), void *param );
 	void sleep(int milliseconds);
 	class Lock {
-		//implementation details hidden (by ugly methods) 
+		//implementation details hidden (by ugly methods)
 		//in order to avoid platform-specific include files here
 		enum {MAX_IMPL_SIZE=64};//make sure this is large enough to hold whatever the real implementation is
 		union {

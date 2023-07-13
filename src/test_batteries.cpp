@@ -56,7 +56,7 @@ namespace PractRand::Tests::Batteries {
 					//new Tests::BirthdayLambda1(26),
 					//new Tests::BirthdaySystematic128(),
 					//new Tests::FPMulti(),			//	1.3 s/GB
-					//new Tests::BCFN_MT(1, 11),  //	
+					//new Tests::BCFN_MT(1, 11),  //
 					//new Tests::TripleFreq(8, 1),  //	2.5 s/GB in isolation, +1.4 seconds in combined test runs
 					//new Tests::LPerm16(32),//			?? s/GB
 					//new Tests::DistFreq4(1),  //		?? s/GB

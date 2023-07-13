@@ -101,12 +101,12 @@ namespace PractRand::Tests {
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
 			Uint64 saved_blocks[MAX_LEVELS * 2];
 			char level_state[MAX_LEVELS];
-			//states: 
+			//states:
 			//0: no blocks saved
 			//1: 1 block saved
 			//2: 2 blocks saved, in order
 			//3: 2 blocks saved, reverse order
-			char level_polarity[MAX_LEVELS];// 0: 
+			char level_polarity[MAX_LEVELS];// 0:
 			int blocks_till_next_pass;
 			int blocks_per_pass;
 			int minimum_level;

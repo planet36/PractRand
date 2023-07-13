@@ -53,15 +53,15 @@ namespace PractRand {
 			virtual std::string get_name() const = 0;
 
 			//1.  Maximum length per test_blocks() call is about 512MB (numblocks==1<<19)
-			//2.  Maximum total length from multiple calls varies slightly but is usually 
-			//       at least 256 TB (numblocks == 1<<48), and often more.  
-			//3.  If the total length is too short then results may not be produced, or 
-			//       might be less reliable.  
-			//4.  You are supposed to make sure that the last REPEATED_BLOCKS blocks from 
-			//       your previous test_blocks() calls are prepended on to the blocks 
-			//       array.  Most tests don't care about this, but a few do.  The extra 
-			//       blocks prepended are to appear at negative indices on the blocks[] 
-			//       array, and are not counted in numblocks.  
+			//2.  Maximum total length from multiple calls varies slightly but is usually
+			//       at least 256 TB (numblocks == 1<<48), and often more.
+			//3.  If the total length is too short then results may not be produced, or
+			//       might be less reliable.
+			//4.  You are supposed to make sure that the last REPEATED_BLOCKS blocks from
+			//       your previous test_blocks() calls are prepended on to the blocks
+			//       array.  Most tests don't care about this, but a few do.  The extra
+			//       blocks prepended are to appear at negative indices on the blocks[]
+			//       array, and are not counted in numblocks.
 			virtual void test_blocks(TestBlock *blocks, int numblocks) = 0;
 
 

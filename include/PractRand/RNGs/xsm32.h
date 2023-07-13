@@ -27,7 +27,7 @@ namespace PractRand::RNGs {
 				//static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class xsm32 final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(xsm32)

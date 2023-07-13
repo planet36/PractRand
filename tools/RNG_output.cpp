@@ -17,8 +17,8 @@
 #include <io.h>
 #endif
 
-//master header, includes everything in PractRand for both 
-//  practical usage and research... 
+//master header, includes everything in PractRand for both
+//  practical usage and research...
 //  EXCEPT it does not include specific algorithms
 //  also it does not include PractRand/RNG_adaptors.h as that includes lots of templated stuff
 #include "PractRand_full.h"
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 	prev_handler = signal(SIGTERM, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGTERM has failed." << std::endl; }
 #ifdef __linux__
 	prev_handler = signal(SIGPIPE, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGPIPE has failed." << std::endl; }
-#endif  
+#endif
 
 	enum {BUFFER_SIZE = 8};
 	//Uint64 buffer[BUFFER_SIZE];

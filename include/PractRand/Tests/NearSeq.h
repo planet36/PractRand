@@ -12,12 +12,12 @@ namespace PractRand::Tests {
 					word			extra bits			derived
 					32	14x8=112	128			2/3		87.5, 35 M		meh
 					64	9x7=63		128			1/2		1.2 K, 268 M	???
-					64	12x5=60		128			1/2		1, 129 K		
-					64	10x12=120	128			3/4		13 K, 227 M		
-					32?	10x4=40		64			0/1		110, 1 B		
-					64	8x8=64		128			2/3		13, 20 K		
-					32	8x8=64		64?			1/2		20 K, 13 B		
-					32	8x4=32		64			0/1		43, 17 M		
+					64	12x5=60		128			1/2		1, 129 K
+					64	10x12=120	128			3/4		13 K, 227 M
+					32?	10x4=40		64			0/1		110, 1 B
+					64	8x8=64		128			2/3		13, 20 K
+					32	8x8=64		64?			1/2		20 K, 13 B
+					32	8x4=32		64			0/1		43, 17 M
 				*/
 
 			static constexpr int WORD_BITS = sizeof(Word)* 8;
@@ -25,10 +25,10 @@ namespace PractRand::Tests {
 			static constexpr int NUM_BUCKETS_L2 = 9;
 			static constexpr int NUM_BUCKETS = 1 << NUM_BUCKETS_L2;
 			static constexpr int BITS_PER_BLOCK = 7;
-			static constexpr int BLOCKS_PER_CORE = NUM_BUCKETS_L2; 
+			static constexpr int BLOCKS_PER_CORE = NUM_BUCKETS_L2;
 			static constexpr int CORE_SEQUENCE_BITS = BLOCKS_PER_CORE * BITS_PER_BLOCK;
 
-			static constexpr int CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS; 
+			static constexpr int CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS;
 			static constexpr int EXTRA_WORDS = 2;
 			static constexpr int SEQUENCE_WORDS = CORE_WORDS + EXTRA_WORDS;
 			static constexpr int SEQUENCE_BITS = SEQUENCE_WORDS * WORD_BITS;
@@ -95,7 +95,7 @@ namespace PractRand::Tests {
 			static constexpr int CORE_WORDS = (CORE_SEQUENCE_BITS + WORD_BITS - 1) / WORD_BITS;
 			static constexpr int EXTRA_FULL_WORDS = 2;//should be an even number, otherwise call it an invalid parameterization
 			static constexpr int EXTRA_PARTIAL_WORD_BITS = CORE_WORDS * WORD_BITS - CORE_SEQUENCE_BITS; //should be less than 1 word, otherwise call it an invalid parameterization
-			static constexpr int EXTRA_BITS = EXTRA_FULL_WORDS * WORD_BITS + EXTRA_PARTIAL_WORD_BITS; 
+			static constexpr int EXTRA_BITS = EXTRA_FULL_WORDS * WORD_BITS + EXTRA_PARTIAL_WORD_BITS;
 			static constexpr int SEQUENCE_WORDS = CORE_WORDS + EXTRA_FULL_WORDS;
 			static constexpr int SEQUENCE_BITS = SEQUENCE_WORDS * WORD_BITS;
 			static constexpr int SEQUENCE_WORD_OFFSET = EXTRA_FULL_WORDS / 2;

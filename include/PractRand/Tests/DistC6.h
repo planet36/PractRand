@@ -3,10 +3,10 @@
 namespace PractRand::Tests {
 		class DistC6 : public TestBaseclass {
 		public:
-			DistC6 ( int length_ = 9, int unitsL_ = 0, 
-				int bits_clipped_0_ = 1, 
-				int bits_clipped_1_ = 0, 
-				int bits_clipped_2_ = 0 ); 
+			DistC6 ( int length_ = 9, int unitsL_ = 0,
+				int bits_clipped_0_ = 1,
+				int bits_clipped_1_ = 0,
+				int bits_clipped_2_ = 0 );
 			void init( PractRand::RNGs::vRNG *known_good ) override;
 			std::string get_name() const override;
 			void get_results ( std::vector<TestResult> &results ) override;

@@ -95,7 +95,7 @@ namespace PractRand {
 		static Uint32 pow_mod_N32(Uint32 x, Uint32 pow, Uint32 mod) {
 			if (x <= 1) return x;
 			if (pow == 0) return 1;
-	
+
 			pow -= 1;
 			if (pow == 0) return x;
 
@@ -767,7 +767,7 @@ namespace PractRand {
 				if (midn >= norm) upper_p = midp;
 				else lower_p = midp;
 			}
-			return (upper_p + lower_p) / 2;	
+			return (upper_p + lower_p) / 2;
 		}
 		double math_normaldist_pdf( double normal ) {
 			static double scale = 1 / sqrt(3.14159265358979 * 2);
@@ -1200,7 +1200,7 @@ namespace PractRand {
 				}
 				else {
 					int bit_delta = (bit_offset - out_offset) & WORD_BITS_MASK;
-					int iww = 
+					int iww =
 					for (int iw = 1; iw < ; xw++) {
 					;
 					if (start_word == end_word) {
@@ -1213,7 +1213,7 @@ namespace PractRand {
 					}
 				}*/
 			}
-			//else if (!bit_offset && 
+			//else if (!bit_offset &&
 			else {
 				if (!zeroed) clear_rectangle(x, x+bits, y, y+1);
 				for (int i = 0; i < bits; i++) {

@@ -94,11 +94,11 @@ namespace PractRand::Crypto {
 					OFFS_C = Constants::INPUT_WORDS - 0,
 					OFFS_D = Constants::INPUT_WORDS/2 - 1,
 				};
-				s0 = 
+				s0 =
 					Constants::PREPROCESS_SHIFT_S0_1(preprocessed[i-OFFS_A]) ^
 					Constants::PREPROCESS_SHIFT_S0_2(preprocessed[i-OFFS_A]) ^
 					Constants::PREPROCESS_SHIFT_S0_3(preprocessed[i-OFFS_A]);
-				s1 = 
+				s1 =
 					Constants::PREPROCESS_SHIFT_S1_1(preprocessed[i-OFFS_B]) ^
 					Constants::PREPROCESS_SHIFT_S1_2(preprocessed[i-OFFS_B]) ^
 					Constants::PREPROCESS_SHIFT_S1_3(preprocessed[i-OFFS_B]);
@@ -112,11 +112,11 @@ namespace PractRand::Crypto {
 			//starting main loop
 			for (i = 0; i < Constants::ROUNDS; i+=2) {
 				Word s0, s1, maj, t1, t2, ch;
-				s0 = 
+				s0 =
 					Constants::MAINLOOP_SHIFT_S0_1(temp_state[0]) ^
 					Constants::MAINLOOP_SHIFT_S0_2(temp_state[0]) ^
 					Constants::MAINLOOP_SHIFT_S0_3(temp_state[0]);
-				s1 = 
+				s1 =
 					Constants::MAINLOOP_SHIFT_S1_1(temp_state[4]) ^
 					Constants::MAINLOOP_SHIFT_S1_2(temp_state[4]) ^
 					Constants::MAINLOOP_SHIFT_S1_3(temp_state[4]);
@@ -137,11 +137,11 @@ namespace PractRand::Crypto {
 
 				Word n0 = t1 + t2;
 				Word n4 = temp_state[3] + t1;
-				s0 = 
+				s0 =
 					Constants::MAINLOOP_SHIFT_S0_1(n0) ^
 					Constants::MAINLOOP_SHIFT_S0_2(n0) ^
 					Constants::MAINLOOP_SHIFT_S0_3(n0);
-				s1 = 
+				s1 =
 					Constants::MAINLOOP_SHIFT_S1_1(n4) ^
 					Constants::MAINLOOP_SHIFT_S1_2(n4) ^
 					Constants::MAINLOOP_SHIFT_S1_3(n4);
@@ -229,7 +229,7 @@ namespace PractRand::Crypto {
 			}
 			input_buffer.as_word[Constants::INPUT_WORDS-1] = endianness_word(length << 3);
 			if (sizeof(Word) < sizeof(Uint64)) {
-				input_buffer.as_word[Constants::INPUT_WORDS-2] = 
+				input_buffer.as_word[Constants::INPUT_WORDS-2] =
 					endianness_word(length>>(sizeof(Word)*8-3));
 			}
 			else input_buffer.as_word[Constants::INPUT_WORDS-2] = 0;

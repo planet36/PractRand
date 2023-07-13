@@ -401,7 +401,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle64::seed(Uint64 s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++) 
+					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw64();
 					for (int i = 0; i <= index_mask; i++) {raw64();raw64();}
 				}
@@ -430,7 +430,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle32::seed(Uint64 s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++) 
+					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw32();
 					for (int i = 0; i <= index_mask; i++)  {raw32();raw32();}
 				}
@@ -459,7 +459,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle16::seed(Uint64 s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++) 
+					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw32();
 					for (int i = 0; i <= index_mask; i++)  {raw16();raw16();}
 				}
@@ -488,7 +488,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle8::seed(Uint64 s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++) 
+					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw32();
 					for (int i = 0; i <= index_mask; i++)  {raw8();raw8();}
 				}

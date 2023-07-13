@@ -39,7 +39,7 @@ namespace PractRand::RNGs {
 				//static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class isaac64x256 final : public vRNG64 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(isaac64x256)

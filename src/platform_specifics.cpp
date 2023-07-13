@@ -148,10 +148,10 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 #endif
 #if (defined _WIN32) && 0 //DISABLED
 	{//WINDOWS REGISTRY
-		//Not a true entropy source, but an accumulator across multiple runs, 
-		//  which we need more than we need another entropy source.  
+		//Not a true entropy source, but an accumulator across multiple runs,
+		//  which we need more than we need another entropy source.
 		//Probably ought to be a transaction,
-		//  but that would require Vista as a minimum Windows version, 
+		//  but that would require Vista as a minimum Windows version,
 		//  and I want to support 2k and XP also
 		HKEY key = nullptr;
 		for (int tries = 0; tries < 3; tries++) {

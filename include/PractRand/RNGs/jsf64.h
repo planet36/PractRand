@@ -23,7 +23,7 @@ namespace PractRand::RNGs {
 				//static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class jsf64 final : public vRNG64 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(jsf64)

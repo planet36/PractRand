@@ -8,8 +8,8 @@ namespace PractRand::Tests {
 			std::vector<TestBaseclass*> tests;
 			ListOfTests ( ) = default;
 			ListOfTests ( TestBaseclass **tests_ );
-			ListOfTests ( 
-				TestBaseclass *test1, TestBaseclass *test2=nullptr, TestBaseclass *test3=nullptr, TestBaseclass *test4=nullptr, 
+			ListOfTests (
+				TestBaseclass *test1, TestBaseclass *test2=nullptr, TestBaseclass *test3=nullptr, TestBaseclass *test4=nullptr,
 				TestBaseclass *test5=nullptr, TestBaseclass *test6=nullptr, TestBaseclass *test7=nullptr, TestBaseclass *test8=nullptr,
 				TestBaseclass *test9=nullptr, TestBaseclass *test10=nullptr, TestBaseclass *test11=nullptr, TestBaseclass *test12=nullptr,
 				TestBaseclass *test13=nullptr, TestBaseclass *test14=nullptr, TestBaseclass *test15=nullptr, TestBaseclass *test16=nullptr

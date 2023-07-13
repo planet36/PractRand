@@ -11,7 +11,7 @@ namespace PractRand::Tests {
 
 			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
-			enum { 
+			enum {
 				SIZE1 = 1<<18, //handles the common case, tracks sets of (1 << SET1_SHIFT) gaps
 				SIZE2 = 1<<17, //handles the uncommon cases, tracks each set of (1 << SET2_SHIFT) gaps
 				SIZE3 = 1<<17, //handles rare cases, tracks each set of (1 << SET3_SHIFT) gaps (VERY rare cases go to extreme_lags instead)

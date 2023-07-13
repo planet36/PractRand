@@ -78,7 +78,7 @@ namespace PractRand {
 		const char *buffer;
 		std::size_t max_size;
 		std::size_t size_used{};
-		DeserializingStateWalker( const char *buffer_, std::size_t max_size_ ) 
+		DeserializingStateWalker( const char *buffer_, std::size_t max_size_ )
 			: buffer(buffer_), max_size(max_size_)
 		{}
 		Uint8 pop8() {
@@ -491,7 +491,7 @@ namespace PractRand {
 		{RNGs::Polymorphic::xsm64 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 0); }
 	}
 	bool initialize_PractRand() {
-		if (!AutoSeeder::initialized) 
+		if (!AutoSeeder::initialized)
 			AutoSeeder::initialize();
 		union {
 			Uint64 as64[1];

@@ -92,7 +92,7 @@ void PractRand::RNGs::Raw::sfc32::seed(Uint64 s) {
 }
 void PractRand::RNGs::Raw::sfc32::seed_fast(Uint64 s) {
 	a = 0;
-	b = Uint32(s >> 0); 
+	b = Uint32(s >> 0);
 	c = Uint32(s >> 32);
 	counter = 1;
 	for (int i = 0; i < 8; i++) raw32();//8
@@ -125,14 +125,14 @@ void PractRand::RNGs::Raw::sfc64::seed(Uint64 s) {
 	//16 outputs skipped - sfc64 is held to a higher standards for seeding than sfc32 because it is rated for more parallel scenarios
 	//no wait, it's rated the same as sfc32, there's no reason for 16 rounds, stick to 12
 /*
-_																	X,12,3					X,11,3								X,13,3					24,X,3						
+_																	X,12,3					X,11,3								X,13,3					24,X,3
 _				e0f0	e0f1	e0f2		e1f0	e1f1	e1f2	25	23	21	10	37	46	10	16	21	22	24	25	36	37	46	10	30	44	45	46	47	8	9	10	11	27	29	30	40,18,3
 sfc	64	5		?		?		?			?		13		?		13	14	12	9	13	13	9	12	13	12	14	14	12	12	13	9	14	13	14	13	12	12	13	14	.	12	13	13	13	.
 sfc	64	6		?		?		?			?		16		?		18	18	18	18	19	17	18	18	20	14	16	16	18	19	16	16	17	18	17	17	14	14	13	14	.	17	17	15	18	.
 sfc 64	7		?		?		?			?		29		?		25	26	26	25	26	27	27	26	26	27	29	25	25	28	25	26	26	27	26	26	25	27	25	25	.	25	26	25	28	.
 sfc 64	8		?		?		?			?		39+		?		40	36	37	22	29	32	22				39+			30									37		.				*	.
 _																	83	80	81	65	74	76	67		*		84+			77				*					75		.					.
-_																	
+_
 _		8/12/18
 */
 }

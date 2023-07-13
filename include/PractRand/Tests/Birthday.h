@@ -113,7 +113,7 @@ namespace PractRand::Tests {
 			// multiple tests are combined by simply adding their observed duplicated and expected duplicates
 			// currently undecided on whether or not early use of the buffer will suppress some bits or not
 			enum {
-				BUFSIZE_L2 = 22, 
+				BUFSIZE_L2 = 22,
 				BUFSIZE = 1 << BUFSIZE_L2
 			};
 			Uint64 buffer[BUFSIZE];
@@ -131,7 +131,7 @@ namespace PractRand::Tests {
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
 			Uint64 flush_buffer() override;
 			static Uint64 get_target_num_at_bufsize(int bufsize_L2_);
-			unsigned int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold 
+			unsigned int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold
 
 			double score;//for scoring method 2
 			static double evaluate_score(double lambda, Uint64 duplicates);
@@ -147,7 +147,7 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock *data, int numblocks) override;
 		};
 		class BirthdayAlt final : public TestBaseclass {
-			//as for BirthdayLambda1, but: 
+			//as for BirthdayLambda1, but:
 			// keep all bits regardless of buffer size, just count an adjusting range of near deltas as if they were exact matches (or score them based upon how exact they are?)
 			// try filtering the initial samples range, as if it was a small part of a larger sort buffer
 			typedef BirthdayHelpers::i128 i128;

@@ -149,7 +149,7 @@ namespace PractRand::RNGs::Adaptors {
 			}//namespace Internal
 
 			template<class base_rng> class _NORMALIZE_SEEDING {
-			public: typedef typename 
+			public: typedef typename
 				Internal::ADAPT_SEEDING<
 					base_rng, (base_rng::FLAGS & RNGs::FLAG::NEEDS_GENERIC_SEEDING) ? true : false
 				> t;

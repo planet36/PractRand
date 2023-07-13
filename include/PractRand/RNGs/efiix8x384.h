@@ -33,7 +33,7 @@ namespace PractRand {
 //				static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class efiix8x384 : public vRNG8 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(efiix8x384)

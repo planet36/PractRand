@@ -39,7 +39,7 @@ namespace PractRand::Testing::RNG_Sets {
 				nullptr
 			};
 			const char *nonrecommended_nonLCG[] = {
-				//"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16", 
+				//"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16",
 				nullptr
 			};
 }

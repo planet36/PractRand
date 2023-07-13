@@ -42,7 +42,7 @@ void PractRand::RNGs::Raw::trivium::seed(Uint64 s) {//LOCKED, do not change
 	//Triviums standard seeding algorithm adapted to PractRand interface
 	Uint8 vec[8];
 	for (auto & i : vec) {
-		i = Uint8(s); 
+		i = Uint8(s);
 		s >>= 8;
 	}
 	seed(vec, 8);
@@ -94,7 +94,7 @@ void PractRand::RNGs::Raw::trivium::seed(const Uint8 *seed_and_iv, int length) {
 			5 - 15
 			6 - 25
 			7 - 30
-			8 - 
+			8 -
 	*/
 }
 void PractRand::RNGs::Raw::trivium::walk_state(StateWalkingObject *walker) {
@@ -126,12 +126,12 @@ void PractRand::RNGs::Raw::trivium::self_test() {
 	Uint8 seed_and_iv[10+10] = {0};
 	rng.seed(seed_and_iv, 14);
 	validate_trivium_result(rng.raw64(), 0xFBE0BF265859051Bull);
-	seed_and_iv[0] = 0x80; rng.seed(seed_and_iv, 14); seed_and_iv[0] = 0x00; 
+	seed_and_iv[0] = 0x80; rng.seed(seed_and_iv, 14); seed_and_iv[0] = 0x00;
 	validate_trivium_result(rng.raw64(), 0x38EB86FF730D7A9Cull);
-	seed_and_iv[9] = 0x80; rng.seed(seed_and_iv, 14); seed_and_iv[9] = 0x00; 
+	seed_and_iv[9] = 0x80; rng.seed(seed_and_iv, 14); seed_and_iv[9] = 0x00;
 	validate_trivium_result(rng.raw64(), 0x5D492E77F8FE62D7ull);
-	seed_and_iv[13] = 0x10; rng.seed(seed_and_iv, 14); seed_and_iv[13] = 0x00; 
+	seed_and_iv[13] = 0x10; rng.seed(seed_and_iv, 14); seed_and_iv[13] = 0x00;
 	validate_trivium_result(rng.raw64(), 0xB0820A503ABB0329ull);
-	seed_and_iv[17] = 0x01; rng.seed(seed_and_iv, 18); seed_and_iv[17] = 0x00; 
+	seed_and_iv[17] = 0x01; rng.seed(seed_and_iv, 18); seed_and_iv[17] = 0x00;
 	validate_trivium_result(rng.raw64(), 0x9A5C56169E7FA406ull);
 }

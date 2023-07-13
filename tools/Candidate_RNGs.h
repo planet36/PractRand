@@ -18,7 +18,7 @@ Canidates currently under consideration:
 	speed: occasionally faster than any recommended RNG, usually only middling though
 	statistical quality: decent at word sizes past 16 bit, poor @ 8 & 16 bit
 		no short term correlation, and the long term correlation seems to be under control
-		but the medium term correlation, while not detected @ 32 or 64 bit, is definitely 
+		but the medium term correlation, while not detected @ 32 or 64 bit, is definitely
 		there
 	portability: uses only simple operations
 	word sizes: viable at 8, 16, 32, & 64 bit ; quality suffers @ 8 & 16 bit though
@@ -34,7 +34,7 @@ Canidates currently under consideration:
 
 2. very fast RNG (VeryFast64/32/16)
 	OVERALL EVALUTION: insufficiently different from sfc64/32/16
-	niche: 
+	niche:
 		fastest inline RNG of reasonable quality
 		with only 2-3 words of state, 1 temp var, and six or so ops, it's cheap to inline
 		lack of a counter variable is bad at small sizes though - too easy to wind up in a bad cycle
@@ -55,7 +55,7 @@ Canidates currently under consideration:
 
 3. possible revisions to the current sfc RNG (sfc_alternative64/32/16)
 	OVERALL EVALUTION: hard to justify
-	niche: similar to sfc - 
+	niche: similar to sfc -
 		small size, fast speed, guaranteed cycle length at some word sizes
 		this version substantially improves quality
 		but... one major use of sfc is as an inline RNG
@@ -80,9 +80,9 @@ The current sfc occupies three distinct niches:
 	1. general small fast RNG
 	2. RNGs that are good for inlining due to small state, few ops, few temp vars, and high speed
 	3. RNGs that combine the general strengths of small fast RNGs with a guaranteed minimum cycle length
-For #1, sfc_alternative is probably better than sfc, plus jsf is comparable and already a recommended RNG.  
-For #2, VeryFast might be better than the current sfc, at least at 32 & 64 bit.  
-For #3, sfc_alternative looks better than the current sfc.  
+For #1, sfc_alternative is probably better than sfc, plus jsf is comparable and already a recommended RNG.
+For #2, VeryFast might be better than the current sfc, at least at 32 & 64 bit.
+For #3, sfc_alternative looks better than the current sfc.
 
 */
 #define POLYMORPHIC_CANDIDATE(rng, bits) \
@@ -429,7 +429,7 @@ public:
 		//						1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32
 		//		32:13 nocount			-	16	20	25	21	26	26	25	23	23	25	24	25	25	22	22	22	25	22	23	22	26	22	24	20	19
 		//		32:14 nocount				17	24	22	27	27	26	24	24	23	27	24	26	25	24	24	25	26	25	24	24	25	22	24	23	20
-		//		32:15 nocount				21	25	23	25	30	28	26	27	27	25	25	26	27	28	24	25	26	25	27	26	29	26	25	23	25		
+		//		32:15 nocount				21	25	23	25	30	28	26	27	27	25	25	26	27	28	24	25	26	25	27	26	29	26	25	23	25
 		//		32:16 nocount				22	25	26	27	28	28	28	28	27	29	27	27	30	26	27	29	28	25	27	29	29	29	27	26	27
 		//		32:17 nocount				26	27	26	27	31	29	29	28	26	28	28	26	30	30	27	29	29	29	29	29	27	29	29	25	25
 		//		32:18 nocount				24	28	29	29	33	30	31	30	30	31	28	30	27	30	28	30	31	30	30	32	32	30	29	28	27
@@ -442,7 +442,7 @@ public:
 		//		32nc:22+23+24				92	99	104	105	113	114	111	107	110	107	105	109	110	110	102	103	108	106	108	108	109	107	107	103	99
 		//		32nc:19+20+21				83	91	91	90	104	99	101	89	99	100	94	98	97	101	93	95	98	100	97	93	101	98	96	95	86
 		//		32nc:19...24				175	190	195	195	217	213	212	196	209	207	199	207	207	211	195	198	206	206	205	201	210	205	203	198	185				8,,,,,9,,10,,17,,24,,12,,,13,15,16,,21
-		//		32nc:17+18+19				78	85	84	86	98	92	93	85	88	91	87	86	87	92	86	90	90	91	89	90	90	91	88	84	79			
+		//		32nc:17+18+19				78	85	84	86	98	92	93	85	88	91	87	86	87	92	86	90	90	91	89	90	90	91	88	84	79
 		//		32nc:17+...+22				164	177	180	181	205	196	196	183	190	194	184	189	191	197	180	187	192	193	190	193	196	190	188	181	171				8,,,,,,,,,17,,9,10,24,,,13,,21,23
 		//		32nc:17..22+32:12..17		296	333	353	358	395	376	395	388	383	392	393	387	364	364	357	369	389	386	373	386	381	368	367	362	337				8,10,,,14,,13,,,,20,,11,,15
 		//		32nc:19+20+21				83	91	91	90	104	99	101	89	99	100	94	98	97	101	93	95	98	100	97	93	101	98	96	95	86
@@ -577,7 +577,7 @@ public:
 		//lfsr_01 = (lfsr_0 & ~lfsr_01) | (lfsr_1 & lfsr_01);
 
 		cycle += 0x5D31995A;
-		return (state_3 + lfsr_0) ^ cycle; 
+		return (state_3 + lfsr_0) ^ cycle;
 		return state_3 ^ cycle;
 
 		//const Word K = (Word)K_;

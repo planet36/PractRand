@@ -86,7 +86,7 @@ void PractRand::RNGs::Polymorphic::sha2_based_pool::empty_input_buffer() {
 	PractRand::Crypto::SHA2_512 sha2;
 	sha2.handle_input(&state[0], STATE_SIZE);
 	sha2.handle_input(
-		&input_buffer[input_buffer_left], 
+		&input_buffer[input_buffer_left],
 		INPUT_BUFFER_SIZE - input_buffer_left);
 	sha2.finish(&state[(state_phase&1) ? (STATE_SIZE-64) : 0] );
 	input_buffer_left = INPUT_BUFFER_SIZE;

@@ -11,8 +11,8 @@
 #include <string>
 #include <vector>
 
-//master header, includes everything in PractRand for both 
-//  practical usage and research... 
+//master header, includes everything in PractRand for both
+//  practical usage and research...
 //  EXCEPT it does not include specific algorithms
 #include "PractRand_full.h"
 
@@ -64,7 +64,7 @@ double get_time_period() { return 1.0 / CLOCKS_PER_SEC; }
 #endif
 
 /*
-A minimal RNG implementation, just enough to make it usable.  
+A minimal RNG implementation, just enough to make it usable.
 Deliberately flawed, though still better than many platforms default RNGs
 */
 
@@ -129,12 +129,12 @@ public:
 	std::string get_name() const override {return "DummyRNG";}
 };
 /*
-	The above class is enough to create a PRNG compatible with PractRand.  
-	You can pass that to any non-template function in PractRand expecting a polymorphic RNG and it should work fine.  
+	The above class is enough to create a PRNG compatible with PractRand.
+	You can pass that to any non-template function in PractRand expecting a polymorphic RNG and it should work fine.
 	(some template functions in PractRand require additional metadata or other weirdness)
-	HOWEVER, that is not enough to allow this (or any other) command line tool to recognize the name of your RNG from the command line.  
-	For that, search for the line mentioning RNG_factory_index["dummy"] in the "main" function below here, 
-	that line allows it to recognize "dummy" on the command line as corresponding to this class.  
+	HOWEVER, that is not enough to allow this (or any other) command line tool to recognize the name of your RNG from the command line.
+	For that, search for the line mentioning RNG_factory_index["dummy"] in the "main" function below here,
+	that line allows it to recognize "dummy" on the command line as corresponding to this class.
 */
 
 double print_result(const PractRand::TestResult &result, bool print_header = false) {
@@ -246,12 +246,12 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	if (true) {// 17 characters?
 		/*
 			Threshold Values:
-			The idea is to assign a suspicioun level based not just upon the 
-			p-value but also the number of p-values and their relative importance.  
-			If there are a million p-values then we probably don't care about 
-			anything less extreme than a one in ten million event.  
-			But if there's one important p-value and a million unimportant ones then 
-			the important one doesn't have to be that extreme to rouse our suspicion.  
+			The idea is to assign a suspicioun level based not just upon the
+			p-value but also the number of p-values and their relative importance.
+			If there are a million p-values then we probably don't care about
+			anything less extreme than a one in ten million event.
+			But if there's one important p-value and a million unimportant ones then
+			the important one doesn't have to be that extreme to rouse our suspicion.
 
 			Output Format:
 			unambiguous failures are indented 2 spaces to make them easier to spot

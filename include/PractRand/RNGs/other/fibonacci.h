@@ -299,7 +299,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
-				class mt19937_unhashed : public vRNG32 {// 
+				class mt19937_unhashed : public vRNG32 {//
 					PractRand::RNGs::Raw::mt19937 implementation;
 				public:
 					Uint32 raw32() override;

@@ -166,7 +166,7 @@ void PractRand::RNGs::Raw::xsm64::walk_state(StateWalkingObject *walker) {
 }
 void PractRand::RNGs::Raw::xsm64::seek_forward (Uint64 how_far_low, Uint64 how_far_high) {
 	if (!how_far_low && !how_far_high) return;
-	fast_forward_lcg128(how_far_low, how_far_high, 
+	fast_forward_lcg128(how_far_low, how_far_high,
 		lcg_low, lcg_high, 1, 1, lcg_adder_low, lcg_adder_high
 	);
 }

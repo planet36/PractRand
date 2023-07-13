@@ -37,7 +37,7 @@ namespace PractRand::RNGs {
 				static void self_test();
 			};
 		}
-		
+
 		namespace Polymorphic {
 			class mt19937 final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(mt19937)

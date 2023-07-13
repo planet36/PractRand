@@ -12,8 +12,8 @@
 #include <vector>
 
 
-//master header, includes everything in PractRand for both 
-//  practical usage and research... 
+//master header, includes everything in PractRand for both
+//  practical usage and research...
 //  EXCEPT it does not include specific algorithms
 #include "PractRand_full.h"
 
@@ -266,7 +266,7 @@ Uint64 generate_binomial_dist(PractRand::RNGs::vRNG *known_good, Uint64 sample_l
 	Uint32 rv = 0;
 	for (; len >= 32; len -= 32) rv += std::popcount(known_good->raw32());
 	for (; len >= 8; len -= 8) rv += std::popcount(known_good->raw8());
-	for (; len >= 1; len -= 1) rv += known_good->raw32() & 1;	
+	for (; len >= 1; len -= 1) rv += known_good->raw32() & 1;
 	return rv;
 }
 void fake_fpf_raw(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 sample_length, int trials, SampleSet &ss_raw) {
@@ -476,18 +476,18 @@ void find_test_distributions() {
 					ss._normalize();
 					//std::printf("//mean= %f; median= %f; stddev= %f;\n", ss.get_mean(), ss.get_result_by_percentile(0.50), ss.get_stddev());
 					std::printf("  {\"%s\",%9.0f, %d,%4d, {", name.c_str(), double(length), (int)ss.rs.size(), (int)ss.num_duplicates());
-					/*double p[] = { 
-						0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, -1, 
-						0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, -1, 
-						0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, -1, 
-						0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30, -1, 
-						0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40, -1, 
-						0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50, -1, 
-						0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60, -1, 
-						0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.70, -1, 
-						0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80, -1, 
-						0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90, -1, 
-						0.91, 0.92, 0.93, 0.94, 0.95, 0.96,	0.97, 0.98, 0.99, -1, 
+					/*double p[] = {
+						0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, -1,
+						0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, -1,
+						0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, -1,
+						0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30, -1,
+						0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40, -1,
+						0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50, -1,
+						0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60, -1,
+						0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.70, -1,
+						0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80, -1,
+						0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90, -1,
+						0.91, 0.92, 0.93, 0.94, 0.95, 0.96,	0.97, 0.98, 0.99, -1,
 						0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999, 0.99995, 0.99998, 0.99999, -2
 					};*/
 					double *p = ref_p129_with_formatting;
@@ -740,13 +740,13 @@ double find_ziggurat_point(double old_x, double target_area) {
 template<class RNG>
 double generate_gaussian( RNG &rng ) {
 	//*/
-	// 
+	//
 	// floats(17+4):   3: 26, 6: 29, 8: 32
 	// doubles(17+4):         6: 30, 8: 32
 	// floats(17+8):   3: 29
-	// doubles(17+8):  
+	// doubles(17+8):
 	// floats(17+4,lf): 3: >33
-	// floats(17+8,lf): 
+	// floats(17+8,lf):
 	static bool inited = false;
 	if (!inited) {
 		double a = 0.5 / TABLE_SIZE;
@@ -772,9 +772,9 @@ double generate_gaussian( RNG &rng ) {
 		tail_scale = table_x[TABLE_SIZE-2] / (table_x[TABLE_SIZE-2] * table_y[TABLE_SIZE-2] / final_stripe_area);
 		//for (int i = 0; i < TABLE_SIZE-1; i++) table_y[i] /= 0.39894228040143270;
 		inited = true;
-		std::printf("table_x = {"); for (int i = 0; i < TABLE_SIZE-1; i++) std::printf("%f, ", table_x[i]); std::printf("}\n"); 
-		std::printf("table_y = {"); for (int i = 0; i < TABLE_SIZE-1; i++) std::printf("%f, ", table_y[i]); std::printf("}\n"); 
-		std::printf("tail_p = %f; tail_scale = %f;\n", tail_p, tail_scale); 
+		std::printf("table_x = {"); for (int i = 0; i < TABLE_SIZE-1; i++) std::printf("%f, ", table_x[i]); std::printf("}\n");
+		std::printf("table_y = {"); for (int i = 0; i < TABLE_SIZE-1; i++) std::printf("%f, ", table_y[i]); std::printf("}\n");
+		std::printf("tail_p = %f; tail_scale = %f;\n", tail_p, tail_scale);
 	}
 	while (true) {
 		unsigned long stripe = rng.raw16() & (TABLE_SIZE-1);
@@ -793,7 +793,7 @@ double generate_gaussian( RNG &rng ) {
 		else if (stripe == TABLE_SIZE-1) {//bottom stripe
 			double x = rng.randf(-1, 1) * tail_scale;
 			if (std::abs(x) < table_x[TABLE_SIZE-2]) return x;
-			double p = rng.randf() * tail_p; 
+			double p = rng.randf() * tail_p;
 			double n = Tests::math_pvalue_to_normaldist(p);
 			if (x < 0) return n;
 			else return -n;
@@ -804,8 +804,8 @@ double generate_gaussian( RNG &rng ) {
 	return 0;//*/
 
 	/*
-	//17+0: 
-	//17+4: 
+	//17+0:
+	//17+4:
 	//17+8: 33+
 	double a, b, r;
 	do {
@@ -818,7 +818,7 @@ double generate_gaussian( RNG &rng ) {
 	return a * prod;
 //	return b * prod;//*/
 
-/*	int s = sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32()) + 
+/*	int s = sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32()) +
 		sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32());
 	return (s - 2040) / 295.6;//*/
 
@@ -845,7 +845,7 @@ double generate_gaussian( RNG &rng ) {
 	int i = rng.raw16() & (NORMTABLE_SIZE-1);
 	return normtable_a[i] + normtable_b[i] * rng.raw32();//*/
 
-	
+
 	/*enum {NORMTABLE_SIZE=1<<10};
 	// 3: 17, 4: 21, 5: 23, 6: 25, 7: 26, 8: 27-28
 	static float normtable_a[NORMTABLE_SIZE-1];
@@ -883,7 +883,7 @@ double generate_gaussian( RNG &rng ) {
 	if (i & 32768) rv = -rv;
 	return rv;//*/
 
-	
+
 	/*enum {NORMTABLE_SIZE_L2=7};
 	enum {STRONG=1
 		,  WEAK =3
@@ -1141,11 +1141,11 @@ int main(int argc, char **argv) {
 	//test_normal_distribution_a();
 	//print_data();
 
-	/*	
+	/*
 	for (int i = 0; i < 117; i++) {
-		std::printf(" %5f : %5f %5f %5f %5f %5f %5f\n", ref_p[i], Tests::math_pvalue_to_chisquared(ref_p[i], 1), 
-			Tests::math_pvalue_to_chisquared(ref_p[i], 2), 
-			Tests::math_pvalue_to_chisquared(ref_p[i], 3), 
+		std::printf(" %5f : %5f %5f %5f %5f %5f %5f\n", ref_p[i], Tests::math_pvalue_to_chisquared(ref_p[i], 1),
+			Tests::math_pvalue_to_chisquared(ref_p[i], 2),
+			Tests::math_pvalue_to_chisquared(ref_p[i], 3),
 			Tests::math_pvalue_to_chisquared(ref_p[i], 4),
 			Tests::math_pvalue_to_chisquared(ref_p[i], 5),
 			Tests::math_pvalue_to_chisquared(ref_p[i], 6)

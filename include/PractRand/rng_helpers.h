@@ -20,7 +20,7 @@ namespace PractRand {
 		virtual void handle(float &) = 0;
 		virtual void handle(double &) = 0;
 
-		//purposes: 
+		//purposes:
 		// 1. seeding
 		// 2. serialization (serialize, deserialize, measure state size)
 		// 3. avalanche style testing (measure state size / props, tweak bits in state, etc)

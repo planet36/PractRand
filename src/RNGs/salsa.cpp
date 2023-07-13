@@ -19,9 +19,9 @@ Salsa matrix structure:
 08-11	IV0, IV1, constant2, seed0/4
 12-15	seed1/5, seed2/6, seed3/7, constant3
 
-The constants go on the diagonal, everything else fits its way in around that, 
-with the position & IV going between the first half of the seed and the second half of the seed.  
-If the seed is short then the 2nd half is treated as equal to the first half.  
+The constants go on the diagonal, everything else fits its way in around that,
+with the position & IV going between the first half of the seed and the second half of the seed.
+If the seed is short then the 2nd half is treated as equal to the first half.
 */
 enum { POS_INDEX0 = 8, POS_INDEX1 = 9, IV_INDEX0 = 6, IV_INDEX1 = 7 };
 enum { SEED_INDEX_A = 1, SEED_INDEX_B = 11 };
