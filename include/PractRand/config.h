@@ -1,4 +1,7 @@
 #pragma once
+
+#include <cstdint>
+
 /*
 Things to configure in this file:
 1.  Endianness (usually CPU dependent)
@@ -61,14 +64,14 @@ compile with error messages about _compiletime_assert_integer_size.
 */
 namespace PractRand {
 	//typical for 32 and 64 bit compiler targets
-	typedef unsigned char          Uint8;
-	typedef unsigned short int     Uint16;
-	typedef unsigned int           Uint32;
-	typedef unsigned long long int Uint64;
-	typedef signed char          Sint8;
-	typedef signed short int     Sint16;
-	typedef signed int           Sint32;
-	typedef signed long long int Sint64;
+	using Uint8 = std::uint8_t;
+	using Uint16 = std::uint16_t;
+	using Uint32 = std::uint32_t;
+	using Uint64 = std::uint64_t;
+	using Sint8 = std::int8_t;
+	using Sint16 = std::int16_t;
+	using Sint32 = std::int32_t;
+	using Sint64 = std::int64_t;
 
 	//double-checking those integer sizes:
 	static_assert(sizeof(Uint8 )==1);
