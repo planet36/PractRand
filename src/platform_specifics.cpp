@@ -116,7 +116,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		rng->add_entropy64(static_cast<Uint64>(std::time(nullptr)));
 		rng->add_entropy64(static_cast<Uint64>(std::clock()));
 		rng->add_entropy64(reinterpret_cast<Uint64>(rng));
-		Uint64 *p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
+		auto *p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
 		rng->add_entropy64(reinterpret_cast<Uint64>(p));
 		//rng->add_entropy64(*p);//commented to avoid issues with memory debuggers
 		free(p);

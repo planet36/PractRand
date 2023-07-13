@@ -208,8 +208,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 pcg32::raw32() {
 					Uint64 oldstate = state;
 					state = state * 0x5851f42d4c957f2dULL + inc;
-					Uint32 xorshifted = Uint32(((oldstate >> 18u) ^ oldstate) >> 27u);
-					Uint32 rot = Uint32(oldstate >> 59u);
+					auto xorshifted = Uint32(((oldstate >> 18u) ^ oldstate) >> 27u);
+					auto rot = Uint32(oldstate >> 59u);
 					return (xorshifted >> rot) | (xorshifted << ((~rot + 1u) & 31));
 				}
 				std::string pcg32::get_name() const {
@@ -225,9 +225,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 pcg32_norot::raw32() {
 					Uint64 oldstate = state;
 					state = state * 0x5851f42d4c957f2dULL + inc;
-					Uint32 xorshifted = Uint32(((oldstate >> 18u) ^ oldstate) >> 27u);
+					auto xorshifted = Uint32(((oldstate >> 18u) ^ oldstate) >> 27u);
 					return xorshifted;
-					//Uint32 rot = Uint32(oldstate >> 59u);
+					//auto rot = Uint32(oldstate >> 59u);
 					//return (xorshifted >> rot) | (xorshifted << ((~rot + 1u) & 31));
 				}
 				std::string pcg32_norot::get_name() const {
@@ -572,7 +572,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				Uint32 mwc64x::raw32() {
 					Uint32 c = state >> 32;
-					Uint32 x = Uint32(state);
+					auto x = Uint32(state);
 					state = x * Uint64(4294883355U) + c;
 					return x ^ c;
 				}

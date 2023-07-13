@@ -96,8 +96,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return -1;
 				}
 				Uint64 MultiplexTransformRNG::get_flags() const {
-					Uint64 anded_bits = Uint64(-1);
-					Uint64 ored_bits = Uint64(0);
+					auto anded_bits = Uint64(-1);
+					auto ored_bits = Uint64(0);
 					for (std::vector<vRNG*>::const_iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
 						Uint64 lf = (*it)->get_flags();
 						anded_bits &= lf;
@@ -128,11 +128,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAsUnknown::~ReinterpretAsUnknown() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAsUnknown::refill() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -148,11 +148,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs8::~ReinterpretAs8() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs8::refill() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -168,11 +168,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs16::~ReinterpretAs16() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs16::refill() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -188,11 +188,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs32::~ReinterpretAs32() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs32::refill() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -208,11 +208,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs64::~ReinterpretAs64() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					delete block;
 				}
 				void ReinterpretAs64::refill() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
 					block->fill(base_rng);
 					index = 0;
 				}
@@ -247,7 +247,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					buffer = &block->as16[0];
 					index = 8192 / INPUT_BITS;
 				}
-				void Discard16to8::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
+				void Discard16to8::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				std::string Discard16to8::get_name() const { return std::string("Discard16to8(") + base_rng->get_name() + ")"; }
 				Uint8 Discard16to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
@@ -260,7 +260,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / 32;
 				}
 				std::string Discard32to8::get_name() const { return std::string("Discard32to8(") + base_rng->get_name() + ")"; }
-				void Discard32to8::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
+				void Discard32to8::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint8 Discard32to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -273,7 +273,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string Discard64to8::get_name() const { return std::string("Discard64to8(") + base_rng->get_name() + ")"; }
 				void Discard64to8::refill() {
-					PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0;
+					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0;
 				}
 				Uint8 Discard64to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
@@ -286,7 +286,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard32to16::get_name() const { return std::string("Discard32to16(") + base_rng->get_name() + ")"; }
-				void Discard32to16::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
+				void Discard32to16::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint16 Discard32to16::raw16() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -298,7 +298,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to16::get_name() const { return std::string("Discard64to16(") + base_rng->get_name() + ")"; }
-				void Discard64to16::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
+				void Discard64to16::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint16 Discard64to16::raw16() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -310,7 +310,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to32::get_name() const { return std::string("Discard64to32(") + base_rng->get_name() + ")"; }
-				void Discard64to32::refill() { PractRand::Tests::TestBlock *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
+				void Discard64to32::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				Uint32 Discard64to32::raw32() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
@@ -508,13 +508,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp.str();
 				}
 				vRNG *apply_BaysDurhamShuffle(vRNG *base_rng, int table_size_L2, int shift) {
-					vRNG8 *tmp8 = dynamic_cast<vRNG8*>(base_rng);
+					auto *tmp8 = dynamic_cast<vRNG8*>(base_rng);
 					if (tmp8)  return new BaysDurhamShuffle8 (tmp8, table_size_L2, shift >= 0 ? shift : 8-table_size_L2);
-					vRNG16 *tmp16 = dynamic_cast<vRNG16*>(base_rng);
+					auto *tmp16 = dynamic_cast<vRNG16*>(base_rng);
 					if (tmp16) return new BaysDurhamShuffle16(tmp16, table_size_L2, shift >= 0 ? shift : 16-table_size_L2);
-					vRNG32 *tmp32 = dynamic_cast<vRNG32*>(base_rng);
+					auto *tmp32 = dynamic_cast<vRNG32*>(base_rng);
 					if (tmp32) return new BaysDurhamShuffle32(tmp32, table_size_L2, shift >= 0 ? shift : 32-table_size_L2);
-					vRNG64 *tmp64 = dynamic_cast<vRNG64*>(base_rng);
+					auto *tmp64 = dynamic_cast<vRNG64*>(base_rng);
 					if (tmp64) return new BaysDurhamShuffle64(tmp64, table_size_L2, shift >= 0 ? shift : 64-table_size_L2);
 					issue_error();
 					return nullptr;//just to quiet the warnings

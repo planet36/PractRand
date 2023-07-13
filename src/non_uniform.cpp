@@ -58,8 +58,8 @@ namespace PractRand::Internals {
 			+5.2176958089e-012, +5.4703391261e-012, +5.7587440258e-012, +6.0910925944e-012, +6.4783253196e-012, +6.9354238958e-012, +7.4834897566e-012, +8.1532648440e-012, +8.9914242845e-012, +1.0072595101e-011, +1.1524333934e-011, +1.3585169202e-011, +1.6762242066e-011, +2.2374584217e-011, +3.5445721984e-011, +1.0270065287e-010
 		};
 		double generate_gaussian_fast(Uint64 raw64) {//fast CDF-based hybrid method
-			Sint32 si = Sint32(raw64 >> 32);
-			Uint32 indeces = Uint32(raw64);
+			auto si = Sint32(raw64 >> 32);
+			auto indeces = Uint32(raw64);
 			long index = (indeces >> (GAUSSIAN_CDF_TABLE_SIZE_L2*0)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
 			double rv = primary_gaussian_cdf_table[index];
 			rv += si * secondary_gaussian_cdf_table[index];

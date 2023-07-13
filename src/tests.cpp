@@ -11174,7 +11174,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		}
 		break;
 		case 3: {//64 bit words
-			Uint32 mask = Uint32((Uint64(1) << lowbits_) - 1);
+			auto mask = Uint32((Uint64(1) << lowbits_) - 1);
 			int i = 0;
 			while (i < max) {
 				Uint32 word = Uint32(data->as64[i++]) & mask;

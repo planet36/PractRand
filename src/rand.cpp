@@ -46,18 +46,18 @@ namespace PractRand {
 		}
 		void handle(bool   &v) override {push(v ? 1 : 0);}
 		void handle(Uint8  &v) override {push(v);}
-		void handle(Uint16 &v) override {Uint8  tmp=Uint8 (v); handle(tmp); tmp=Uint8 (v>> 8); handle(tmp);}
-		void handle(Uint32 &v) override {Uint16 tmp=Uint16(v); handle(tmp); tmp=Uint16(v>>16); handle(tmp);}
-		void handle(Uint64 &v) override {Uint32 tmp=Uint32(v); handle(tmp); tmp=Uint32(v>>32); handle(tmp);}
+		void handle(Uint16 &v) override {auto tmp=Uint8 (v); handle(tmp); tmp=Uint8 (v>> 8); handle(tmp);}
+		void handle(Uint32 &v) override {auto tmp=Uint16(v); handle(tmp); tmp=Uint16(v>>16); handle(tmp);}
+		void handle(Uint64 &v) override {auto tmp=Uint32(v); handle(tmp); tmp=Uint32(v>>32); handle(tmp);}
 		void handle(float  &v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::abs(v);
 			int exp;
 			double n = std::frexp(v, &exp);
-			Uint16 tmp_exp = Uint16( (exp<<1) + (sign?1:0));
+			auto tmp_exp = Uint16( (exp<<1) + (sign?1:0));
 			handle(tmp_exp);
-			Uint32 tmp_sig = Uint32(std::ldexp(n - 0.5, 32));
+			auto tmp_sig = Uint32(std::ldexp(n - 0.5, 32));
 			handle(tmp_sig);
 		}
 		void handle(double &v) override {
@@ -68,7 +68,7 @@ namespace PractRand {
 			double n = std::frexp(v, &exp);
 			Uint32 tmp_exp = exp + (sign?0x80000000:0);
 			handle(tmp_exp);
-			Uint64 tmp_sig = Uint64(std::ldexp(n - 0.5, 64));
+			auto tmp_sig = Uint64(std::ldexp(n - 0.5, 64));
 			handle(tmp_sig);
 		}
 		Uint32 get_properties() const override {return FLAG_READ_ONLY;}
@@ -468,7 +468,7 @@ namespace PractRand {
 		void vRNG::add_entropy32(Uint32) {}
 		void vRNG::add_entropy64(Uint64) {}
 		void vRNG::add_entropy_N(const void *_data, std::size_t length) {
-			const Uint8 *data = static_cast<const Uint8*>(_data);
+			auto *data = static_cast<const Uint8*>(_data);
 			for (unsigned long i = 0; i < length; i++) add_entropy8(data[i]);
 		}
 		bool vRNG::add_entropy_automatically(int milliseconds) {

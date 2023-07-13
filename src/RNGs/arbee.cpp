@@ -68,7 +68,7 @@ void PractRand::RNGs::Raw::arbee::walk_state(StateWalkingObject *walker) {
 	if (walker->is_seeder()) i = 1;
 }
 void PractRand::RNGs::Raw::arbee::add_entropy_N(const void *_data, size_t length) {
-	const Uint8 *data = static_cast<const Uint8*>(_data);
+	auto *data = static_cast<const Uint8*>(_data);
 #ifdef PRACTRAND_TARGET_IS_LITTLE_ENDIAN
 	//maybe add an ifdef to enable misaligned reads at compile time where appropriate?
 /*	if (!(7 & reinterpret_cast<Uint64>(data))) {
@@ -82,7 +82,7 @@ void PractRand::RNGs::Raw::arbee::add_entropy_N(const void *_data, size_t length
 	else*/
 #endif
 	while (length >= 8) {
-		Uint64 in = Uint64(*(data++));
+		auto in = Uint64(*(data++));
 		in |= Uint64(*(data++)) << 8;
 		in |= Uint64(*(data++)) << 16;
 		in |= Uint64(*(data++)) << 24;
