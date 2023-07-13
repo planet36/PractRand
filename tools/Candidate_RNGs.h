@@ -183,7 +183,7 @@ public:
 	static Word rotate(Word value, int bits) {return ((value << bits) | (value >> (OUTPUT_BITS - bits)));}
 	VeryFast() {
 		PractRand::RNGs::Polymorphic::hc256 good(PractRand::SEED_AUTO);
-		for (int i = 0; i < 256; i++) table[i] = Word(good.raw64());
+		for (auto & i : table) i = Word(good.raw64());
 	}
 	Word _raw_native() {
 		//Word old;

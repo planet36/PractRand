@@ -12,7 +12,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
-		for (int i = 0; i < 1024; i++) buffy[i] = rng->raw16();
+		for (auto & i : buffy) i = rng->raw16();
 		j++;
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
@@ -22,7 +22,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 
 	//just to make very sure that some smart compiler won't optimize everything away:
 	Uint16 a = 0;
-	for (int i = 0; i < 1024; i++) a |= buffy[i];
+	for (const auto i : buffy) a |= i;
 	if (a == 0) std::printf("unlikely!");
 
 	return rate;
@@ -36,7 +36,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
-		for (int i = 0; i < 1024; i++) buffy[i] = rng->raw32();
+		for (auto & i : buffy) i = rng->raw32();
 		j++;
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
@@ -46,7 +46,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 
 	//just to make very sure that some smart compiler won't optimize everything away:
 	Uint32 a = 0;
-	for (int i = 0; i < 1024; i++) a |= buffy[i];
+	for (const auto i : buffy) a |= i;
 	if (a == 0) std::printf("unlikely!");
 
 	return rate;
@@ -60,7 +60,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
-		for (int i = 0; i < 1024; i++) buffy[i] = rng->raw64();
+		for (auto & i : buffy) i = rng->raw64();
 		j++;
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
@@ -70,7 +70,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
 
 	//just to make very sure that some smart compiler won't optimize everything away:
 	Uint64 a = 0;
-	for (int i = 0; i < 1024; i++) a |= buffy[i];
+	for (const auto i : buffy) a |= i;
 	if (a == 0) std::printf("unlikely!");
 
 	return rate;

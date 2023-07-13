@@ -238,7 +238,7 @@ void PractRand::RNGs::Raw::chacha::seed_short(const Uint32 seed_and_iv[6], bool 
 	used = 0;
 }
 void PractRand::RNGs::Raw::chacha::walk_state(StateWalkingObject *walker) {
-	for (int i = 0; i < 12; i++) walker->handle(state[i]);
+	for (auto & i : state) walker->handle(i);
 	walker->handle(used);
 	walker->handle(extend_cycle);
 	if (extend_cycle) walker->handle(position_overflow);

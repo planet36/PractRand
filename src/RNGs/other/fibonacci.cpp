@@ -115,7 +115,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string lfsr_medium::get_name() const {return "lfsr_medium";}
 				void lfsr_medium::walk_state(StateWalkingObject *walker) {
-					for (int i = 0; i < SIZE; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					walker->handle(used);
 					if (used >= SIZE) used = 0;
 				}
@@ -147,7 +147,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string mm32::get_name() const {return "mm32";}
 				void mm32::walk_state(StateWalkingObject *walker) {
 					walker->handle(index1);
-					for (int i = 0; i < 55; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index1 >= 55) index1 %= 55;
 					index2 = index1 - 24;
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
@@ -163,7 +163,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string mm16of32::get_name() const {return "mm16of32";}
 				void mm16of32::walk_state(StateWalkingObject *walker) {
 					walker->handle(index1);
-					for (int i = 0; i < 55; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index1 >= 55) index1 %= 55;
 					index2 = index1 - 24;
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
@@ -185,7 +185,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void mm32_awc::walk_state(StateWalkingObject *walker) {
 					walker->handle(carry);
 					walker->handle(index1);
-					for (int i = 0; i < 55; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index1 >= 55) index1 %= 55;
 					index2 = index1 - 24;
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
@@ -208,7 +208,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void mm16of32_awc::walk_state(StateWalkingObject *walker) {
 					walker->handle(carry);
 					walker->handle(index1);
-					for (int i = 0; i < 55; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index1 >= 55) index1 %= 55;
 					index2 = index1 - 24;
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
@@ -230,7 +230,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void mwc4691::walk_state(StateWalkingObject *walker) {
 					walker->handle(index);
 					walker->handle(carry);
-					for (int i = 0; i < 4691; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 				}
 				
 				//
@@ -245,7 +245,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void cbuf_accum::walk_state(StateWalkingObject *walker) {
 					walker->handle(index);
 					walker->handle(accum);
-					for (int i = 0; i < L; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
@@ -260,7 +260,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void cbuf_accum_big::walk_state(StateWalkingObject *walker) {
 					walker->handle(index);
 					walker->handle(accum);
-					for (int i = 0; i < L; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
@@ -285,7 +285,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(index);
 					walker->handle(accum1);
 					walker->handle(accum2);
-					for (int i = 0; i < L; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
@@ -302,7 +302,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(index);
 					walker->handle(accum1);
 					walker->handle(accum2);
-					for (int i = 0; i < L; i++) walker->handle(cbuf[i]);
+					for (auto & i : cbuf) walker->handle(i);
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
@@ -320,8 +320,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void dual_cbuf_small::walk_state(StateWalkingObject *walker) {
 					walker->handle(index1);
 					walker->handle(index2);
-					for (int i = 0; i < L1; i++) walker->handle(cbuf1[i]);
-					for (int i = 0; i < L2; i++) walker->handle(cbuf2[i]);
+					for (auto & i : cbuf1) walker->handle(i);
+					for (auto & i : cbuf2) walker->handle(i);
 					if (index1 > L1) index1 %= L1;
 					if (!index1) index1 = L1;
 					if (index2 > L2) index2 %= L2;
@@ -341,8 +341,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void dual_cbuf::walk_state(StateWalkingObject *walker) {
 					walker->handle(index1);
 					walker->handle(index2);
-					for (int i = 0; i < L1; i++) walker->handle(cbuf1[i]);
-					for (int i = 0; i < L2; i++) walker->handle(cbuf2[i]);
+					for (auto & i : cbuf1) walker->handle(i);
+					for (auto & i : cbuf2) walker->handle(i);
 					if (index1 > L1) index1 %= L1;
 					if (!index1) index1 = L1;
 					if (index2 > L2) index2 %= L2;
@@ -364,8 +364,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(index1);
 					walker->handle(index2);
 					walker->handle(accum);
-					for (int i = 0; i < L1; i++) walker->handle(cbuf1[i]);
-					for (int i = 0; i < L2; i++) walker->handle(cbuf2[i]);
+					for (auto & i : cbuf1) walker->handle(i);
+					for (auto & i : cbuf2) walker->handle(i);
 					if (index1 > L1) index1 %= L1;
 					if (index2 > L2) index2 %= L2;
 					if ( !index1 ) index1 = L1;
@@ -387,8 +387,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(index1);
 					walker->handle(index2);
 					walker->handle(accum);
-					for (int i = 0; i < L1; i++) walker->handle(cbuf1[i]);
-					for (int i = 0; i < L2; i++) walker->handle(cbuf2[i]);
+					for (auto & i : cbuf1) walker->handle(i);
+					for (auto & i : cbuf2) walker->handle(i);
 					if (index1 > L1) index1 %= L1;
 					if (index2 > L2) index2 %= L2;
 					if (!index1) index1 = L1;
@@ -415,7 +415,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot32small::get_name() const { return "ranrot32small"; }
 				void ranrot32small::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32::raw32() {
@@ -436,7 +436,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot32::get_name() const { return "ranrot32"; }
 				void ranrot32::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32big::raw32() {
@@ -457,7 +457,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot32big::get_name() const { return "ranrot32big"; }
 				void ranrot32big::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot3tap32small::func(Uint32 a, Uint32 b, Uint32 c) {
@@ -478,7 +478,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot3tap32small::get_name() const { return "ranrot3tap32small"; }
 				void ranrot3tap32small::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot3tap32::func(Uint32 a, Uint32 b, Uint32 c) {
@@ -499,7 +499,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot3tap32::get_name() const { return "ranrot3tap32"; }
 				void ranrot3tap32::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot3tap32big::func(Uint32 a, Uint32 b, Uint32 c) {
@@ -520,7 +520,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot3tap32big::get_name() const { return "ranrot3tap32big"; }
 				void ranrot3tap32big::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32hetsmall::func(Uint32 a, Uint32 b, Uint32 c) {
@@ -542,7 +542,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot32hetsmall::get_name() const { return "ranrot32hetsmall"; }
 				void ranrot32hetsmall::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32het::func(Uint32 a, Uint32 b, Uint32 c) {
@@ -564,7 +564,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot32het::get_name() const { return "ranrot32het"; }
 				void ranrot32het::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32hetbig::func(Uint32 a, Uint32 b, Uint32 c) {
@@ -586,7 +586,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string ranrot32hetbig::get_name() const { return "ranrot32hetbig"; }
 				void ranrot32hetbig::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 
@@ -604,9 +604,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string fibmul16of32::get_name() const {return "fibmul16of32";}
 				void fibmul16of32::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
-					for (int i = 0; i < LAG1; i++) buffer[i] |= 1;
+					for (auto & i : buffer) i |= 1;
 				}
 				Uint32 fibmul32of64::raw32() {
 					if (position) return Uint32(buffer[--position]);
@@ -622,9 +622,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string fibmul32of64::get_name() const {return "fibmul32of64";}
 				void fibmul32of64::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
-					for (int i = 0; i < LAG1; i++) buffer[i] |= 1;
+					for (auto & i : buffer) i |= 1;
 				}
 				Uint16 fibmulmix16::raw16() {
 					if (position) return buffer[--position];
@@ -652,7 +652,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string fibmulmix16::get_name() const { return "fibmulmix16"; }
 				void fibmulmix16::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
-					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					for (auto & i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
 

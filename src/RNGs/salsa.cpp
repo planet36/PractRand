@@ -156,7 +156,7 @@ void PractRand::RNGs::Raw::salsa::seed_short(const Uint32 seed_and_iv[6], bool e
 	used = 0;
 }
 void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject *walker) {
-	for (int i = 0; i < 16; i++) walker->handle(state[i]);
+	for (auto & i : state) walker->handle(i);
 	walker->handle(used);
 	walker->handle(extend_cycle);
 	if (extend_cycle) walker->handle(position_overflow);

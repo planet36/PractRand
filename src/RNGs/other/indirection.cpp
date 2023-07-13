@@ -34,7 +34,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						}
 					}
 					else {
-						for (int i = 0; i < 256; i++) walker->handle(arr[i]);
+						for (auto & i : arr) walker->handle(i);
 					}
 				}
 

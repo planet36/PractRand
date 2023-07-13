@@ -80,7 +80,7 @@ void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
 	//LOCKED, do not change
 	//exception - in version 0.85 added check for invalid state
 	walker->handle(used);
-	for (unsigned long i = 0; i < ARRAY_SIZE; i++) walker->handle(state[i]);
+	for (auto & i : state) walker->handle(i);
 	if (used > ARRAY_SIZE) used = ARRAY_SIZE;
 	if (walker->is_clumsy()) {
 		unsigned long successive_zeroes;

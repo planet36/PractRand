@@ -181,7 +181,7 @@ void benchmark_random_access_rngs() {
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data;
-	for (unsigned int i = 0; i < DataBlock::SIZE / sizeof(Uint64); i++) data.as64[i] = rng.raw64();
+	for (auto & i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
 #define POLYPERF(a) {printf("  %s\n", a.get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
@@ -192,7 +192,7 @@ void benchmark_entropy_pool_input() {
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data;
-	for (unsigned int i = 0; i < DataBlock::SIZE / sizeof(Uint64); i++) data.as64[i] = rng.raw64();
+	for (auto & i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
 #define POLYPERF(a) {printf("  %s\n", a.get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}

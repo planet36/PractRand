@@ -176,16 +176,16 @@ namespace PractRand::Crypto {
 		void SHA2_512::endianness_state() {
 			typedef SHA2_512_constants Constants;
 			if (Constants::REVERSE_ENDIANNESS) {
-				for (int i = 0; i < Constants::OUTPUT_WORDS; i++) {
-					state[i] = endianness_word(state[i]);
+				for (auto & i : state) {
+					i = endianness_word(i);
 				}
 			}
 		}
 		void SHA2_512::endianness_input() {
 			typedef SHA2_512_constants Constants;
 			if (Constants::REVERSE_ENDIANNESS) {
-				for (int i = 0; i < Constants::INPUT_WORDS; i++) {
-					input_buffer.as_word[i] = endianness_word(input_buffer.as_word[i]);
+				for (auto & i : input_buffer.as_word) {
+					i = endianness_word(i);
 				}
 			}
 		}

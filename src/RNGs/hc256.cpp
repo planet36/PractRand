@@ -131,7 +131,7 @@ void PractRand::RNGs::Raw::hc256::seed(Uint64 s) {//LOCKED, do not change
 }
 void PractRand::RNGs::Raw::hc256::seed(vRNG *seeder_rng) {//LOCKED, do not change
 	Uint32 seed_array[16];
-	for (int i = 0; i < 16; i++) seed_array[i] = seeder_rng->raw32();
+	for (auto & i : seed_array) i = seeder_rng->raw32();
 	seed(seed_array);
 }
 void PractRand::RNGs::Raw::hc256::self_test() {
@@ -146,7 +146,7 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 	rng.seed(key_and_iv);
 	Uint32 checksums[16] = {0};
 	for (int x = 0; x < 1<<16; x++) {
-		for (int i = 0; i < 16; i++) checksums[i] ^= rng.raw32();
+		for (auto & checksum : checksums) checksum ^= rng.raw32();
 	}
 	if (checksums[0] != 0xc6b6fb99) issue_error("hc256::self_test() failed");
 	if (checksums[1] != 0xf2ae1440) issue_error("hc256::self_test() failed");
@@ -211,11 +211,11 @@ void PractRand::RNGs::Raw::hc256::seed(Uint32 key_and_iv[16]) {//LOCKED, do not 
 }
 void PractRand::RNGs::Raw::hc256::walk_state(StateWalkingObject *walker) {
 	//LOCKED, do not change
-	for (unsigned int i = 0; i < 1024; i++) walker->handle(P[i]);
-	for (unsigned int i = 0; i < 1024; i++) walker->handle(Q[i]);
+	for (auto & i : P) walker->handle(i);
+	for (auto & i : Q) walker->handle(i);
 	walker->handle(counter);
 	walker->handle(used);
-	for (unsigned int i = 0; i < OUTPUT_BUFFER_SIZE; i++) walker->handle(outbuf[i]);
+	for (auto & i : outbuf) walker->handle(i);
 
 	if (!(walker->get_properties() & StateWalkingObject::FLAG_READ_ONLY)) {
 		if (used > OUTPUT_BUFFER_SIZE) used = OUTPUT_BUFFER_SIZE;

@@ -205,9 +205,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 					Uint64 s0 = 0;
 					Uint64 s1 = 0;
-					for (unsigned int i = 0; i < sizeof JUMP / sizeof *JUMP; i++) {
+					for (const auto i : JUMP) {
 						for (int b = 0; b < 64; b++) {
-							if (JUMP[i] & 1ULL << b) {
+							if (i & 1ULL << b) {
 								s0 ^= state0;
 								s1 ^= state1;
 							}
@@ -318,7 +318,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string flea32x1::get_name() const { return "flea32x1"; }
 				void flea32x1::walk_state(StateWalkingObject *walker) {
-					for (int z = 0; z < SIZE; z++) walker->handle(a[z]);
+					for (auto & z : a) walker->handle(z);
 					walker->handle(b);
 					walker->handle(c);
 					walker->handle(d);

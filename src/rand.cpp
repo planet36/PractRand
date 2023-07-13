@@ -170,7 +170,7 @@ namespace PractRand {
 			PractRand::RNGs::Polymorphic::sha2_based_pool entropy_pool;
 			//PractRand::RNGs::Polymorphic::arbee entropy_pool;
 			enough_entropy_found = entropy_pool.add_entropy_automatically(1);
-			for (int i = 0; i < POOL_SIZE; i++) shared_entropy[i] = entropy_pool.raw64();
+			for (auto & i : shared_entropy) i = entropy_pool.raw64();
 		}
 		static void get_autoseed_fixed_entropy(Uint64 entropy[5], [[maybe_unused]] const void *target) {
 			// NOT thread-safe the first time it's run
@@ -242,7 +242,7 @@ namespace PractRand {
 					issue_error("PractRand: failed to obtain entropy for cryptographic quality autoseeding");
 				Uint64 extra[5];
 				get_autoseed_fixed_entropy(extra, ptr1);
-				for (int i = 0; i < 5; i++) entropy_pool.add_entropy64(extra[i]);
+				for (const auto i : extra) entropy_pool.add_entropy64(i);
 				std::memset(extra, 0, sizeof(extra));
 				if (false) {
 					seeder.seed(&entropy_pool);//probably stronger, but... not 100% sure with Trivium
@@ -251,7 +251,7 @@ namespace PractRand {
 					//what we're supposed to do:
 					enum {B = 20};
 					Uint8 s[B];
-					for (int i = 0; i < B; i++) s[i] = entropy_pool.raw8();
+					for (auto & i : s) i = entropy_pool.raw8();
 					seeder.seed(s, B);
 					std::memset(s, 0, B);
 					for (int i = 0; i < 4; i++) seeder.raw64();//strength of Trivium might be improved by skipping a few outputs after seeding

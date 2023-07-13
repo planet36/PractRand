@@ -69,9 +69,9 @@ void PractRand::RNGs::Polymorphic::sha2_based_pool::reset_state() {
 	seed(Uint64(0));
 }
 void PractRand::RNGs::Polymorphic::sha2_based_pool::walk_state(StateWalkingObject *walker) {
-	for (int i = 0; i < STATE_SIZE; i++) walker->handle(state[i]);
-	for (int i = 0; i < 128; i++) walker->handle(input_buffer[i]);
-	for (int i = 0; i < 64; i++) walker->handle(output_buffer[i]);
+	for (auto & i : state) walker->handle(i);
+	for (auto & i : input_buffer) walker->handle(i);
+	for (auto & i : output_buffer) walker->handle(i);
 	walker->handle(input_buffer_left);
 	walker->handle(output_buffer_left);
 	walker->handle(state_phase);
@@ -96,10 +96,10 @@ void PractRand::RNGs::Polymorphic::sha2_based_pool::refill_output_buffer() {
 	sha2.handle_input(&state[0], STATE_SIZE);
 	sha2.finish(&output_buffer[0]);
 
-	for (int i = 0; i < 64; i++) {
+	for (const auto i : output_buffer) {
 		state_phase++;
 		while (state_phase >= STATE_SIZE) state_phase -= STATE_SIZE;
-		state[state_phase] ^= output_buffer[i];
+		state[state_phase] ^= i;
 	}
 	output_buffer_left = 64;
 }

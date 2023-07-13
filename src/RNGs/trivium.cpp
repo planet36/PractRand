@@ -41,8 +41,8 @@ Uint64 PractRand::RNGs::Raw::trivium::raw64() {//LOCKED, do not change
 void PractRand::RNGs::Raw::trivium::seed(Uint64 s) {//LOCKED, do not change
 	//Triviums standard seeding algorithm adapted to PractRand interface
 	Uint8 vec[8];
-	for (int i = 0; i < 8; i++) {
-		vec[i] = Uint8(s); 
+	for (auto & i : vec) {
+		i = Uint8(s); 
 		s >>= 8;
 	}
 	seed(vec, 8);

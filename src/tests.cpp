@@ -1657,8 +1657,7 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 	blocks_tested += numblocks;
 	if ((oblocks>>19) != (blocks_tested>>19)) {//once every 512 megabytes or so... prevent overflow
 		if (warmup) autofail = true;
-		for (int i = 0; i < 65536; i++) {
-			Uint32 n = last[i];
+		for (const auto n : last) {
 			if (ofs - n > 0x18000000) {
 				autofail = true;
 			}
@@ -4342,11 +4341,11 @@ void PractRand::Tests::FPMulti::Platter::reset([[maybe_unused]] PractRand::RNGs:
 	total_count = 0;
 
 	//gap test stuff:
-	for (int i = 0; i < (1 << GAP_SIG_BITS); i++) {
-		//gap_global_history[i] = 1ull << 63;
-		gap_global_history[i] = 0;
-		//gap_global_history[i] = 0 - known_good->randli(1ull << (e + GAP_SIG_BITS + 1));
-		//gap_global_history[i] = 0 - 1ull << (e + GAP_SIG_BITS);
+	for (auto & i : gap_global_history) {
+		//i = 1ull << 63;
+		i = 0;
+		//i = 0 - known_good->randli(1ull << (e + GAP_SIG_BITS + 1));
+		//i = 0 - 1ull << (e + GAP_SIG_BITS);
 	}
 	gap_product = 0.5;
 	gap_product_extracted_L2 = 1;
@@ -4829,7 +4828,7 @@ PractRand::Tests::Birthday32::Birthday32() {
 }
 void PractRand::Tests::Birthday32::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	num_buffered = 0;
-	for (int i = 0; i < MAX_DUPLICATES; i++) counts[i] = 0;
+	for (auto & count : counts) count = 0;
 }
 std::string Tests::Birthday32::get_name() const {
 	return "BDay32";
@@ -4865,14 +4864,13 @@ void PractRand::Tests::Birthday32::flush_buffer() {
 	};
 	Uint32 sort_helper[SORTHELP_SIZE + 1];
 	std::memset(sort_helper, 0, (SORTHELP_SIZE + 1) * sizeof(Uint32));
-	for (int i = 0; i < BUFFER_SIZE; i++) sort_helper[1 + (buffer[i] >> (32 - SORTHELP_SIZE_L2))]++;
+	for (const auto i : buffer) sort_helper[1 + (i >> (32 - SORTHELP_SIZE_L2))]++;
 	//int running_total = 0;
 	for (int i = 2; i <= SORTHELP_SIZE; i++) {
 		sort_helper[i] += sort_helper[i-1];
 	}
 	Uint32 sorted_buffer[BUFFER_SIZE];
-	for (int i = 0; i < BUFFER_SIZE; i++) {
-		Uint32 value = buffer[i];
+	for (const auto value : buffer) {
 		int hi = value >> (32 - SORTHELP_SIZE_L2);
 		sorted_buffer[sort_helper[hi]++] = value;
 	}
@@ -5052,7 +5050,7 @@ PractRand::Tests::Birthday64::Birthday64() {
 }
 void PractRand::Tests::Birthday64::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	num_buffered = 0;
-	for (int i = 0; i < MAX_DUPLICATES; i++) counts[i] = 0;
+	for (auto & count : counts) count = 0;
 }
 std::string Tests::Birthday64::get_name() const {
 	return "BDay64";
@@ -5175,7 +5173,7 @@ void PractRand::Tests::BirthdayHelpers::radix_sort_and_copy(i128 *buffer, i128 *
 	constexpr int COMBINED_PASSES = 3;
 	Uint64 regions[COMBINED_PASSES << SORT_HELPER_BITS];
 	if (true) {//count frequencies for each pass
-		for (long i = 0; i < (COMBINED_PASSES << SORT_HELPER_BITS); i++) regions[i] = 0;
+		for (auto & region : regions) region = 0;
 		//long shift = 64 - SORT_HELPER_BITS - bits_already;
 		Uint64 already_check_mask = ((1ull << bits_already) - 1) << (64 - bits_already);//debuging check, remove sometime
 		Uint64 already_check_value = buffer[0].high & already_check_mask;//debuging check, remove sometime
@@ -5237,7 +5235,7 @@ void PractRand::Tests::BirthdayHelpers::radix_sort_and_copy(i128 *buffer, i128 *
 }
 void PractRand::Tests::BirthdayHelpers::histogram_in_place_sort128(i128 *base, Uint64 length, long bits_already) {
 	Uint64 freq_counts[1 << SORT_HELPER_BITS];
-	for (long i = 0; i < (1 << SORT_HELPER_BITS); i++) freq_counts[i] = 0;
+	for (auto & freq_count : freq_counts) freq_count = 0;
 	long shift = 64 - SORT_HELPER_BITS - bits_already;
 	for (Uint64 i = 0; i < length; i++) {
 		freq_counts[(base[i].high >> shift) & ((1ull << SORT_HELPER_BITS) - 1)]++;
@@ -5408,7 +5406,7 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128 *ba
 	if (length_L2 < 1) issue_error();
 	Uint64 length = 1 << length_L2;
 	Uint64 freq_counts[1 << SORT_HELPER_BITS];
-	for (long i = 0; i < (1 << SORT_HELPER_BITS); i++) freq_counts[i] = 0;
+	for (auto & freq_count : freq_counts) freq_count = 0;
 	for (Uint64 i = 0; i < length; i++) {
 		freq_counts[base[i].high >> (64 - SORT_HELPER_BITS)]++;
 	}
@@ -5429,7 +5427,7 @@ PractRand::Tests::BirthdayLamda1::BirthdayLamda1(int buffer_size_L2_) : buffer_s
 }
 void PractRand::Tests::BirthdayLamda1::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	num_buffered = 0;
-	for (int i = 0; i < (1 << SORT_HELPER_BITS); i++) sort_helper_counts[i] = 0;
+	for (auto & sort_helper_count : sort_helper_counts) sort_helper_count = 0;
 	autofail = false;
 }
 std::string Tests::BirthdayLamda1::get_name() const {
@@ -5839,7 +5837,7 @@ void PractRand::Tests::BirthdayAlt::init([[maybe_unused]] PractRand::RNGs::vRNG 
 	num_buffered = 0;
 	autofail = false;
 
-	for (int i = 0; i < (1 << SORT_HELPER_BITS); i++) sort_helper_counts[i] = 0;
+	for (auto & sort_helper_count : sort_helper_counts) sort_helper_count = 0;
 
 	score_sum_log = 0;
 	score_sum_log2 = 0;
@@ -5915,7 +5913,7 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	num_buffered = 0;
 	if (autofail) return;
 	BirthdayHelpers::_sorted_deltas_of_sorted_values(buffer, buffer_size_L2, sort_helper_counts);
-	for (int i = 0; i < (1 << SORT_HELPER_BITS); i++) sort_helper_counts[i] = 0;
+	for (auto & sort_helper_count : sort_helper_counts) sort_helper_count = 0;
 
 	long double expected_log_offset{}, expected_log_samples, deviation/*, uncertainty*/;
 	_lookup_constants(buffer_size_L2, &expected_log_offset, &deviation, &expected_log_samples);
@@ -6023,7 +6021,7 @@ PractRand::Tests::Pat5::Pat5() = default;
 
 void PractRand::Tests::Pat5::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good) {
 	counts.reset_counts();
-	for (int pi = 0; pi < (1 << PATTERN_INDEX_BITS); pi++) patterns[pi].total_count = -1;
+	for (auto & pattern : patterns) pattern.total_count = -1;
 	blocks_tested = 0;
 }
 std::string PractRand::Tests::Pat5::get_name() const {
@@ -6131,7 +6129,7 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 		if (INCLUDE_NON_MATCHES) probs2[TOTAL_SIZE] = 1 - any_match_prob;
 		for (int i = 0; i < TOTAL_SIZE; i++) probs2[i] = base_probs[i & (BASE_SIZE - 1)] * specific_match_prob;
 		Sint64 total_matches = 0;
-		for (int i = 0; i < TOTAL_PATTERNS; i++) total_matches += patterns[i].total_count;
+		for (const auto & pattern : patterns) total_matches += pattern.total_count;
 		if (total_matches < 100) return;
 		if (INCLUDE_NON_MATCHES) counts2[TOTAL_SIZE] = total_opportunities - total_matches;
 		if (total_opportunities > 300) {
@@ -6295,7 +6293,7 @@ PractRand::Tests::BRank::BRank( Uint32 rate_hl2_ ) : rate_hl2(rate_hl2_) {
 }
 void PractRand::Tests::BRank::PerSize::reset() {
 	total = 0;
-	for (int i = 0; i < NUM_COUNTS; i++) counts[i] = 0;
+	for (auto & count : counts) count = 0;
 	outliers.resize(0);
 	outliers_overflow = 0;
 }
@@ -6322,16 +6320,16 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 		_base_probs[0] = 0.2887880950866024212789;
 		for (int i = 1; i < PerSize::NUM_COUNTS + 1; i++) _base_probs[i] = _base_probs[i - 1] * 2.0 / std::pow((1 << i) - 1, 2);
 		long double sum = 0;
-		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) sum += _base_probs[i];
-		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) _base_probs[i] /= sum;
+		for (const auto _base_prob : _base_probs) sum += _base_prob;
+		for (auto & _base_prob : _base_probs) _base_prob /= sum;
 		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) base_score[i] = -std::log(_base_probs[i]) / std::log(2.0);
 		long double expected = 0;
 		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) expected += base_score[i] * _base_probs[i];
-		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) base_score[i] -= expected;
+		for (auto & i : base_score) i -= expected;
 		long double deviation = 0;
 		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) deviation += base_score[i] * base_score[i] * _base_probs[i];
 		deviation = std::sqrt(deviation);
-		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) base_score[i] /= deviation;
+		for (auto & i : base_score) i /= deviation;
 	}
 
 	for (unsigned int si = 0; si < ps.size(); si++) {
@@ -6356,9 +6354,9 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 			continue;
 		}
 		double score = 0;
-		if (s.outliers.size()) for (unsigned int i = 0; i < s.outliers.size(); i++) {
-			if (s.outliers[i] > worst) worst = s.outliers[i];
-			score += base_score[PerSize::NUM_COUNTS] + (s.outliers[i] - PerSize::NUM_COUNTS) * (base_score[PerSize::NUM_COUNTS] - base_score[PerSize::NUM_COUNTS - 1]);
+		for (const auto outlier : s.outliers) {
+			if (outlier > worst) worst = outlier;
+			score += base_score[PerSize::NUM_COUNTS] + (outlier - PerSize::NUM_COUNTS) * (base_score[PerSize::NUM_COUNTS] - base_score[PerSize::NUM_COUNTS - 1]);
 		}
 		for (int i = 0; i < PerSize::NUM_COUNTS; i++) score += base_score[i] * s.counts[i];
 		score /= std::sqrt(double(s.total));
@@ -6490,7 +6488,7 @@ void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 	if (SEQUENCE_BITS < CORE_SEQUENCE_BITS) issue_error("NearSeq - bad settings");
 	static const Word lookup[2] = { (1 << BITS_PER_BLOCK) - 1, 0x0 };//backwards, as we're inverting values here for maximum hamming distance
 	for (int bi = 0; bi < NUM_BUCKETS; bi++) {
-		for (int x = 0; x < SEQUENCE_WORDS; x++) buckets[bi].sequence[x] = 0;
+		for (auto & sequence : buckets[bi].sequence) sequence = 0;
 		for (int x = 0; x < BLOCKS_PER_CORE; x++) {
 			int dest_bit_pos = x * BITS_PER_BLOCK;
 			int dest_word_start = dest_bit_pos >> WORD_BITS_L2;
@@ -6504,8 +6502,8 @@ void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 		}
 	}
 
-	for (int x = 0; x < MAX_CORE_DISTANCES; x++) core_distances[x] = 0;
-	for (int x = 0; x < MAX_CORE_DISTANCES; x++) sum_extra_distances[x] = 0;
+	for (auto & core_distance : core_distances) core_distance = 0;
+	for (auto & sum_extra_distance : sum_extra_distances) sum_extra_distance = 0;
 
 	unsigned int table_size = 1 << BITS_PER_BLOCK;
 	lookup_table = new Uint8[table_size];
@@ -6540,7 +6538,7 @@ void PractRand::Tests::NearSeq::get_results(std::vector<TestResult> &results) {
 	//if (blocks_tested < 1 << 24) return;
 
 	Uint64 total_count = 0;
-	for (int i = 0; i < MAX_CORE_DISTANCES; i++) total_count += core_distances[i];
+	for (const auto core_distance : core_distances) total_count += core_distance;
 	if (!total_count) return;
 	Uint64 target_threshold = (total_count * 9) / 10;
 	Uint64 total_so_far = 0;
@@ -6838,12 +6836,12 @@ void PractRand::Tests::NearSeq2::init(PractRand::RNGs::vRNG *known_good) {
 			}
 		}
 	}
-	for (int i = 0; i < NUM_BUCKETS; i++) buckets[i].reset();
+	for (auto & bucket : buckets) bucket.reset();
 	TestBaseclass::init(known_good);
 }
 void PractRand::Tests::NearSeq2::Bucket::reset() {
 	for (int i = 0; i <= MAX_TOTAL_HDIST; i++) core_hdist[i] = 0;
-	for (int b = 0; b < HDIST_BINS; b++) for (int i = 0; i < EXTRA_BITS; i++) extra_counts[b][i] = 0;
+	for (auto & extra_count : extra_counts) for (auto & i : extra_count) i = 0;
 }
 void PractRand::Tests::NearSeq2::deinit() {
 	delete[] lookup_table1;
@@ -7055,14 +7053,14 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 	if (true) {//populate core_probs
 		for (int i = 0; i <= MAX_TOTAL_HDIST; i++) core_probs[i] = 0;
 		int block_h[BLOCKS_PER_CORE];
-		for (int i = 0; i < BLOCKS_PER_CORE; i++) block_h[i] = 0;
+		for (auto & i : block_h) i = 0;
 		bool end = false;
 		while (!end) {
 			double chance = 1.0;
 			int core_h = 0;
-			for (int i = 0; i < BLOCKS_PER_CORE; i++) {
-				chance *= block_probs[block_h[i]];
-				core_h += block_h[i];
+			for (const auto i : block_h) {
+				chance *= block_probs[i];
+				core_h += i;
 			}
 			core_probs[core_h] += chance;
 			for (int i = 0; true; ) {
@@ -7126,8 +7124,8 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 
 	if (total_samples * valid_core_chance > 40 * NUM_BUCKETS) {
 		G_TEST bucket_distribution;
-		for (int bucket_index = 0; bucket_index < NUM_BUCKETS; bucket_index++) {
-			bucket_distribution.add_category(per_bucket_total[bucket_index], valid_core_chance / NUM_BUCKETS);
+		for (const auto bucket_total : per_bucket_total) {
+			bucket_distribution.add_category(bucket_total, valid_core_chance / NUM_BUCKETS);
 		}
 		bucket_distribution.add_category(total_invalid_samples, invalid_core_chance);
 		bucket_distribution.finalize();
@@ -7144,9 +7142,9 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		G_TEST core_nearness;
 		core_nearness.set_minimum_prob(10.0 / total_valid_samples);
 		double scale = 1.0 / NUM_BUCKETS;// we're only counting valid cores this time
-		for (int bucket_index = 0; bucket_index < NUM_BUCKETS; bucket_index++) {
+		for (const auto & bucket : buckets) {
 			for (int h = 0; h <= MAX_TOTAL_HDIST; h++) {
-				core_nearness.add_category(buckets[bucket_index].core_hdist[h], core_probs[h] * scale);
+				core_nearness.add_category(bucket.core_hdist[h], core_probs[h] * scale);
 			}
 		}
 		core_nearness.finalize();
@@ -7163,9 +7161,9 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		G_TEST core_nearness;
 		core_nearness.set_minimum_prob(10.0 / total_samples);
 		double scale = valid_core_chance / NUM_BUCKETS;
-		for (int bucket_index = 0; bucket_index < NUM_BUCKETS; bucket_index++) {
+		for (const auto & bucket : buckets) {
 			for (int h = 0; h <= MAX_TOTAL_HDIST; h++) {
-				core_nearness.add_category(buckets[bucket_index].core_hdist[h], core_probs[h] * scale);
+				core_nearness.add_category(bucket.core_hdist[h], core_probs[h] * scale);
 			}
 		}
 		core_nearness.add_category(total_invalid_samples, invalid_core_chance);
@@ -7792,7 +7790,7 @@ void PractRand::Tests::mod3n::test_blocks(TestBlock *data, int numblocks) {
 
 void PractRand::Tests::Coup16::init(PractRand::RNGs::vRNG *known_good) {
 	counts.reset_counts();
-	for (int i = 0; i < S; i++) flags[i] = 0;
+	for (auto & flag : flags) flag = 0;
 	blocks_tested = 0;
 	TestBaseclass::init(known_good);
 }
@@ -7814,9 +7812,9 @@ void PractRand::Tests::Coup16::test_blocks(TestBlock *data, int numblocks) {
 
 		if (!(blocks_tested & 127)) {
 			int sum = 0;
-			for (int i = 0; i < S; i++) {
-				sum += std::popcount(flags[i]);
-				flags[i] = 0;
+			for (auto & flag : flags) {
+				sum += std::popcount(flag);
+				flag = 0;
 			}
 			counts.increment(sum - 1);
 		}
@@ -8270,8 +8268,8 @@ void PractRand::Tests::TripleMirrorFreqN::init(PractRand::RNGs::vRNG *known_good
 	counts.reset_counts();
 	blocks_tested = 0;
 	blocks_till_next_pass = 0;// blocks_per_pass - 1;
-	for (int i = 0; i < MAX_LEVELS; i++) level_state[i] = 0;
-	for (int i = 0; i < MAX_LEVELS; i++) level_polarity[i] = 0;
+	for (auto & i : level_state) i = 0;
+	for (auto & i : level_polarity) i = 0;
 	if ((ALIGN << POSITIONS_L2) > 64) issue_error("TripleMirrorFreqN::init - bad configuration");
 	TestBaseclass::init(known_good);
 }
@@ -8398,10 +8396,10 @@ void PractRand::Tests::TripleMirrorCoup::init(PractRand::RNGs::vRNG *known_good)
 	blocks_till_next_pass = blocks_per_pass - 1;
 	TestBaseclass::init(known_good);
 	if (SIZE1 + SIZE2 + SIZE3 < 6) issue_error("TrippleMirrorCoup - we have a problem");
-	for (int i = 0; i < 1 << (TOTAL_INDEX_BITS >> 6); i++) coup_masks[i] = 0;
-	for (int i = 0; i < COUP_BUCKETS; i++) coup_counts[i] = 0;
+	for (auto & coup_mask : coup_masks) coup_mask = 0;
+	for (auto & coup_count : coup_counts) coup_count = 0;
 	pass_number = 0;
-	for (int i = 0; i < (1 << POSITIONS_L2); i++) coup_last[i] = 0;
+	for (auto & i : coup_last) i = 0;
 	coup_collected = 0;
 }
 std::string PractRand::Tests::TripleMirrorCoup::get_name() const {
@@ -10626,7 +10624,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 		0.24528088, 0.25527148, 0.27205481, 0.30726141, 0.28827943, 0.32981264, 0.38117138, 0.44076495, //16368-16375
 		0.33798840, 0.34510993, 0.35643682, 0.38575104, 0.37029208, 0.40305350, 0.45040664, 0.50002851, //16376-16383
 	};
-	for (int i = 0; i < 128; i++) lperm8_chances[i] = 0;
+	for (auto & lperm8_chance : lperm8_chances) lperm8_chance = 0;
 	for (int i = 0; i < fact8; i++) {
 		Uint8 rawperm[8];
 		Uint8 used = 0;
