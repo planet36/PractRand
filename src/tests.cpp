@@ -280,7 +280,7 @@ const double PractRand::Tests::RawTestCalibrationData_129::ref_p[129] = {
 	0.9999995, 0.9999998, 0.9999999
 };
 PractRand::Tests::RawTestCalibrationData_129 *PractRand::Tests::RawTestCalibrationData_129::convert117to129(const PractRand::Tests::RawTestCalibrationData_117 *old) {
-	PractRand::Tests::RawTestCalibrationData_129 *rv = new PractRand::Tests::RawTestCalibrationData_129();
+	auto *rv = new PractRand::Tests::RawTestCalibrationData_129();
 	rv->name = old->name;
 	rv->blocks = old->blocks;
 	rv->num_samples = old->num_samples;

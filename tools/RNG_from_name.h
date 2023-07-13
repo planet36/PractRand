@@ -365,7 +365,7 @@ namespace RNG_Factories {
 			if (value > 255) {params.push_back("number of rounds too high for chacha");return nullptr;}
 		}
 		if (value < 1) {params.push_back("number of rounds too low for chacha");return nullptr;}
-		PractRand::RNGs::Polymorphic::chacha *rng = new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
+		auto *rng = new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
 		rng->set_rounds(value);
 		return rng;
 	}
@@ -380,7 +380,7 @@ namespace RNG_Factories {
 			if (value > 255) {params.push_back("number of rounds too high for salsa");return nullptr;}
 		}
 		if (value < 1) {params.push_back("number of rounds too low for salsa");return nullptr;}
-		PractRand::RNGs::Polymorphic::salsa *rng = new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
+		auto *rng = new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
 		rng->set_rounds(value);
 		return rng;
 	}
