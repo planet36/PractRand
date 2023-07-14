@@ -1,4 +1,5 @@
 #include <cmath>
+#include <csignal>     /* signal, sig_atomic_t */
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -7,7 +8,6 @@
 #include <list>
 #include <map>
 #include <set>
-#include <signal.h>     /* signal, sig_atomic_t */
 #include <sstream>
 #include <string>
 #include <vector>
