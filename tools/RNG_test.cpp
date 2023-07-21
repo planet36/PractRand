@@ -142,14 +142,14 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	//                                     10        20        30        40        50        60        70        80
 	std::printf("  ");//2 characters
 	//NAME
-	if (true) {// 34 characters
+	if constexpr (true) {// 34 characters
 		std::printf("%s", result.name.c_str());
 		int len = result.name.length();
 		for (int i = len; i < 34; i++) std::printf(" ");
 	}
 
 	//RAW TEST RESULT
-	if (true) {// 10 characters?
+	if constexpr (true) {// 10 characters?
 		double raw = result.get_raw();
 		if (raw > 99999.0) std::printf("R>+99999  ");
 		else if (raw < -99999.0) std::printf("R<-99999  ");
@@ -161,7 +161,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	}
 
 	//RESULT AS A NUMERICAL "SUSPICION LEVEL" (log of distance from pvalue to closest extrema)
-	if (false) {// 12 characters?
+	if constexpr (false) {// 12 characters?
 		bool printed = false;
 		double susp = result.get_suspicion();
 		if (result.type == result.TYPE_PASSFAIL)
@@ -183,7 +183,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	}
 
 	//RESULT AS A p-value
-	if (true) {// 14 characters?
+	if constexpr (true) {// 14 characters?
 		if (result.type == result.TYPE_PASSFAIL)
 			std::printf("  %s      ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
 		else if (result.type == result.TYPE_RAW)
@@ -243,7 +243,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	double rs = as - wmod;
 	//double ap = std::abs(0.5 - result.get_pvalue());
 	//MESSAGE DESCRIBING RESULT IN ENGLISH
-	if (true) {// 17 characters?
+	if constexpr (true) {// 17 characters?
 		/*
 			Threshold Values:
 			The idea is to assign a suspicioun level based not just upon the
@@ -258,7 +258,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 			probable failures with (barely) enough room for ambiguity are indented 1 space
 			the most extreme failures get a sequence of exclamation marks to distinguish them
 		*/
-		if (false) ;
+		if constexpr (false) ;
 		else if (rs >999) std::printf("  FAIL !!!!!!!!  ");
 		else if (rs >325) std::printf("  FAIL !!!!!!!   ");
 		else if (rs >165) std::printf("  FAIL !!!!!!    ");
@@ -684,7 +684,7 @@ int main(int argc, char **argv) {
 		//-a
 		//-e EXPECTED
 		//-p THRESHOLD
-		if (false) ;
+		if constexpr (false) ;
 		else if (!std::strcmp(argv[i], "-a")) {
 			smart_thresholds = false;
 			threshold = 1;
@@ -772,7 +772,7 @@ int main(int argc, char **argv) {
 	//walking parameters a second time to force the mode to be known prior to finding the test lengths
 	for (int i = 2; i < argc; i++) {
 		int params_left = argc - i - 1;
-		if (false) ;
+		if constexpr (false) ;
 		else if (!std::strcmp(argv[i], "-tlmin")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
 			double length = interpret_length(argv[++i], !mode);
@@ -889,7 +889,7 @@ int main(int argc, char **argv) {
 
 	Tests::ListOfTests tests( (Tests::TestBaseclass*)nullptr);
 	if (test_set_index == -1) { std::printf("internal error\n"); std::exit(1); }
-	if (false) ;
+	if constexpr (false) ;
 	else if (folding == 0) tests = test_sets[test_set_index].callback();
 	else if (folding == 1) tests = Tests::Batteries::apply_standard_foldings(testing_rng, test_sets[test_set_index].callback);
 	else if (folding == 2) tests = Tests::Batteries::apply_extended_foldings(test_sets[test_set_index].callback);

@@ -41,7 +41,7 @@ namespace PractRand::Tests {
 			Uint32 unreorder_codes ( Uint32 rcode ) const {return unreorder_codes_table[rcode];}
 			void generate_reorder_codes ();
 			Uint32 _advance_index ( Uint32 index, int rbcode ) const {
-				if (ENABLE_REORDER)
+				if constexpr (ENABLE_REORDER)
 					return ((index & mask_pre) << 1) | rbcode ;
 				else
 					return ((index & mask_pre) << bits_per_sample) | rbcode ;

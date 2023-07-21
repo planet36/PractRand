@@ -544,7 +544,7 @@ void find_test_distributions() {
 					for (int j = 0; j < results.size(); j++) data[results[j].name][new_blocks]._add(results[j].get_raw());
 				}
 			}//*/
-			if (true) {
+			if constexpr (true) {
 				Uint64 new_blocks = (1ull << length_L2) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
 				blocks_so_far = new_blocks;
@@ -1008,7 +1008,7 @@ void test_normal_distribution_a() {
 	}
 	double rate = count*8.0 / (double(std::clock_t(bench_end-bench_start))/CLOCKS_PER_SEC);
 	std::printf("gaussian speed: %.3f M / second\n", rate / 1000000.0 );
-	if (false) {
+	if constexpr (false) {
 		SampleSet ss; ss.rs.reserve(1<<27);
 		for (int n = 0; n <= 27; n++) {
 			for (int i = (1<<n) - ss.size(); i > 0; i--) ss._add(generate_gaussian(rng));
@@ -1016,7 +1016,7 @@ void test_normal_distribution_a() {
 			printf("test_normal_distribution_a0 : 2^%02d: mean:%+.5f, stddev:%.5f\n", n, ss.get_mean(), ss.get_stddev());
 		}
 	}
-	if (false) {
+	if constexpr (false) {
 		SampleSet ss; ss.rs.reserve(1<<27);
 		for (int n = 0; n <= 27; n++) {
 			for (int i = (1<<n) - ss.size(); i > 0; i--) ss._add(Tests::math_normaldist_to_pvalue(generate_gaussian(rng)));
@@ -1024,7 +1024,7 @@ void test_normal_distribution_a() {
 			printf("test_normal_distribution_a1 : 2^%02d: %+f\n", n, Tests::test_uniformity(ss));
 		}
 	}
-	if (true) {
+	if constexpr (true) {
 		enum {TBITS=17};
 		std::vector<Uint64> counts; counts.resize(1<<TBITS, 0);
 		Uint64 total = 0;
@@ -1078,7 +1078,7 @@ Uint64 count_period(PractRand::RNGs::vRNG *rng) {
 }
 
 void test_sfc16() {
-	if (1) {//search for short cycles
+	if constexpr (1) {//search for short cycles
 		enum {
 			BUFFER_SIZE = 16,//plenty to tell if the state matched (6 would probably be enough, but more doesn't hurt)
 			SHORT_CYCLE_L2 = 40,//the log-based-2 of the cycle length we consider "too short"
@@ -1104,7 +1104,7 @@ void test_sfc16() {
 		}
 
 	}
-	if (0) {
+	if constexpr (0) {
 		long double p248 = std::pow(2, 48);
 		long double base = std::pow(0.5, 48);
 		long double base_inv = 1 - base;

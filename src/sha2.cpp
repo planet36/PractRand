@@ -166,10 +166,10 @@ namespace PractRand::Crypto {
 		SHA2_512::Word SHA2_512::endianness_word(Word a) {
 			typedef SHA2_512_constants Constants;
 			if (Constants::REVERSE_ENDIANNESS) {
-				if (false) ;
-				else if (sizeof(Word)==8) return invert_endianness64(Uint64(a));
-				else if (sizeof(Word)==4) return invert_endianness32(Uint32(a));
-				else if (sizeof(Word)==2) return invert_endianness16(Uint16(a));
+				if constexpr (false) ;
+				else if constexpr (sizeof(Word)==8) return invert_endianness64(Uint64(a));
+				else if constexpr (sizeof(Word)==4) return invert_endianness32(Uint32(a));
+				else if constexpr (sizeof(Word)==2) return invert_endianness16(Uint16(a));
 			}
 			return a;
 		}
@@ -228,7 +228,7 @@ namespace PractRand::Crypto {
 				std::memset(input_buffer.as_byte, 0, Constants::INPUT_SIZE - EXTRAS + 1);
 			}
 			input_buffer.as_word[Constants::INPUT_WORDS-1] = endianness_word(length << 3);
-			if (sizeof(Word) < sizeof(Uint64)) {
+			if constexpr (sizeof(Word) < sizeof(Uint64)) {
 				input_buffer.as_word[Constants::INPUT_WORDS-2] =
 					endianness_word(length>>(sizeof(Word)*8-3));
 			}

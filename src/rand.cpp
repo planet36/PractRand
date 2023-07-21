@@ -244,7 +244,7 @@ namespace PractRand {
 				get_autoseed_fixed_entropy(extra, ptr1);
 				for (const auto i : extra) entropy_pool.add_entropy64(i);
 				std::memset(extra, 0, sizeof(extra));
-				if (false) {
+				if constexpr (false) {
 					seeder.seed(&entropy_pool);//probably stronger, but... not 100% sure with Trivium
 				}
 				else {

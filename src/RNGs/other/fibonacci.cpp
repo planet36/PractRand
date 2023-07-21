@@ -31,7 +31,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					bool carry = false;
 					if (shift_b) {
-						if (true) {
+						if constexpr (true) {
 							Uint64 old = olda[0] << shift_b;
 							state[shift_i] += old;
 							carry = state[shift_i] < old;
@@ -46,7 +46,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						}
 					}
 					else {
-						if (true) {
+						if constexpr (true) {
 							Uint64 old = olda[0];
 							state[shift_i] += old;
 							//bool carry = state[shift_i] < old;

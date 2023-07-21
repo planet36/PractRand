@@ -1173,7 +1173,7 @@ namespace PractRand {
 			//46 seconds
 			//added shifts
 			Word *dest = &data[y*ww+(x>>WORD_BITS_L2)];
-			if (false) {
+			if constexpr (false) {
 			/*	//clear partial words at begining & end of region
 				int end = x + bits;
 				Word start_mask = (Word(1) << (x & WORD_BITS_MASK)) - 1;
