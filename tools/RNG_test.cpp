@@ -887,7 +887,7 @@ int main(int argc, char **argv) {
 
 	std::printf("\n\n");
 
-	Tests::ListOfTests tests( (Tests::TestBaseclass*)nullptr);
+	Tests::ListOfTests tests( static_cast<Tests::TestBaseclass*>(nullptr));
 	if (test_set_index == -1) { std::printf("internal error\n"); std::exit(1); }
 	if constexpr (false) ;
 	else if (folding == 0) tests = test_sets[test_set_index].callback();
