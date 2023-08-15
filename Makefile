@@ -35,9 +35,11 @@ $(LIB): $(LIB_OBJS)
 $(BINS): tools/RNG_% : tools/RNG_%.cpp $(LIB)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $< $(LIB)
 
-install: $(BINS)
+install: $(BINS) | $(DESTDIR)$(BINDIR)
+	@cp -v -f -- $^ $(DESTDIR)$(BINDIR)
+
+$(DESTDIR)$(BINDIR):
 	@mkdir -v -p -- $(DESTDIR)$(BINDIR)
-	@cp -v -f -- $(BINS) $(DESTDIR)$(BINDIR)
 
 clean:
 	@$(RM) --verbose -- $(LIB_DEPS) $(LIB_OBJS) $(LIB) $(BIN_DEPS) $(BINS)
