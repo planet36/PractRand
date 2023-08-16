@@ -31,6 +31,7 @@ all: $(BINS)
 $(LIB): $(LIB_OBJS)
 	ar rcs $@ $^
 
+# The built-in recipe for the implicit rule uses $^ instead of $<
 # https://www.gnu.org/software/make/manual/html_node/Static-Usage.html
 # Static Pattern Rule
 $(BINS): tools/RNG_% : tools/RNG_%.cpp $(LIB)
