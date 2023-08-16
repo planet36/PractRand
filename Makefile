@@ -3,6 +3,7 @@
 
 # https://pracrand.sourceforge.net/installation.txt
 # https://www.pcg-random.org/posts/how-to-test-with-practrand.html
+# https://espadrine.github.io/blog/posts/a-primer-on-randomness.html
 
 export LC_ALL := C
 
