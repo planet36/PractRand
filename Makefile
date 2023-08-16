@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Steven Ward
 # SPDX-License-Identifier: OSL-3.0
 
-# http://pracrand.sourceforge.net/installation.txt
+# https://pracrand.sourceforge.net/installation.txt
 # https://www.pcg-random.org/posts/how-to-test-with-practrand.html
 
 export LC_ALL := C
