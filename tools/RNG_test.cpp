@@ -493,6 +493,7 @@ int lookup_te_value(int te) {
 
 int main(int argc, char **argv) {
 	PractRand::initialize_PractRand();
+	PractRand::hook_error_handler(PractRand::print_err);
 	std::printf("RNG_test using PractRand version %s\n", PractRand::version_str);
 #ifdef _WIN32 // needed to allow binary stdin on windows
 	_setmode( _fileno(stdin), _O_BINARY);

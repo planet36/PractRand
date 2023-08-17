@@ -86,6 +86,7 @@ int main(int argc, char **argv) {
 #endif
 	if (argc < 3 || argc > 4) print_usage(argv[0]);
 	PractRand::initialize_PractRand();
+	PractRand::hook_error_handler(PractRand::print_err);
 
 	RNG_Factories::register_recommended_RNGs();
 	RNG_Factories::register_nonrecommended_RNGs();

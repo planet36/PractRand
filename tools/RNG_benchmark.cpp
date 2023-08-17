@@ -202,6 +202,7 @@ void benchmark_entropy_pool_input() {
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
 	PractRand::initialize_PractRand();
+	PractRand::hook_error_handler(PractRand::print_err);
 //	PractRand::self_test_PractRand();
 
 	printf("Random number generation speeds:\n");
