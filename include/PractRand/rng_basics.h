@@ -13,6 +13,7 @@ namespace PractRand {
 	//NOTE: initialize_PractRand() is NOT threadsafe, it should be called before threads get spun off
 
 	void self_test_PractRand();
+	void print_err(const char* msg);
 	void issue_error(const char *msg = nullptr);//PractRand calls this any time there is an internal error
 	void hook_error_handler(void(*callback)(const char *));//this can be used to replace the default behavior of issue_error
 

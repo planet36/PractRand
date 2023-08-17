@@ -21,6 +21,7 @@ namespace PractRand {
 	const char *version_str = "0.95";
 	SEED_AUTO_TYPE SEED_AUTO;
 	SEED_NONE_TYPE SEED_NONE;
+	void print_err(const char* msg) { (void)std::fputs(msg, stderr); }
 	void (*error_callback)(const char *) = nullptr;
 	void issue_error ( const char *msg) {
 		if (error_callback) error_callback(msg);
