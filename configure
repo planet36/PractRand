@@ -1,57 +1,99 @@
 #!/bin/sh -e
 
-# PractRand configure script
-#
-# Accepts no arguments and only loads some defaults from environment
-# variables. Example usage:
-#   $ CXX=g++ ./configure
-#   $ make -kj$(nproc)
-# Or:
-#   $ CXX=g++ \
-#     CXXFLAGS='-ggdb3 -Og -fsanitize=address -fsanitize=undefined' \
-#     LDFLAGS='-fsanitize=address -fsanitize=undefined' \
-#     ./configure
-#   $ make -kj$(nproc)
-
-CXX=${CXX:-c++}
-CXXFLAGS=${CXXFLAGS:--std=c++14 -O3}
-LDFLAGS=${LDFLAGS:-}
-LDLIBS=${LDLIBS:-}
+CXX=${CXX:-g++}
+CXX_STANDARD=${CXX_STANDARD:-c++20}
+CXXFLAGS="${CXXFLAGS} -std=${CXX_STANDARD} -Iinclude"
+CXXFLAGS="${CXXFLAGS} -pthread -DMULTITHREADING_SUPPORTED=1"
 
 cat >Makefile <<EOF
-.POSIX:
-.SUFFIXES:
-CXX      = $CXX
-CXXFLAGS = $CXXFLAGS
-LDFLAGS  = $LDFLAGS
-LDLIBS   = $LDLIBS
+CXXFLAGS += $CXXFLAGS
 
-all: RNG_test
+# if optimized
+CXXFLAGS += -O3 -march=native -mtune=native
 
-clean:
-	rm -f RNG_test \$(obj)
+# if multithreaded
+# CXXFLAGS += -pthread -DMULTITHREADING_SUPPORTED=1
+LDFLAGS += -pthread
 
-.SUFFIXES: .cpp .o
-.cpp.o:
-	\$(CXX) -c -Iinclude -pthread \$(CXXFLAGS) -o \$@ \$<
+LIB_PREFIX ?= lib
+LIB_SUFFIX ?= .a
+SHLIB_LDFLAGS ?= -shared -fPIC
+
+LIB_NAME = PractRand
+
+OS ?= \$(shell uname -s)
+
+ifeq (\$(SHLIB_SUFFIX),)
+ifeq (\$(OS),Darwin)
+	SHLIB_SUFFIX=.dylib
+else
+	SHLIB_SUFFIX=.so
+endif
+endif
+
+
+STATIC_LIB=\$(LIB_PREFIX)\$(LIB_NAME)\$(LIB_SUFFIX)
+SHARED_LIB=\$(LIB_PREFIX)\$(LIB_NAME)\$(SHLIB_SUFFIX)
+
+ifeq (\$(OS),Darwin)
+	SHLIB_LDFLAGS += -undefined dynamic_lookup
+else
+	SHLIB_LDFLAGS += -Wl,-soname,\$(SHARED_LIB)
+endif
+
+
+all: RNG_test RNG_benchmark RNG_output \$(STATIC_LIB)
+
+.SUFFIXES: .cpp .o \$LIB_SUFFIX \$SHLIB_SUFFIX
 
 EOF
 
-for cpp in src/*.cpp src/RNGs/*.cpp src/RNGs/other/*.cpp tools/RNG_test.cpp; do
-    o="${cpp%*.cpp}".o
-    $CXX -Iinclude -pthread -MM -MT$o $cpp >>Makefile
+for cpp in src/*.cpp src/RNGs/*.cpp src/RNGs/other/*.cpp; do
+    o="${cpp%.cpp}".o
+    $CXX $CXXFLAGS -MM -MT $o $cpp >>Makefile
     obj="$(printf '%s \\\n %s' "$obj" $o)"
     files="$files $o"
 done
 
-cat >>Makefile <<EOF
-obj =$obj
+for src in src/RNGs/*.cpp; do
+    o="${src%.cpp}".o
+    $CXX $CXXFLAGS -MM -MT $o $src >>Makefile
+    rng_obj="$(printf '%s \\\n %s' "$rng_obj" $o)"
+    files="$files $o"
+done
 
-RNG_test: \$(obj) Makefile
-	\$(CXX) -pthread \$(LDFLAGS) -o \$@ \$(obj) \$(LDLIBS)
+for cpp in tools/RNG_test.cpp tools/RNG_benchmark.cpp tools/RNG_output.cpp; do
+    o="${cpp%.cpp}".o
+    $CXX $CXXFLAGS -MM -MT$o $cpp >>Makefile
+done
+
+
+cat >>Makefile <<EOF
+
+obj = $obj
+
+RNG_test: \$(obj) $rng_obj tools/RNG_test.o
+	\$(CXX) \$(LDFLAGS) \$^ -o \$@
+
+RNG_benchmark: \$(obj) $rng_obj tools/RNG_benchmark.o
+	\$(CXX) \$(LDFLAGS) \$^ -o \$@
+
+RNG_output: \$(obj) $rng_obj tools/RNG_output.o
+	\$(CXX) \$(LDFLAGS) \$^ -o \$@
+
+\$(STATIC_LIB): \$(obj)
+	\$(AR) rcs \$@ \$^
+
+\$(SHARED_LIB): \$(obj)
+	\$(CXX) \$(SHLIB_LDFLAGS) -o \$@ \$^
+
+clean:
+	rm -f RNG_test \$(obj) $rng_obj $exe_obj
+
+.PHONY: all clean
 
 EOF
 
-for file in $files; do
-    printf '%s: Makefile\n' $file >>Makefile
-done
+# for file in $files; do
+#     printf '%s: Makefile\n' $file >>Makefile
+# done

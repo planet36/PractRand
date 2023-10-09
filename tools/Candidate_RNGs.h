@@ -2,8 +2,10 @@
 
 #include "RNG_from_name.h"
 
+
 namespace Candidates {
 
+using namespace PractRand;
 
 /*
 Canidates currently under consideration:

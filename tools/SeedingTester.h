@@ -2,6 +2,10 @@
 
 #include <bit>
 
+#include "Candidate_RNGs.h"
+
+using namespace PractRand;
+
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;

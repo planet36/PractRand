@@ -1,4 +1,7 @@
 libPractRand.a
+*.o
+*.so
+*.dylib
 RNG_benchmark
 RNG_output
 RNG_test
