@@ -22,7 +22,7 @@ BINS = $(basename $(BIN_SRCS))
 CPPFLAGS += -MMD -MP
 CPPFLAGS += -Iinclude
 
-CXXFLAGS += -O3 -flto=auto -march=native
+CXXFLAGS += -O3 -flto=auto -march=native -fno-math-errno
 
 LDLIBS += -pthread
 
