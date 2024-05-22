@@ -120,22 +120,22 @@ namespace PractRand::Tests {
 			Uint8 *lookup_table2;//hamming distance from idealized value for core block
 
 			Sint8 lookup1(Word value) const {
-				if (BITS_PER_BLOCK < WORD_BITS) value &= (1UL << BITS_PER_BLOCK) - 1;
-				if (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
-				else if (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
-				else if (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
+				if constexpr (BITS_PER_BLOCK < WORD_BITS) value &= (1UL << BITS_PER_BLOCK) - 1;
+				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
+				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
+				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
 				else return lookup_table1[std::popcount(value)];
 			}
 			Sint32 _lookup1(Word value) const {
-				if (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
-				else if (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
-				else if (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
+				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
+				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
+				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
 				else return lookup_table1[std::popcount(value)];
 			}
 			Uint32 _lookup2(Word value) const {
-				if (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table2[value];
-				else if (BITS_PER_BLOCK <= 16) return lookup_table2[std::popcount(value)];
-				else if (BITS_PER_BLOCK <= 32) return lookup_table2[std::popcount(value)];
+				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table2[value];
+				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table2[std::popcount(value)];
+				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table2[std::popcount(value)];
 				else return lookup_table2[std::popcount(value)];
 			}
 			void analyze_block(Word block_value, long &bucket, int bucket_bit, long &hdist) const {
