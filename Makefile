@@ -23,6 +23,7 @@ else
 endif
 endif
 
+CXXFLAGS += -O3 -flto=auto -march=native -mtune=native -fno-math-errno
 
 STATIC_LIB=$(LIB_PREFIX)$(LIB_NAME)$(LIB_SUFFIX)
 SHARED_LIB=$(LIB_PREFIX)$(LIB_NAME)$(SHLIB_SUFFIX)
