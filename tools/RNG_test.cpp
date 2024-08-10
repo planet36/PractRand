@@ -607,7 +607,7 @@ int main(int argc, char **argv) {
 		std::printf("  -tlmax LENGTH  sets the maximum test length to LENGTH.  The tests will stop\n");
 		std::printf("                 after that much data.  See notes on lengths for details on how\n");
 		std::printf("                 to express the length you want.\n");
-		std::printf("                 The default maximum is 32 terabytes (-tlmin 32TB).\n");
+		std::printf("                 The default maximum is 32 terabytes (-tlmax 32TB).\n");
 		std::printf("  -tlshow LENGTH sets an additional point at which to display interim results.\n");
 		std::printf("                 You can set multiple such points if desired.\n");
 		std::printf("                 These are in addition to the normal interim results points,\n");
