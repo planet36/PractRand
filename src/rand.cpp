@@ -18,7 +18,7 @@
 #include "PractRand/RNGs/all.h"
 
 namespace PractRand {
-	const char *version_str = "0.95";
+	const char *version_str = "0.95" "-planet36";
 	SEED_AUTO_TYPE SEED_AUTO;
 	SEED_NONE_TYPE SEED_NONE;
 	void print_err(const char* msg) { (void)std::fputs(msg, stderr); (void)std::fputc('\n', stderr); }
