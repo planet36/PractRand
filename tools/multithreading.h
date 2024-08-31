@@ -41,7 +41,7 @@ namespace Threading {
 #include <windows.h>
 namespace Threading {
 	//compile time assert that Lock is big enough:
-	typedef char compile_time_assertion[(sizeof(Lock) >= sizeof(CRITICAL_SECTION)) ? 1 : -1];
+	static_assert(sizeof(Lock) >= sizeof(CRITICAL_SECTION));
 	static void _issue_win32_error(int number, const char *msg) {
 		enum { BUFSIZE = 256 };
 		TCHAR buf[BUFSIZE];
@@ -98,7 +98,7 @@ namespace Threading {
 #include <unistd.h>
 namespace Threading {
 	//compile time assert that Lock is big enough:
-	typedef char compile_time_assertion[(sizeof(Lock) >= sizeof(pthread_mutex_t)) ? 1 : -1];
+	static_assert(sizeof(Lock) >= sizeof(pthread_mutex_t));
 	static void _issue_pthread_error(int number, const char *msg) {
 		(void)std::fprintf(stderr, "errno = %d: %s", number, std::strerror(number));
 		issue_error(msg);
