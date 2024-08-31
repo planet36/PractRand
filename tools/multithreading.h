@@ -11,7 +11,6 @@
 #endif
 namespace Threading {
 	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *threadfunc)(void*), void *param );
-	void sleep(int milliseconds);
 	class Lock {
 		//implementation details hidden (by ugly methods)
 		//in order to avoid platform-specific include files here
@@ -54,9 +53,6 @@ namespace Threading {
 		);
 		std::fprintf(stderr, "GetLastError() = %d: %s", number, buf);
 		issue_error(msg);
-	}
-	void sleep(int milliseconds) {
-		::Sleep(milliseconds);
 	}
 	void create_thread( unsigned long (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
 	//void create_thread( THREADFUNC_RETURN_TYPE (*func)(THREADFUNC_CALLING_CONVENTION *), void *param ) {
@@ -106,16 +102,6 @@ namespace Threading {
 	static void _issue_pthread_error(int number, const char *msg) {
 		(void)std::fprintf(stderr, "errno = %d: %s", number, std::strerror(number));
 		issue_error(msg);
-	}
-	void sleep(int milliseconds) {
-		timespec ts;
-		ts.tv_sec = 0;
-		if (milliseconds > 1000) {
-			ts.tv_sec = milliseconds / 1000;
-			milliseconds -= ts.tv_sec * 1000;
-		}
-		ts.tv_nsec = milliseconds * 1000 + 1;
-		nanosleep(&ts, nullptr);
 	}
 	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
 		pthread_t thread;

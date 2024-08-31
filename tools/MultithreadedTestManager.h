@@ -1,6 +1,8 @@
 #pragma once
 
 #include "multithreading.h"
+#include <chrono>
+#include <thread>
 
 class MultithreadedTestManager : public TestManager {
 	class TestThread {
@@ -15,7 +17,7 @@ class MultithreadedTestManager : public TestManager {
 			if (!finished) {
 				//must have tried to retire it too quickly to initialize properly?
 				lock.leave();
-				Threading::sleep(0);
+				std::this_thread::sleep_for(std::chrono::milliseconds::zero());
 				return false;
 			}
 			lock.leave();
