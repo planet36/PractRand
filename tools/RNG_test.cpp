@@ -17,7 +17,6 @@
 #include "PractRand_full.h"
 
 #define MULTITHREADING_SUPPORTED
-#define CPP_2011_SUPPORTED
 
 //specific algorithms: all recommended RNGs
 #include "PractRand/RNGs/all.h"
@@ -52,16 +51,10 @@ PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 #endif
 #include "Candidate_RNGs.h"
 
-#if defined CPP_2011_SUPPORTED
 #include <chrono>
 typedef std::chrono::system_clock::rep TimeUnit;
 TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
 double get_time_period() { return std::chrono::system_clock::period().num / static_cast<double>(std::chrono::system_clock::period().den); }
-#else
-typedef std::clock_t TimeUnit;
-std::clock_t get_time() {return std::clock();}
-double get_time_period() { return 1.0 / CLOCKS_PER_SEC; }
-#endif
 
 /*
 A minimal RNG implementation, just enough to make it usable.
