@@ -765,7 +765,9 @@ int main(int argc, char **argv) {
 		std::exit(0);
 	}
 #endif
-	enum {TL_MIN = 1, TL_MAX = 2, TL_SHOW = 3};//, TL_FLAG_UNSPECIFIED_UNITS = 16};
+	constexpr int TL_MIN = 1;
+	constexpr int TL_MAX = 2;
+	constexpr int TL_SHOW = 3;
 	std::map<double,int> show_times;
 	std::map<Uint64,int> show_datas;
 	double show_min = -2.0;

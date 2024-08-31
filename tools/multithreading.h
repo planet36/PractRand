@@ -43,7 +43,7 @@ namespace Threading {
 	//compile time assert that Lock is big enough:
 	static_assert(sizeof(Lock) >= sizeof(CRITICAL_SECTION));
 	static void _issue_win32_error(int number, const char *msg) {
-		enum { BUFSIZE = 256 };
+		constexpr int BUFSIZE = 256;
 		TCHAR buf[BUFSIZE];
 		FormatMessage(
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr,
