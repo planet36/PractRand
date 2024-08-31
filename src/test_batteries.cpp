@@ -148,12 +148,12 @@ namespace PractRand::Tests::Batteries {
 					//new Tests::BCFN_FF(0, 13),  //	12.0 seconds/GB
 					//new Tests::BCFN_MT(1, 11),  //	19.6 seconds/GB
 
-					//new Tests::Birthday64(), //uses a 64 megabyte buffer, ~13 seconds/GB
+					//new Tests::Birthday64(), //uses a 64 mebibyte buffer, ~13 seconds/GB
 					//new Tests::BirthdayLambda1(), //I keep adjusting the buffer size, but a 1 GB buffer is common
-					//new Tests::BirthdaySystematic128(25), //uses (up to) a 512 megabyte buffer
-					//new Tests::BirthdaySystematic128(26), //uses (up to) a 1 gigabyte buffer
-					//new Tests::BirthdaySystematic128(27), //uses (up to) a 2 gigabyte buffer
-					//new Tests::BirthdaySystematic128(28), //uses (up to) a 4 gigabyte buffer
+					//new Tests::BirthdaySystematic128(25), //uses (up to) a 512 mebibyte buffer
+					//new Tests::BirthdaySystematic128(26), //uses (up to) a 1 gibibyte buffer
+					//new Tests::BirthdaySystematic128(27), //uses (up to) a 2 gibibyte buffer
+					//new Tests::BirthdaySystematic128(28), //uses (up to) a 4 gibibyte buffer
 
 					//medium range tests:
 					new Tests::mod3n(0),//				7.5 s/GB with EXP==9, 8.1 with EXP==10

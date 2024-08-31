@@ -294,7 +294,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	std::printf("length= ");
 	Uint64 length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
 	double log2b = std::log(double(length)) / std::log(2.0);
-	const char *unitstr[6] = {"kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte", "exabyte"};
+	const char *unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
 	int units = int(std::floor(log2b / 10)) - 1;
 	if (units < 0 || units > 5) {std::printf("internal error: length out of bounds?\n");std::exit(1);}
 	if (length & (length-1))
@@ -600,7 +600,7 @@ int main(int argc, char **argv) {
 		std::printf("  -tlmax LENGTH  sets the maximum test length to LENGTH.  The tests will stop\n");
 		std::printf("                 after that much data.  See notes on lengths for details on how\n");
 		std::printf("                 to express the length you want.\n");
-		std::printf("                 The default maximum is 32 terabytes (-tlmax 32TB).\n");
+		std::printf("                 The default maximum is 32 tebibytes (-tlmax 32TB).\n");
 		std::printf("  -tlshow LENGTH sets an additional point at which to display interim results.\n");
 		std::printf("                 You can set multiple such points if desired.\n");
 		std::printf("                 These are in addition to the normal interim results points,\n");
@@ -631,20 +631,20 @@ int main(int argc, char **argv) {
 		std::printf("  the number will be treated as the log-based-2 of the amount of bytes to test\n");
 		std::printf("  (in normal target mode) or the log-baed-2 of the number of seeds or strings\n");
 		std::printf("  to test in alternate test target modes.\n");
-		std::printf("  example: -tlmin 23 (sets the minimum test length to 8 million bytes or 8\n");
+		std::printf("  example: -tlmin 23 (sets the minimum test length to 8 mebibytes or 8\n");
 		std::printf("    million seeds, depending upon test target mode)\n");
-		std::printf("  Alternatively, an amount of data can be expressed as a number followed by \n");
-		std::printf("  KB, MB, GB, TB, or PB for kilobytes, megabytes, gigabytes, or petabytes.\n");
-		std::printf("  example: -tlmin 14KB (sets the minimum test length to 14 kilobytes\n");
-		std::printf("  If the B is omitted on KB, MB, GB, TB, or PB then it treat the metric\n");
+		std::printf("  Alternatively, an amount of data can be expressed as a number followed by\n");
+		std::printf("  KB, MB, GB, TB, or PB for kibibytes, mebibytes, gibibytes, tebibytes, or pebibytes.\n");
+		std::printf("  example: -tlmin 14KB (sets the minimum test length to 14 kibibytes\n");
+		std::printf("  If the B is omitted on KB, MB, GB, TB, or PB then it treats the metric\n");
 		std::printf("  prefixes as refering to numbers of bytes in normal test target mode, or\n");
 		std::printf("  numbers of seeds in seeding test target mode, or numbers of strings in\n");
 		std::printf("  entropy pooling test target mode.\n");
-		std::printf("  example: -tlmin 40M (sets the minimum test length to ~40 million bytes or ~40\n");
+		std::printf("  example: -tlmin 40M (sets the minimum test length to ~40 mebibytes or ~40\n");
 		std::printf("    million seeds, depending upon test target mode)\n");
-		std::printf("  A minor detail: I use the de facto standard (in which K means 1024 when\n");
-		std::printf("  dealing with quantities of binary information) not the official standard (in\n");
-		std::printf("  which K means 1000 no matter what is being dealt with unless an 'i' follows\n");
+		std::printf("  A minor detail: I use binary prefixes (in which K means 1024 when\n");
+		std::printf("  dealing with quantities of binary information) not metric prefixes (in\n");
+		std::printf("  which K means 1000 no matter what is being dealt with, unless an 'i' follows\n");
 		std::printf("  the 'K').\n");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
 		std::exit(0);

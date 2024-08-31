@@ -1610,7 +1610,7 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 	unsigned long max = TestBlock::SIZE * numblocks / 2;
 	Uint32 max2 = ofs + max;
 	Uint16 *base = &data[0].as16[0];
-	if (warmup) while (ofs != max2) {//warmup should last about 1.5 megabytes, but be highly variable
+	if (warmup) while (ofs != max2) {//warmup should last about 1.5 mebibytes, but be highly variable
 		Uint16 a = *(base++);
 		Uint32 prior = last[a];
 		last[a] = ++ofs;
@@ -1655,7 +1655,7 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 	}
 	Uint64 oblocks = blocks_tested;
 	blocks_tested += numblocks;
-	if ((oblocks>>19) != (blocks_tested>>19)) {//once every 512 megabytes or so... prevent overflow
+	if ((oblocks>>19) != (blocks_tested>>19)) {//once every 512 mebibytes or so... prevent overflow
 		if (warmup) autofail = true;
 		for (const auto n : last) {
 			if (ofs - n > 0x18000000) {
@@ -6256,7 +6256,7 @@ void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
 	}
 	//Uint64 oblocks = blocks_tested;
 	blocks_tested += numblocks;
-//	if ((oblocks>>17) != (blocks_tested>>17)) {//once every 128 megabytes or so... prevent overflow
+//	if ((oblocks>>17) != (blocks_tested>>17)) {//once every 128 mebibytes or so... prevent overflow
 //		for (i = 0; i < 256; i++) {
 //			int n = last_sym_pos[i];
 //			if (n == -1) continue;
@@ -6443,7 +6443,7 @@ void PractRand::Tests::BRank::test_blocks(TestBlock *data, int numblocks) {
 		PerSize &s = ps[size_index];
 		Uint64 time_needed = s.time_per;
 
-		Uint32 bytes = s.size * (s.size >> 3);//may exceed 4 gigabits, but not that many gigaBYTEs
+		Uint32 bytes = s.size * (s.size >> 3);//may exceed 4 gibibits, but not that many gibiBYTEs
 		Uint32 blocks_needed = (bytes + TestBlock::SIZE - 1) >> TestBlock::SIZE_L2;//rounding up, so no more than one matrix per block
 
 		if (saved_time < time_needed) {//throttle
@@ -8574,7 +8574,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 	//int lperm8_greaterthan[128];
 	//int lperm8_lessthan[128];
 	//int lperm8_incomparable[128];
-	const double lperm16_ratio[LPERM_BUCKETS / 2] = {//from 1 petabyte of hc256 (seed=0x5de6fa19):
+	const double lperm16_ratio[LPERM_BUCKETS / 2] = {//from 1 pebibyte of hc256 (seed=0x5de6fa19):
 		0.50003673, 0.54964384, 0.59699571, 0.62975592, 0.61430835, 0.64362826, 0.65492433, 0.66203379, //    0-    7
 		0.55929909, 0.61887826, 0.67023886, 0.71175169, 0.69277723, 0.72800420, 0.74475900, 0.75474994, //    8-   15
 		0.76672578, 0.81303166, 0.84287851, 0.87317403, 0.86025155, 0.88318222, 0.89561472, 0.90238026, //   16-   23

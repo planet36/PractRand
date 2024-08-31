@@ -47,7 +47,7 @@ namespace PractRand::Tests {
 				//FixedSizeCount<Uint16, 1 << (SEQ_SIG_BITS * SEQ_N)> seq_count;
 				//Uint32 seq_current;
 
-				Uint64 gap_global_history[1 << GAP_SIG_BITS];//4 kilobytes at current settings
+				Uint64 gap_global_history[1 << GAP_SIG_BITS];//4 kibibytes at current settings
 				double gap_product;
 				double gap_expected_inverse;
 				Sint64 gap_product_extracted_L2;

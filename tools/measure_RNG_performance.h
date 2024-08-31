@@ -1,7 +1,7 @@
 #pragma once
 
 //template<typename RNG> double measure_RNG_performance();
-//returns megabytes per second, of calls to raw64() on 64 bit RNGs or raw32 on other RNGs
+//returns mebibytes per second, of calls to raw64() on 64 bit RNGs or raw32 on other RNGs
 
 template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .5) + 1};
@@ -17,7 +17,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
 	double delta = (clock2 - clock1) / double(CLOCKS_PER_SEC);//seconds
-	double amount = j / 256.0;//megabytes
+	double amount = j / 256.0;//mebibytes
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
@@ -41,7 +41,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
 	double delta = (clock2 - clock1) / double(CLOCKS_PER_SEC);//seconds
-	double amount = j / 256.0;//megabytes
+	double amount = j / 256.0;//mebibytes
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
@@ -65,7 +65,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
 	double delta = (clock2 - clock1) / double(CLOCKS_PER_SEC);//seconds
-	double amount = j / 128.0;//megabytes
+	double amount = j / 128.0;//mebibytes
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
