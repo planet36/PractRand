@@ -5,6 +5,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <string>
 
 using namespace PractRand;
@@ -43,14 +44,14 @@ Uint16 PractRand::RNGs::Raw::rarns16::raw16() {
 		S3 = 1,
 		OUTROT = 5
 	};
-	Uint16 rv = rotate16(xs1 + xs3, OUTROT);
+	Uint16 rv = std::rotl(static_cast<uint16_t>(xs1 + xs3), OUTROT);
 	Uint16 old = xs1 >> global_s1;
 	xs3 ^= xs1;
 	xs1 ^= xs2;
 	xs2 ^= xs3;
 	xs1 ^= old;
-	xs3 = rotate16(xs3, global_s2);
-	xs1 = rotate16(xs1, global_s3);
+	xs3 = std::rotl(xs3, global_s2);
+	xs1 = std::rotl(xs1, global_s3);
 	rv += xs1;
 	return rv;
 }
@@ -82,14 +83,14 @@ Uint32 PractRand::RNGs::Raw::rarns32::raw32() {
 		S3 = 5,
 		OUTROT = 10
 	};
-	Uint32 rv = rotate32(xs1 + xs3, OUTROT);
+	Uint32 rv = std::rotl(xs1 + xs3, OUTROT);
 	Uint32 old = xs1 >> S1;
 	xs3 ^= xs1;
 	xs1 ^= xs2;
 	xs2 ^= xs3;
 	xs1 ^= old;
-	xs3 = rotate32(xs3, S2);
-	xs1 = rotate32(xs1, S3);
+	xs3 = std::rotl(xs3, S2);
+	xs1 = std::rotl(xs1, S3);
 	rv += xs1;
 	return rv;
 }
@@ -117,14 +118,14 @@ Uint64 PractRand::RNGs::Raw::rarns64::raw64() {
 		S3 = 5,
 		OUTROT = 21
 	};
-	Uint64 rv = rotate64(xs1 + xs3, OUTROT);
+	Uint64 rv = std::rotl(xs1 + xs3, OUTROT);
 	Uint64 old = xs1 >> S1;
 	xs3 ^= xs1;
 	xs1 ^= xs2;
 	xs2 ^= xs3;
 	xs1 ^= old;
-	xs3 = rotate32(xs3, S2);
-	xs1 = rotate32(xs1, S3);
+	xs3 = std::rotl(xs3, S2);
+	xs1 = std::rotl(xs1, S3);
 	rv += xs1;
 	return rv;
 }

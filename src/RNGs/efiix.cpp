@@ -8,6 +8,7 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 //#include "PractRand/RNGs/trivium.h"
+#include <bit>
 #include <cstring>
 #include <string>
 
@@ -44,7 +45,7 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	Word old = a ^ b;\
 	a = b + i++;\
 	b = c + indirect;\
-	c = old + rotate ## BITS (c, SHIFT_AMOUNT);\
+	c = old + std::rotl(c, SHIFT_AMOUNT);\
 	return b ^ iterated;
 //current algorithm
 //perfect statistically (unless ITERATION_SIZE and word size are both very small), reasonably fast
@@ -63,7 +64,7 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	Word old = a + i++;\
 	a = b + iterated;\
 	b = c ^ indirect;\
-	c = old + rotate ## BITS (c, SHIFT_AMOUNT);\
+	c = old + std::rotl(c, SHIFT_AMOUNT);\
 	return b;
 */
 //adequate statistically, good speed
@@ -81,7 +82,7 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	Word old = a^b;\
 	a = b + indirect;\
 	b = c + iterated;\
-	c = old + rotate ## BITS (c, SHIFT_AMOUNT);\
+	c = old + std::rotl(c, SHIFT_AMOUNT);\
 	i++;\
 	return b;
 */
@@ -98,7 +99,7 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 	Word old = a + b;\
 	a = b + iterated;\
 	b = c + indirect;\
-	c = old ^ rotate ## BITS (c, SHIFT_AMOUNT);\
+	c = old ^ std::rotl(c, SHIFT_AMOUNT);\
 	i++; return old;
 */
 //decent statistically, decent speed
@@ -263,7 +264,7 @@ void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint
 					Word old = a ^ b;
 					a = b + i++;
 					b = c + indirect;
-					c = old + rotate8(c, 3);
+					c = old + std::rotl(c, 3);
 					if (y + mask + 1 >= INDIRECTION_SIZE) continue;
 					indirection_table[y + mask + 1] = b ^ iterated;
 				}
@@ -278,7 +279,7 @@ void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint
 					Word old = a ^ b;
 					a = b + i++;
 					b = c + indirect;
-					c = old + rotate8(c, 3);
+					c = old + std::rotl(c, 3);
 					//return b ^ iterated;
 				}
 				mask = (mask << 1) | 1;

@@ -4,6 +4,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <string>
 
 using namespace PractRand;
@@ -19,9 +20,9 @@ void PractRand::RNGs::Raw::arbee::reset_entropy() {
 	i = 13;
 }
 Uint64 PractRand::RNGs::Raw::arbee::raw64() {
-	Uint64 e = a + rotate(b,45);
-	a = b ^ rotate(c, 13);
-	b = c + rotate(d, 37);
+	Uint64 e = a + std::rotl(b,45);
+	a = b ^ std::rotl(c, 13);
+	b = c + std::rotl(d, 37);
 	c = e + d + i++;
 	d = e + a;
 	return d;

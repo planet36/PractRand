@@ -2,6 +2,8 @@
 
 #include "RNG_from_name.h"
 
+#include <bit>
+
 namespace Candidates {
 
 
@@ -123,13 +125,12 @@ public:
 		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
 	};
 	Word buffer[LAG1], position, counter1, counter2, extra;
-	static Word rotate(Word value, int bits) {return (value << bits) | (value >> (8*sizeof(value)-bits));}
 	Word step( Word newest, Word oldest, Word middle ) {
 		/*newest ^= middle + (middle << 3);
-		extra ^= (rotate(newest, SHIFT3) + extra);
+		extra ^= (std::rotl(newest, SHIFT3) + extra);
 		return extra + oldest;*/
-		return (rotate(oldest, SHIFT1) ^ rotate(middle, SHIFT2)) + rotate(newest, SHIFT3);
-		//return (rotate(oldest, SHIFT1) ^ rotate(middle, SHIFT2)) + (rotate(newest, SHIFT3) ^ prior);
+		return (std::rotl(oldest, SHIFT1) ^ std::rotl(middle, SHIFT2)) + std::rotl(newest, SHIFT3);
+		//return (std::rotl(oldest, SHIFT1) ^ std::rotl(middle, SHIFT2)) + (std::rotl(newest, SHIFT3) ^ prior);
 		//newest += newest << 2; newest ^= newest >> 3; return current + other + newest;
 	}
 	Word refill() {
@@ -180,7 +181,6 @@ public:
 	};
 	Word a, b, c;
 	Word table[256];
-	static Word rotate(Word value, int bits) {return ((value << bits) | (value >> (OUTPUT_BITS - bits)));}
 	VeryFast() {
 		PractRand::RNGs::Polymorphic::hc256 good(PractRand::SEED_AUTO);
 		for (auto & i : table) i = Word(good.raw64());
@@ -190,48 +190,48 @@ public:
 		//const Word K = Word(0x92ec64765925a395ull);
 		/*
 		old = a + b;// irreversible, but fast and seems decent enough once the cycle length is long enough
-		a = rotate(a, RSHIFT) ^ old;
-		b = rotate(b, ROTATE) + old;
+		a = std::rotl(a, RSHIFT) ^ old;
+		b = std::rotl(b, ROTATE) + old;
 		return old;//*/
 		//now based upon alearx:
-		//a ^= rotate(b + c, LSHIFT);
-		//b ^= rotate(c + (c << 3), RSHIFT);
-		//c ^= a + (a << 3); c = rotate(c, ROTATE);
+		//a ^= std::rotl(b + c, LSHIFT);
+		//b ^= std::rotl(c + (c << 3), RSHIFT);
+		//c ^= a + (a << 3); c = std::rotl(c, ROTATE);
 		//return a;//*/
 		//good speed, 16 bit version fails @ 32 GB, 32 bit version passed 8 TB
 		/*
 		old = a + b;
 		a = b ^ (b >> RSHIFT);
 		b = c + (c << LSHIFT);
-		c = old + rotate(c,ROTATE);// RSHIFT,LSHIFT,ROTATE : 7,3,9 @ 32 bit
+		c = old + std::rotl(c,ROTATE);// RSHIFT,LSHIFT,ROTATE : 7,3,9 @ 32 bit
 		return old;//*/
 		//best quality: 16 bit fails @ 1 TB, but not as fast ;; switching "a += b ^ c;" for "a ^= b + c;" increases that to 2 TB
 		/*
 		old = a + (a << LSHIFT);
 		a += b ^ c;
 		b = c ^ (c >> RSHIFT);
-		c = old + rotate(c,ROTATE);
+		c = old + std::rotl(c,ROTATE);
 		return old;//*/
 		//faster, simpler, lower quality - just 5-6 ops, very few dependent
 		//16 bit: 64 MB, 32 bit: 32 GB
 		/*
 		old = a + b;
-		a = c + rotate(b,ROTATE);
+		a = c + std::rotl(b,ROTATE);
 		b = c + (c << LSHIFT);
 		c ^= old;
 		return c;//*/
 		/*
 		old = a + b;// 6 ops with LEA, 7 with RISC, unfortunately more dependencies thtn desirable, test result:  16 bit: 256 GB
 		a = b + (b << RSHIFT);
-		b = rotate(b, LSHIFT) + c;
-		c = rotate(c, ROTATE) ^ old;
+		b = std::rotl(b, LSHIFT) + c;
+		c = std::rotl(c, ROTATE) ^ old;
 		return old;//*/
 		//*
 		a += b;// 5 ops on all relevant archs, dependencies aren't too bad; test results:  16 bit: 16 GB, 32 bit: > 4 TB
 		b ^= c;//test results at 16 bit: PractRand std: 16 GB ; gjrand: ----1
 		c += a;//test results at 32 bit: PractRand std: >4 TB ; gjrand: ------
-		b = rotate(b, RSHIFT);
-		c = rotate(c, ROTATE);
+		b = std::rotl(b, RSHIFT);
+		c = std::rotl(c, ROTATE);
 		return a;//*/
 		//another alternative, 5-7 ops
 		//16 bit: 256 MB, 32 bit: 2 TB
@@ -239,21 +239,21 @@ public:
 		old = a + b;
 		a = b;
 		b = c + (c << LSHIFT);
-		c = rotate(c, ROTATE);
+		c = std::rotl(c, ROTATE);
 		c += old;
 		return a;//*/
 		//uses multiplication, only 2 words, but pretty good asside from that:
 		//16: 16 MB, 32 bit: 8 TB
 		/*
 		old = a * Word(0x92ec64765925a395ull);
-		a = b ^ rotate(a, OUTPUT_BITS / 2);
+		a = b ^ std::rotl(a, OUTPUT_BITS / 2);
 		b = old;
 		return a+b;//*/
 		//16: 128 MB, 32 bit: ??
 		/*
 		old = a * Word(0x92ec64765925a395ull);
 		a += c++;
-		a ^= rotate(b, OUTPUT_BITS / 2);
+		a ^= std::rotl(b, OUTPUT_BITS / 2);
 		b = old;
 		return a;//*/
 		/*old = (a ^ (a >> (OUTPUT_BITS/2)));
@@ -286,12 +286,11 @@ public:
 		FLAGS = 0//PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
 	};
 	Word a, b, c, d, counter, counter2;
-	static Word rotate(Word value, int bits) {return (value << bits) | (value >> (8*sizeof(value)-bits));}
 	static Word nluf(Word value) {
 		value *= 9;//15;
 		//value += Word(3442999295u);
 		//value ^= Word(1702153011u);
-		value = rotate(value, OUTPUT_BITS/3+1) ^ value; return value;
+		value = std::rotl(value, OUTPUT_BITS/3+1) ^ value; return value;
 	}
 	Word _raw_native() {
 		//experiment with larger pseudo-counter
@@ -301,58 +300,58 @@ public:
 		//a = b ^ (b >> SHIFT2);
 		//a = b + (b << SHIFT3);
 		a = b + counter2;
-		b = rotate(b, SHIFT1) + tmp;
+		b = std::rotl(b, SHIFT1) + tmp;
 		return a;//*/
 		//SFC 3:
 		/*Word tmp = a + b + counter++;
 		a = b ^ (b >> SHIFT2);
-		b = rotate(b,SHIFT1) + tmp;
+		b = std::rotl(b,SHIFT1) + tmp;
 		return tmp;//*/
 		//SFC 4, 16 bit version >8 TB (64 GB w/o counter)
 		/*Word old = a + b + counter++;//64 GB on counter, 8 TB on b
 		a = b ^ (b >> SHIFT2);//128 GB?
 		b = c + (c << SHIFT3);//1 TB
-		c = old + rotate(c,SHIFT1);//important!
+		c = old + std::rotl(c,SHIFT1);//important!
 		return old;//*/
 		//okay speed, 16 bit version >2 TB (256 GB w/o counter), 32 bit @ ?
 		/*Word old = a + (a << SHIFT3);
 		a = b + c + counter++;
 		b = c ^ (c >> SHIFT2);
-		c = rotate(c,SHIFT1) + old;
+		c = std::rotl(c,SHIFT1) + old;
 		return old;//*/
 		//too slow, 16 bit version ??? (4 TB w/o counter)
 		/*Word old = a + b + counter++;
-		a = old ^ rotate(a, SHIFT2);
+		a = old ^ std::rotl(a, SHIFT2);
 		b = c + (c << SHIFT3);
-		c = old + rotate(c,SHIFT1);
+		c = old + std::rotl(c,SHIFT1);
 		return old;//*/
 		//too slow, 16 bit version ??? (2 TB w/o counter)
 		/*Word old = a + (a << SHIFT3);
 		a += b ^ c;
 		b = c ^ (c >> SHIFT2) ^ counter++;
-		c = old + rotate(c,SHIFT1);
+		c = old + std::rotl(c,SHIFT1);
 		return old;//*/
 		//faster, 16 bit version failed @ 64-128 GB (4 GB w/o counter), 32 bit @ ? (passed 16 TB w/o counter)
 		/*Word old = a + b;
 		a = b + counter++;
 		b = c ^ (c >> SHIFT2);
-		c = old + rotate(c,SHIFT1);
+		c = old + std::rotl(c,SHIFT1);
 		return old;//*/
 		//good speed, 16 bit version failed @ >512 GB (32 GB w/o counter), 32 bit @ ? (? w/o counter)
 		/*Word old = a + b + counter++;
 		a = b + (b << SHIFT3);
 		b = c ^ (c >> SHIFT2);
-		c = old + rotate(c,SHIFT1);
+		c = old + std::rotl(c,SHIFT1);
 		return old;//*/
 		//???
 		/*Word old = a + counter++;
-		a = rotate(a, 3) ^ (a+b);
-		b = rotate(b, 7) ^ (b+c);
-		c = rotate(c, 11) ^ (c+old);
+		a = std::rotl(a, 3) ^ (a+b);
+		b = std::rotl(b, 7) ^ (b+c);
+		c = std::rotl(c, 11) ^ (c+old);
 		return old^b;*/
-		/*a += rotate(a,7);
-		b = rotate(b,13) + b + (b<<3);
-		c = (c + (c << 7)) ^ rotate(c,11);
+		/*a += std::rotl(a,7);
+		b = std::rotl(b,13) + b + (b<<3);
+		c = (c + (c << 7)) ^ std::rotl(c,11);
 		return a^b^c;*/
 
 		//a three-word version, adequate quality, but probably doesn't do to well with superscalarism
@@ -360,17 +359,17 @@ public:
 		a += b + c;
 		c += 1;
 		b ^= a;
-		a = rotate(a, 3);
-		b = rotate(b, 11);
+		a = std::rotl(a, 3);
+		b = std::rotl(b, 11);
 		a += b;
 		b ^= a;//*/
 
 		/*
-		c = rotate(c, 7);//best shift pairs at 16 bits are (10,3), (7,5), (11,9) ; other possibles are (4,9), (5,13), (6,11), (6,13), (7,4), (9,3), (9,4), (9,5), (11,7), (12,6), (12,9), and (12,10)
+		c = std::rotl(c, 7);//best shift pairs at 16 bits are (10,3), (7,5), (11,9) ; other possibles are (4,9), (5,13), (6,11), (6,13), (7,4), (9,3), (9,4), (9,5), (11,7), (12,6), (12,9), and (12,10)
 		a += b + counter++;//but even with those shifts, quality is marginal
 		b ^= c;
 		c += a;
-		a = rotate(a, 12);*/
+		a = std::rotl(a, 12);*/
 
 
 
@@ -379,7 +378,7 @@ public:
 		/*enum { SHIFT = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 11 : -1)) };//43, 11, 9
 		a += b; b -= c;
 		c += a; a ^= counter++;
-		c = rotate(c, SHIFT);//*/
+		c = std::rotl(c, SHIFT);//*/
 		//w/ counter	32:29->24, 28->37?, 27->36		16:14->22, 13->23, 12->32, 11->37, 10->37, 9->30, 8->19, 7->30, 6->38, 5->38, 4->29, 3->19, 2->18
 		//w/o counter	32:29->  , 28->  , 27->			16:14->17, 13->19, 12->26, 11->30, 10->31, 9->31, 8->17, 7->31, 6->31, 5->31, 4->30, 3->19, 2->17
 
@@ -387,8 +386,8 @@ public:
 		/*  //
 		Word result = a + b;
 		b ^= a;
-		a = rotate(a, 55 % OUTPUT_BITS) ^ b ^ (b << (14 % OUTPUT_BITS));
-		b = rotate(b, 36 % OUTPUT_BITS);
+		a = std::rotl(a, 55 % OUTPUT_BITS) ^ b ^ (b << (14 % OUTPUT_BITS));
+		b = std::rotl(b, 36 % OUTPUT_BITS);
 		return result;//*/
 
 		//??? speed, 16 bit version failed @ ? GB (16 GB w/o counter), 32 bit @ ?
@@ -398,8 +397,8 @@ public:
 
 		//a += b; b -= c;
 		//c += a; a ^= counter++;
-		//b = rotate(b, _SHIFT1);//*/
-		//c = rotate(c, _SHIFT2);//*/
+		//b = std::rotl(b, _SHIFT1);//*/
+		//c = std::rotl(c, _SHIFT2);//*/
 		//w/ counter	32:29->24, 28->37?, 27->36		16:14->22, 13->23, 12->32, 11->37, 10->37, 9->30, 8->19, 7->30, 6->38, 5->38, 4->29, 3->19, 2->18
 		//w/o counter	32:29->  , 28->  , 27->			16:14->17, 13->19, 12->26, 11->30, 10->31, 9->31, 8->17, 7->31, 6->31, 5->31, 4->30, 3->19, 2->17
 
@@ -409,7 +408,7 @@ public:
 		enum { SH2 = (OUTPUT_BITS == 64) ?  3 : ((OUTPUT_BITS == 32) ?  3 : ((OUTPUT_BITS == 16) ? 3 : ((OUTPUT_BITS == 8) ? 2 : -1))) };// using LEA on x86
 		a += b; b -= c;
 		c += a; //a ^= counter++;
-		c = rotate(c, SH1);//cb  with count: ?, 14, 9, ?  ; w/o count: 16, 8, 9, ?
+		c = std::rotl(c, SH1);//cb  with count: ?, 14, 9, ?  ; w/o count: 16, 8, 9, ?
 		b += (b << SH2);//ba*/
 		//						1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32
 		//		16 nocount				19	37	39	40	39	32	39	38	34	34	19			40,39,39,39,38,37,34
@@ -558,7 +557,6 @@ public:
 		OUTPUT_BITS = sizeof(Word) * 8,
 		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
 	};
-	Word rotate(Word value, int bits) {return (value << bits) | (value >> (OUTPUT_BITS - bits));}
 	Word lfsr(Word n, Word m) {return (n >> 1) ^ (-(n & 1) & m);}
 	Word _raw_native() {
 		Uint32 save = state_0 ^ (state_0 << 13);
@@ -584,7 +582,7 @@ public:
 		//Word old = a + b + counter++;//64 GB? on counter, 8 TB on b
 		//a = b ^ (b >> SHIFT2);//128 GB?
 		//b = c + (c << SHIFT3);//1 TB
-		//c = old + rotate(c,SHIFT1);//important!
+		//c = old + std::rotl(c,SHIFT1);//important!
 		//return old;
 		/*Uint64 rv;
 		asm (
@@ -739,7 +737,6 @@ public:
 			//fx = 0xff;
 			//offset = 0;
 		}
-		Word rotate(Word value, int bits) { return (value << bits) | (value >> (WORD_BITS - bits)); }
 		void round() {
 			//64: 11, 16, 32, 13, 19, 32
 			//32: 5, 8, 16, 9, 11, 16
@@ -748,16 +745,16 @@ public:
 			// 2 3
 			v[0] += v[1];
 			v[2] += v[3];
-			v[1] = rotate(v[1], SH1);
-			v[3] = rotate(v[3], SH2);
+			v[1] = std::rotl(v[1], SH1);
+			v[3] = std::rotl(v[3], SH2);
 			v[1] ^= v[0];
 			v[3] ^= v[2];
 
-			v[0] = rotate(v[0], SH3);
+			v[0] = std::rotl(v[0], SH3);
 			v[2] += v[1];
 			v[0] += v[3];
-			v[1] = rotate(v[1], SH4);
-			v[3] = rotate(v[3], SH5);
+			v[1] = std::rotl(v[1], SH4);
+			v[3] = std::rotl(v[3], SH5);
 			v[1] ^= v[2];
 			v[3] ^= v[0];
 

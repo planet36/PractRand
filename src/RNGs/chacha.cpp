@@ -4,6 +4,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <cstring>
 #include <sstream>
 #include <string>
@@ -176,7 +177,7 @@ void PractRand::RNGs::Raw::chacha::_core() {
 	for (int i = 0; i < 4; i++) outbuf[i] = constants[i];
 	for (int i = 4; i < 16; i++) outbuf[i] = state[i-4];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-#define BLAH(base,i1,i2,i3,R) base[i1] += base[i2]; base[i3] = rotate32(base[i3] ^ base[i1], R);
+#define BLAH(base,i1,i2,i3,R) base[i1] += base[i2]; base[i3] = std::rotl(base[i3] ^ base[i1], R);
 #define QUARTERROUND(i1,i2,i3,i4) BLAH(outbuf,i1,i2,i4,16) BLAH(outbuf,i3,i4,i2,12) BLAH(outbuf,i1,i2,i4,8) BLAH(outbuf,i3,i4,i2,7)
 	for (int round = 1; round < rounds; round+=2) {
 		QUARTERROUND( 0, 4, 8,12)

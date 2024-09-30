@@ -2,6 +2,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <string>
 
 #if defined _MSC_VER && _MSC_VER >= 1800
@@ -44,10 +45,10 @@ Uint32 PractRand::RNGs::Raw::xsm32::raw32() {
 	//const Uint32 K = 0x21052045;  //	00100001000001010010000001000101 373  161 - original reduced quality version
 	//const Uint32 K =	0x01002045;  //	00000001000000000010000001000101 363  157 - lowest quality version tested
 
-	Uint32 tmp = lcg_high ^ rotate(lcg_high + lcg_low, 9); tmp ^= rotate(tmp + lcg_adder_high, 19);
+	Uint32 tmp = lcg_high ^ std::rotl(lcg_high + lcg_low, 9); tmp ^= std::rotl(tmp + lcg_adder_high, 19);
 	tmp *= 0xD251CF2D;
 	step_forwards();
-	tmp = tmp ^ rotate(tmp + lcg_high, 16);
+	tmp = tmp ^ std::rotl(tmp + lcg_high, 16);
 	tmp *= Uint32(0x299529B5);
 	tmp ^= tmp >> 16;
 	return tmp;
@@ -111,10 +112,10 @@ void PractRand::RNGs::Raw::xsm32::seek_backward(Uint64 how_far) {
 Uint64 PractRand::RNGs::Raw::xsm64::raw64() {
 	const Uint64 K = 0xA3EC647659359ACDull;//1010001111101100011001000111011001011001001101011001101011001101
 
-	Uint64 tmp = lcg_high ^ rotate64(lcg_high + lcg_low, 16); tmp ^= rotate64(tmp + lcg_adder_high, 40);
+	Uint64 tmp = lcg_high ^ std::rotl(lcg_high + lcg_low, 16); tmp ^= std::rotl(tmp + lcg_adder_high, 40);
 	tmp *= K;
 	step_forwards();
-	tmp = tmp ^ rotate(tmp + lcg_high, 32);
+	tmp = tmp ^ std::rotl(tmp + lcg_high, 32);
 	tmp *= K;
 	tmp ^= tmp >> 32;
 	return tmp;

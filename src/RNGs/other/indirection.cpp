@@ -5,6 +5,7 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 //#include "PractRand/test_helpers.h"
+#include <bit>
 #include <cstdlib>
 #include <sstream>
 #include <string>
@@ -339,7 +340,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 old = a ^ b;
 					a = b + i;
 					b = c + indirect;
-					c = old + rotate8(c, 3);
+					c = old + std::rotl(c, 3);
 					i++;
 					return b ^ iterated;//*/
 
@@ -351,7 +352,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 old = a + i++;
 					a = b + iterated;
 					b = c ^ indirect;
-					c = old + rotate( c, 3 );
+					c = old + std::rotl( c, 3 );
 					return b;//*/
 
 					//"^b" - 1+1: 38, 1+2: >36
@@ -363,7 +364,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 old = a + b;
 					a = b + iterated;
 					b = c + indirect;
-					c = old ^ rotate( c, 3 );
+					c = old ^ std::rotl( c, 3 );
 					i++; return old;//*/
 
 					//1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
@@ -374,7 +375,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 old = a ^ b;
 					a = b + indirect;
 					b = c + iterated;
-					c = old + rotate( c, 3 );
+					c = old + std::rotl( c, 3 );
 					return b;//*/
 				}
 				void efiix8_varqual::walk_state(StateWalkingObject *walker) {
@@ -545,7 +546,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 &t2 = table[i2];
 					Uint16 old = a ^ i;
 					a ^= t2 + b;
-					b = rotate16(b, 5) + old;
+					b = std::rotl(b, 5) + old;
 					t1 = t2;
 					t2 = old;
 					return a;
@@ -580,12 +581,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (int i = 0; i < half_size; i++) {
 						Uint16 o = table[i];
 						table[i] += a;
-						a = table2[o & mask] + rotate16(a, 5);
+						a = table2[o & mask] + std::rotl(a, 5);
 					}
 					for (int i = 0; i < half_size; i++) {
 						Uint16 o = table2[i];
 						table2[i] += a;
-						a = table[o & mask] + rotate16(a, 5);
+						a = table[o & mask] + std::rotl(a, 5);
 					}
 					left = (1 << table_size_L2) - 1;
 					return table[left--];
@@ -619,7 +620,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a += tmp;
 					table[i1] = table[i2];
 					table[i2] = tmp;
-					a = rotate(a, 5);
+					a = std::rotl(a, 5);
 					return tmp;
 				}
 				void genindD::walk_state(StateWalkingObject *walker) {
@@ -648,8 +649,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 genindE::raw16() {
 					int X = i++;
 					int Y = a & mask;
-					Uint16 A = rotate(table2[X], 3) + rotate(table2[Y], 0);
-					Uint16 B = rotate(table1[X], 0) ^ rotate(a, 2);
+					Uint16 A = std::rotl(table2[X], 3) + std::rotl(table2[Y], 0);
+					Uint16 B = std::rotl(table1[X], 0) ^ std::rotl(a, 2);
 					table1[X] = a;
 					a = B + A;
 					if (i > mask) {
@@ -688,7 +689,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 genindF::raw16() {
 					a ^= table2[i++ & mask];
 					int i1 = a & mask;
-					a = rotate16(a, 11);
+					a = std::rotl(a, 11);
 					Uint16 o1 = table1[i1];
 					int i2 = o1 & mask;
 					Uint16 o2 = table2[i2];

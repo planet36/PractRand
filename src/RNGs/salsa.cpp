@@ -5,6 +5,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <cstring>
 #include <sstream>
 #include <string>
@@ -47,10 +48,10 @@ int PractRand::RNGs::Polymorphic::salsa::get_rounds() const {return implementati
 //raw:
 PractRand::RNGs::Raw::salsa::~salsa() {std::memset(this, 0, sizeof(*this));}
 static void salsa_mix_core(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
-	b ^= rotate32(a + d, 7);
-	c ^= rotate32(b + a, 9);
-	d ^= rotate32(c + b, 13);
-	a ^= rotate32(d + c, 18);
+	b ^= std::rotl(a + d, 7);
+	c ^= std::rotl(b + a, 9);
+	d ^= std::rotl(c + b, 13);
+	a ^= std::rotl(d + c, 18);
 }
 //	const Uint32 *constants = short_seed ? salsa_short_seed_constants : salsa_long_seed_constants;
 void PractRand::RNGs::Raw::salsa::_core() {

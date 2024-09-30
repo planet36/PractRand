@@ -4,6 +4,7 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 //#include "PractRand/test_helpers.h"
+#include <bit>
 #include <sstream>
 #include <string>
 
@@ -294,8 +295,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 mmr16::raw16() {
 					Uint16 old = a;
 					a = b * 0x69ad;
-					b = rotate16(b, 7) ^ c;
-					c = rotate16(c, 5) + old;
+					b = std::rotl(b, 7) ^ c;
+					c = std::rotl(c, 5) + old;
 					return old;
 				}
 				std::string mmr16::get_name() const { return "mmr16"; }
@@ -307,8 +308,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 mmr32::raw32() {
 					Uint32 old = a;
 					a = b * 0xAC4969AD;
-					b = rotate16(b, 13) ^ c;
-					c = rotate16(c, 9) + old;
+					b = std::rotl(b, 13) ^ c;
+					c = std::rotl(c, 9) + old;
 					return old;
 				}
 				std::string mmr32::get_name() const { return "mmr32"; }
@@ -415,7 +416,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				Uint16 mwrca16::raw16() {
 					Uint16 old = a * 0xa395;
-					a ^= rotate16(b, 8);
+					a ^= std::rotl(b, 8);
 					b = old;
 					return a+b;
 				}
@@ -426,7 +427,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				Uint32 mwrca32::raw32() {
 					Uint32 old = a * 0x5925a395;
-					a ^= rotate32(b, 16);
+					a ^= std::rotl(b, 16);
 					b = old;
 					return a+b;
 				}
@@ -439,7 +440,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 mwrcc16::raw16() {
 					Uint16 old = a * 0xa395;
 					a += counter++;
-					a ^= rotate16(b, 8);
+					a ^= std::rotl(b, 8);
 					b = old;
 					return a;
 				}
@@ -452,7 +453,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 mwrcc32::raw32() {
 					Uint32 old = a * 0x5925a395;
 					a += counter++;
-					a ^= rotate32(b, 16);
+					a ^= std::rotl(b, 16);
 					b = old;
 					return a;
 				}
@@ -466,7 +467,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 mwrcca16::raw16() {
 					Uint16 old = a * 0xa395;
 					a += counter++;
-					a ^= rotate16(b, 8);
+					a ^= std::rotl(b, 8);
 					b = old;
 					return a+b;
 				}
@@ -479,7 +480,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 mwrcca32::raw32() {
 					Uint32 old = a * 0x5925a395;
 					a += counter++;
-					a ^= rotate32(b, 16);
+					a ^= std::rotl(b, 16);
 					b = old;
 					return a+b;
 				}
@@ -506,7 +507,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 mwlac_varA::raw16() {
 					Uint16 oa;
 					oa = a * 0x9785;//   1001011110000101
-					a = b ^ rotate16(a, 7);
+					a = b ^ std::rotl(a, 7);
 					b += c;
 					c = oa;
 					return c;
@@ -518,8 +519,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 mwlac_varB::raw16() {
 					Uint16 oa;
 					oa = a * 0x9785;//   1001011110000101
-					b = rotate(b, 13);
-					a = b ^ rotate16(a, 7);
+					b = std::rotl(b, 13);
+					a = b ^ std::rotl(a, 7);
 					b += c;
 					c = oa;
 					return c;
@@ -530,8 +531,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				Uint16 mwlac_varC::raw16() {
 					a *= 0x9785;//   1001011110000101
-					b = rotate16(b, 5);
-					c = rotate16(c, 13);
+					b = std::rotl(b, 5);
+					c = std::rotl(c, 13);
 					b ^= a;
 					a ^= c;
 					c += b;
@@ -546,8 +547,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					b -= c;
 					c += a;
 					a *= 0x9785;//   1001011110000101
-					b = rotate16(b, 7);
-					c = rotate16(c, 4);
+					b = std::rotl(b, 7);
+					c = std::rotl(c, 4);
 					return a;
 				}
 				std::string mwlac_varD::get_name() const { return "mwlac_varD"; }
@@ -562,7 +563,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					c *= 0x9785;//   1001011110000101
 					//shift:	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15
 					//						37	39-	41	34-	34	38-	39	38-	35	20
-					b = rotate16(b, 6);
+					b = std::rotl(b, 6);
 					return a;
 				}
 				std::string mwlac_varE::get_name() const { return "mwlac_varE"; }
@@ -783,7 +784,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 				Uint32 mo_Cmfr32::raw32() {
-					state = ~(2911329625u*state); state = rotate32(state,17);
+					state = ~(2911329625u*state); state = std::rotl(state,17);
 					return state;
 				}
 				std::string mo_Cmfr32::get_name() const {return "mo_Cmfr32";}
@@ -791,7 +792,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint32 mo_Cmr32::raw32() {
-					state = 4031235431u * state; state = rotate32(state, 15);
+					state = 4031235431u * state; state = std::rotl(state, 15);
 					return state;
 				}
 				std::string mo_Cmr32::get_name() const { return "mo_Cmr32"; }
@@ -799,7 +800,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint32 mo_Cmr32of64::raw32() {
-					state = 38217494031235431ull * state; state = rotate64(state, 37);
+					state = 38217494031235431ull * state; state = std::rotl(state, 37);
 					return Uint32(state);
 				}
 				std::string mo_Cmr32of64::get_name() const { return "mo_Cmr32of64"; }
@@ -828,9 +829,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				Uint64 mulcr64::raw64() {
 					Uint64 rv = a * count;
-					a = rotate64(a, 24) + b;
+					a = std::rotl(a, 24) + b;
 					count += 2;
-					b = rotate64(b, 37) ^ rv;
+					b = std::rotl(b, 37) ^ rv;
 					return rv;
 				}
 				std::string mulcr64::get_name() const { return "mulcr64"; }
@@ -843,7 +844,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 mulcr32::raw32() {
 					Uint32 rv = a * 2911329625u;
 					a = b ^ count++;
-					b = rotate32(b, 11) + rv;
+					b = std::rotl(b, 11) + rv;
 					return rv;
 				}
 				std::string mulcr32::get_name() const { return "mulcr32"; }
@@ -855,7 +856,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 mulcr16::raw16() {
 					Uint16 rv = a * 2911329625u;
 					a = b ^ count++;
-					b = rotate16(b, 6) + rv;
+					b = std::rotl(b, 6) + rv;
 					return rv;
 				}
 				std::string mulcr16::get_name() const { return "mulcr16"; }

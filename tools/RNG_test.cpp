@@ -69,9 +69,6 @@ public:
 	PractRand::RNGs::Polymorphic::NotRecommended::lcg16of64_varqual rng1;
 	PractRand::RNGs::Polymorphic::NotRecommended::simpleB rng2;
 	//and any helper methods you want:
-	static Uint16 rotate16(Uint16 v, int bits) { return (v << bits) | (v >> (16 - bits)); }
-	static Uint32 rotate32(Uint32 v, int bits) { return (v << bits) | (v >> (32 - bits)); }
-	static Uint64 rotate64(Uint64 v, int bits) { return (v << bits) | (v >> (64 - bits)); }
 	//static Uint64 byteswap64(Uint64 v) { return (Uint64(Uint8(v >> 0)) << 56) | (Uint64(Uint8(v >> 8)) << 48) | (Uint64(Uint8(v >> 16)) << 40) | (Uint64(Uint8(v >> 24)) << 32) | (Uint64(Uint8(v >> 32)) << 24) | (Uint64(Uint8(v >> 40)) << 16) | (Uint64(Uint8(v >> 48)) << 8) | (Uint64(Uint8(v >> 56)) << 0); }
 	static Uint16 ddRot16(Uint16 value) { return std::rotr(value, (value >> (16 - 3)) << 1); }
 	static Uint32 ddRot32(Uint32 value) { return std::rotr(value, (value >> (32 - 3)) << 2); }
@@ -90,7 +87,7 @@ public:
 		//Uint16 a = ddRot16(s1) - s2;
 		//Uint16 b = ddRot16(s3) - s4;
 		//Uint16 c = ddRot16(s2) - ddRot16(s4);
-		//return ddRot16((s1 + s3) * 1) + ((s2 * 9) ^ rotate16(s2 * 9, 5)) + (s4 * 3);
+		//return ddRot16((s1 + s3) * 1) + ((s2 * 9) ^ std::rotl(s2 * 9, 5)) + (s4 * 3);
 		//return (a & b) | (c & ~a);
 		//return (a & b) | (b & c) | (a & c);
 		//return a ^ b;

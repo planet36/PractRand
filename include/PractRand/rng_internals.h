@@ -90,14 +90,6 @@ namespace PractRand {
 	}
 	namespace Internals {
 		//inline
-		static inline Uint8  rotate8 (Uint8  value, int bits) {return (value << bits) | (value >> (8 -bits));}
-		static inline Uint16 rotate16(Uint16 value, int bits) {return (value << bits) | (value >> (16-bits));}
-		static inline Uint32 rotate32(Uint32 value, int bits) {return (value << bits) | (value >> (32-bits));}
-		static inline Uint64 rotate64(Uint64 value, int bits) {return (value << bits) | (value >> (64-bits));}
-		static inline Uint8  rotate(Uint8  value, int bits) {return rotate8 (value, bits);}
-		static inline Uint16 rotate(Uint16 value, int bits) {return rotate16(value, bits);}
-		static inline Uint32 rotate(Uint32 value, int bits) {return rotate32(value, bits);}
-		static inline Uint64 rotate(Uint64 value, int bits) {return rotate64(value, bits);}
 		//non_uniform.cpp
 		double generate_gaussian_fast(Uint64 raw64);//fast CDF-based hybrid method
 		//double generate_gaussian_high_quality(Uint64 raw192[3]);//slow PDF-based ziggurat method

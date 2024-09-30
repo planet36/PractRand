@@ -4,6 +4,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <sstream>
 #include <string>
 
@@ -461,7 +462,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot3tap32small::func(Uint32 a, Uint32 b, Uint32 c) {
-					return rotate(a, ROT1) + rotate(b, ROT2) + rotate(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
+					return std::rotl(a, ROT1) + std::rotl(b, ROT2) + std::rotl(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
 				}
 				Uint32 ranrot3tap32small::raw32() {
 					if (position) return buffer[--position];
@@ -482,7 +483,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot3tap32::func(Uint32 a, Uint32 b, Uint32 c) {
-					return rotate(a, ROT1) + rotate(b, ROT2) + rotate(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
+					return std::rotl(a, ROT1) + std::rotl(b, ROT2) + std::rotl(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
 				}
 				Uint32 ranrot3tap32::raw32() {
 					if (position) return buffer[--position];
@@ -503,7 +504,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot3tap32big::func(Uint32 a, Uint32 b, Uint32 c) {
-					return rotate(a, ROT1) + rotate(b, ROT2) + rotate(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
+					return std::rotl(a, ROT1) + std::rotl(b, ROT2) + std::rotl(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
 				}
 				Uint32 ranrot3tap32big::raw32() {
 					if (position) return buffer[--position];
@@ -524,7 +525,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32hetsmall::func(Uint32 a, Uint32 b, Uint32 c) {
-					a = rotate(a, ROT1); b = rotate(b, ROT2); c = rotate(c, ROT3);
+					a = std::rotl(a, ROT1); b = std::rotl(b, ROT2); c = std::rotl(c, ROT3);
 					return (a + b) ^ c;
 				}
 				Uint32 ranrot32hetsmall::raw32() {
@@ -546,7 +547,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32het::func(Uint32 a, Uint32 b, Uint32 c) {
-					a = rotate(a, ROT1); b = rotate(b, ROT2); c = rotate(c, ROT3);
+					a = std::rotl(a, ROT1); b = std::rotl(b, ROT2); c = std::rotl(c, ROT3);
 					return (a + b) ^ c;
 				}
 				Uint32 ranrot32het::raw32() {
@@ -568,7 +569,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 				Uint32 ranrot32hetbig::func(Uint32 a, Uint32 b, Uint32 c) {
-					a = rotate(a, ROT1); b = rotate(b, ROT2); c = rotate(c, ROT3);
+					a = std::rotl(a, ROT1); b = std::rotl(b, ROT2); c = std::rotl(c, ROT3);
 					return (a + b) ^ c;
 				}
 				Uint32 ranrot32hetbig::raw32() {
@@ -637,13 +638,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (unsigned long i = 0; i < LAG2; i++) {
 						Uint16 a = buffer[i + LAG1 - LAG1];
 						Uint16 b = buffer[i + LAG1 - LAG2];
-						a = rotate16(a, SH1); b = rotate16(b, SH2); prev += rotate16(prev, SH3);
+						a = std::rotl(a, SH1); b = std::rotl(b, SH2); prev += std::rotl(prev, SH3);
 						prev = buffer[i] = (a * (b | 1)) ^ prev;
 					}
 					for (unsigned long i = LAG2; i < LAG1; i++) {
 						Uint16 a = buffer[i];
 						Uint16 b = buffer[i - LAG2];
-						a = rotate16(a, SH1); b = rotate16(b, SH2); prev += rotate16(prev, SH3);
+						a = std::rotl(a, SH1); b = std::rotl(b, SH2); prev += std::rotl(prev, SH3);
 						prev = buffer[i] = (a * (b | 1)) ^ prev;
 					}
 					position = LAG1;
