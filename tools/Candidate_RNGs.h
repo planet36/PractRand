@@ -512,37 +512,6 @@ SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 32)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 16)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 8)
 
-/*#include <intrin.h>
-static Uint32 bswap32a(Uint32 v) {v = (v << 16) | (v >> 16); v = ((v & 0xff00ff00) >> 8) | ((v & 0x00ff00ff) << 8); return v;}
-static Uint32 bswap32b(Uint32 v) {union {Uint32 whole; Uint8 parts[4];};whole=v; parts[0]^=parts[3];parts[3]^=parts[0];parts[0]^=parts[3]; parts[1]^=parts[2];parts[2]^=parts[1];parts[1]^=parts[2]; return whole;}
-static Uint32 bswap32c(Uint32 v) {union {Uint32 whole; Uint8 parts[4];};whole=v; Uint8 tmp=parts[0];parts[0]=parts[3];parts[3]=tmp; tmp=parts[1];parts[1]=parts[2];parts[2]=tmp; return whole;}
-static Uint32 bswap32d(Uint32 v) {return _byteswap_ulong(v);}
-static Uint32 bswap32e(Uint32 v) {__asm {mov eax, v} __asm {bswap eax}}*/
-
-
-/*static Uint64 bswap64a(Uint64 v) {v = (v << 32) | (v >> 32); v = ((v & 0xff00ff00ff00ff00) >> 8) | ((v & 0x00ff00ff00ff00ff) << 8); v = ((v & 0xffff0000ffff0000) >> 16) | ((v & 0x0000ffff0000ffff) << 16); return v;}
-static Uint64 bswap64b(Uint64 v) {
-	union {Uint64 whole; Uint8 parts[8];};whole=v;
-	parts[0]^=parts[7];parts[7]^=parts[0];parts[0]^=parts[7];
-	parts[1]^=parts[6];parts[6]^=parts[1];parts[1]^=parts[6];
-	parts[2]^=parts[5];parts[5]^=parts[2];parts[2]^=parts[5];
-	parts[3]^=parts[4];parts[4]^=parts[3];parts[3]^=parts[4];
-	return whole;
-}
-static Uint64 bswap64c(Uint64 v) {
-	union {Uint64 whole; Uint8 parts[8];};whole=v;
-	Uint8 tmp=parts[0];parts[0]=parts[7];parts[7]=tmp;
-	tmp=parts[1];parts[1]=parts[6];parts[6]=tmp;
-	tmp=parts[2];parts[2]=parts[5];parts[5]=tmp;
-	tmp=parts[3];parts[3]=parts[4];parts[4]=tmp;
-	return whole;
-}
-static Uint64 bswap64d(Uint64 v) {return __builtin_bswap64(v);}
-static Uint64 bswap64e(Uint64 v) {
-	__asm__("bswap %0" : "+r" (v) : "0" (v) );
-	return v;
-}//*/
-
 
 template<typename Word, int rotate_bits, Uint64 K_>
 class _mcx {
@@ -622,7 +591,6 @@ public:
 		);
 		return rv;//*/
 
-//	printf("%8x%8x\n", Uint32(Candidates::bswap64e(0x123456789abcdefull)>>32), Uint32(Candidates::bswap64e(0x123456789abcdefull)));
 		/*Uint64 x = b;
 		x *= K;
 		Uint32 old_a = a;
