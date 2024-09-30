@@ -6870,20 +6870,23 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 			if (lookup1(w) < 0) return true;
-			w >>= BITS_PER_BLOCK;
+			if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
+			else w >>= BITS_PER_BLOCK;
 		}
 		for (index = 1; index < CORE_WORDS - 1; index++) {
 			w = core[index];
 			for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 				is_bad |= lookup1(w);
-				w >>= BITS_PER_BLOCK;
+				if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
+				else w >>= BITS_PER_BLOCK;
 			}
 			if (is_bad < 0) return true;
 		}
 		w = core[index];
 		for (int i = 0; i < BLOCKS_PER_CORE - (CORE_WORDS - 1) * (WORD_BITS / BITS_PER_BLOCK); i++) {
 			is_bad |= lookup1(w);
-			w >>= BITS_PER_BLOCK;
+			if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
+			else w >>= BITS_PER_BLOCK;
 		}
 		if (is_bad < 0) return true;
 		else return false;
@@ -6959,19 +6962,22 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 			analyze_block(w, core_bucket, bucket_bit++, h);
-			w >>= BITS_PER_BLOCK;
+			if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
+			else w >>= BITS_PER_BLOCK;
 		}
 		for (index_ = 1; index_ < CORE_WORDS - 1; index_++) {
 			w = core[index_];
 			for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 				analyze_block(w, core_bucket, bucket_bit++, h);
-				w >>= BITS_PER_BLOCK;
+				if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
+				else w >>= BITS_PER_BLOCK;
 			}
 		}
 		w = core[index_];
 		for (int i = 0; i < BLOCKS_PER_CORE - (CORE_WORDS - 1) * (WORD_BITS / BITS_PER_BLOCK); i++) {
 			analyze_block(w, core_bucket, bucket_bit++, h);
-			w >>= BITS_PER_BLOCK;
+			if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
+			else w >>= BITS_PER_BLOCK;
 		}
 	}
 	else {//blocks do NOT align to word boundaries
