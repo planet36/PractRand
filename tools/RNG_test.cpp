@@ -1,4 +1,5 @@
 
+#include <bit>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -71,13 +72,10 @@ public:
 	static Uint16 rotate16(Uint16 v, int bits) { return (v << bits) | (v >> (16 - bits)); }
 	static Uint32 rotate32(Uint32 v, int bits) { return (v << bits) | (v >> (32 - bits)); }
 	static Uint64 rotate64(Uint64 v, int bits) { return (v << bits) | (v >> (64 - bits)); }
-	static Uint32 rotate_right16(Uint32 v, int bits) { return (v >> bits) | (v << (16 - bits)); }
-	static Uint32 rotate_right32(Uint32 v, int bits) { return (v >> bits) | (v << (32 - bits)); }
-	static Uint64 rotate_right64(Uint64 v, int bits) { return (v >> bits) | (v << (64 - bits)); }
 	//static Uint64 byteswap64(Uint64 v) { return (Uint64(Uint8(v >> 0)) << 56) | (Uint64(Uint8(v >> 8)) << 48) | (Uint64(Uint8(v >> 16)) << 40) | (Uint64(Uint8(v >> 24)) << 32) | (Uint64(Uint8(v >> 32)) << 24) | (Uint64(Uint8(v >> 40)) << 16) | (Uint64(Uint8(v >> 48)) << 8) | (Uint64(Uint8(v >> 56)) << 0); }
-	static Uint16 ddRot16(Uint16 value) { return rotate_right16(value, (value >> (16 - 3)) << 1); }
-	static Uint32 ddRot32(Uint32 value) { return rotate_right32(value, (value >> (32 - 3)) << 2); }
-	static Uint64 ddRot64(Uint64 value) { return rotate_right64(value, (value >> (64 - 4)) << 2); }
+	static Uint16 ddRot16(Uint16 value) { return std::rotr(value, (value >> (16 - 3)) << 1); }
+	static Uint32 ddRot32(Uint32 value) { return std::rotr(value, (value >> (32 - 3)) << 2); }
+	static Uint64 ddRot64(Uint64 value) { return std::rotr(value, (value >> (64 - 4)) << 2); }
 	//constructor, if necessary
 	DummyRNG() : rng1(8) {}
 	//implement algorithm

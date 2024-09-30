@@ -3,6 +3,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <cstring>
 #include <string>
 
@@ -18,12 +19,6 @@ void PractRand::RNGs::Polymorphic::hc256::seed(vRNG *seeder_rng) { implementatio
 
 //raw:
 PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
-#ifndef _MSC_VER
-#define rotr(x,n) (((x)>>(n))|((x)<<(32-(n))))
-#else
-#include <stdlib.h>
-#define rotr(x,n) _lrotr(x,n)
-#endif
 
 #define h1(x,y) { \
 	Uint8 a,b,c,d; \
@@ -44,8 +39,8 @@ PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 }
 #define step_A(u,v,a,b,c,d,m){ \
 	Uint32 tem0,tem1,tem2,tem3; \
-	tem0 = rotr((v),23); \
-	tem1 = rotr((c),10); \
+	tem0 = std::rotr((v),23); \
+	tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
 	(u) += (b)+(tem0^tem1)+Q[tem2]; \
 	(a) = (u); \
@@ -54,8 +49,8 @@ PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 }
 #define step_B(u,v,a,b,c,d,m){ \
 	Uint32 tem0,tem1,tem2,tem3; \
-	tem0 = rotr((v),23); \
-	tem1 = rotr((c),10); \
+	tem0 = std::rotr((v),23); \
+	tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
 	(u) += (b)+(tem0^tem1)+P[tem2]; \
 	(a) = (u); \
@@ -154,18 +149,18 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 	if (checksums[15] != 0xa9c08937) issue_error("hc256::self_test() failed");
 }
 
-#define f1(x) (rotr((x),7) ^ rotr((x),18) ^ ((x) >> 3))
-#define f2(x) (rotr((x),17) ^ rotr((x),19) ^ ((x) >> 10))
+#define f1(x) (std::rotr((x),7) ^ std::rotr((x),18) ^ ((x) >> 3))
+#define f2(x) (std::rotr((x),17) ^ std::rotr((x),19) ^ ((x) >> 10))
 #define f(a,b,c,d) (f2((a)) + (b) + f1((c)) + (d))
 #define feedback_1(u,v,b,c) { \
 	Uint32 tem0,tem1,tem2; \
-	tem0 = rotr((v),23); tem1 = rotr((c),10); \
+	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
 	(u) += (b)+(tem0^tem1)+Q[tem2]; \
 }
 #define feedback_2(u,v,b,c) { \
 	Uint32 tem0,tem1,tem2; \
-	tem0 = rotr((v),23); tem1 = rotr((c),10); \
+	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
 	(u) += (b)+(tem0^tem1)+P[tem2]; \
 }
