@@ -2,8 +2,8 @@
 
 namespace PractRand::Tests {
 		class CoupGap final : public TestBaseclass {
-			//enum {MAX_OLDEST_AGE = 256 * 16};
-			enum {MAX_CURRENT_AGE = 256 * 2};
+			//static constexpr int MAX_OLDEST_AGE = 256 * 16;
+			static constexpr int MAX_CURRENT_AGE = 256 * 2;
 
 			//low8 = current_sym, high8 = oldest_sym
 			FixedSizeCount<Uint8, 256*256> count_syms_by_oldest_sym;

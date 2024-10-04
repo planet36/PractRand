@@ -7,19 +7,15 @@ namespace PractRand::RNGs {
 		namespace Raw {
 			class efiix64x384 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 64,
-					FLAGS = FLAG::USES_SPECIFIED | FLAG::USES_INDIRECTION | FLAG::USES_CYCLIC_BUFFER | FLAG::ENDIAN_SAFE
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 64;
+				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::USES_INDIRECTION | FLAG::USES_CYCLIC_BUFFER | FLAG::ENDIAN_SAFE;
 			protected:
 				typedef Uint64 Word;
-				enum {
-					ITERATION_SIZE_L2 = 7,
-					ITERATION_SIZE = 1 << ITERATION_SIZE_L2,
-					INDIRECTION_SIZE_L2 = 8,
-					INDIRECTION_SIZE = 1 << INDIRECTION_SIZE_L2
-				};
+				static constexpr int ITERATION_SIZE_L2 = 7;
+				static constexpr int ITERATION_SIZE = 1 << ITERATION_SIZE_L2;
+				static constexpr int INDIRECTION_SIZE_L2 = 8;
+				static constexpr int INDIRECTION_SIZE = 1 << INDIRECTION_SIZE_L2;
 				Word indirection_table[INDIRECTION_SIZE], iteration_table[ITERATION_SIZE];
 				Word i, a, b, c;
 			public:

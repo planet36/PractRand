@@ -309,7 +309,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				Uint32 flea32x1::raw32() {
-					enum { SHIFT1 = 15, SHIFT2 = 27 };
+					constexpr int SHIFT1 = 15;
+					constexpr int SHIFT2 = 27;
 					Uint32 e = a[d % SIZE];
 					a[d % SIZE] = ((b << SHIFT1) | (b >> (32 - SHIFT1)));
 					b = c + ((d << SHIFT2) | (d >> (32 - SHIFT2)));
@@ -402,7 +403,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 sfc_v1_16::raw16() {
 					Uint16 tmp = a ^ counter++;
 					a = b + (b << 2);
-					enum { BARREL_SHIFT = 5 };
+					constexpr int BARREL_SHIFT = 5;
 					b = ((b << BARREL_SHIFT) | (b >> (16 - BARREL_SHIFT))) + tmp;
 					return a;
 				}
@@ -415,7 +416,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 sfc_v1_32::raw32() {
 					Uint32 tmp = a ^ counter++;
 					a = b + (b << 5);
-					enum { BARREL_SHIFT = 12 };
+					constexpr int BARREL_SHIFT = 12;
 					b = ((b << BARREL_SHIFT) | (b >> (32 - BARREL_SHIFT))) + tmp;
 					return a;
 				}
@@ -428,7 +429,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 sfc_v2_16::raw16() {
 					Uint16 tmp = a ^ b;
 					a = b + (b << 2);
-					enum { BARREL_SHIFT = 5 };
+					constexpr int BARREL_SHIFT = 5;
 					b = ((b << BARREL_SHIFT) | (b >> (16 - BARREL_SHIFT))) + tmp + counter++;
 					return tmp;
 				}
@@ -441,7 +442,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 sfc_v2_32::raw32() {
 					Uint32 tmp = a ^ b;
 					a = b + (b << 5);
-					enum { BARREL_SHIFT = 12 };
+					constexpr int BARREL_SHIFT = 12;
 					b = ((b << BARREL_SHIFT) | (b >> (32 - BARREL_SHIFT))) + tmp + counter++;
 					return tmp;
 				}
@@ -454,7 +455,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 sfc_v3_16::raw16() {
 					Uint16 tmp = a + b + counter++;
 					a = b ^ (b >> 2);
-					enum { BARREL_SHIFT = 5 };
+					constexpr int BARREL_SHIFT = 5;
 					b = ((b << BARREL_SHIFT) | (b >> (16 - BARREL_SHIFT))) + tmp;
 					return tmp;
 				}
@@ -467,7 +468,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 sfc_v3_32::raw32() {
 					Uint32 tmp = a + b + counter++;
 					a = b ^ (b >> 5);
-					enum { BARREL_SHIFT = 12 };
+					constexpr int BARREL_SHIFT = 12;
 					b = ((b << BARREL_SHIFT) | (b >> (32 - BARREL_SHIFT))) + tmp;
 					return tmp;
 				}
@@ -558,7 +559,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				Uint32 simpleA::raw32() {
-					enum { BARREL_SHIFT1 = 19 };
+					constexpr int BARREL_SHIFT1 = 19;
 					Uint32 tmp = b ^ ((a << BARREL_SHIFT1) | (a >> (32 - BARREL_SHIFT1)));
 					a = ~b + c;
 					b = c;
@@ -572,7 +573,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 				Uint16 simpleB::raw16() {
-					enum { BARREL_SHIFT1 = 3, BARREL_SHIFT2 = 5 };
+					constexpr int BARREL_SHIFT1 = 3;
+					constexpr int BARREL_SHIFT2 = 5;
 					Uint16 tmp = ((a << BARREL_SHIFT1) | (a >> (16 - BARREL_SHIFT1))) ^ ~b;
 					a = b + c;
 					b = c;
@@ -586,7 +588,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 				Uint16 simpleC::raw16() {
-					enum { BARREL_SHIFT1 = 3, BARREL_SHIFT2 = 5 };
+					constexpr int BARREL_SHIFT1 = 3;
+					constexpr int BARREL_SHIFT2 = 5;
 					Uint16 tmp = ((a << BARREL_SHIFT1) | (a >> (16 - BARREL_SHIFT1))) ^ ~b;
 					a = b + ((c << BARREL_SHIFT2) | (c >> (16 - BARREL_SHIFT2)));
 					b = c ^ (c >> 2);
@@ -600,7 +603,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 				Uint32 simpleD::raw32() {
-					enum { BARREL_SHIFT1 = 19 };
+					constexpr int BARREL_SHIFT1 = 19;
 					Uint32 old = a;
 					Uint32 tmp = b ^ ((a << BARREL_SHIFT1) | (a >> (32 - BARREL_SHIFT1)));
 					a = b + c;

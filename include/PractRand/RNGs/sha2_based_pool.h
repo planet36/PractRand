@@ -5,13 +5,12 @@
 namespace PractRand::RNGs::Polymorphic {
 			class sha2_based_pool final : public vRNG8 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL,
-					OUTPUT_BITS = 8,
-					FLAGS = FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION | FLAG::CRYPTOGRAPHIC_SECURITY
-				};
-				enum {STATE_SIZE = 128-24};
-				enum {INPUT_BUFFER_SIZE=128, OUTPUT_BUFFER_SIZE=64};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
+				static constexpr int OUTPUT_BITS = 8;
+				static constexpr int FLAGS = FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION | FLAG::CRYPTOGRAPHIC_SECURITY;
+				static constexpr int STATE_SIZE = 128 - 24;
+				static constexpr int INPUT_BUFFER_SIZE = 128;
+				static constexpr int OUTPUT_BUFFER_SIZE = 64;
 				Uint8 state[STATE_SIZE];
 				Uint8 input_buffer[128];
 				Uint8 output_buffer[64];

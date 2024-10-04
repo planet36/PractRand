@@ -110,7 +110,7 @@ namespace PractRand {
 		};
 		class vRNG8 : public vRNG {
 		public:
-			enum {OUTPUT_BITS = 8};
+			static constexpr int OUTPUT_BITS = 8;
 			Uint16 raw16() override;
 			Uint32 raw32() override;
 			Uint64 raw64() override;
@@ -118,7 +118,7 @@ namespace PractRand {
 		};
 		class vRNG16 : public vRNG {
 		public:
-			enum {OUTPUT_BITS = 16};
+			static constexpr int OUTPUT_BITS = 16;
 			Uint8  raw8 () override;
 			Uint32 raw32() override;
 			Uint64 raw64() override;
@@ -126,7 +126,7 @@ namespace PractRand {
 		};
 		class vRNG32 : public vRNG {
 		public:
-			enum {OUTPUT_BITS = 32};
+			static constexpr int OUTPUT_BITS = 32;
 			Uint8  raw8 () override;
 			Uint16 raw16() override;
 			Uint64 raw64() override;
@@ -134,18 +134,18 @@ namespace PractRand {
 		};
 		class vRNG64 : public vRNG {
 		public:
-			enum {OUTPUT_BITS = 64};
+			static constexpr int OUTPUT_BITS = 64;
 			Uint8  raw8 () override;
 			Uint16 raw16() override;
 			Uint32 raw32() override;
 			int get_native_output_size() const override;
 		};
-		namespace OUTPUT_TYPES {enum {
-	//		SIMPLE_1 = 0,     //one of 8,16,32,64 as _raw()
-			NORMAL_1 = 1,     //one of 8,16,32,64 as raw ## X ()
-			NORMAL_ALL = 2,   //all of 8,16,32,64 as raw ## X ()
-	//		TEMPLATED_ALL = 3,//all of 8,16,32,64 as raw ## X() AND as _raw<X>()
-		};}
+		namespace OUTPUT_TYPES {
+		//constexpr int SIMPLE_1 = 0;     //one of 8,16,32,64 as _raw()
+		constexpr int NORMAL_1 = 1;       //one of 8,16,32,64 as raw ## X ()
+		constexpr int NORMAL_ALL = 2;     //all of 8,16,32,64 as raw ## X ()
+		//constexpr int TEMPLATED_ALL = 3;//all of 8,16,32,64 as raw ## X() AND as _raw<X>()
+		}
 //		enum DISTRIBUTIONS_TYPE {
 //			DISTRIBUTIONS_TYPE__NONE = 0,
 //			DISTRIBUTIONS_TYPE__NORMAL = 1

@@ -11,16 +11,14 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock *data, int numblocks) override;
 
 		protected:
-			enum {
-				ALIGNMENT1 = 4,//the alignments must be powers of 2
-				ALIGNMENT2 = 4,
-				// TODO: try it with a 3rd window
-				SIZE1 = 4,
-				SIZE2 = 4,
-				POSITIONS1_L2 = 0,//	4,8:38		0,10:38		0,8(8):>39		0(8),8(8):>39		0,11:39
-				POSITIONS2_L2 = 10,
-				TOTAL_INDEX_BITS = SIZE1 + SIZE2 + POSITIONS1_L2 + POSITIONS2_L2
-			};
+			static constexpr int ALIGNMENT1 = 4; //the alignments must be powers of 2
+			static constexpr int ALIGNMENT2 = 4;
+			// TODO: try it with a 3rd window
+			static constexpr int SIZE1 = 4;
+			static constexpr int SIZE2 = 4;
+			static constexpr int POSITIONS1_L2 = 0; //	4,8:38		0,10:38		0,8(8):>39		0(8),8(8):>39		0,11:39
+			static constexpr int POSITIONS2_L2 = 10;
+			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + POSITIONS1_L2 + POSITIONS2_L2;
 			int blocks_till_next;
 			int blocks_per;
 			FixedSizeCount<Uint8, 1 << TOTAL_INDEX_BITS> counts;
@@ -186,9 +184,7 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock *data, int numblocks) override;
 
 		protected:
-			enum {
-				LPERM_BUCKETS = 1 << 15 // do not change
-			};
+			static constexpr int LPERM_BUCKETS = 1 << 15; // do not change
 			int word_bits;// 8, 16, 32, or 64 bits; 16 is recommended
 			int blocks_till_next_pass;
 			int blocks_per_pass;

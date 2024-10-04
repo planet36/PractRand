@@ -14,7 +14,8 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock *data, int numblocks) override;
 
 		protected:
-			enum { ENABLE_REORDER = 1, ENABLE_8_BIT_BYPASS = 1 };
+			static constexpr int ENABLE_REORDER = 1;
+			static constexpr int ENABLE_8_BIT_BYPASS = 1;
 			//configuration:
 			int length;
 			int unitsL;

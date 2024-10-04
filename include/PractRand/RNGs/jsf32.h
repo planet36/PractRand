@@ -8,11 +8,9 @@ namespace PractRand::RNGs {
 			//implemented in RNGs/jsf.cpp
 			class jsf32 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 32,
-					FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 32;
+				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE;
 			protected:
 				Uint32 a, b, c, d;
 			public:

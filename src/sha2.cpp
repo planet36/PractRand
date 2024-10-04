@@ -88,12 +88,10 @@ namespace PractRand::Crypto {
 			for (i = 0; i < Constants::INPUT_WORDS; i++) preprocessed[i] = input_buffer.as_word[i];
 			for (i = Constants::INPUT_WORDS; i < Constants::ROUNDS; i++) {
 				Word s0, s1;
-				enum {
-					OFFS_A = Constants::INPUT_WORDS - 1,
-					OFFS_B = 2,
-					OFFS_C = Constants::INPUT_WORDS - 0,
-					OFFS_D = Constants::INPUT_WORDS/2 - 1,
-				};
+				constexpr int OFFS_A = Constants::INPUT_WORDS - 1;
+				constexpr int OFFS_B = 2;
+				constexpr int OFFS_C = Constants::INPUT_WORDS - 0;
+				constexpr int OFFS_D = Constants::INPUT_WORDS/2 - 1;
 				s0 =
 					Constants::PREPROCESS_SHIFT_S0_1(preprocessed[i-OFFS_A]) ^
 					Constants::PREPROCESS_SHIFT_S0_2(preprocessed[i-OFFS_A]) ^

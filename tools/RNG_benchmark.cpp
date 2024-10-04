@@ -39,7 +39,7 @@ double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	//no real point to benchmarking non-polymorphic RNGs - seeding is sufficiently slow that the overhead will be insignificant
 	RNG _rng(PractRand::SEED_AUTO);
 	PractRand::RNGs::vRNG *rng = &_rng;
-	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.1 + 0.5)};
+	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.1 + 0.5);
 	PractRand::RNGs::LightWeight::sfc64 known_fast(13);
 	long clock0 = clock();
 	long clock1, clock2;
@@ -128,17 +128,15 @@ void benchmark_RNG_speeds() {
 #undef PERF_POLYMORPHIC_ONLY
 }
 union DataBlock {
-	enum {
-		SIZE_L2 = 10,
-		SIZE = 1<<SIZE_L2
-	};
+	static constexpr int SIZE_L2 = 10;
+	static constexpr int SIZE = 1<<SIZE_L2;
 	Uint8  as8 [SIZE  ];
 	Uint16 as16[SIZE/2];
 	Uint32 as32[SIZE/4];
 	Uint64 as64[SIZE/8];
 };
 #define DECLARE_EP_BENCH_FUNC(bits) double benchmark_entropy_pool_ ## bits (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
-	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};\
+	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;\
 	long clock0 = clock();\
 	long clock1, clock2;\
 	while ((clock1 = clock()) == clock0) ;\
@@ -160,7 +158,7 @@ DECLARE_EP_BENCH_FUNC(16)
 DECLARE_EP_BENCH_FUNC(32)
 DECLARE_EP_BENCH_FUNC(64)
 double benchmark_entropy_pool_N (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
-	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};
+	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	long clock0 = clock();
 	long clock1, clock2;
 	while ((clock1 = clock()) == clock0) ;
@@ -178,7 +176,7 @@ double benchmark_entropy_pool_N (PractRand::RNGs::vRNG &entropy_pool, DataBlock 
 	return rate;
 }
 void benchmark_random_access_rngs() {
-	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};
+	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data;
 	for (auto & i : data.as64) i = rng.raw64();
@@ -189,7 +187,7 @@ void benchmark_random_access_rngs() {
 	POLYPERF(sha2_based)
 }
 void benchmark_entropy_pool_input() {
-	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1};
+	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data;
 	for (auto & i : data.as64) i = rng.raw64();

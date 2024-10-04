@@ -583,10 +583,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				Uint32 xlcg32of64_varqual::raw32() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					state = (state ^ X) * M;
 					return Uint32(state >> outshift);
 				}
@@ -599,10 +597,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint16 xlcg16of64_varqual::raw16() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					state = (state ^ X) * M;
 					return Uint16(state >> outshift);
 				}
@@ -615,10 +611,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint8 xlcg8of64_varqual::raw8() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					state = (state ^ X) * M;
 					return Uint8(state >> outshift);
 				}
@@ -631,10 +625,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint32 xlcg32of128_varqual::raw32() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					Uint64 a = Uint32(low) * Uint64(M);
 					Uint64 b = (low >> 32) * Uint64(M);
 					low = a + (b << 32);
@@ -654,10 +646,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(low); walker->handle(high);
 				}
 				Uint16 xlcg16of128_varqual::raw16() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					Uint64 a = Uint32(low) * Uint64(M);
 					Uint64 b = (low >> 32) * Uint64(M);
 					low = a + (b << 32);
@@ -677,10 +667,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(low); walker->handle(high);
 				}
 				Uint8 xlcg8of128_varqual::raw8() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					Uint64 a = Uint32(low) * Uint64(M);
 					Uint64 b = (low >> 32) * Uint64(M);
 					low = a + (b << 32);
@@ -701,10 +689,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				Uint32 cxlcg32of96_varqual::raw32() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					lcg1 = (lcg1 ^ X) * M;
 					Uint64 tmp = lcg2 * Uint64(1579544716);
 					lcg2 = Uint32(tmp & 0x7FffFFff) + Uint32(tmp >> 33) + 1;
@@ -720,10 +706,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!lcg2) lcg2 = 1;
 				}
 				Uint16 cxlcg16of96_varqual::raw16() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					lcg1 = (lcg1 ^ X) * M;
 					Uint64 tmp = lcg2 * Uint64(1579544716);
 					lcg2 = Uint32(tmp & 0x7FffFFff) + Uint32(tmp >> 33) + 1;
@@ -739,10 +723,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!lcg2) lcg2 = 1;
 				}
 				Uint8 cxlcg8of96_varqual::raw8() {
-					enum {
-						X = 0xC74EAD55,//must end in 5 or D
-						M = 0x947E3DB3,//must end in 3 or B
-					};
+					constexpr int X = 0xC74EAD55; //must end in 5 or D
+					constexpr int M = 0x947E3DB3; //must end in 3 or B
 					lcg1 = (lcg1 ^ X) * M;
 					Uint64 tmp = lcg2 * Uint64(1579544716);
 					lcg2 = Uint32(tmp & 0x7FffFFff) + Uint32(tmp >> 33) + 1;

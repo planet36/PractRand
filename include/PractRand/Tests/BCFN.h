@@ -15,7 +15,7 @@ namespace PractRand::Tests {
 		*/
 		class BCFN final : public TestBaseclass {
 		protected:
-			enum { LEVELS = 32 };
+			static constexpr int LEVELS = 32;
 			VariableSizeCount<Uint16> counts[LEVELS];
 			long mask[LEVELS];
 			long cur[LEVELS];
@@ -41,7 +41,7 @@ namespace PractRand::Tests {
 		};
 		class BCFN_FF final : public TestBaseclass {
 		protected:
-			enum { LEVELS = 32 };
+			static constexpr int LEVELS = 32;
 			VariableSizeCount<Uint16> counts[LEVELS];
 			//long mask[LEVELS];
 			unsigned long mask;
@@ -50,7 +50,7 @@ namespace PractRand::Tests {
 			long leftovers[LEVELS];// <4 is never used? <10 not really needed?
 			long warmup[LEVELS];   // <4 is never used?
 
-			enum {COUNTS2_SIZE=256};//review the optimizations near the end of test_blocks() before reducing this value
+			static constexpr int COUNTS2_SIZE = 256;//review the optimizations near the end of test_blocks() before reducing this value
 			Uint64 counts2[LEVELS][COUNTS2_SIZE];
 			std::vector<Sint32> extreme_counts2[LEVELS];// <= 1 in a hundred million events
 			long shifts[LEVELS];

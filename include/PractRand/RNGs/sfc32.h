@@ -8,11 +8,9 @@ namespace PractRand::RNGs {
 			//implemented in RNGs/sfc.cpp
 			class sfc32 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 32,
-					FLAGS = FLAG::ENDIAN_SAFE | FLAG::USES_SPECIFIED
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 32;
+				static constexpr int FLAGS = FLAG::ENDIAN_SAFE | FLAG::USES_SPECIFIED;
 			protected:
 				Uint32 a, b, c, counter;
 			public:

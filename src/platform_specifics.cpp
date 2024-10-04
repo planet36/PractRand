@@ -40,8 +40,9 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 	//the intention is for "millisecond" to be an amount of time that this function is permitted to spend on obtaining entropy
 	//but currently nothing that spends time in a controlled fashion is implemented, so it's meaningless
 
-	enum {DESIRED_BITS = 256};
-	enum {N32 = (DESIRED_BITS+31)/32, N64 = (DESIRED_BITS+63)/64};
+	constexpr int DESIRED_BITS = 256;
+	//constexpr int N32 = (DESIRED_BITS+31)/32;
+	constexpr int N64 = (DESIRED_BITS+63)/64;
 
 #if (defined _WIN32) && 0 // DISABLED
 	{//win32 crypto PRNG, simple interface
@@ -175,7 +176,8 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 			);
 			if (r != ERROR_SUCCESS) continue;
 			//printf("%s\n", (d==REG_CREATED_NEW_KEY) ? "failed to find key, creating" : "found key");
-			enum {TARGET_SIZE = 128, BUFFER_SIZE=512};
+			constexpr int TARGET_SIZE = 128;
+			constexpr int BUFFER_SIZE = 512;
 			Uint8 buffer[BUFFER_SIZE];
 			DWORD size = BUFFER_SIZE;
 			DWORD type;

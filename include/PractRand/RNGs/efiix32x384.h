@@ -8,17 +8,13 @@ namespace PractRand {
 		namespace Raw {
 			class efiix32x48 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 32,
-					FLAGS = FLAG::USES_SPECIFIED | FLAG::USES_INDIRECTION | FLAG::USES_CYCLIC_BUFFER | FLAG::ENDIAN_SAFE
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 32;
+				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::USES_INDIRECTION | FLAG::USES_CYCLIC_BUFFER | FLAG::ENDIAN_SAFE;
 			protected:
 				typedef Uint32 Word;
-				enum {
-					ITERATION_SIZE = 32,
-					INDIRECTION_SIZE = 16
-				};
+				static constexpr int ITERATION_SIZE = 32;
+				static constexpr int INDIRECTION_SIZE = 16;
 				Word iteration_table[ITERATION_SIZE], indirection_table[INDIRECTION_SIZE];
 				Word i, a, b, c;
 			public:

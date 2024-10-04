@@ -31,7 +31,10 @@ std::string PractRand::RNGs::Polymorphic::sfc16::get_name() const {return "sfc16
 
 //raw:
 Uint16 PractRand::RNGs::Raw::sfc16::raw16() {
-	enum {BARREL_SHIFT = 6, RSHIFT = 5, LSHIFT = 3};//good sets include {4,3,2},{6,5,2},{4,5,3},{6,5,3},{7,5,3}; older versions used {7,3,2}
+	//good sets include {4,3,2},{6,5,2},{4,5,3},{6,5,3},{7,5,3}; older versions used {7,3,2}
+	constexpr int BARREL_SHIFT = 6;
+	constexpr int RSHIFT = 5;
+	constexpr int LSHIFT = 3;
 	Uint16 tmp = a + b + counter++;//49 / 8:30+ / 7:35 / 6:27 / 5:17
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
@@ -76,7 +79,10 @@ void PractRand::RNGs::Raw::sfc16::walk_state(StateWalkingObject *walker) {
 	walker->handle(counter);
 }
 Uint32 PractRand::RNGs::Raw::sfc32::raw32() {
-	enum {BARREL_SHIFT = 21, RSHIFT = 9, LSHIFT = 3};//good sets include {21,9,3},{15,8,3}; older versions used {25,8,3} which wasn't as good
+	//good sets include {21,9,3},{15,8,3}; older versions used {25,8,3} which wasn't as good
+	constexpr int BARREL_SHIFT = 21;
+	constexpr int RSHIFT = 9;
+	constexpr int LSHIFT = 3;
 	Uint32 tmp = a + b + counter++;
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
@@ -111,7 +117,10 @@ void PractRand::RNGs::Raw::sfc32::walk_state(StateWalkingObject *walker) {
 	walker->handle(counter);
 }
 Uint64 PractRand::RNGs::Raw::sfc64::raw64() {
-	enum {BARREL_SHIFT = 24, RSHIFT = 11, LSHIFT = 3};//good sets include {24,11,3},{25,12,3},{},{} ; older versions used {25,12,3}, which is decent
+	//good sets include {24,11,3},{25,12,3},{},{} ; older versions used {25,12,3}, which is decent
+	constexpr int BARREL_SHIFT = 24;
+	constexpr int RSHIFT = 11;
+	constexpr int LSHIFT = 3;
 	Uint64 tmp = a + b + counter++;
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);

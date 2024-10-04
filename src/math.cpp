@@ -1284,7 +1284,7 @@ namespace PractRand {
 
 			//trying to minimize sweeps through memory... but not minimize actual math
 			//(minimizing math costs too much)
-			enum {STEP=24};//rows at once
+			constexpr int STEP = 24;//rows at once
 			//--: 306, 4: 263, 8: 249, 16: 246, 64: 239, 256: 237
 			//with "shortened" added it's now... 1: 241, 4: 205, 8: 199, 16: 197, 24: 188, 256: 183
 			int last_ranks_found = 0;

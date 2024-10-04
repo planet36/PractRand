@@ -14,7 +14,7 @@ namespace Threading {
 	class Lock {
 		//implementation details hidden (by ugly methods)
 		//in order to avoid platform-specific include files here
-		enum {MAX_IMPL_SIZE=64};//make sure this is large enough to hold whatever the real implementation is
+		static constexpr int MAX_IMPL_SIZE = 64;//make sure this is large enough to hold whatever the real implementation is
 		union {
 			char impl_data[MAX_IMPL_SIZE];
 			long long aligned_data;//to force a reasonable alignment

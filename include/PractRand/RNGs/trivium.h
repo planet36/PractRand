@@ -8,11 +8,9 @@ namespace PractRand::RNGs {
 			//implemented in RNGs/trivium.cpp
 			class trivium {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 64,
-					FLAGS = FLAG::ENDIAN_SAFE | FLAG::CRYPTOGRAPHIC_SECURITY | FLAG::USES_SPECIFIED
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 64;
+				static constexpr int FLAGS = FLAG::ENDIAN_SAFE | FLAG::CRYPTOGRAPHIC_SECURITY | FLAG::USES_SPECIFIED;
 			protected:
 				Uint64 a[2], b[2], c[2];
 			public:

@@ -902,7 +902,7 @@ int main(int argc, char **argv) {
 	double time_passed = 0;
 	while (true) {
 		Uint64 blocks_to_test = next_power_of_2 - blocks_tested;
-		enum {MAX_BLOCKS = 256 * 1024};
+		constexpr int MAX_BLOCKS = 256 * 1024;
 		if (blocks_to_test > MAX_BLOCKS) blocks_to_test = MAX_BLOCKS;
 		while (!show_datas.empty()) {
 			Uint64 data_checkpoint = show_datas.begin()->first - blocks_tested;

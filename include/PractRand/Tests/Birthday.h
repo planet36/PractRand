@@ -112,10 +112,8 @@ namespace PractRand::Tests {
 			// generally, the buffer size is aimed to have a lambda value of about 1 when using all 64 bits
 			// multiple tests are combined by simply adding their observed duplicated and expected duplicates
 			// currently undecided on whether or not early use of the buffer will suppress some bits or not
-			enum {
-				BUFSIZE_L2 = 22,
-				BUFSIZE = 1 << BUFSIZE_L2
-			};
+			static constexpr int BUFSIZE_L2 = 22;
+			static constexpr int BUFSIZE = 1 << BUFSIZE_L2;
 			Uint64 buffer[BUFSIZE];
 			Uint64 elements_buffered;
 			Uint64 num_sorted; // this many elements in the buffer are already sorted, starting at the beginning, potentially allowing optimization to the final sorting of its contents

@@ -11,7 +11,7 @@ namespace PractRand::RNGs::Adaptors {
 
 			template<class base_rng> class NORMALIZE;
 			template<class base_rng> class _NORMALIZE_OUTPUT;
-		//	template<class base_rng> class _TEMPLATIZE_OUTPUT;
+			//template<class base_rng> class _TEMPLATIZE_OUTPUT;
 			template<class base_rng> class _NORMALIZE_SEEDING;
 			template<class base_rng> class _NORMALIZE_DISTRIBUTIONS;
 
@@ -22,7 +22,7 @@ namespace PractRand::RNGs::Adaptors {
 				template<class base_rng> class ADAPT_SEEDING<base_rng,true> : public base_rng {
 				public:
 					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
-//						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
+					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					typedef base_rng base_rng_type;
 					void seed     (Uint64 seed) {StateWalkingObject *walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
 					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
@@ -31,7 +31,7 @@ namespace PractRand::RNGs::Adaptors {
 				template<class base_rng> class ADAPT_SEEDING<base_rng,false> : public base_rng {
 				public:
 					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
-//						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
+					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					typedef base_rng base_rng_type;
 					using base_rng :: seed;
 					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
@@ -41,8 +41,8 @@ namespace PractRand::RNGs::Adaptors {
 
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 8> : public base_rng {
 				public:
-					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
-//						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
+					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
+					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					typedef base_rng base_rng_type;
 					Uint16 raw16() {return this->raw8()  + (static_cast<Uint16>(this->raw8()) <<  8);}
 					Uint32 raw32() {return raw16() + (static_cast<Uint32>(raw16()) << 16);}
@@ -50,8 +50,8 @@ namespace PractRand::RNGs::Adaptors {
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 16> : public base_rng {
 				public:
-					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
-//						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
+					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
+					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					typedef base_rng base_rng_type;
 					Uint8  raw8()  {return static_cast<Uint8>(this->raw16());}
 					Uint32 raw32() {return this->raw16() + (static_cast<Uint32>(this->raw16()) << 16);}
@@ -59,8 +59,8 @@ namespace PractRand::RNGs::Adaptors {
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 32> : public base_rng {
 				public:
-					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
-//						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
+					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
+					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					typedef base_rng base_rng_type;
 					Uint8  raw8()  {return static_cast<Uint8>(this->raw32());}
 					Uint16 raw16() {return static_cast<Uint16>(this->raw32());}
@@ -68,8 +68,8 @@ namespace PractRand::RNGs::Adaptors {
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 64> : public base_rng {
 				public:
-					enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL};
-//						enum {RNG_WRAPPER_LEVEL=base_rng::RNG_WRAPPER_LEVEL+1};
+					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
+					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					typedef base_rng base_rng_type;
 					Uint8  raw8()  {return static_cast<Uint8>(this->raw64());}
 					Uint16 raw16() {return static_cast<Uint16>(this->raw64());}
@@ -87,7 +87,7 @@ namespace PractRand::RNGs::Adaptors {
 
 				template<class base_rng> class ADD_DISTRIBUTIONS : public base_rng {
 				public:
-//						enum {DISTRIBUTIONS_TYPE = DISTRIBUTIONS_TYPE__NORMAL};
+					//static constexpr int DISTRIBUTIONS_TYPE = DISTRIBUTIONS_TYPE__NORMAL;
 					Uint32 randi ( Uint32 max ) {
 						Uint32 mask, tmp;
 						max -= 1;

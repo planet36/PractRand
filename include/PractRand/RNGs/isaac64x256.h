@@ -7,16 +7,12 @@ namespace PractRand::RNGs {
 		namespace Raw {
 			class isaac64x256 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 64,
-					FLAGS = FLAG::CRYPTOGRAPHIC_SECURITY | FLAG::OUTPUT_IS_BUFFERED | FLAG::ENDIAN_SAFE
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 64;
+				static constexpr int FLAGS = FLAG::CRYPTOGRAPHIC_SECURITY | FLAG::OUTPUT_IS_BUFFERED | FLAG::ENDIAN_SAFE;
 			protected:
-				enum {
-					SIZE_L2 = 8,
-					SIZE = 1 << SIZE_L2
-				};
+				static constexpr int SIZE_L2 = 8;
+				static constexpr int SIZE = 1 << SIZE_L2;
 				Uint64 results[SIZE];
 				Uint64 state[SIZE];
 				Uint64 a, b, c;

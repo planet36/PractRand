@@ -3,10 +3,8 @@
 namespace PractRand::Tests {
 		class FPF final : public TestBaseclass {
 		protected:
-			enum {
-				MAX_SIG_BITS = 16,
-//				DIRECTION = 0 //0 = low to high, 1 = high to low
-			};
+			static constexpr int MAX_SIG_BITS = 16;
+			//static constexpr int DIRECTION = 0; // 0 = low to high, 1 = high to low
 			//static unsigned long count_leading_zeroes32( Uint32 value );
 			const int sig_bits, exp_bits;
 			const int stride_bits_L2;

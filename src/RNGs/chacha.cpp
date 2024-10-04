@@ -30,8 +30,11 @@ top row is constants
 3rd row is the rest of the seed (for long seeds) or a duplicate of the seed (for short seeds)
 4th row is the position & initialization vector
 */
-enum { POS_INDEX0 = 12 - 4, POS_INDEX1 = 13 - 4, IV_INDEX0 = 14 - 4, IV_INDEX1 = 15 - 4 };
-enum { POSITION_OVERFLOW_INDEX = 0};
+constexpr int POS_INDEX0 = 12 - 4;
+constexpr int POS_INDEX1 = 13 - 4;
+constexpr int IV_INDEX0 = 14 - 4;
+constexpr int IV_INDEX1 = 15 - 4;
+constexpr int POSITION_OVERFLOW_INDEX = 0;
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(chacha)

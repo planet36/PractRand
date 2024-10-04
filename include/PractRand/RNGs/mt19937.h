@@ -7,13 +7,12 @@ namespace PractRand::RNGs {
 		namespace Raw {
 			class mt19937 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 32,
-					FLAGS = FLAG::OUTPUT_IS_BUFFERED | FLAG::OUTPUT_IS_HASHED | FLAG::ENDIAN_SAFE
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 32;
+				static constexpr int FLAGS = FLAG::OUTPUT_IS_BUFFERED | FLAG::OUTPUT_IS_HASHED | FLAG::ENDIAN_SAFE;
 			protected:
-				enum {ARRAY_SIZE=624, OFFSET=397};
+				static constexpr int ARRAY_SIZE = 624;
+				static constexpr int OFFSET = 397;
 				Uint32 state[ARRAY_SIZE];
 				Uint32 used;
 				void _advance_state();

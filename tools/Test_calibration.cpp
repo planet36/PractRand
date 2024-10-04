@@ -360,9 +360,9 @@ void blah_fpf() {
 
 void set_shift_values(int shift1, int shift2, int shift3);
 struct CharPoly {
-	enum { WORDS = 3 };
+	static constexpr int WORDS = 3;
 	typedef Uint16 Word;
-	enum { BITS = sizeof(Word) * 8 };
+	static constexpr int BITS = sizeof(Word) * 8;
 	Word data[WORDS];
 
 	void zero() { std::memset(data, 0, WORDS * sizeof(Word)); }
@@ -388,12 +388,13 @@ CharPoly mulx(const CharPoly &mod, const CharPoly &a) {
 	return rv;
 }
 void blah_rarns_search_shifts() {
-	enum {
-		BITS = 16,
-		MIN_SHIFT1 = 0, MAX_SHIFT1 = BITS-1,
-		MIN_SHIFT2 = 0, MAX_SHIFT2 = BITS-1,
-		MIN_SHIFT3 = 0, MAX_SHIFT3 = BITS-1,
-	};
+	constexpr int BITS = 16;
+	constexpr int MIN_SHIFT1 = 0;
+	constexpr int MAX_SHIFT1 = BITS-1;
+	constexpr int MIN_SHIFT2 = 0;
+	constexpr int MAX_SHIFT2 = BITS-1;
+	constexpr int MIN_SHIFT3 = 0;
+	constexpr int MAX_SHIFT3 = BITS-1;
 	int shift1 = MIN_SHIFT1, shift2 = MIN_SHIFT2, shift3 = MIN_SHIFT3;
 	while (true) {
 		PractRand::RNGs::Raw::rarns16 rarns;
@@ -455,7 +456,7 @@ void find_test_distributions() {
 	Uint64 next_checkpoint = 1;
 	for (Uint64 n = 0; n <= 1ull<<30; n++) {
 		if (n == next_checkpoint) {
-			enum {CHUNKY = 1 << 12};
+			constexpr int CHUNKY = 1 << 12;
 			if (next_checkpoint < CHUNKY) next_checkpoint <<= 1; else next_checkpoint += CHUNKY;
 			std::printf("\n\n\n\n");
 			std::printf("==================================================\n");
@@ -574,11 +575,11 @@ static void calibrate_set_uniformity(SampleSet *calib, int n, PractRand::RNGs::v
 	calib->_normalize();
 }
 static void simple_chisquare_test( PractRand::RNGs::vRNG *known_good ) {
-	enum {SIZE = 1<<4};
+	constexpr int SIZE = 1<<4;
 	Uint64 counts[SIZE];
 	double probs[SIZE];
 	SampleSet ssA, ssB;
-	enum {N = 8};
+	constexpr int N = 8;
 	for (int x = 0; x < SIZE; x++) probs[x] = 1.0 / SIZE;
 	for (int i = 0; i < N; i++) {
 		for (int x = 0; x < SIZE; x++) counts[x] = 0;
@@ -624,7 +625,7 @@ void verify_test_distributions() {
 		if (n == next_checkpoint) {
 			SampleSet calib;
 			calibrate_set_uniformity(&calib, n, &known_good);
-			enum {CHUNKY = 1 << 8};
+			constexpr int CHUNKY = 1 << 8;
 			if (next_checkpoint < CHUNKY) next_checkpoint <<= 1; else next_checkpoint += CHUNKY;
 			std::printf("\n\n\n\n");
 			std::printf("==================================================\n");
@@ -733,7 +734,7 @@ double find_ziggurat_point(double old_x, double target_area) {
 	return x;
 }
 
-	enum {TABLE_SIZE=1<<7};
+	constexpr int TABLE_SIZE = 1<<7;
 	static float table_y[TABLE_SIZE-1];
 	static float table_x[TABLE_SIZE-1];
 	static double tail_scale, tail_p, final_stripe_area;
@@ -822,7 +823,7 @@ double generate_gaussian( RNG &rng ) {
 		sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32());
 	return (s - 2040) / 295.6;//*/
 
-	/*enum {NORMTABLE_SIZE=1<<9};
+	/*constexpr int NORMTABLE_SIZE = 1<<9;
 	// 4: 17, 5: 19, 6: 21, 7: 22-23, 8: 24-25, 9: 26-27
 	static float normtable_a[NORMTABLE_SIZE];
 	static float normtable_b[NORMTABLE_SIZE];
@@ -846,7 +847,7 @@ double generate_gaussian( RNG &rng ) {
 	return normtable_a[i] + normtable_b[i] * rng.raw32();//*/
 
 
-	/*enum {NORMTABLE_SIZE=1<<10};
+	/*constexpr int NORMTABLE_SIZE = 1<<10;
 	// 3: 17, 4: 21, 5: 23, 6: 25, 7: 26, 8: 27-28
 	static float normtable_a[NORMTABLE_SIZE-1];
 	static float normtable_b[NORMTABLE_SIZE-1];
@@ -884,10 +885,9 @@ double generate_gaussian( RNG &rng ) {
 	return rv;//*/
 
 
-	/*enum {NORMTABLE_SIZE_L2=7};
-	enum {STRONG=1
-		,  WEAK =3
-	};
+	/*constexpr int NORMTABLE_SIZE_L2 = 7;
+	constexpr int STRONG = 1;
+	constexpr int WEAK = 3;
 	// test A
 	// Strong+Weak, Standards    3      4      5      6      7      8      9      10
 	// 1+0          full         15     17     19     21     22.5   24.5   26.5   ?
@@ -912,7 +912,7 @@ double generate_gaussian( RNG &rng ) {
 	// 1+8          full          23         25         26         27         ?          ?          ?
 	// 8+0          full          ?          ?          25+1       ?          ?          ?          ?
 	// ?+?          full          ?          ?          ?          ?          ?          ?          ?
-	enum {NORMTABLE_SIZE=1<<NORMTABLE_SIZE_L2};
+	constexpr int NORMTABLE_SIZE = 1<<NORMTABLE_SIZE_L2;
 	static double normtable_a[NORMTABLE_SIZE];
 	static double normtable_b[NORMTABLE_SIZE];
 	static double normtable_c[NORMTABLE_SIZE];
@@ -1025,10 +1025,10 @@ void test_normal_distribution_a() {
 		}
 	}
 	if constexpr (true) {
-		enum {TBITS=17};
+		constexpr int TBITS=17;
 		std::vector<Uint64> counts; counts.resize(1<<TBITS, 0);
 		Uint64 total = 0;
-		enum {DISCARD_BITS = 4};
+		constexpr int DISCARD_BITS = 4;
 		const double scale = std::pow(2.0, TBITS*1.0+DISCARD_BITS);
 		const double p_thresh = std::pow(0.5, DISCARD_BITS*1.0);
 		double n_thresh = 999999999999999.0;
@@ -1052,10 +1052,10 @@ void test_normal_distribution_a() {
 }
 
 Uint64 count_period(PractRand::RNGs::vRNG *rng) {
-	enum {BYTES = 32};//must be a power of 2 greater than or equal to 8
+	constexpr int BYTES = 32;//must be a power of 2 greater than or equal to 8
 	if (rng->get_native_output_size() == 8) {
 		typedef Uint8 Word;
-		enum { BUFSIZE = BYTES / sizeof(Word) };
+		constexpr int BUFSIZE = BYTES / sizeof(Word);
 		Word buff1[BUFSIZE];
 		Word buff2[BUFSIZE];
 		rng->autoseed();
@@ -1079,10 +1079,8 @@ Uint64 count_period(PractRand::RNGs::vRNG *rng) {
 
 void test_sfc16() {
 	if constexpr (1) {//search for short cycles
-		enum {
-			BUFFER_SIZE = 16,//plenty to tell if the state matched (6 would probably be enough, but more doesn't hurt)
-			SHORT_CYCLE_L2 = 40,//the log-based-2 of the cycle length we consider "too short"
-		};
+		constexpr int BUFFER_SIZE = 16;//plenty to tell if the state matched (6 would probably be enough, but more doesn't hurt)
+		constexpr int SHORT_CYCLE_L2 = 40;//the log-based-2 of the cycle length we consider "too short"
 		Uint16 buffy[BUFFER_SIZE];
 		PractRand::RNGs::Raw::sfc16 rng;
 		for (Uint64 seed = 0; true; seed++) {

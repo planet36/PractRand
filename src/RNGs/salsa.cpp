@@ -24,10 +24,17 @@ The constants go on the diagonal, everything else fits its way in around that,
 with the position & IV going between the first half of the seed and the second half of the seed.
 If the seed is short then the 2nd half is treated as equal to the first half.
 */
-enum { POS_INDEX0 = 8, POS_INDEX1 = 9, IV_INDEX0 = 6, IV_INDEX1 = 7 };
-enum { SEED_INDEX_A = 1, SEED_INDEX_B = 11 };
-enum { CONST_INDEX_0 = 0, CONST_INDEX_1 = 5, CONST_INDEX_2 = 10, CONST_INDEX_3 = 15 };
-enum { POSITION_OVERFLOW_INDEX = CONST_INDEX_0};
+constexpr int POS_INDEX0 = 8;
+constexpr int POS_INDEX1 = 9;
+constexpr int IV_INDEX0 = 6;
+constexpr int IV_INDEX1 = 7;
+constexpr int SEED_INDEX_A = 1;
+constexpr int SEED_INDEX_B = 11;
+constexpr int CONST_INDEX_0 = 0;
+constexpr int CONST_INDEX_1 = 5;
+constexpr int CONST_INDEX_2 = 10;
+constexpr int CONST_INDEX_3 = 15;
+constexpr int POSITION_OVERFLOW_INDEX = CONST_INDEX_0;
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(salsa)

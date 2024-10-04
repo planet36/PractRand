@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
 	prev_handler = signal(SIGPIPE, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGPIPE has failed." << std::endl; }
 #endif
 
-	enum {BUFFER_SIZE = 8};
+	constexpr int BUFFER_SIZE = 8;
 	//Uint64 buffer[BUFFER_SIZE];
 	PractRand::Tests::TestBlock buffer[BUFFER_SIZE];
 	while (n && !signaled) {

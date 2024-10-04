@@ -34,7 +34,8 @@ namespace PractRand::Tests {
 				Uint32 size;
 				Uint64 time_per;
 				Uint64 total;
-				enum { NUM_COUNTS = 10, MAX_OUTLIERS = 100 };
+				static constexpr int NUM_COUNTS = 10;
+				static constexpr int MAX_OUTLIERS = 100;
 				Uint64 counts[NUM_COUNTS];
 
 				Uint64 outliers_overflow;

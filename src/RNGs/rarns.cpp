@@ -38,12 +38,10 @@ void set_shift_values(int shift1, int shift2, int shift3) {
 	global_s3 = shift3;
 }
 Uint16 PractRand::RNGs::Raw::rarns16::raw16() {
-	enum {
-		S1 = 2,
-		S2 = 1,
-		S3 = 1,
-		OUTROT = 5
-	};
+	//constexpr int S1 = 2;
+	//constexpr int S2 = 1;
+	//constexpr int S3 = 1;
+	constexpr int OUTROT = 5;
 	Uint16 rv = std::rotl(static_cast<uint16_t>(xs1 + xs3), OUTROT);
 	Uint16 old = xs1 >> global_s1;
 	xs3 ^= xs1;
@@ -77,12 +75,10 @@ void PractRand::RNGs::Raw::rarns16::walk_state(StateWalkingObject *walker) {
 }
 
 Uint32 PractRand::RNGs::Raw::rarns32::raw32() {
-	enum {
-		S1 = 13,
-		S2 = 3,
-		S3 = 5,
-		OUTROT = 10
-	};
+	constexpr int S1 = 13;
+	constexpr int S2 = 3;
+	constexpr int S3 = 5;
+	constexpr int OUTROT = 10;
 	Uint32 rv = std::rotl(xs1 + xs3, OUTROT);
 	Uint32 old = xs1 >> S1;
 	xs3 ^= xs1;
@@ -112,12 +108,10 @@ void PractRand::RNGs::Raw::rarns32::walk_state(StateWalkingObject *walker) {
 	if (!(xs1 | xs2 | xs3)) xs1 = 1;
 }
 Uint64 PractRand::RNGs::Raw::rarns64::raw64() {
-	enum {
-		S1 = 13,
-		S2 = 3,
-		S3 = 5,
-		OUTROT = 21
-	};
+	constexpr int S1 = 13;
+	constexpr int S2 = 3;
+	constexpr int S3 = 5;
+	constexpr int OUTROT = 21;
 	Uint64 rv = std::rotl(xs1 + xs3, OUTROT);
 	Uint64 old = xs1 >> S1;
 	xs3 ^= xs1;

@@ -630,11 +630,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 fibmulmix16::raw16() {
 					if (position) return buffer[--position];
 					Uint16 prev = buffer[LAG1 - 1];
-					enum {
-						SH1  = 0
-						,SH2 = 0
-						,SH3 = 5
-					};
+					constexpr int SH1  = 0;
+					constexpr int SH2 = 0;
+					constexpr int SH3 = 5;
 					for (unsigned long i = 0; i < LAG2; i++) {
 						Uint16 a = buffer[i + LAG1 - LAG1];
 						Uint16 b = buffer[i + LAG1 - LAG2];

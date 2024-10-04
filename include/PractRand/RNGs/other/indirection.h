@@ -108,7 +108,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					~isaac16_varqual() override;
 				};
 				class efiix8_varqual : public vRNG8 {
-					enum {SHIFT_AMOUNT=2};
+					static constexpr int SHIFT_AMOUNT = 2;
 					//average cycle length, in bytes: 2**(4 * W - 2), where W=(4 + iteration_table_size + indirection_table_size)
 					int iteration_table_size_m1;
 					int indirection_table_size_m1;

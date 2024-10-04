@@ -161,7 +161,7 @@ namespace PractRand {
 		Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 	};
 	namespace AutoSeeder {
-		enum {POOL_SIZE = 5};
+		constexpr int POOL_SIZE = 5;
 		static bool initialized = false;
 		static bool enough_entropy_found;
 		static Uint64 shared_entropy[POOL_SIZE] = {0};
@@ -250,7 +250,7 @@ namespace PractRand {
 				}
 				else {
 					//what we're supposed to do:
-					enum {B = 20};
+					constexpr int B = 20;
 					Uint8 s[B];
 					for (auto & i : s) i = entropy_pool.raw8();
 					seeder.seed(s, B);

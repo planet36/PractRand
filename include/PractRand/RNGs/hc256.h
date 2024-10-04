@@ -7,13 +7,11 @@ namespace PractRand::RNGs {
 		namespace Raw {
 			class hc256 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 32,
-					FLAGS = FLAG::CRYPTOGRAPHIC_SECURITY | FLAG::OUTPUT_IS_HASHED | FLAG::OUTPUT_IS_BUFFERED | FLAG::ENDIAN_SAFE
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 32;
+				static constexpr int FLAGS = FLAG::CRYPTOGRAPHIC_SECURITY | FLAG::OUTPUT_IS_HASHED | FLAG::OUTPUT_IS_BUFFERED | FLAG::ENDIAN_SAFE;
 			protected:
-				enum { OUTPUT_BUFFER_SIZE=64 };//should be a multiple of 16
+				static constexpr int OUTPUT_BUFFER_SIZE = 64;//should be a multiple of 16
 				Uint32 outbuf[OUTPUT_BUFFER_SIZE];
 				Uint32 used;
 				Uint32 X[16], Y[16];

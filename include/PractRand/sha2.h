@@ -19,7 +19,7 @@ namespace PractRand::Crypto {
 			void endianness_input();
 			void endianness_state();
 		public:
-			enum {RESULT_LENGTH = 64};
+			static constexpr int RESULT_LENGTH = 64;
 			void reset();
 			void handle_input(const Uint8 *input, unsigned long length);
 			void finish(Uint8 destination[RESULT_LENGTH]);

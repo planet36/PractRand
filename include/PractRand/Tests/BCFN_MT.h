@@ -6,7 +6,7 @@ namespace PractRand::Tests {
 
 		/*class BCFTFN : public TestBaseclass {
 		protected:
-			enum {LEVELS = 8};
+			static constexpr int LEVELS = 8;
 			long overlap, tbits, mask;
 			VariableSizeCount<Uint16> counts[LEVELS];
 			long current[LEVELS];
@@ -17,7 +17,12 @@ namespace PractRand::Tests {
 		};
 		class BCFN_MT : public TestBaseclass {
 		protected:
-			enum { LEVELS = 32, THRESHOLDS_L2 = 2, THRESHOLDS=1<<THRESHOLDS_L2, INDEX_SIZE_L2 = 8, INDEX_SIZE = 1 << INDEX_SIZE_L2, TOTAL = THRESHOLDS * LEVELS };
+			static constexpr int LEVELS = 32;
+			static constexpr int THRESHOLDS_L2 = 2;
+			static constexpr int THRESHOLDS = 1 << THRESHOLDS_L2;
+			static constexpr int INDEX_SIZE_L2 = 8;
+			static constexpr int INDEX_SIZE = 1 << INDEX_SIZE_L2;
+			static constexpr int TOTAL = THRESHOLDS * LEVELS;
 
 			VariableSizeCount<Uint16> counts[TOTAL];
 			long cur[TOTAL];

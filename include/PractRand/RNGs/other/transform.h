@@ -185,7 +185,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Discard16to8 : public Transform8 {
 					typedef Uint16 InWord;
 					typedef Uint8 OutWord;
-					enum { INPUT_BITS = sizeof(InWord)* 8 };
+					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
 					void refill();
@@ -197,7 +197,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Discard32to8 : public Transform8 {
 					typedef Uint32 InWord;
 					typedef Uint8 OutWord;
-					enum { INPUT_BITS = sizeof(InWord)* 8 };
+					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
 					void refill();
@@ -209,7 +209,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Discard64to8 : public Transform8 {
 					typedef Uint64 InWord;
 					typedef Uint8 OutWord;
-					enum { INPUT_BITS = sizeof(InWord)* 8 };
+					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
 					void refill();
@@ -221,7 +221,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Discard32to16 : public Transform16 {
 					typedef Uint32 InWord;
 					typedef Uint16 OutWord;
-					enum { INPUT_BITS = sizeof(InWord)* 8 };
+					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
 					void refill();
@@ -233,7 +233,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Discard64to16 : public Transform16 {
 					typedef Uint64 InWord;
 					typedef Uint16 OutWord;
-					enum { INPUT_BITS = sizeof(InWord)* 8 };
+					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
 					void refill();
@@ -245,7 +245,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Discard64to32 : public Transform32 {
 					typedef Uint64 InWord;
 					typedef Uint32 OutWord;
-					enum { INPUT_BITS = sizeof(InWord)* 8 };
+					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
 					void refill();

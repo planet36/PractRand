@@ -25,12 +25,10 @@ namespace PractRand {
 		// 2. serialization (serialize, deserialize, measure state size)
 		// 3. avalanche style testing (measure state size / props, tweak bits in state, etc)
 		// 4. ???
-		enum {
-			FLAG_READ_ONLY = 1, // does not make changes
-			FLAG_WRITE_ONLY = 2,// result does not depend upon prior state
-			FLAG_CLUMSY = 4,    // may violate invariants (if also FLAG_READ_ONLY then only wants to see state visible to clumsy writers)
-			FLAG_SEEDER = 8,    // some RNGs may have extra invariants enforced only on seeded states (minimum distance away from other seeded states on cycle)
-		};
+		static constexpr int FLAG_READ_ONLY = 1; // does not make changes
+		static constexpr int FLAG_WRITE_ONLY = 2;// result does not depend upon prior state
+		static constexpr int FLAG_CLUMSY = 4;    // may violate invariants (if also FLAG_READ_ONLY then only wants to see state visible to clumsy writers)
+		static constexpr int FLAG_SEEDER = 8;    // some RNGs may have extra invariants enforced only on seeded states (minimum distance away from other seeded states on cycle)
 		virtual Uint32 get_properties() const = 0;
 		bool is_read_only() const { return (get_properties() & FLAG_READ_ONLY) ? true : false; }
 		bool is_write_only() const { return (get_properties() & FLAG_WRITE_ONLY) ? true : false; }
@@ -67,7 +65,9 @@ namespace PractRand {
 	StateWalkingObject *get_autoseeder(const void *);//must be deleted after use
 }
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_H(RNG) public:\
-		enum {OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL,OUTPUT_BITS = Raw:: RNG ::OUTPUT_BITS,FLAGS = Raw:: RNG ::FLAGS};\
+		static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;\
+		static constexpr int OUTPUT_BITS = Raw:: RNG ::OUTPUT_BITS;\
+		static constexpr int FLAGS = Raw:: RNG ::FLAGS;\
 		Raw:: RNG implementation;\
 		RNG (Uint64 s) {seed(s);}\
 		RNG (vRNG *seeder) {seed(seeder);}\

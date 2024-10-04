@@ -91,7 +91,8 @@ For #3, sfc_alternative looks better than the current sfc.
 class polymorphic_ ## rng ## bits final : public PractRand::RNGs::vRNG ## bits {\
 public:\
 	typedef raw_ ## rng ## bits ImplementationType;\
-	enum {OUTPUT_BITS = ImplementationType ::OUTPUT_BITS,FLAGS = ImplementationType ::FLAGS};\
+	static constexpr int OUTPUT_BITS = ImplementationType ::OUTPUT_BITS;\
+	static constexpr int FLAGS = ImplementationType ::FLAGS;\
 	polymorphic_ ## rng ## bits (PractRand::SEED_NONE_TYPE) {}\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
 	polymorphic_ ## rng ## bits (Uint64 seed_value) {seed(seed_value);}\
@@ -104,7 +105,8 @@ public:\
 class polymorphic_ ## rng ## bits final : public PractRand::RNGs::vRNG ## bits {\
 public:\
 	typedef raw_ ## rng ## bits ImplementationType;\
-	enum {OUTPUT_BITS = ImplementationType ::OUTPUT_BITS,FLAGS = ImplementationType ::FLAGS};\
+	static constexpr int OUTPUT_BITS = ImplementationType ::OUTPUT_BITS;\
+	static constexpr int FLAGS = ImplementationType ::FLAGS;\
 	ImplementationType implementation; \
 	polymorphic_ ## rng ## bits(PractRand::SEED_NONE_TYPE) {}\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
@@ -119,11 +121,9 @@ public:\
 template<typename Word, int LAG1, int LAG2, int SHIFT1, int SHIFT2, int SHIFT3>
 class RanrotVariant {
 public:
-	enum {
-		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
-		OUTPUT_BITS = 8 * sizeof(Word),
-		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
-	};
+	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
+	static constexpr int OUTPUT_BITS = 8 * sizeof(Word);
+	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 	Word buffer[LAG1], position, counter1, counter2, extra;
 	Word step( Word newest, Word oldest, Word middle ) {
 		/*newest ^= middle + (middle << 3);
@@ -174,11 +174,9 @@ POLYMORPHIC_CANDIDATE(ranrot_variant,  8)
 template<typename Word, int ROTATE, int RSHIFT, int LSHIFT>
 class VeryFast {
 public:
-	enum {
-		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
-		OUTPUT_BITS = 8 * sizeof(Word),
-		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
-	};
+	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
+	static constexpr int OUTPUT_BITS = 8 * sizeof(Word);
+	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 	Word a, b, c;
 	Word table[256];
 	VeryFast() {
@@ -280,11 +278,9 @@ POLYMORPHIC_CANDIDATE(VeryFast,  8)
 template<typename Word, int SHIFT1, int SHIFT2, int SHIFT3>
 class _sfc_alternative {
 public:
-	enum {
-		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
-		OUTPUT_BITS = 8 * sizeof(Word),
-		FLAGS = 0//PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
-	};
+	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
+	static constexpr int OUTPUT_BITS = 8 * sizeof(Word);
+	static constexpr int FLAGS = 0; //PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
 	Word a, b, c, d, counter, counter2;
 	static Word nluf(Word value) {
 		value *= 9;//15;
@@ -375,7 +371,7 @@ public:
 
 
 		//VERY good speed, 16 bit version failed @ 256 GB (2 GB w/o counter), 32 bit @ ?
-		/*enum { SHIFT = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 11 : -1)) };//43, 11, 9
+		/*constexpr int SHIFT = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 11 : -1));//43, 11, 9
 		a += b; b -= c;
 		c += a; a ^= counter++;
 		c = std::rotl(c, SHIFT);//*/
@@ -391,8 +387,8 @@ public:
 		return result;//*/
 
 		//??? speed, 16 bit version failed @ ? GB (16 GB w/o counter), 32 bit @ ?
-		//enum { _SHIFT1 = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 10 : -1)) };
-		//enum { _SHIFT2 = (OUTPUT_BITS == 64) ? 25 : ((OUTPUT_BITS == 32) ?  9 : ((OUTPUT_BITS == 16) ?  7 : -1)) };
+		//constexpr int _SHIFT1 = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 10 : -1));
+		//constexpr int _SHIFT2 = (OUTPUT_BITS == 64) ? 25 : ((OUTPUT_BITS == 32) ?  9 : ((OUTPUT_BITS == 16) ?  7 : -1));
 
 
 		//a += b; b -= c;
@@ -404,8 +400,8 @@ public:
 
 		//VERY good speed, 16 bit version failed @ 16 TB (1 TB w/o counter), 32 bit @ > 4 TB w/o counter ; 16 bit version passes gjrand --huge (--??? w/o counter
 		/*
-		enum { SH1 = (OUTPUT_BITS == 64) ? 48 : ((OUTPUT_BITS == 32) ? 14 : ((OUTPUT_BITS == 16) ? 9 : ((OUTPUT_BITS == 8) ? 5 : -1))) };
-		enum { SH2 = (OUTPUT_BITS == 64) ?  3 : ((OUTPUT_BITS == 32) ?  3 : ((OUTPUT_BITS == 16) ? 3 : ((OUTPUT_BITS == 8) ? 2 : -1))) };// using LEA on x86
+		constexpr int SH1 = (OUTPUT_BITS == 64) ? 48 : ((OUTPUT_BITS == 32) ? 14 : ((OUTPUT_BITS == 16) ? 9 : ((OUTPUT_BITS == 8) ? 5 : -1)));
+		constexpr int SH2 = (OUTPUT_BITS == 64) ?  3 : ((OUTPUT_BITS == 32) ?  3 : ((OUTPUT_BITS == 16) ? 3 : ((OUTPUT_BITS == 8) ? 2 : -1)));// using LEA on x86
 		a += b; b -= c;
 		c += a; //a ^= counter++;
 		c = std::rotl(c, SH1);//cb  with count: ?, 14, 9, ?  ; w/o count: 16, 8, 9, ?
@@ -478,7 +474,8 @@ public:
 		//		sum:64nc:19..24					195				194							191												.
 		return a;
 	}
-	void _seed(Uint64 s) {enum { SEEDING_ROUNDS = (OUTPUT_BITS == 64) ? 24 : ((OUTPUT_BITS == 32) ? 24 : ((OUTPUT_BITS == 16) ? 16 : ((OUTPUT_BITS == 8) ? 12 : -1))) };
+	void _seed(Uint64 s) {
+		constexpr int SEEDING_ROUNDS = (OUTPUT_BITS == 64) ? 24 : ((OUTPUT_BITS == 32) ? 24 : ((OUTPUT_BITS == 16) ? 16 : ((OUTPUT_BITS == 8) ? 12 : -1)));
 		//16 bit: 9/10/12/16
 		//32 bit: 15/18/21/24
 		//64 bit: ?
@@ -521,11 +518,9 @@ class _mcx {
 	Uint32 lfsr_0, lfsr_1, lfsr_01;
 	Uint32 cycle;
 public:
-	enum {
-		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
-		OUTPUT_BITS = sizeof(Word) * 8,
-		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
-	};
+	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
+	static constexpr int OUTPUT_BITS = sizeof(Word) * 8;
+	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 	Word lfsr(Word n, Word m) {return (n >> 1) ^ (-(n & 1) & m);}
 	Word _raw_native() {
 		Uint32 save = state_0 ^ (state_0 << 13);
@@ -654,11 +649,9 @@ POLYMORPHIC_CANDIDATE(mcx, 32)
 class raw_siphash {
 public:
 	typedef Uint64 Word;
-	enum {
-		OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1,
-		OUTPUT_BITS = sizeof(Word)* 8,
-		FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING
-	};
+	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
+	static constexpr int OUTPUT_BITS = sizeof(Word)* 8;
+	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 	Word raw64() { return _raw(); }
 		/*
 			for non-cryptographic use, using the most limited round function (double-rounds w/ 5 shifts):
@@ -749,7 +742,7 @@ public:
 	SipHash s;
 	Word _raw() {
 		return s.get_result();
-		//Word c = counter++; enum { X = 1 }; if (c & X) return s.v[c & X]; return s.get_result(c);
+		//Word c = counter++; constexpr int X = 1; if (c & X) return s.v[c & X]; return s.get_result(c);
 		/*PractRand::RNGs::LightWeight::arbee hasher;
 		hasher.add_entropy64(counter++);
 		for (int i = 0; i < 2; i++) hasher.raw64();
@@ -793,7 +786,8 @@ public:
 class polymorphic_siphash final : public PractRand::RNGs::vRNG64 {
 public:
 	typedef raw_siphash ImplementationType;
-	enum { OUTPUT_BITS = ImplementationType::OUTPUT_BITS, FLAGS = ImplementationType::FLAGS };
+	static constexpr int OUTPUT_BITS = ImplementationType::OUTPUT_BITS;
+	static constexpr int FLAGS = ImplementationType::FLAGS;
 	polymorphic_siphash(PractRand::SEED_NONE_TYPE) {}
 	polymorphic_siphash(PractRand::SEED_AUTO_TYPE) { autoseed(); }
 	polymorphic_siphash(Uint64 seed_value) { seed(seed_value); }

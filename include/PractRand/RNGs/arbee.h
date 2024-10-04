@@ -7,11 +7,9 @@ namespace PractRand::RNGs {
 		namespace Raw {
 			class arbee {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL,
-					OUTPUT_BITS = 64,
-					FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
+				static constexpr int OUTPUT_BITS = 64;
+				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION;
 			protected:
 				Uint64 a, b, c, d, i;
 				void mix();
@@ -43,9 +41,7 @@ namespace PractRand::RNGs {
 		namespace Polymorphic {
 			class arbee final : public vRNG64 {
 			public:
-				enum {
-					FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION
-				};
+				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION;
 				Raw::arbee implementation;
 				Uint64 get_flags() const override;
 				std::string get_name() const override;

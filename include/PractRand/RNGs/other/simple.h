@@ -188,7 +188,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//the low quality variant of the FLEA RNG by Robert Jenkins
 				//(he named this variant flea0)
 				class flea32x1 : public vRNG32 {
-					enum {SIZE = 1};
+					static constexpr int SIZE = 1;
 					Uint32 a[SIZE], b, c, d, i;
 				public:
 					Uint32 raw32() override;

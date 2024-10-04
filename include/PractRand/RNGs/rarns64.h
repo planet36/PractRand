@@ -8,11 +8,9 @@ namespace PractRand::RNGs {
 			//implemented in RNGs/rarns.cpp
 			class rarns64 {
 			public:
-				enum {
-					OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1,
-					OUTPUT_BITS = 64,
-					FLAGS = FLAG::ENDIAN_SAFE | FLAG::USES_SPECIFIED
-				};
+				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
+				static constexpr int OUTPUT_BITS = 64;
+				static constexpr int FLAGS = FLAG::ENDIAN_SAFE | FLAG::USES_SPECIFIED;
 			protected:
 				Uint64 xs1, xs2, xs3;
 			public:
