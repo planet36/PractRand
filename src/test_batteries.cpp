@@ -134,7 +134,7 @@ namespace PractRand::Tests::Batteries {
 				return apply_extended_foldings(get_core_tests);
 			}
 			ListOfTests get_expanded_core_tests() {
-				return Tests::ListOfTests(//*
+				return Tests::ListOfTests(
 					//long range linear tests:
 					//new Tests::BCFN(2, 13, false), //	3.4 seconds/GB
 					//new Tests::BCFN(1, 13, false), //	5.8 seconds/GB
@@ -182,7 +182,6 @@ namespace PractRand::Tests::Batteries {
 					//ambiguous to long range tests
 					new Tests::FPMulti(),//				1.3 s/GB on my current system, which seems to be 1.5x to 2x faster than what the other measurements here were made on?
 					new Tests::Gap16(),//				3.4->3.1 s/GB
-//*/
 					//new Tests::NearSeq(),  //			???
 					//new Tests::NearSeq2(),  //			???
 					//new Tests::Coup16(),  //			???

@@ -284,7 +284,7 @@ void fake_fpf_raw(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 sample_le
 			samples_left -= 1024;
 		}
 		long samples_left2 = samples_left;
-		for (long x = 0; x < samples_left2; x++) counts[known_good->raw32() & mask]++;//*/
+		for (long x = 0; x < samples_left2; x++) counts[known_good->raw32() & mask]++;
 		/*counts[0] = sample_length;
 		for (int b = 0; b < tbits; b++) {
 			for (int x = 0; x < (1<<b); x++) {
@@ -293,7 +293,7 @@ void fake_fpf_raw(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 sample_le
 				counts[x] = half;
 				counts[x + (1<<b)] = base-half;
 			}
-		}//*/
+		}*/
 
 		double raw = raw = Tests::g_test_flat(mask+1,&counts[0]);
 		ss_raw._add(Tests::math_chisquared_to_normal(raw, mask));
@@ -544,7 +544,7 @@ void find_test_distributions() {
 					tests.tests[i]->get_results(results);
 					for (int j = 0; j < results.size(); j++) data[results[j].name][new_blocks]._add(results[j].get_raw());
 				}
-			}//*/
+			}
 			if constexpr (true) {
 				Uint64 new_blocks = (1ull << length_L2) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
@@ -740,7 +740,6 @@ double find_ziggurat_point(double old_x, double target_area) {
 	static double tail_scale, tail_p, final_stripe_area;
 template<class RNG>
 double generate_gaussian( RNG &rng ) {
-	//*/
 	//
 	// floats(17+4):   3: 26, 6: 29, 8: 32
 	// doubles(17+4):         6: 30, 8: 32
@@ -802,7 +801,7 @@ double generate_gaussian( RNG &rng ) {
 		double p = rng.randlf();
 		return Tests::math_pvalue_to_normaldist(p);
 	}
-	return 0;//*/
+	return 0;
 
 	/*
 	//17+0:
@@ -817,11 +816,11 @@ double generate_gaussian( RNG &rng ) {
 	while (r > 1.0);
 	double prod = std::sqrt(-2 * std::log(r) / r);
 	return a * prod;
-//	return b * prod;//*/
+//	return b * prod;*/
 
 /*	int s = sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32()) +
 		sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32());
-	return (s - 2040) / 295.6;//*/
+	return (s - 2040) / 295.6;*/
 
 	/*constexpr int NORMTABLE_SIZE = 1<<9;
 	// 4: 17, 5: 19, 6: 21, 7: 22-23, 8: 24-25, 9: 26-27
@@ -844,7 +843,7 @@ double generate_gaussian( RNG &rng ) {
 		inited = true;
 	}
 	int i = rng.raw16() & (NORMTABLE_SIZE-1);
-	return normtable_a[i] + normtable_b[i] * rng.raw32();//*/
+	return normtable_a[i] + normtable_b[i] * rng.raw32();*/
 
 
 	/*constexpr int NORMTABLE_SIZE = 1<<10;
@@ -882,7 +881,7 @@ double generate_gaussian( RNG &rng ) {
 	i = rng.raw16();
 	double rv = normtable_c[i&(NORMTABLE_SIZE-1)] + normtable_d[i&(NORMTABLE_SIZE-1)] * rng.raw32();
 	if (i & 32768) rv = -rv;
-	return rv;//*/
+	return rv;*/
 
 
 	/*constexpr int NORMTABLE_SIZE_L2 = 7;
@@ -988,7 +987,7 @@ double generate_gaussian( RNG &rng ) {
 		//index = rng.raw16() & (NORMTABLE_SIZE-1);
 		rv += normtable_a[index];
 	}
-	return rv;//*/
+	return rv;*/
 
 }
 double generate_gaussian_( PractRand::RNGs::vRNG *rng ) {return generate_gaussian(*rng);}
@@ -1148,7 +1147,7 @@ int main(int argc, char **argv) {
 			Tests::math_pvalue_to_chisquared(ref_p[i], 5),
 			Tests::math_pvalue_to_chisquared(ref_p[i], 6)
 		);
-	}//*/
+	}*/
 
 
 	return 0;

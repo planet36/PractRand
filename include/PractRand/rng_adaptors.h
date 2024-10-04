@@ -37,7 +37,6 @@ namespace PractRand::RNGs::Adaptors {
 					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
 					void autoseed ()            {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
 				};
-//*/
 
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 8> : public base_rng {
 				public:
@@ -145,7 +144,6 @@ namespace PractRand::RNGs::Adaptors {
 				public:typedef base_rng t;
 				};
 
-//*/
 			}//namespace Internal
 
 			template<class base_rng> class _NORMALIZE_SEEDING {

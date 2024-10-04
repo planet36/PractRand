@@ -342,7 +342,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					b = c + indirect;
 					c = old + std::rotl(c, 3);
 					i++;
-					return b ^ iterated;//*/
+					return b ^ iterated;
 
 					//1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ];
@@ -353,7 +353,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b + iterated;
 					b = c ^ indirect;
 					c = old + std::rotl( c, 3 );
-					return b;//*/
+					return b;*/
 
 					//"^b" - 1+1: 38, 1+2: >36
 					//"^a" - 1+1: 38
@@ -365,7 +365,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b + iterated;
 					b = c + indirect;
 					c = old ^ std::rotl( c, 3 );
-					i++; return old;//*/
+					i++; return old;*/
 
 					//1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
@@ -376,7 +376,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b + indirect;
 					b = c + iterated;
 					c = old + std::rotl( c, 3 );
-					return b;//*/
+					return b;*/
 				}
 				void efiix8_varqual::walk_state(StateWalkingObject *walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c); walker->handle(i);
@@ -418,7 +418,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					b = c + indirect;
 					c = old + rotate4(c, 2);
 					i++;
-					return b ^ iterated;//*/
+					return b ^ iterated;
 
 					//8 - 1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ];
@@ -429,7 +429,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b + iterated;
 					b = c ^ indirect;
 					c = old + rotate4( c, 2 );
-					return b;//*/
+					return b;*/
 
 					//8 "^b" - 1+1: 38, 1+2: >36
 					/*
@@ -460,7 +460,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b + iterated;
 					b = c + indirect;
 					c = old ^ rotate4( c, 3 );
-					i++; return old;//*/
+					i++; return old;*/
 
 					//8 - 1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
 					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
@@ -471,7 +471,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b + indirect;
 					b = c + iterated;
 					c = old + rotate4( c, 2 );
-					return b;//*/
+					return b;*/
 				}
 				Uint8 efiix4_varqual::raw8() {
 					Uint8 rv = raw4() & 15; return rv | ((raw4() & 15) << 4);

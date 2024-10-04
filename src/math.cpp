@@ -547,7 +547,6 @@ namespace PractRand {
 			else return 1;
 		}
 		static double math_erfcx(double x) {//scaled complementary error function, may have the wrong scale or otherwise be wonky?
-			//*
 			//found this on stackoverflow, http://stackoverflow.com/questions/34723644/scaled-complementary-error-function-erfcxx-computation-avoiding-arithmetic-o
 			//seems to work well
 
@@ -889,7 +888,7 @@ namespace PractRand {
 					else pdf[i] = std::exp(log_p);
 					cdf[i] = i ? cdf[i-1]+pdf[i] : pdf[i];
 					log_p += std::log(double(num_bits-i) / double(i+1));
-				}//*/
+				}
 			}
 			else {
 				//normal approximation - bad for num_bits < 4096
@@ -901,7 +900,7 @@ namespace PractRand {
 					cdf[i] = math_normaldist_to_pvalue(norm + 0.5 * delta);
 					//pdf[i] = i ? cdf[i] - cdf[i-1] : cdf[i];
 					pdf[i] = math_normaldist_pdf(norm) * delta;
-				}//*/
+				}
 				//calculate from center ; DON'T USE - too much accumulated error on cdf at edges
 				/*double p = calculate_center_bit_combination_chance(num_bits_L2);
 				pdf[n] = p;
@@ -911,7 +910,7 @@ namespace PractRand {
 					p *= r;
 					pdf[i] = p;
 					cdf[i] = cdf[i+1]-pdf[i+1];
-				}//*/
+				}*/
 				// TO DO: test idea: calculate from center near center, from edge far from center
 			}
 		}

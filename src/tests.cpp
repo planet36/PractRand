@@ -2552,7 +2552,6 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult> &results) {
 		}
 	}*/
 }
-//*/
 #endif
 
 
@@ -4955,7 +4954,7 @@ void PractRand::Tests::Birthday64::_histogram_in_place_sort64(Uint64 *base, long
 	/*if (bits_already >= 64 - SORT_HELPER_BITS) {// - no longer applies since bits_already is assumed to be zero
 		std::sort(&base[0], &base[length]);
 		return;
-	}//*/
+	}*/
 	Uint32 region_count[1 << SORT_HELPER_BITS];
 	std::memset(region_count, 0, sizeof(region_count[0])* (1 << SORT_HELPER_BITS));
 	long shift = 64 - SORT_HELPER_BITS;// -bits_already;
@@ -7884,7 +7883,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 	std::printf("total: %.0f    mean: %.7f   dev: %.9f   err: %.9f\n", total, avg, dev, total_error);
 	std::printf("sum_p: %.9f\n", sum_p);
 	std::printf("blocks tested = %.0f GB, print_at = %.0f GB\n", double(blocks_tested >> 20), double(print_at >> 20));
-	std::printf("\n");//*/
+	std::printf("\n");*/
 }
 void PractRand::Tests::DistFreq4::init(PractRand::RNGs::vRNG *known_good) {
 	counts.reset_counts();

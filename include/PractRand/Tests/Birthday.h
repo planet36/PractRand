@@ -175,5 +175,5 @@ namespace PractRand::Tests {
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
-		};//*/
+		};
 }//PractRand

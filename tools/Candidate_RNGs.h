@@ -190,26 +190,26 @@ public:
 		old = a + b;// irreversible, but fast and seems decent enough once the cycle length is long enough
 		a = std::rotl(a, RSHIFT) ^ old;
 		b = std::rotl(b, ROTATE) + old;
-		return old;//*/
+		return old;*/
 		//now based upon alearx:
 		//a ^= std::rotl(b + c, LSHIFT);
 		//b ^= std::rotl(c + (c << 3), RSHIFT);
 		//c ^= a + (a << 3); c = std::rotl(c, ROTATE);
-		//return a;//*/
+		//return a;
 		//good speed, 16 bit version fails @ 32 GB, 32 bit version passed 8 TB
 		/*
 		old = a + b;
 		a = b ^ (b >> RSHIFT);
 		b = c + (c << LSHIFT);
 		c = old + std::rotl(c,ROTATE);// RSHIFT,LSHIFT,ROTATE : 7,3,9 @ 32 bit
-		return old;//*/
+		return old;*/
 		//best quality: 16 bit fails @ 1 TB, but not as fast ;; switching "a += b ^ c;" for "a ^= b + c;" increases that to 2 TB
 		/*
 		old = a + (a << LSHIFT);
 		a += b ^ c;
 		b = c ^ (c >> RSHIFT);
 		c = old + std::rotl(c,ROTATE);
-		return old;//*/
+		return old;*/
 		//faster, simpler, lower quality - just 5-6 ops, very few dependent
 		//16 bit: 64 MB, 32 bit: 32 GB
 		/*
@@ -217,20 +217,19 @@ public:
 		a = c + std::rotl(b,ROTATE);
 		b = c + (c << LSHIFT);
 		c ^= old;
-		return c;//*/
+		return c;*/
 		/*
 		old = a + b;// 6 ops with LEA, 7 with RISC, unfortunately more dependencies thtn desirable, test result:  16 bit: 256 GB
 		a = b + (b << RSHIFT);
 		b = std::rotl(b, LSHIFT) + c;
 		c = std::rotl(c, ROTATE) ^ old;
-		return old;//*/
-		//*
+		return old;*/
 		a += b;// 5 ops on all relevant archs, dependencies aren't too bad; test results:  16 bit: 16 GB, 32 bit: > 4 TB
 		b ^= c;//test results at 16 bit: PractRand std: 16 GB ; gjrand: ----1
 		c += a;//test results at 32 bit: PractRand std: >4 TB ; gjrand: ------
 		b = std::rotl(b, RSHIFT);
 		c = std::rotl(c, ROTATE);
-		return a;//*/
+		return a;
 		//another alternative, 5-7 ops
 		//16 bit: 256 MB, 32 bit: 2 TB
 		/*
@@ -239,21 +238,21 @@ public:
 		b = c + (c << LSHIFT);
 		c = std::rotl(c, ROTATE);
 		c += old;
-		return a;//*/
+		return a;*/
 		//uses multiplication, only 2 words, but pretty good asside from that:
 		//16: 16 MB, 32 bit: 8 TB
 		/*
 		old = a * Word(0x92ec64765925a395ull);
 		a = b ^ std::rotl(a, OUTPUT_BITS / 2);
 		b = old;
-		return a+b;//*/
+		return a+b;*/
 		//16: 128 MB, 32 bit: ??
 		/*
 		old = a * Word(0x92ec64765925a395ull);
 		a += c++;
 		a ^= std::rotl(b, OUTPUT_BITS / 2);
 		b = old;
-		return a;//*/
+		return a;*/
 		/*old = (a ^ (a >> (OUTPUT_BITS/2)));
 		//c += (c << 3) + 1;
 		a += b + (b << 3);
@@ -297,48 +296,48 @@ public:
 		//a = b + (b << SHIFT3);
 		a = b + counter2;
 		b = std::rotl(b, SHIFT1) + tmp;
-		return a;//*/
+		return a;*/
 		//SFC 3:
 		/*Word tmp = a + b + counter++;
 		a = b ^ (b >> SHIFT2);
 		b = std::rotl(b,SHIFT1) + tmp;
-		return tmp;//*/
+		return tmp;*/
 		//SFC 4, 16 bit version >8 TB (64 GB w/o counter)
 		/*Word old = a + b + counter++;//64 GB on counter, 8 TB on b
 		a = b ^ (b >> SHIFT2);//128 GB?
 		b = c + (c << SHIFT3);//1 TB
 		c = old + std::rotl(c,SHIFT1);//important!
-		return old;//*/
+		return old;*/
 		//okay speed, 16 bit version >2 TB (256 GB w/o counter), 32 bit @ ?
 		/*Word old = a + (a << SHIFT3);
 		a = b + c + counter++;
 		b = c ^ (c >> SHIFT2);
 		c = std::rotl(c,SHIFT1) + old;
-		return old;//*/
+		return old;*/
 		//too slow, 16 bit version ??? (4 TB w/o counter)
 		/*Word old = a + b + counter++;
 		a = old ^ std::rotl(a, SHIFT2);
 		b = c + (c << SHIFT3);
 		c = old + std::rotl(c,SHIFT1);
-		return old;//*/
+		return old;*/
 		//too slow, 16 bit version ??? (2 TB w/o counter)
 		/*Word old = a + (a << SHIFT3);
 		a += b ^ c;
 		b = c ^ (c >> SHIFT2) ^ counter++;
 		c = old + std::rotl(c,SHIFT1);
-		return old;//*/
+		return old;*/
 		//faster, 16 bit version failed @ 64-128 GB (4 GB w/o counter), 32 bit @ ? (passed 16 TB w/o counter)
 		/*Word old = a + b;
 		a = b + counter++;
 		b = c ^ (c >> SHIFT2);
 		c = old + std::rotl(c,SHIFT1);
-		return old;//*/
+		return old;*/
 		//good speed, 16 bit version failed @ >512 GB (32 GB w/o counter), 32 bit @ ? (? w/o counter)
 		/*Word old = a + b + counter++;
 		a = b + (b << SHIFT3);
 		b = c ^ (c >> SHIFT2);
 		c = old + std::rotl(c,SHIFT1);
-		return old;//*/
+		return old;*/
 		//???
 		/*Word old = a + counter++;
 		a = std::rotl(a, 3) ^ (a+b);
@@ -351,14 +350,13 @@ public:
 		return a^b^c;*/
 
 		//a three-word version, adequate quality, but probably doesn't do to well with superscalarism
-		//*
 		a += b + c;
 		c += 1;
 		b ^= a;
 		a = std::rotl(a, 3);
 		b = std::rotl(b, 11);
 		a += b;
-		b ^= a;//*/
+		b ^= a;
 
 		/*
 		c = std::rotl(c, 7);//best shift pairs at 16 bits are (10,3), (7,5), (11,9) ; other possibles are (4,9), (5,13), (6,11), (6,13), (7,4), (9,3), (9,4), (9,5), (11,7), (12,6), (12,9), and (12,10)
@@ -374,7 +372,7 @@ public:
 		/*constexpr int SHIFT = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 11 : -1));//43, 11, 9
 		a += b; b -= c;
 		c += a; a ^= counter++;
-		c = std::rotl(c, SHIFT);//*/
+		c = std::rotl(c, SHIFT);*/
 		//w/ counter	32:29->24, 28->37?, 27->36		16:14->22, 13->23, 12->32, 11->37, 10->37, 9->30, 8->19, 7->30, 6->38, 5->38, 4->29, 3->19, 2->18
 		//w/o counter	32:29->  , 28->  , 27->			16:14->17, 13->19, 12->26, 11->30, 10->31, 9->31, 8->17, 7->31, 6->31, 5->31, 4->30, 3->19, 2->17
 
@@ -384,7 +382,7 @@ public:
 		b ^= a;
 		a = std::rotl(a, 55 % OUTPUT_BITS) ^ b ^ (b << (14 % OUTPUT_BITS));
 		b = std::rotl(b, 36 % OUTPUT_BITS);
-		return result;//*/
+		return result;*/
 
 		//??? speed, 16 bit version failed @ ? GB (16 GB w/o counter), 32 bit @ ?
 		//constexpr int _SHIFT1 = (OUTPUT_BITS == 64) ? 43 : ((OUTPUT_BITS == 32) ? 23 : ((OUTPUT_BITS == 16) ? 10 : -1));
@@ -393,8 +391,8 @@ public:
 
 		//a += b; b -= c;
 		//c += a; a ^= counter++;
-		//b = std::rotl(b, _SHIFT1);//*/
-		//c = std::rotl(c, _SHIFT2);//*/
+		//b = std::rotl(b, _SHIFT1);
+		//c = std::rotl(c, _SHIFT2);
 		//w/ counter	32:29->24, 28->37?, 27->36		16:14->22, 13->23, 12->32, 11->37, 10->37, 9->30, 8->19, 7->30, 6->38, 5->38, 4->29, 3->19, 2->18
 		//w/o counter	32:29->  , 28->  , 27->			16:14->17, 13->19, 12->26, 11->30, 10->31, 9->31, 8->17, 7->31, 6->31, 5->31, 4->30, 3->19, 2->17
 
@@ -527,12 +525,12 @@ public:
 		state_0 = state_1;
 		state_1 = state_2;
 		state_2 = state_3;
-		state_3 = state_3 ^ (state_3 >> 17) ^ (save ^ (save >> 7));//*/
+		state_3 = state_3 ^ (state_3 >> 17) ^ (save ^ (save >> 7));
 		/*Uint32 save = state_0;
 		state_0 = state_1;
 		state_1 = state_2 ^ (state_2 >> 7);
 		state_2 = state_3 ^ (state_3 << 13);
-		state_3 = state_3 ^ (state_3 >> 17) ^ save;//*/
+		state_3 = state_3 ^ (state_3 >> 17) ^ save;*/
 
 		lfsr_0 = lfsr(lfsr_0, 0xE28F75ED);
 		//lfsr_1 = lfsr(lfsr_1, 0x400005B6);
@@ -560,7 +558,7 @@ public:
 			:"1"(a), "2"(b), "3"(c)//inputs
 			://clobbers
 		);*/
-		//return rv;//*/
+		//return rv;
 		/*Uint64 rv;
 		asm (
 			"mov    0(%%rdi), %%rax \n"
@@ -584,7 +582,7 @@ public:
 			:"D"(this)//inputs
 			:"memory", "%rbx", "%rcx", "%rdx"//clobbers
 		);
-		return rv;//*/
+		return rv;*/
 
 		/*Uint64 x = b;
 		x *= K;
@@ -746,7 +744,7 @@ public:
 		/*PractRand::RNGs::LightWeight::arbee hasher;
 		hasher.add_entropy64(counter++);
 		for (int i = 0; i < 2; i++) hasher.raw64();
-		return hasher.raw64();//*/
+		return hasher.raw64();*/
 		SipHash hasher = s;
 		hasher.feed_in_word(counter++);
 		hasher.extra_mixing();
@@ -756,7 +754,7 @@ public:
 			s.feed_in_word(k1);
 			s.feed_in_word(k2);
 		}
-		return hasher.get_result();//*/
+		return hasher.get_result();
 	}
 	std::string get_name() const {
 		std::ostringstream tmp;
