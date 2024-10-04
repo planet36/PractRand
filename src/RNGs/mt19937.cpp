@@ -17,7 +17,7 @@ std::string PractRand::RNGs::Polymorphic::mt19937::get_name() const {return "mt1
 
 //raw:
 static inline unsigned long twist32( unsigned long m, unsigned long s0, unsigned long s1 ) {
-	static const unsigned long gfsr_twist_table[2] = {0, 0x9908b0dful};
+	static constexpr unsigned long gfsr_twist_table[2] = {0, 0x9908b0dful};
 	return m ^ gfsr_twist_table[s1&1] ^ (((s0&0x80000000ul)|(s1&0x7ffffffful))>>1);
 }
 void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change

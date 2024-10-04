@@ -348,7 +348,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						}
 					}
 				}
-				static const GeneralizedTableTransform::Entry self_shrinking_table11[256] = {
+				static constexpr GeneralizedTableTransform::Entry self_shrinking_table11[256] = {
 					{ 0, 0 },{ 0, 0 },{ 0, 1 },{ 1, 1 },{ 0, 0 },{ 0, 0 },{ 0, 1 },{ 1, 1 },
 					{ 0, 1 },{ 0, 1 },{ 0, 2 },{ 1, 2 },{ 1, 1 },{ 1, 1 },{ 2, 2 },{ 3, 2 },
 					{ 0, 0 },{ 0, 0 },{ 0, 1 },{ 1, 1 },{ 0, 0 },{ 0, 0 },{ 0, 1 },{ 1, 1 },

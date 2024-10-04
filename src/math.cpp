@@ -489,7 +489,7 @@ namespace PractRand {
 				//actual = std::log(double(f));
 			}*/
 			if (a < 32) {
-				static const double lookup[32] = {//values found here: https://www.johndcook.com/blog/csharp_log_factorial/
+				static constexpr double lookup[32] = {//values found here: https://www.johndcook.com/blog/csharp_log_factorial/
 					0.000000000000000, 0.000000000000000, 0.693147180559945, 1.791759469228055,    //0-3
 					3.178053830347946, 4.787491742782046, 6.579251212010101, 8.525161361065415,    //4-7
 					10.604602902745251, 12.801827480081469, 15.104412573075516, 17.502307845873887,//8-11
@@ -832,7 +832,7 @@ namespace PractRand {
 
 		//long double gap_probs( int first, int last, long double baseprob = (255.0 / 256.0) );
 		double calculate_center_bit_combination_chance(int bits_L2) {
-			static const double chance_skipped[25] = {
+			static constexpr double chance_skipped[25] = {
 				0.0,              //1 bit
 				0.5,              //2 bit
 				0.375,            //4 bit
@@ -916,7 +916,7 @@ namespace PractRand {
 			}
 		}
 
-		static const Uint8 reverse_table[256] = {
+		static constexpr Uint8 reverse_table[256] = {
 		//	  0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
 			0  , 128,  64, 192,  32, 160,  96, 224,  16, 144,  80, 208,  48, 176, 112, 240,//0
 			8  , 136,  72, 200,  40, 168, 104, 232,  24, 152,  88, 216,  56, 184, 120, 248,//16

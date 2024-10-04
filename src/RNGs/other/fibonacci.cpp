@@ -22,7 +22,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				//bigbadlcgX::~bigbadlcgX() { delete[] state; }
 				Uint64 bigbadlcg64X::raw64() {
-					static const Uint64 K = 0xB5;//0xA3EC647659359ACDull;
+					static constexpr Uint64 K = 0xB5;//0xA3EC647659359ACDull;
 					Uint64 olda[MAX_N] = {0};
 					for (int i = 0; i < n; i++) olda[i] = state[i];
 					Uint64 rv = state[n - 1];

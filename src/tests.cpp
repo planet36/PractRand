@@ -203,20 +203,6 @@ double PractRand::Tests::RawTestCalibrationData_117::index_to_pvalue(double inde
 	double scale = index - low_i;
 	return low + (high - low) * scale;
 }
-const double PractRand::Tests::RawTestCalibrationData_117::ref_p[117] = {
-	0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005,
-	0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10,
-	0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20,
-	0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30,
-	0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40,
-	0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50,
-	0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60,
-	0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.70,
-	0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80,
-	0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90,
-	0.91, 0.92, 0.93, 0.94, 0.95, 0.96,	0.97, 0.98, 0.99,
-	0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999, 0.99995, 0.99998, 0.99999
-};
 double PractRand::Tests::RawTestCalibrationData_129::sample_to_index(double sample) const {
 	if (sample <= table[limit]) return limit;
 	if (sample >= table[128 - limit]) return 128 - limit;
@@ -261,24 +247,6 @@ double PractRand::Tests::RawTestCalibrationData_129::index_to_pvalue(double inde
 	double scale = index - low_i;
 	return low + (high - low) * scale;
 }
-const double PractRand::Tests::RawTestCalibrationData_129::ref_p[129] = {
-	0.0000001, 0.0000002, 0.0000005,
-	0.000001, 0.000002, 0.000005, 0.00001, 0.00002, 0.00005,
-	0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005,
-	0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10,
-	0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20,
-	0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30,
-	0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40,
-	0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50,
-	0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60,
-	0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.70,
-	0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80,
-	0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90,
-	0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99,
-	0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999,
-	0.99995, 0.99998, 0.99999, 0.999995, 0.999998, 0.999999,
-	0.9999995, 0.9999998, 0.9999999
-};
 PractRand::Tests::RawTestCalibrationData_129 *PractRand::Tests::RawTestCalibrationData_129::convert117to129(const PractRand::Tests::RawTestCalibrationData_117 *old) {
 	auto *rv = new PractRand::Tests::RawTestCalibrationData_129();
 	rv->name = old->name;
@@ -2319,7 +2287,7 @@ void PractRand::Tests::DistC7::get_results(std::vector<TestResult> &results) {
 
 
 
-static const char bit_count_table8[256] = {
+static constexpr char bit_count_table8[256] = {
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
@@ -2494,7 +2462,7 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult> &results) {
 	return;
 	/*if (!blocks_tested) return;
 	//results.push_back(TestResult(this->get_name() + ":!", autofail ? 1 : 0, autofail ? 1 : 0, TestResult::TYPE_PASSFAIL, 0.000001));
-	static const double chance_skipped[15] = {
+	static constexpr double chance_skipped[15] = {
 		0.0,              //1 bit
 		0.5,              //2 bit
 		0.375,            //4 bit
@@ -2653,7 +2621,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 			if the number of samples is not large enough to reach a stable pattern then I transform the data to make it act like tbits was smaller
 		*/
 		double safety_factor = 1;
-		static const float unbalanced_safety_table[6] = {8,6,4.5,3,2,1.5};
+		static constexpr float unbalanced_safety_table[6] = {8,6,4.5,3,2,1.5};
 		if (unbalanced) safety_factor = unbalanced_safety_table[nlevel>=9?5:nlevel-3];
 		double adjusted_samples = samples / safety_factor;
 		if constexpr (false) ;
@@ -3328,7 +3296,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 	if (!blocks_tested) return;
 	//results.push_back(TestResult(this->get_name() + ":!", autofail ? 1 : 0, autofail ? 1 : 0, TestResult::TYPE_PASSFAIL, 0.000001));
 	/*
-	static const double chance_skipped[15] = {
+	static constexpr double chance_skipped[15] = {
 		0.0,              //1 bit
 		0.5,              //2 bit
 		0.375,            //4 bit
@@ -3368,7 +3336,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		if the number of samples is not large enough to reach a stable pattern then I transform the data to make it act like tbits was smaller
 		*/
 		double safety_factor = 1;
-		static const float unbalanced_safety_table[6] = { 8, 6, 4.5, 3, 2, 1.5 };
+		static constexpr float unbalanced_safety_table[6] = { 8, 6, 4.5, 3, 2, 1.5 };
 		if (unbalanced) safety_factor = unbalanced_safety_table[nlevel >= 9 ? 5 : nlevel - 3];
 		double adjusted_samples = samples / safety_factor;
 		if constexpr (false);
@@ -3804,7 +3772,7 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 
 
 
-static const Uint8 count_low_zeroes_table[256] = {
+static constexpr Uint8 count_low_zeroes_table[256] = {
 //	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
 	8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//0
 	4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//1
@@ -3823,7 +3791,7 @@ static const Uint8 count_low_zeroes_table[256] = {
 	5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//14
 	4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//15
 };
-static const Uint8 count_high_zeroes_table[256] = {
+static constexpr Uint8 count_high_zeroes_table[256] = {
 //	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
 	8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4,//0
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,//1
@@ -4294,7 +4262,7 @@ PractRand::Tests::FPMulti::FPMulti() //(int stride_bits_L2_, int skip_platters_)
 	//:
 	//stride_bits_L2(stride_bits_L2_)
 {
-	static const double gap_L2_expected_lookup[30] = {
+	static constexpr double gap_L2_expected_lookup[30] = {
 		// I printed lots of precision, but the actual calculations weren't that accurate.  I'm pretty sure it's all at least as good as single-precision, probably better.
 		0.732649482117484,
 		1.537438290932739,
@@ -4467,7 +4435,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 
 	if constexpr (true) {// full gap test
 		constexpr int NUM_PRECALCED = 29;
-		static const double precalced_per_sample_variance[NUM_PRECALCED] = {
+		static constexpr double precalced_per_sample_variance[NUM_PRECALCED] = {
 			// I printed lots of precision, but the actual calculations weren't that accurate.  I think it's all at least as good as single-precision though.
 			0.689767784941473,
 			1.337738769110027,
@@ -5860,7 +5828,7 @@ void PractRand::Tests::BirthdayAlt::_lookup_constants(int table_size_L2,long dou
 	};
 	if (table_size_L2 < 6) issue_error("BirthdayAlt::_lookup_constants: table_size_L2 too low");
 	if (table_size_L2 >= 32) issue_error("BirthdayAlt::_lookup_constants: table_size_L2 too high");
-	static const PerSizeEmpiricalData table[32] = {
+	static constexpr PerSizeEmpiricalData table[32] = {
 		// haven't found a good formula for these values yet, but the number of possible cases is limited and we can tolerate minor errors
 		// and the units are in an ugly format, will try to fix that shortly
 		{ 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },//0-5
@@ -6500,7 +6468,7 @@ PractRand::Tests::NearSeq::NearSeq() {
 }
 void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 	if (SEQUENCE_BITS < CORE_SEQUENCE_BITS) issue_error("NearSeq - bad settings");
-	static const Word lookup[2] = { (1 << BITS_PER_BLOCK) - 1, 0x0 };//backwards, as we're inverting values here for maximum hamming distance
+	static constexpr Word lookup[2] = { (1 << BITS_PER_BLOCK) - 1, 0x0 };//backwards, as we're inverting values here for maximum hamming distance
 	for (int bi = 0; bi < NUM_BUCKETS; bi++) {
 		for (auto & sequence : buckets[bi].sequence) sequence = 0;
 		for (int x = 0; x < BLOCKS_PER_CORE; x++) {
@@ -6734,7 +6702,7 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 	int start = blocks_tested ? -SEQUENCE_WORD_OFFSET : SEQUENCE_WORD_OFFSET;
 	int end = (numblocks * (TestBlock::SIZE * 8 / WORD_BITS)) - (SEQUENCE_BITS / WORD_BITS - SEQUENCE_WORD_OFFSET);
 
-	static const Word lookup_block_value[2] = { (1 << BITS_PER_BLOCK) - 1, 0x0 };//backwards
+	static constexpr Word lookup_block_value[2] = { (1 << BITS_PER_BLOCK) - 1, 0x0 };//backwards
 
 	for (int pos = start; pos < end; pos++) {
 		/* chances at various settings
@@ -11132,13 +11100,13 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 	}
 	switch (unitsL) {
 		case -1: {//4 bit words
-			static const Uint8 table0[256] = {
+			static constexpr Uint8 table0[256] = {
 				0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,
 				0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,
 				0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,
 				0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3
 			};
-			static const Uint8 table1[256] = {
+			static constexpr Uint8 table1[256] = {
 				0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3,4,5,6,7,4,5,6,7,4,5,6,7,4,5,6,7,8,9,10,11,8,9,10,11,8,9,10,11,8,9,10,11,12,13,14,15,12,13,14,15,12,13,14,15,12,13,14,15,
 				0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3,4,5,6,7,4,5,6,7,4,5,6,7,4,5,6,7,8,9,10,11,8,9,10,11,8,9,10,11,8,9,10,11,12,13,14,15,12,13,14,15,12,13,14,15,12,13,14,15,
 				0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3,4,5,6,7,4,5,6,7,4,5,6,7,4,5,6,7,8,9,10,11,8,9,10,11,8,9,10,11,8,9,10,11,12,13,14,15,12,13,14,15,12,13,14,15,12,13,14,15,

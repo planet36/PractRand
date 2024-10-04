@@ -202,7 +202,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				Uint64 xoroshiro128plus_2p64::raw64() {
 					Uint64 result = state0 + state1;
-					static const Uint64 JUMP[] = { 0xbeac0467eba5facb, 0xd86b048b86aa9922 };
+					static constexpr Uint64 JUMP[] = { 0xbeac0467eba5facb, 0xd86b048b86aa9922 };
 
 					Uint64 s0 = 0;
 					Uint64 s1 = 0;

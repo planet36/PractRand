@@ -54,9 +54,9 @@ int PractRand::RNGs::Polymorphic::chacha::get_rounds() const {return implementat
 //raw:
 PractRand::RNGs::Raw::chacha::~chacha() {std::memset(this, 0, sizeof(*this));}
 #ifdef PRACTRAND_ALIGN_128
-static const Uint32 PRACTRAND_ALIGN_128 chacha_long_seed_constants[4] = {
+static constexpr Uint32 PRACTRAND_ALIGN_128 chacha_long_seed_constants[4] = {
 #else
-static const Uint32 chacha_long_seed_constants[4] = {
+static constexpr Uint32 chacha_long_seed_constants[4] = {
 #endif
 	//"expand 32-byte k"
 	(Uint32('e') << 0) + (Uint32('x') << 8) + (Uint32('p') << 16) + (Uint32('a') << 24),
@@ -65,9 +65,9 @@ static const Uint32 chacha_long_seed_constants[4] = {
 	(Uint32('t') << 0) + (Uint32('e') << 8) + (Uint32(' ') << 16) + (Uint32('k') << 24)
 };
 #ifdef PRACTRAND_ALIGN_128
-static const Uint32 PRACTRAND_ALIGN_128 chacha_short_seed_constants[4] = {
+static constexpr Uint32 PRACTRAND_ALIGN_128 chacha_short_seed_constants[4] = {
 #else
-static const Uint32 chacha_short_seed_constants[4] = {
+static constexpr Uint32 chacha_short_seed_constants[4] = {
 #endif
 	//"expand 16-byte k"
 	(Uint32('e') << 0) + (Uint32('x') << 8) + (Uint32('p') << 16) + (Uint32('a') << 24),

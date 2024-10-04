@@ -101,9 +101,9 @@ namespace PractRand {
 #if defined PRACTRAND_BOOST_COMPATIBILITY
 			typedef Uint64 result_type;
 			result_type operator()() {return raw64();}
-			static const bool has_fixed_value = true;
-			static const result_type min_value = 0;
-			static const result_type max_value = ~(result_type)0;
+			static constexpr bool has_fixed_value = true;
+			static constexpr result_type min_value = 0;
+			static constexpr result_type max_value = ~(result_type)0;
 			result_type min() const {return min_value;}
 			result_type max() const {return max_value;}
 #endif
