@@ -20,7 +20,7 @@ namespace Special_RNGs {
 			(void)std::fprintf(stderr, "error reading standard input\n");
 			std::exit(0);
 		}
-		static constexpr int BUFF_SIZE = BUFSIZ / sizeof(Word);
+		static constexpr int BUFF_SIZE = 32768 / sizeof(Word);
 		Word *pos, *end;
 		bool ended{false};
 		Word buffer[BUFF_SIZE];
