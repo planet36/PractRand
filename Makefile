@@ -40,7 +40,7 @@ $(BINS): tools/RNG_% : tools/RNG_%.cpp $(LIB)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $< $(LIB)
 
 install: $(BINS) | $(DESTDIR)$(BINDIR)
-	@cp -v -f -- $^ $(DESTDIR)$(BINDIR)
+	@cp -v -f --update -- $^ $(DESTDIR)$(BINDIR)
 
 $(DESTDIR)$(BINDIR):
 	@mkdir -v -p -- $(DESTDIR)$(BINDIR)
