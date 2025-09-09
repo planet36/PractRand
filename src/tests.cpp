@@ -4352,9 +4352,9 @@ void PractRand::Tests::FPMulti::process(Uint64 position, unsigned long e, unsign
 			if (!(p.gap_hits & 63)) {//testing suggests this is good up to 4095 - for safety margin I use 1023, and set autofail on any gap products out of range at that point
 				// no wait... if GAP_SIG_BITS is adjusted the usable range changes (4095 was for 9 bits), though 127 seems to be usable for all useful values of GAP_SIG_BITS
 				int L2;
-				if (std::isinf(p.gap_product)) issue_error("FPMulti::process - gap product is infinite");
+				//if (std::isinf(p.gap_product)) issue_error("FPMulti::process - gap product is infinite");
 				if (std::isinf(p.gap_product)) autofail = true;
-				if (0 == p.gap_product) issue_error("FPMulti::process - gap product is zero");
+				//if (0 == p.gap_product) issue_error("FPMulti::process - gap product is zero");
 				if (p.gap_product == 0) autofail = true;
 				if (std::isnan(p.gap_product)) issue_error("FPMulti::process - gap product is NaN");// should be impossible, I think
 				if (autofail) return;
