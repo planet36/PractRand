@@ -17,8 +17,8 @@ namespace PractRand::Tests {
 		double chi_squared_test ( unsigned long categories, const double *prob_table, const Uint64 *counts );
 		double rarity_test(unsigned long categories, const double *prob_table, const Uint64 *counts);
 		class G_TEST {
-			long double total, sum, prob_sum, minimum_prob, partial_count, partial_prob;
-			long categories;
+			long double total{}, sum{}, prob_sum{}, minimum_prob{}, partial_count{}, partial_prob{};
+			long categories{};
 		public:
 			G_TEST() { reset(); }
 			void reset();
@@ -106,8 +106,8 @@ namespace PractRand::Tests {
 
 		template<typename LowIntType, int size>
 		class FixedSizeCount {
-			LowIntType low[size];
-			Uint64 high[size];
+			LowIntType low[size]{};
+			Uint64 high[size]{};
 		public:
 			int get_size() {return size;}
 			void reset_counts() {
@@ -133,7 +133,7 @@ namespace PractRand::Tests {
 		class VariableSizeCount {
 			LowIntType *low;
 			Uint64 *high;
-			int size;
+			int size{};
 		public:
 			int get_size() {return size;}
 			void reset_counts() {
@@ -177,7 +177,7 @@ namespace PractRand::Tests {
 		class BitMatrix {
 			typedef Uint32 Word;
 			std::vector<Word> data;
-			int w, h, ww;
+			int w{}, h{}, ww{};
 		public:
 			static constexpr int WORD_BITS = sizeof(Word)*8;
 			static constexpr int WORD_BITS_MASK = WORD_BITS-1;
@@ -196,12 +196,12 @@ namespace PractRand::Tests {
 		struct RawTestCalibrationData_117 {
 			//for use on tests that produce (very) roughly a normal distribution
 			//should be based upon at least 512 samples
-			const char *name;  //e.g. "Gap-16:A"
-			Uint64 blocks;     //e.g. 32 for 32 KB
-			Uint64 num_samples;//e.g. 65536 for that many results of known good RNGs used to construct raw_table
-			Uint64 num_duplicates;
+			const char *name = nullptr;  //e.g. "Gap-16:A"
+			Uint64 blocks{};     //e.g. 32 for 32 KB
+			Uint64 num_samples{};//e.g. 65536 for that many results of known good RNGs used to construct raw_table
+			Uint64 num_duplicates{};
 
-			double table[117];
+			double table[117]{};
 			double median{};//redundant
 			double mean{};
 			double stddev{};
