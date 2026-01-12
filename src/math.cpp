@@ -12,13 +12,17 @@
 #include "PractRand.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
-#include "PractRand/rng_internals.h"
 #include "PractRand/test_helpers.h"
-#include "PractRand/RNGs/efiix64x384.h"
+#include "PractRand/RNGs/efiix64x48.h"
+
+#if defined _MSC_VER && _MSC_VER >= 1400
+#include <intrin.h>
+#endif
+
 
 namespace PractRand {
 	namespace Internals {
-		static void add_128 ( const Uint32 *a, const Uint32 *b, Uint32 *result ) {
+		static void add_128(const Uint32 *a, const Uint32 *b, Uint32 *result) {
 			Uint64 tmp = 0;
 			for (int x = 0; x < 4; x++) {
 				tmp += a[x];
@@ -125,84 +129,347 @@ namespace PractRand {
 			}
 			return val;
 		}
-
-
-		/*XorshiftMatrix::XorshiftMatrix( int size_, bool identity ) {
-			size = size_;
-			bits.resize(size * size, false);
-			if (identity) for (int i = 0; i < size; i++) set(i,i,true);
-		}
-		void XorshiftMatrix::apply(const std::vector<bool> &input, std::vector<bool> &output) {
-			if (input.size() != size) issue_error();
-			output.resize(size);
-			for (int i = 0; i < size; i++) {
-				bool r = false;
-				for (int j = 0; j < size; j++) r ^= input[j] & get(j, i);
-				output[i] = r;
-			}
-		}
-		bool XorshiftMatrix::operator==(const XorshiftMatrix &other) const {
-			return size == other.size && bits == other.bits;
-		}
-		XorshiftMatrix XorshiftMatrix::operator*(const XorshiftMatrix &other) const {
-			XorshiftMatrix rv(size, false);
-			if (other.size != size) issue_error();
-			for (int i = 0; i < size; i++) {
-				for (int j = 0; j < size; j++) {
-					bool r = false;
-					for (int k = 0; k < size; k++) {
-						r ^= get(j, k) & other.get(k,i);
-					}
-					rv.set(j, i, r);
-				}
-			}
-			return rv;
-		}
-		XorshiftMatrix XorshiftMatrix::exponent(Uint64 exponent_value) const {
-			XorshiftMatrix rv(size, true), tmp(*this);
-			if (!exponent_value) return rv;
-			while (true) {
-				if (exponent_value & 1) rv = rv * tmp;
-				exponent_value >>= 1;
-				if (!exponent_value) break;
-				tmp = tmp * tmp;
-			}
-			return rv;
-		}
-		XorshiftMatrix XorshiftMatrix::exponent2Xminus1(Uint64 x) const {
-			//exponent(2**X-1), X may be >=64
-			XorshiftMatrix rv(size, true);
-			while (x) {
-				rv = rv * rv * *this;
-				x--;
-			}
-			return rv;
-		}
-		bool XorshiftMatrix::verify_period_factorization(const std::vector<Uint64> &factors) const {
-			for (size_t i = 0; i < factors.size(); i++) {
-				XorshiftMatrix tmp = *this;
-				for (size_t j = 0; j < factors.size(); j++) {
-					if (i != j) tmp = tmp.exponent(factors[j]);
-				}
-				bool is_identity = (tmp * *this) == *this;
-				if (is_identity != (i == factors.size())) return false;
-			}
-			return true;
-		}*/
 	}
+	namespace Internals {
+		static const Uint8 count_low_zeroes_table[256] = {
+			//	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
+			8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//0
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//1
+			5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//2
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//3
+			6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//4
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//5
+			5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//6
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//7
+			7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//8
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//9
+			5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//10
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//11
+			6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//12
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//13
+			5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//14
+			4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//15
+		};
+		static const Uint8 count_high_zeroes_table[256] = {
+			//	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
+			8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4,//0
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,//1
+			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,//2
+			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,//3
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//4
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//5
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//6
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//7
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//8
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//9
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//10
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//11
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//12
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//13
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//14
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//15
+		};
+		static const Sint8 ilog2_table[256] = {
+			//	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
+			-1, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,//0
+			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,//1
+			5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,//2
+			5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,//3
+			6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,//4
+			6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,//5
+			6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,//6
+			6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,//7
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//8
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//9
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//10
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//11
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//12
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//13
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//14
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,//15
+		};
+#if defined _MSC_VER && _MSC_VER >= 1400 && defined _M_X64 && !defined PRACTRAND_NO_INTRINSICS
+		int count_ones8(Uint8 a) {
+			return __popcnt16(a);//there is no 8-bit variant
+		}
+		int count_ones16(Uint16 a) {
+			return __popcnt16(a);
+		}
+		int count_ones32(Uint32 a) {
+			return __popcnt(a);//the 32-bit variant doesn't have the size in the name
+		}
+		int count_ones64(Uint64 a) {
+			return __popcnt64(a);
+		}
+#elif defined _MSC_VER && _MSC_VER >= 1400 && defined _M_IX86 && !defined PRACTRAND_NO_INTRINSICS
+		int count_ones8(Uint8 a) {
+			return __popcnt16(a);//there is no 8-bit variant
+		}
+		int count_ones16(Uint16 a) {
+			return __popcnt16(a);
+		}
+		int count_ones32(Uint32 a) {
+			return __popcnt(a);//the 32-bit variant doesn't have the size in the name
+		}
+		int count_ones64(Uint64 a) {
+			return __popcnt(a) + __popcnt(a >> 32);
+		}
+#elif defined __GNUC__ && !defined PRACTRAND_NO_INTRINSICS
+		int count_ones8(Uint8 a) {
+			return __builtin_popcount(a);
+		}
+		int count_ones16(Uint16 a) {
+			return __builtin_popcount(a);
+		}
+		int count_ones32(Uint32 a) {
+			return __builtin_popcount(a);
+		}
+		int count_ones64(Uint64 a) {
+			return __builtin_popcountll(a);
+		}
+#else
+		static const Uint8 hamming_weight_table[256] = {
+			0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+			1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+			2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+			3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+			4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+		};
+		int count_ones8(Uint8 a) {
+			return hamming_weight_table[a];
+		}
+		int count_ones16(Uint16 a) {
+			return hamming_weight_table[Uint8(a)] + hamming_weight_table[Uint8(a >> 8)];
+		}
+		int count_ones32(Uint32 a) {
+			return hamming_weight_table[Uint8(a)] + hamming_weight_table[Uint8(a >> 8)] + hamming_weight_table[Uint8(a >> 16)] + hamming_weight_table[Uint8(a >> 24)];
+			//todo: check if Brian Kernighan algorithm is faster ; it's basically while (value) {rv++; value &= value-1;}
+		}
+		int count_ones64(Uint64 a) {
+			//	return distance_table[Uint8(a)] + distance_table[Uint8(a>>8)] + distance_table[Uint8(a>>16)] + distance_table[Uint8(a>>24)] +
+			//		distance_table[Uint8(a>>32)] + distance_table[Uint8(a>>40)] + distance_table[Uint8(a>>48)] + distance_table[Uint8(a>>56)];
+
+			// at some point it makes sense to stop using the tables and start using bitwise math
+			//... I *think* that point is around 64 bits on 64 bit hardware + compilers
+			Uint64 b;
+			b = a & 0xAAAAAAAAAAAAAAAAull; a ^= b; // 1 -> 2
+			b >>= 1; a += b;//0-2
+			b = a & 0xCCCCCCCCCCCCCCCCull; a ^= b; // 2 -> 4
+			b >>= 2; a += b;//0-4
+			b = a & 0xF0F0F0F0F0F0F0F0ull; a ^= b; // 4 -> 8
+			b >>= 4; a += b;//0-8
+			b = a;// & 0xFF00FF00FF00FF00ull; a ^= b; // 8 -> 16
+			b >>= 8; a += b;//0-16
+			b = a;// & 0xFFFF0000FFFF0000ull; a ^= b; // 16 -> 32
+			b >>= 16; a += b;//0-32
+			b = a;// & 0xFFFFFFFF00000000ull; a ^= b; // 32 -> 64
+			b >>= 32; a += b;//0-64
+			return Uint8(a);
+		}
+#endif
+
+#if defined _MSC_VER && _MSC_VER >= 1400 && (defined _M_X64 || defined _M_ARM64) && !defined PRACTRAND_NO_INTRINSICS
+		// is this actually a good idea?  I'm not sure this helps performance any
+		unsigned long count_low_zeroes32(Uint32 value) {
+			unsigned long rv;
+			if (!_BitScanForward(&rv, value)) rv = 32;
+			return rv;
+		}
+		unsigned long count_low_zeroes64(Uint64 value) {
+			unsigned long rv;
+			if (!_BitScanForward64(&rv, value)) rv = 64;
+			return rv;
+		}
+		unsigned long count_high_zeroes32(Uint32 value) {
+			unsigned long tmp;
+			if (_BitScanReverse(&tmp, value)) return 31 ^ tmp;
+			else return 32;
+		}
+		unsigned long count_high_zeroes64(Uint64 value) {
+			unsigned long tmp;
+			if (_BitScanReverse64(&tmp, value)) return 63 ^ tmp;
+			else return 64;
+		}
+		long ilog2_32(Uint32 value) {
+			unsigned long tmp;
+			if (_BitScanReverse(&tmp, value)) return tmp;
+			return -1;
+		}
+		long ilog2_64(Uint64 value) {
+			unsigned long tmp;
+			if (_BitScanReverse64(&tmp, value)) return tmp;
+			return -1;
+		}
+#elif defined _MSC_VER && _MSC_VER >= 1400 && (defined _M_IX86 || defined _M_ARM) && !defined PRACTRAND_NO_INTRINSICS
+		unsigned long count_low_zeroes32(Uint32 value) {
+			unsigned long rv;
+			if (!_BitScanForward(&rv, value)) rv = 32;
+			return rv;
+		}
+		unsigned long count_low_zeroes64(Uint64 value) {
+			unsigned long rv;
+			if (_BitScanForward(&rv, Uint32(value))) return rv;
+			if (_BitScanForward(&rv, Uint32(value >> 32))) return rv + 32;
+			return 64;
+		}
+		unsigned long count_high_zeroes32(Uint32 value) {
+			unsigned long tmp;
+			if (_BitScanReverse(&tmp, value)) return 31 - tmp;
+			else return 32;
+		}
+		unsigned long count_high_zeroes64(Uint64 value) {
+			unsigned long tmp;
+			if (_BitScanReverse(&tmp, Uint32(value >> 32))) return 31 - tmp;
+			if (_BitScanReverse(&tmp, Uint32(value))) return 63 - tmp;
+			return 64;
+		}
+		long ilog2_32(Uint32 value) {
+			unsigned long tmp;
+			if (_BitScanReverse(&tmp, value)) return tmp;
+			return -1;
+		}
+		long ilog2_64(Uint64 value) {
+			unsigned long tmp;
+			if (_BitScanReverse(&tmp, Uint32(value >> 32))) return tmp + 32;
+			if (_BitScanReverse(&tmp, Uint32(value))) return tmp;
+			return -1;
+		}
+#elif defined __GNUC__ && !defined PRACTRAND_NO_INTRINSICS
+		//todo: add a version number requirement
+		unsigned long count_low_zeroes32(Uint32 value) {
+			if (!value) return 32;
+			else return  __builtin_ctz(value);
+		}
+		unsigned long count_low_zeroes64(Uint64 value) {
+			if (!value) return 64;
+			else return  __builtin_ctzll(value);
+		}
+		unsigned long count_high_zeroes32(Uint32 value) {
+			if (!value) return 32;
+			else return  __builtin_clz(value);
+		}
+		unsigned long count_high_zeroes64(Uint64 value) {
+			if (!value) return 64;
+			else return  __builtin_clzll(value);
+		}
+		long ilog2_32(Uint32 value) {
+			if (!value) return -1;
+			return __builtin_clz(value) ^ 31;
+		}
+		long ilog2_64(Uint64 value) {
+			if (!value) return -1;
+			return __builtin_clzll(value) ^ 63;
+		}
+#else //generic / software path
+		//todo: add gcc/clang path
+		unsigned long count_high_zeroes32(Uint32 value) {
+			Uint8 count = 0;
+			if (!(value >> 16)) { count += 16; value <<= 16; }
+			if (!(value >> 24)) { count += 8; value <<= 8; }
+			return count_high_zeroes_table[value >> 24] + count;
+		}
+		unsigned long count_high_zeroes64(Uint64 value) {
+			Uint8 count = 0;
+			if (!(value >> 32)) { count += 32; value <<= 32; }
+			if (!(value >> 48)) { count += 16; value <<= 16; }
+			if (!(value >> 56)) { count += 8; value <<= 8; }
+			return count_high_zeroes_table[value >> 56] + count;
+		}
+		unsigned long count_low_zeroes32(Uint32 value) {
+			if (value & 255) return count_low_zeroes_table[value & 255];
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 8;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 16;
+			value >>= 8;
+			return count_low_zeroes_table[value & 255] + 24;
+		}
+		unsigned long count_low_zeroes64(Uint64 value) {
+			if (value & 255) return count_low_zeroes_table[value & 255] + 0;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 8;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 16;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 24;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 32;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 40;
+			value >>= 8;
+			if (value & 255) return count_low_zeroes_table[value & 255] + 48;
+			value >>= 8;
+			return count_low_zeroes_table[value & 255] + 56;
+		}
+
+		long ilog2_32(Uint32 value) {
+			if (!value) return -1;
+			long rv = 0;
+			if (value >> 16) { value >>= 16; rv += 16; }
+			if (value >> 8) { value >>= 8; rv += 8; }
+			return rv + ilog2_table[value];
+		}
+		long ilog2_64(Uint64 value) {
+			if (!value) return -1;
+			long rv = 0;
+			if (value >> 32) { value >>= 32; rv += 32; }
+			if (value >> 16) { value >>= 16; rv += 16; }
+			if (value >> 8) { value >>= 8; rv += 8; }
+			return rv + ilog2_table[value];
+		}
+#endif
+		static const Uint8 reverse_table[256] = {
+			//0   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+			0  , 128,  64, 192,  32, 160,  96, 224,  16, 144,  80, 208,  48, 176, 112, 240,//0
+			8  , 136,  72, 200,  40, 168, 104, 232,  24, 152,  88, 216,  56, 184, 120, 248,//16
+			4  , 132,  68, 196,  36, 164, 100, 228,  20, 148,  84, 212,  52, 180, 116, 244,//32
+			12 , 140,  76, 204,  44, 172, 108, 236,  28, 156,  92, 220,  60, 188, 124, 252,//48
+			2  , 130,  66, 194,  34, 162,  98, 226,  18, 146,  82, 210,  50, 178, 114, 242,//64
+			10 , 138,  74, 202,  42, 170, 106, 234,  26, 154,  90, 218,  58, 186, 122, 250,//80
+			6  , 134,  70, 198,  38, 166, 102, 230,  22, 150,  86, 214,  54, 182, 118, 246,//96
+			14 , 142,  78, 206,  46, 174, 110, 238,  30, 158,  94, 222,  62, 190, 126, 254,//112
+			1  , 129,  65, 193,  33, 161,  97, 225,  17, 145,  81, 209,  49, 177, 113, 241,//0+128
+			9  , 137,  73, 201,  41, 169, 105, 233,  25, 153,  89, 217,  57, 185, 121, 249,//16+128
+			5  , 133,  69, 197,  37, 165, 101, 229,  21, 149,  85, 213,  53, 181, 117, 245,//32+128
+			13 , 141,  77, 205,  45, 173, 109, 237,  29, 157,  93, 221,  61, 189, 125, 253,//48+128
+			3  , 131,  67, 195,  35, 163,  99, 227,  19, 147,  83, 211,  51, 179, 115, 243,//64+128
+			11 , 139,  75, 203,  43, 171, 107, 235,  27, 155,  91, 219,  59, 187, 123, 251,//80+128
+			7  , 135,  71, 199,  39, 167, 103, 231,  23, 151,  87, 215,  55, 183, 119, 247,//96+128
+			15 , 143,  79, 207,  47, 175, 111, 239,  31, 159,  95, 223,  63, 191, 127, 255,//112+128
+		};
+		Uint8  reverse_bits8 (Uint8  a) {return reverse_table[a];}
+		Uint16 reverse_bits16(Uint16 a) {return reverse_bits8 (a >>  8) + (Uint16(reverse_bits8 (Uint8 (a)))<<8);}
+		Uint32 reverse_bits32(Uint32 a) {return reverse_bits16(a >> 16) + (Uint32(reverse_bits16(Uint16(a)))<<16);}
+		Uint64 reverse_bits64(Uint64 a) {return reverse_bits32(a >> 32) + (Uint64(reverse_bits32(Uint32(a)))<<32);}
+
+	}//namespace Internals
+
 	namespace Tests {
+
 		//categories = old # of entries in tables
 		//return value = new # of entries in tables
 		//combines adjacent entries
 		//N should be the minimum number of expected elements per bucket, more or less
 		//if aggressive is true, it will treat N as a hard limit on how low probabilities can be
 		//otherwise, it will treat it as a soft limit
-		//linear combines only adjacent entries; non-linear is not yet implemented
-		int simplify_prob_table ( unsigned long categories, double N, double *prob_table, Uint64 *counts, bool linear, bool aggressive ) {
+		//ordered combines only adjacent entries; un-ordered is not yet implemented
+		int simplify_prob_table(unsigned long categories, double N, double *prob_table, Uint64 *counts, bool ordered, bool aggressive) {
+			if (categories <= 2) return categories;
 			if (N < 2.0) N = 2.0;
 			double E = 1.0 / N;
-			int reduced_size = categories;
-			if (!linear) {
+			long reduced_size = categories;
+			if (!ordered) {
 				std::multimap<double,Uint64> indexed;
 				for (unsigned long i = 0; i < categories; i++) indexed.insert(std::pair<double,Uint64>(prob_table[i], counts[i]));
 				while (reduced_size > 2) {
@@ -224,33 +491,68 @@ namespace PractRand {
 				if (i != reduced_size) issue_error();
 				return reduced_size;
 			}
-			else {//linear
+			else {//ordered
+				//std::list<double> list_form;
+				//std::multimap<double, std::list<double>::iterator> indexed;
+
+				//long num_above_E = 0;
+				//for (int i = 0; i < reduced_size; i++) num_above_E += (prob_table[i] >= E) ? 1 : 0;
+				//if (num_above_E == 1) {//first merge everything down to just 2-3 categories: categories preceding the big one, the big one, and categories following the big one
+
 				// I forget, why I am not doing a single pass?
 				double E2 = aggressive ? 0.5 : E;
-				for (int i = 0; i < 100; i++) {
+				for (int pass = 0; pass < 1; pass++) {
 					int combined = 0;
+					if (reduced_size == 2) continue;
 					for (int j = 0; j < reduced_size; j++) {
+						if (reduced_size - combined <= 2) {
+							prob_table[j - combined] = prob_table[j];
+							counts[j - combined] = counts[j];
+							continue;
+						}
 						double below = 9;
 						double above = 9;
 						if (j > combined) below = prob_table[j-combined-1];
 						if (j < reduced_size-1) above = prob_table[j+1];
 						double other = (below < above) ? below : above;
-						if ((prob_table[j] < E) && (other < E2)) {
+						double current = prob_table[j];
+						//if ((current < E) && (other < E2)) {
+						if ((current < E) && (other >= current) && (other < E2)) {
 							if (below < above) {
-								prob_table[j-combined-1] += prob_table[j];
-								counts[j-combined-1] += counts[j];
+								//prob_table[j-combined-1] += prob_table[j];
+								//counts[j-combined-1] += counts[j];
+								//combined ++;
+								prob_table[j] += prob_table[j - combined - 1];
+								counts[j] += counts[j - combined - 1];
+								//prob_table[j - combined - 1] = 0;//remove
+								//counts[j - combined - 1] = 0;//remove
 								combined ++;
+								j--;
 							}
 							else {
-								prob_table[j-combined] = prob_table[j] + prob_table[j+1];
-								counts[j-combined] = counts[j] + counts[j+1];
-								combined ++;
-								j++;
+								//prob_table[j-combined] = prob_table[j] + prob_table[j+1];
+								//counts[j-combined] = counts[j] + counts[j+1];
+								//combined ++;
+								//j++;
+								prob_table[j + 1] += prob_table[j];
+								counts[j + 1] += counts[j];
+								//prob_table[j] = 0;//remove
+								//counts[j] = 0;//remove
+								combined++;
+							}
+							if (j+1 > combined && prob_table[j - combined] < E) {
+								prob_table[j] = prob_table[j - combined];
+								counts[j] = counts[j - combined];
+								//prob_table[j - combined] = 0;//remove
+								//counts[j - combined] = 0;//remove
+								j--;
 							}
 						}
-						else {
-							prob_table[j-combined] = prob_table[j];
-							counts[j-combined] = counts[j];
+						else if (combined) {
+							prob_table[j - combined] = prob_table[j];
+							counts[j - combined] = counts[j];
+							//prob_table[j] = 0;//remove
+							//counts[j] = 0;//remove
 						}
 					}
 					reduced_size -= combined;
@@ -272,19 +574,21 @@ namespace PractRand {
 			{
 				long double expected = sum * prob_table[i];
 				long double diff = ((long double)counts[i]) - expected;
-				diff = fabs(diff) - 0.5;
+				diff = std::fabs(diff) - 0.5;
 				v += (diff*diff)/expected;
 			}
 		//	double normal = (V-(categories-1))/sqrt((double)(categories-1));
 			return (double)v;
 		}
-		double rarity_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
+		double rarity_test_old(unsigned long categories, const double *prob_table, const Uint64 *counts) {
 			long double total = 0;
 			std::vector<double> logs; logs.resize(categories);
 			long double mean = 0.0;
 			for (unsigned long i = 0; i < categories; i++) {
 				total += counts[i];
+				if (prob_table[i] <= 0) issue_error("rarity_test - prob <= 0");
 				logs[i] = std::log(prob_table[i]);
+				if (logs[i] < -720) logs[i] = -720;
 				mean += prob_table[i] * logs[i];
 			}
 			long double dev = 0.0;
@@ -321,33 +625,105 @@ namespace PractRand {
 
 			return sum / std::sqrt(total);
 		}
-		double my_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
-			double score_actual = 0;
-			double score_mean = 0;
-			//double score_mean_sqr = 0;
-			double prob_sum = 0;
-			Uint64 total = 0;
-			for (unsigned long i = 0; i < categories; i++) {
-				double score = prob_table[i] > 0 ? -std::log(prob_table[i]) : 999.0;
-				score_mean += prob_table[i] * score;
-				//score_mean_sqr += prob_table[i] * score * score;
-				prob_sum += prob_table[i];
+		double rarity_test(unsigned long categories, const double *prob_table, const Uint64 *counts, bool ordered, bool accept_zero) {
+			if (!ordered) {
+				const double MAX_SCORE = 750.0;//doesn't need to be exact, this is just a plausible value for a probability low enough to fall below the lowest possible 64 bit floating point value greater than zero
+				double score_actual = 0;
+				double score_mean = 0;
+				//double score_mean_sqr = 0;
+				double prob_sum = 0;
+				Uint64 total = 0;
+
+				for (unsigned long i = 0; i < categories; i++) {
+					//double score = prob_table[i] > 0 ? -std::log(prob_table[i]) : 999.0;
+					double score = -std::log(prob_table[i]);
+					if (prob_table[i] <= 0) {
+						if (!accept_zero) issue_error("rarity_test(unordered,nozeroes) - prob <= 0, accept_zero = false");
+						if (prob_table[i] < 0) issue_error("rarity_test(unordered,zeroes) - prob < 0");
+					}
+					if (score > MAX_SCORE) score = MAX_SCORE;
+					score_mean += prob_table[i] * score;
+					//score_mean_sqr += prob_table[i] * score * score;
+					prob_sum += prob_table[i];
+				}
+				//score_mean /= prob_sum; // this doesn't look right...
+				if (std::fabs(prob_sum - 1) > 0.000001) issue_error("my_test() - prob_sum deviated");
+				//score_mean_sqr /= prob_sum;
+				double score_variance = 0;
+				for (unsigned long i = 0; i < categories; i++) {
+					//double score = prob_table[i] > 0 ? -std::log(prob_table[i]) : 999.0;
+					double score = -std::log(prob_table[i]);
+					if (score > MAX_SCORE) score = MAX_SCORE;
+					score -= score_mean;
+					score_variance += score * score * prob_table[i];
+					score_actual += score * counts[i];
+					total += counts[i];
+				}
+				double score_deviation = std::sqrt(score_variance * total);
+				double score_normalized = score_actual;
+				//score_normalized -= score_mean * total;
+				score_normalized /= score_deviation;
+				return score_normalized;
 			}
-			score_mean /= prob_sum;
-			//score_mean_sqr /= prob_sum;
-			double score_deviation = 0;
-			for (unsigned long i = 0; i < categories; i++) {
-				double score = prob_table[i] > 0 ? -std::log(prob_table[i]) : 999.0;
-				score -= score_mean;
-				score_deviation += score * score * prob_table[i];
-				score_actual += score * counts[i];
-				total += counts[i];
+			else {//ordered
+				const double MAX_SCORE = 35.0;// maximum score is lower here because resolution is lower just below 1.0 than just above 0.0
+				double score_actual = 0;
+				double score_mean = 0;
+				//double score_mean_sqr = 0;
+				double prob_sum = 0;
+				Uint64 total = 0;
+				Sint64 mid_point = -1;
+				double mid_prob = 1.5;
+				for (unsigned long i = 0; i < categories; i++) {
+					double p = prob_sum + prob_table[i] * 0.5;
+					double score = -std::log(p) - std::log(1 - p);
+					if (score > MAX_SCORE) score = MAX_SCORE;
+					if (prob_table[i] <= 0) {
+						if (!accept_zero) issue_error("rarity_test(ordered,nozeroes) - prob <= 0, accept_zero = false");
+						if (prob_table[i] < 0) issue_error("rarity_test(ordered,zeroes) - prob < 0");
+					}
+					score_mean += prob_table[i] * score;
+					//score_mean_sqr += prob_table[i] * score * score;
+					prob_sum += prob_table[i];
+					if (std::fabs(p - 0.5) < mid_prob) {
+						mid_point = i;
+						mid_prob = std::fabs(prob_sum - 0.5);
+					}
+				}
+				//score_mean /= prob_sum; // this doesn't look right...
+				if (std::fabs(prob_sum - 1) > 0.001) issue_error("rarity_test() - prob_sum deviated substantially");
+				if (std::fabs(prob_sum - 1) > 0.000001) issue_error("rarity_test() - prob_sum deviated slightly");
+				//score_mean_sqr /= prob_sum;
+				double score_variance = 0;
+				prob_sum = 0;
+				for (unsigned long i = 0; i < mid_point; i++) {
+					double p = prob_sum + prob_table[i] * 0.5;
+					prob_sum += prob_table[i];
+					double score = -std::log(p) - std::log(1 - p);
+					if (score > MAX_SCORE) score = MAX_SCORE;
+					score -= score_mean;
+					score_variance += score * score * prob_table[i];
+					score_actual += score * counts[i];
+					total += counts[i];
+				}
+				//numeric stability is better in some cases if the tail is handled in reverse order
+				double prob_sum2 = 0;
+				for (long i = categories - 1; i >= mid_point; i--) {
+					double p = prob_sum2 + prob_table[i] * 0.5;
+					prob_sum2 += prob_table[i];
+					double score = -std::log(p) - std::log(1 - p);
+					if (score > MAX_SCORE) score = MAX_SCORE;
+					score -= score_mean;
+					score_variance += score * score * prob_table[i];
+					score_actual += score * counts[i];
+					total += counts[i];
+				}
+				double score_deviation = std::sqrt(score_variance * total);
+				double score_normalized = score_actual;
+				//score_normalized -= score_mean * total;
+				score_normalized /= score_deviation;
+				return score_normalized;
 			}
-			score_deviation = std::sqrt(score_deviation * total);
-			double score_normalized = score_actual;
-			//score_normalized -= score_mean * total;
-			score_normalized /= score_deviation;
-			return score_normalized;
 		}
 		void G_TEST::reset() {
 			total = 0;
@@ -460,10 +836,18 @@ namespace PractRand {
 			if (num_choices > set_size - num_choices) {
 				num_choices = set_size - num_choices;
 			}
+			if (num_choices == 1) return set_size;
+
 			Uint64 rv = set_size;
-			for (int i = 2; i <= num_choices; i++) {
-				rv *= set_size + 1 - i;
-				rv /= i;//guaranteed to divide evenly, if we haven't overflowed yet
+			for (long i = 2; i <= num_choices; i++) {
+				//rv *= set_size + 1 - i;
+				//rv /= i;//guaranteed to divide evenly, if we haven't overflowed yet
+
+				Uint64 remainder = rv % i;
+				Uint64 multiplier = set_size + 1 - i;
+				rv /= i;
+				rv *= multiplier;
+				rv += (remainder * multiplier) / i;
 			}
 			return rv;
 		}
@@ -518,6 +902,9 @@ namespace PractRand {
 			rv -= (1.0 / 360) * (inv * inv2);
 			rv += (1.0 / 1260) * (inv * inv2 * inv2);
 			return rv;
+		}
+		double math_poisson_pmf(double lambda, int value) {
+			return std::exp(std::log(lambda) * value - lambda - PractRand::Tests::math_factorial_log(value));
 		}
 		static double math_harmonic_series(int n) {
 			if (n > 1000) return std::log(double(n)) + 0.57721566490153286;
@@ -691,11 +1078,11 @@ namespace PractRand {
 				ln_scale += std::log(a);
 				goto recurse;
 			}
-			issue_error(); return -1;
+			issue_error("error in math_regularized_gamma_function"); return -1;
 		}
 		static double math_upper_incomplete_gamma(double a, double x) {
 			if (a == 1) return std::exp(-x);
-			if (fabs(floor(a+.5)-a) <= 0.00000000001) {
+			if (std::fabs(floor(a+.5)-a) <= 0.00000000001) {
 				if (!x) return math_factorial(a-1);
 				int max = int(floor(a+.5) - 1);
 				long double sum = 0;
@@ -709,16 +1096,16 @@ namespace PractRand {
 			if (a == 0.5) return sqrt(3.14159265358979) * (1 - math_erf(sqrt(x)));
 		//	if (a == 0.0 && x>0) return -math_exponent_integral(-x)
 			if (a > 1) return (a-1) * math_upper_incomplete_gamma( a-1, x ) + pow(x, a-1) * ::exp(-x);
-			issue_error();return -1;
+			issue_error("errror in math_upper_incomplete_gamma");return -1;
 		}
 		double math_chisquared_to_normal ( double chisquared, double DoF ) {
-			return ( chisquared - DoF ) / std::sqrt(DoF);
+			return ( chisquared - DoF ) / std::sqrt(DoF);// THIS SHOULD BE DIVIDED BY SQRT(2) I THINK -- BUT CHANGING IT NOW MIGHT BREAK CALIBRATION ON A LOT OF STUFF
 		}
 		double math_chisquared_to_pvalue ( double chisquared, double DoF ) {
 			if (DoF == 2) return 1 - std::exp(chisquared*-.5);
 			//long double n = math_chisquared_to_normal(chisquared, DoF);
-			//if (fabs(n) > 100) return (n > 0) ? 1 : 0;
-			//if (fabs(chisquared) > 100) return math_normaldist_to_pvalue(n);
+			//if (std::fabs(n) > 100) return (n > 0) ? 1 : 0;
+			//if (std::fabs(chisquared) > 100) return math_normaldist_to_pvalue(n);
 			//long double p = math_lower_incomplete_gamma(DoF/2,chisquared/2) / math_gamma_function(DoF/2);
 			long double p = math_regularized_gamma_function(DoF / 2, chisquared / 2);
 			if (p < 0) p = 0;
@@ -743,17 +1130,22 @@ namespace PractRand {
 			norm *= std::sqrt(0.5);
 			double scaled = math_erfcx(norm);
 			double scale = norm * norm;
-			double ec = 1 - math_erf(norm);
+			//double ec = 1 - math_erf(norm);
 			double l = (std::log(scaled) - scale) / std::log(2.0);
 			return -(l + 0);
 		}
 		double math_normaldist_to_pvalue(double norm) {
+			if (norm > 0) return 1 - math_normaldist_to_pvalue(-norm);
+			double r = std::erfc(norm * -0.7071067811865475244);
+			return r * 0.5;
+
 			/*double r;
-			r = math_erf(norm * sqrt(0.5));
+			r = math_erf(norm * std::sqrt(0.5));
 			r *= 0.5;
 			r += 0.5;
 			return r;*/
-			double upper_p, lower_p;
+
+			/*double upper_p, lower_p;
 			if (norm >= 0) {
 				upper_p = 1;
 				lower_p = 0.5;
@@ -768,13 +1160,20 @@ namespace PractRand {
 				if (midn >= norm) upper_p = midp;
 				else lower_p = midp;
 			}
-			return (upper_p + lower_p) / 2;	
+			return (upper_p + lower_p) / 2;	*/
 		}
-		double math_normaldist_pdf( double normal ) {
+		double math_normaldist_cdf(double normal) {
+			return (math_erf(normal*0.7071067811865475) + 1) * 0.5;
+		}
+		double math_normaldist_pdf(double normal) {
 			static double scale = 1 / sqrt(3.14159265358979 * 2);
-			return scale * exp(normal*normal * -0.5);
+			return scale * std::exp(normal*normal * -0.5);
 		}
-		double math_pvalue_to_normaldist( double pvalue ) {
+		double math_normaldist_pdf_log(double normal) {
+			static double scale_ln = -0.91893853320467274178032973640562;// std::log(1 / sqrt(3.14159265358979 * 2));
+			return scale_ln + (normal*normal * -0.5);
+		}
+		double math_pvalue_to_normaldist(double pvalue) {
 			//public domain, originally by Peter J. Acklam
 			const double a1 = -39.69683028665376;
 			const double a2 = 220.9460984245205;
@@ -863,17 +1262,17 @@ namespace PractRand {
 			if (bits_L2 < 25) return chance_skipped[bits_L2];
 			else return chance_skipped[24] * std::pow(0.5, 0.5 * (bits_L2 - 24));
 		}
-		void get_hamming_weight_chances(int num_bits, std::vector<double> &pdf, std::vector<double> &cdf) {
-			int n = num_bits/2;
+		void get_hamming_weight_chances(long num_bits, std::vector<double> &pdf, std::vector<double> &cdf) {
+			long n = num_bits/2;
 			pdf.resize(n+1);
 			cdf.resize(n+1);
-			if (num_bits <= 512) {
+			if (num_bits <= 128) {//probably good out to 1024 or so
 				//calculate from edge normally
 				long double p = std::pow(0.5, num_bits);
 				long double prev_cdf = p;
 				pdf[0] = p;
 				cdf[0] = p;
-				for (int i = 1; i <= n; i++) {
+				for (long i = 1; i <= n; i++) {
 					p /= i;
 					p *= num_bits + 1 - i;
 					pdf[i] = p;
@@ -881,65 +1280,67 @@ namespace PractRand {
 					cdf[i] = prev_cdf;
 				}
 			}
-			else if (num_bits < 16384) {
+			else if (num_bits < (1<<20)) {//seems to be good out to very large values?  really, array sizes are the limiting factor
+				//calculate from edge with FP values, but separate out the exponent to handle small values decently --this should be good for the first half of both PDF & CDF, and adequate for the rest of the PDF, but awful near the end of the CDF - mirroring it would work better, but I'm letting the error accumulate for now
+				double p = 1.0;
+				int exponent = -num_bits;
+				long double prev_cdf = 0;
+				if (exponent > -1070) prev_cdf = std::ldexp(p, exponent);
+				pdf[0] = prev_cdf;
+				cdf[0] = prev_cdf;
+				for (long i = 1; i <= n; i++) {
+					p /= i;
+					p *= num_bits + 1 - i;
+
+					int tmp_exp;
+					p = std::frexp(p, &tmp_exp);
+					exponent += tmp_exp;
+					long double tmp_p = 0;
+					if (exponent > -1070) tmp_p = std::ldexp(p, exponent);
+					pdf[i] = tmp_p;
+					prev_cdf += tmp_p;
+					cdf[i] = prev_cdf;
+				}
+				double sum = pdf[n] + 2 * cdf[n - 1];
+				double e = std::fabs(sum - 1);
+				if (e > 0.000000001) issue_error("calculate_center_bit_combination_chance():path2 - error accumulated?");
+			}
+			/*else if (num_bits < 16384) {//not as good as the previous method
 				//calculate from edge as log, to deal with numbers beyond range of double-precision floating point
 				double log_p = std::log(0.5) * num_bits;
 				double thresh = std::log(0.5) * 1000;
-				for (int i = 0; i <= n; i++) {
+				for (long i = 0; i <= n; i++) {
 					if (log_p < thresh) pdf[i] = 0;
 					else pdf[i] = std::exp(log_p);
 					cdf[i] = i ? cdf[i-1]+pdf[i] : pdf[i];
 					log_p += std::log(double(num_bits-i) / double(i+1));
-				}//*/
-			}
-			else {
-				//normal approximation - bad for num_bits < 4096
+				}
+			}*/
+			else {//not great, but better for larger num_bits... at least 4096, preferably over 16384 ; the real advantage is that this can be calculated from anywhere, the array isn't really needed
+				//normal approximation
 				double mean = num_bits/2.0;
-				double dev = sqrt(num_bits * 0.5 * 0.5);
+				double dev = std::sqrt(num_bits * 0.5 * 0.5);
 				double delta = 1.0 / dev;
-				for (int i = 0; i <= n; i++) {
-					double norm = (i - mean) / dev;
+				for (long i = 0; i <= n; i++) {
+					double norm = (i - mean) * delta;
 					cdf[i] = math_normaldist_to_pvalue(norm + 0.5 * delta);
 					//pdf[i] = i ? cdf[i] - cdf[i-1] : cdf[i];
 					pdf[i] = math_normaldist_pdf(norm) * delta;
 				}//*/
-				//calculate from center ; DON'T USE - too much accumulated error on cdf at edges
-				/*double p = calculate_center_bit_combination_chance(num_bits_L2);
+			}
+			/*else {//calculate from center ; DON'T USE - too much accumulated error on cdf at edges
+				double p = calculate_center_bit_combination_chance(num_bits_L2);
 				pdf[n] = p;
 				cdf[n] = (p+1)/2;
-				for (int i = n-1; i >= 0; i--) {
+				for (long i = n-1; i >= 0; i--) {
 					double r = double(i+1)/double(num_bits-i);
 					p *= r;
 					pdf[i] = p;
 					cdf[i] = cdf[i+1]-pdf[i+1];
-				}//*/
-				// TO DO: test idea: calculate from center near center, from edge far from center
-			}
+				}
+			}//*/
+			// TO DO: test idea: calculate from center near center, from edge far from center
 		}
-
-		static const Uint8 reverse_table[256] = {
-		//	  0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
-			0  , 128,  64, 192,  32, 160,  96, 224,  16, 144,  80, 208,  48, 176, 112, 240,//0
-			8  , 136,  72, 200,  40, 168, 104, 232,  24, 152,  88, 216,  56, 184, 120, 248,//16
-			4  , 132,  68, 196,  36, 164, 100, 228,  20, 148,  84, 212,  52, 180, 116, 244,//32
-			12 , 140,  76, 204,  44, 172, 108, 236,  28, 156,  92, 220,  60, 188, 124, 252,//48
-			2  , 130,  66, 194,  34, 162,  98, 226,  18, 146,  82, 210,  50, 178, 114, 242,//64
-			10 , 138,  74, 202,  42, 170, 106, 234,  26, 154,  90, 218,  58, 186, 122, 250,//80
-			6  , 134,  70, 198,  38, 166, 102, 230,  22, 150,  86, 214,  54, 182, 118, 246,//96
-			14 , 142,  78, 206,  46, 174, 110, 238,  30, 158,  94, 222,  62, 190, 126, 254,//112
-			1  , 129,  65, 193,  33, 161,  97, 225,  17, 145,  81, 209,  49, 177, 113, 241,//0+128
-			9  , 137,  73, 201,  41, 169, 105, 233,  25, 153,  89, 217,  57, 185, 121, 249,//16+128
-			5  , 133,  69, 197,  37, 165, 101, 229,  21, 149,  85, 213,  53, 181, 117, 245,//32+128
-			13 , 141,  77, 205,  45, 173, 109, 237,  29, 157,  93, 221,  61, 189, 125, 253,//48+128
-			3  , 131,  67, 195,  35, 163,  99, 227,  19, 147,  83, 211,  51, 179, 115, 243,//64+128
-			11 , 139,  75, 203,  43, 171, 107, 235,  27, 155,  91, 219,  59, 187, 123, 251,//80+128
-			7  , 135,  71, 199,  39, 167, 103, 231,  23, 151,  87, 215,  55, 183, 119, 247,//96+128
-			15 , 143,  79, 207,  47, 175, 111, 239,  31, 159,  95, 223,  63, 191, 127, 255,//112+128
-		};
-		Uint8 reverse_bits8(Uint8 a) {return reverse_table[a];}
-		Uint16 reverse_bits16(Uint16 a) {return reverse_bits8 (a >>  8) + (Uint16(reverse_bits8 (Uint8 (a)))<<8);}
-		Uint32 reverse_bits32(Uint32 a) {return reverse_bits16(a >> 16) + (Uint32(reverse_bits16(Uint16(a)))<<16);}
-		Uint64 reverse_bits64(Uint64 a) {return reverse_bits32(a >> 32) + (Uint64(reverse_bits32(Uint32(a)))<<32);}
 
 		/*static double integral_of_ln_x(double x) {
 			return x * (std::log(x) - 1);
@@ -972,37 +1373,39 @@ namespace PractRand {
 			double raw = raw_test_edge_distribution(categories, prob_table, counts);
 			return raw;
 		}*/
-		double test_uniformity( const SampleSet &ss ) {
+		double uniformity_test(const SampleSet &ss) {
 			long size = ss.size();
 			if (!size) return 0;
 			double size_f = size;
 			double size_a = size + 1.0;
+			long double scale = (size + 1.0) * 1.7810724179901979852;// 1.781... is e^x where x is Euler's constant
 			double size_inv = 1.0 / size_a;
 			double prior = 0;
 			double sum_log = 0;
 			//double sum_exp = 0;
 			double longest = 0;
-			const double epsilon = std::pow(0.5, 50);
+			const double epsilon = std::pow(0.5, 54);
 			for (int j = 0; j <= size; j++) {
 				double current = j < size ? ss.get_result_by_index(j) : 1.0;
-				long double delta = current - prior;
-				delta += epsilon;
-				double L = std::log(delta);
-				sum_log += L;
+				long double delta = current; delta -= prior;
+				if (delta < epsilon) delta = epsilon;
+				double L = std::log(delta * scale);
+				sum_log -= L;
 				//sum_exp += std::exp(delta*size_inv);
 				if (longest < delta) {
 					longest = delta;
 				}
 				prior = current;
 			}
-			sum_log += std::log(size_a) * size_a;
+			//sum_log += std::log(size_a) * size_a;
 
 			//sum_exp = sum_exp - size_a - 1 / size_a - std::pow(size_a, -3) + std::pow(size_a, -4) - std::pow(size_a, -5) * 2  + std::pow(size_a, -6) * 2 ;
 			//sum_exp *= std::sqrt(size_a) * (size_a+1) * (size_a+1) * (size_a+1);
 			//sum_exp /= 1 + std::pow(size_a * 0.00047515, 5);
 
-			sum_log = -sum_log;
-			sum_log -= size_a * 0.57721566490153286 - 0.5;
+			//sum_log = -sum_log;
+			//sum_log -= size_a * 0.57721566490153286;
+			sum_log += 0.5;
 			sum_log /= std::sqrt(size_f);
 			sum_log += std::pow(2*size_f+1, -1.442695) * 0.2;
 			sum_log *= 1.245;
@@ -1034,32 +1437,196 @@ namespace PractRand {
 
 			return rv;
 		}
-		double test_table_uniformity( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
+		double uniformity_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
+			/*
+				basically the same algorithm as uniformity_test above
+				however, it currently operates under the assumpion that samples inside of a discrete category are perfecly uniformly spaced within that category
+				which will throw off the results a bit - variance and score will probably be lower than expected
+				maybe I'll get around to trying to adjust it to match random spacing instead
+				it might be proportional to total count minus the number of categories with non-zero counts?
+				it could be brute-forced by taking known good PRNG and randomly generating each spacing, but that seems both excessive and undesirably noisy
+			*/
 			long double prob_sum = 0;
 			long double total = 0;
 			for (unsigned long i = 0; i < categories; i++) total += counts[i];
 			if (!total) return 0;
-			long double sum_exp = 0, sum_log = 0;
-			double adjusted_total = total + 1.0;
-			double prior = 0;
-			//double DoF = 0;
+			long double scale = (total + 1.0) * 1.7810724179901979852;// 1.781... is e^x where x is Euler's constant
+			long double sum_exp = 0, sum_log = 0, longest = 0;
+			double post_distance = 0;
+
+			double blah = 0;
+
 			for (unsigned long i = 0; i < categories; i++) {
 				double cur_prob = prob_table[i];
-				if (counts[i]) {
-					double c = counts[i];
-					//DoF += c; //c > 2 ? 2 : 1;
-					double delta = cur_prob / (c + 1);
-					//sum += _uniformity_transform(prob_sum + delta * 0.5, adjusted_total);
-					if (c > 1) {
-						//sum += _uniformity_transform(delta, adjusted_total) * (c-1);
-					}
-					prior = prob_sum + cur_prob - delta * 0.5;
+				if (cur_prob < 0 || (cur_prob == 0 && counts[i])) {
+					issue_error("uniformity_test [table variant]: prob <= 0");
+				}
+				//blah += std::exp(cur_prob * expected_delta_inverse) * cur_prob;
+				Uint64 count = counts[i];
+				if (!count) {
+					post_distance += cur_prob;
+				}
+				else {
+					double delta = cur_prob / counts[i];
+					post_distance += delta * 0.5;
+					if (post_distance > longest) longest = post_distance;
+					if (delta > longest && count > 1) longest = delta;
+					sum_log -= std::log(post_distance * scale);
+					sum_log -= std::log(delta * scale) * (count - 1);
+					post_distance = delta * 0.5;
 				}
 				prob_sum += cur_prob;
 			}
-			//sum = sum - adjusted_total * 1.578 + 0.3;
-			//return sum / std::sqrt(total);
-			return 0;
+			if (post_distance > longest) longest = post_distance;
+			sum_log -= std::log(post_distance * scale);
+
+			double size_a = total + 1.0;
+			double size_f = size_a - 1.0;
+			sum_log += 0.5;
+			sum_log /= std::sqrt(size_f);
+			sum_log += std::pow(2 * size_f + 1, -1.442695) * 0.2;
+			sum_log *= 1.245;
+
+			longest -= math_harmonic_series(size_a) / size_a;
+			longest *= size_a + 2;
+
+			//double rv = sum_log;
+			//double rv = (sum_exp + sum_log) / 1.625;//pretty good for fewer samples, but tends to freak out eventually
+			double rv = longest * 0.6 + sum_log * 0.6;
+			return rv;
+		}
+		static double lowest_of_N(double n, PractRand::RNGs::Polymorphic::vRNG *known_good) {
+			double r = known_good->rand_double();
+			if (n == 1) return r;
+			if (!r) return 0;
+			return 1 - std::pow(r, 1.0 / n);
+		}
+		double uniformity_test_with_brute_force(unsigned long categories, const double *prob_table, const Uint64 *counts, PractRand::RNGs::Polymorphic::vRNG *known_good) {
+			/*
+				as above, except this one attempts to brute-force the conversion from testing a set of uniform samples (ranging from 0 to 1) to a chi-squared-test-style test of categorized samples
+			*/
+			long double prob_sum = 0;
+			long double total = 0;
+			for (unsigned long i = 0; i < categories; i++) total += counts[i];
+			if (!total) return 0;
+			long double scale = (total + 1.0) * 1.7810724179901979852;// 1.781... is e^x where x is Euler's constant
+			long double sum_exp = 0, sum_log = 0, longest = 0;
+			//double adjusted_total = total + 1.0;
+			double running_total_distance = 0;
+			//double DoF = 0;
+
+			double blah = 0;
+
+			for (unsigned long i = 0; i < categories; i++) {
+				double remaining_prob = prob_table[i];
+				prob_sum += remaining_prob;
+				if (remaining_prob < 0 || (remaining_prob == 0 && counts[i])) {
+					issue_error("uniformity_test [table variant 2]: prob <= 0");
+				}
+				//blah += std::exp(remaining_prob * expected_delta_inverse) * remaining_prob;
+				Uint64 remaining_count = counts[i];
+				while (remaining_count) {
+					double distance = lowest_of_N(remaining_count, known_good) * remaining_prob;
+					while (!distance) distance = lowest_of_N(remaining_count, known_good) * remaining_prob;
+					running_total_distance += distance;
+					remaining_prob -= distance;
+					remaining_count -= 1;
+					if (running_total_distance > longest) longest = running_total_distance;
+					sum_log -= std::log(running_total_distance * scale);
+					running_total_distance = 0;
+				}
+				running_total_distance += remaining_prob;
+			}
+			if (running_total_distance > longest) longest = running_total_distance;
+			sum_log -= std::log(running_total_distance * scale);
+
+			double size_a = total + 1.0;
+			double size_f = size_a - 1.0;
+			sum_log += 0.5;
+			sum_log /= std::sqrt(size_f);
+			sum_log += std::pow(2 * size_f + 1, -1.442695) * 0.2;
+			sum_log *= 1.245;
+
+			longest -= math_harmonic_series(size_a) / size_a;
+			longest *= size_a + 2;
+
+			//double rv = sum_log;
+			//double rv = (sum_exp + sum_log) / 1.625;//pretty good for fewer samples, but tends to freak out eventually
+			double rv = longest * 0.6 + sum_log * 0.6;
+			return rv;
+		}
+		double uniformity_test_with_brute_force2(unsigned long categories, const double *prob_table, const Uint64 *counts, PractRand::RNGs::Polymorphic::vRNG *known_good) {
+			/*
+				as above, except this one tries to be scalable to very high counts per category
+				it does so by not actually generating a random value for each individual sample
+				instead, in each category, it generates a lowest random number, a highest random number, and mean and variance for the results of all the rest
+				it can do this only for sum_log, not longest, so that gets ignored
+			*/
+			long double prob_sum = 0;
+			long double total = 0;
+			for (unsigned long i = 0; i < categories; i++) total += counts[i];
+			if (!total) return 0;
+			long double scale = (total + 1.0) * 1.7810724179901979852;// 1.781... is e^x where x is Euler's constant
+			long double sum_log = 0;
+			double running_total_distance = 0;
+
+			double mean_of_skipped_components = 0;
+			double variance_of_skipped_components = 0;
+
+			for (unsigned long i = 0; i < categories; i++) {
+				double remaining_prob = prob_table[i];
+				prob_sum += remaining_prob;
+				if (remaining_prob < 0 || (remaining_prob == 0 && counts[i])) {
+					issue_error("uniformity_test [table variant 2]: prob <= 0");
+				}
+				Uint64 remaining_count = counts[i];
+				if (remaining_count <= 4) {
+					while (remaining_count) {
+						double distance = lowest_of_N(remaining_count, known_good) * remaining_prob;
+						running_total_distance += distance;
+						remaining_prob -= distance;
+						remaining_count -= 1;
+						//if (running_total_distance > longest) longest = running_total_distance;
+						sum_log -= std::log(running_total_distance * scale);
+						running_total_distance = 0;
+					}
+					running_total_distance += remaining_prob;
+				}
+				else {
+					double lowest_sample = lowest_of_N(remaining_count, known_good);
+					double highest_sample = 1 - (1 - lowest_sample) * lowest_of_N(remaining_count - 1, known_good);
+					running_total_distance = (1 - highest_sample) * remaining_prob;
+					sum_log -= std::log(running_total_distance + lowest_sample * remaining_prob);
+
+					remaining_prob *= highest_sample - lowest_sample;
+					remaining_count -= 2;
+
+					// theoretically, we now have a region of known width, containing a known number of samples, precisely bounded at each end by a sample
+					// thus, this region should have the same general distribution of sum_log as the overall function does
+					// ...once normalization is removed
+					// ...and adjusted for its width and number of samples
+					// if I can correctly handle that, then I can replace brute forcing every sample in that region with brute forcing the overall distribution of samples in that region
+
+					//double subregion_mean = std::log(1.0 / );
+
+					//mean_of_skipped_components += subregion_mean * remaining_prob;
+					//variance_of_skipped_components += subregion_variance * remaining_prob * remaining_prob;
+				}
+			}
+			//if (running_total_distance > longest) longest = running_total_distance;
+			sum_log -= std::log(running_total_distance * scale);
+
+			double size_a = total + 1.0;
+			double size_f = size_a - 1.0;
+			sum_log += 0.5;
+			sum_log /= std::sqrt(size_f);
+			sum_log += std::pow(2 * size_f + 1, -1.442695) * 0.2;
+			sum_log *= 1.245;
+
+			double rv = sum_log;
+			//double rv = (sum_exp + sum_log) / 1.625;//pretty good for fewer samples, but tends to freak out eventually
+			//double rv = longest * 0.6 + sum_log * 0.6;
+			return rv;
 		}
 
 
@@ -1157,201 +1724,6 @@ namespace PractRand {
 			double fi = di - ii;
 			return rs[ii] + (rs[ii+1] - rs[ii]) * fi;
 		}
-
-		void BitMatrix::init(int w_, int h_) {
-			w = w_;
-			h = h_;
-			ww = (w_ + WORD_BITS_MASK) >> WORD_BITS_L2;
-			data.resize(ww*h, 0);
-			//for (int i = 0; i < ww*h; i++) data[i] = 0;
-		}
-		void BitMatrix::raw_import(int offset, Word *input, int length) {
-			for (int i = 0; i < length; i++) data[offset+i] = input[i];
-		}
-		void BitMatrix::import_partial_row(int x, int y, Word *input, int bits, int bit_offset, bool zeroed) {
-			//49 seconds
-			//added zeroed
-			//46 seconds
-			//added shifts
-			Word *dest = &data[y*ww+(x>>WORD_BITS_L2)];
-			if (false) {
-			/*	//clear partial words at begining & end of region
-				int end = x + bits;
-				Word start_mask = (Word(1) << (x & WORD_BITS_MASK)) - 1;
-				Word end_mask = ~(~Word(0) >> (((end-1) & WORD_BITS_MASK) ^ WORD_BITS_MASK));
-				int end_word = end >> WORD_BITS;
-				if (!zeroed) {
-					clear_rectangle(x, x+bits, y, y+1);
-					//dest[0] &= start_mask;
-					//dest[end_word] &= end_mask;
-				}
-				int start_word = x >> WORD_BITS_L2;
-				int end_word = (end-1) >> WORD_BITS_L2;
-				int out_offset = x & WORD_BITS_MASK;
-				input -= start_word;
-				if (bit_offset == out_offset) {
-					if (start_word == end_word) data[start_word] |= input[start_word] & ~(start_mask & end_mask);
-					else {
-						data[start_word] |= input[start_word] & ~start_mask;
-						for (int xw = start_word+1; xw < end_word; xw++) {
-							data[xw] = input[xw];
-						}
-						data[end_word] |= input[end_word] & ~end_mask;
-					}
-				}
-				else {
-					int bit_delta = (bit_offset - out_offset) & WORD_BITS_MASK;
-					int iww = 
-					for (int iw = 1; iw < ; xw++) {
-					;
-					if (start_word == end_word) {
-					}
-					else {
-						data[start_word] |= (input[xw] >> bit_offset) & ~start_mask;
-						for (int xw = start_word+1; xw < end_word; xw++) {
-							data[xw] = (input[xw] >> bit_delta) | (input[xw+1] << (WORD_BITS-bit_delta));
-						}
-					}
-				}*/
-			}
-			//else if (!bit_offset && 
-			else {
-				if (!zeroed) clear_rectangle(x, x+bits, y, y+1);
-				for (int i = 0; i < bits; i++) {
-					int a = i+bit_offset;
-					bool value = (input[a >> WORD_BITS_L2] >> (a & WORD_BITS_MASK)) & 1;
-					int b = i+(x & WORD_BITS_MASK);
-					dest[b >> WORD_BITS_L2] |= Word(value) << (b & WORD_BITS_MASK);
-				}
-			}
-		}
-		bool BitMatrix::read_position(int x, int y) const {
-			int index = (x >> WORD_BITS_L2)+y*ww;
-			Word w = data[index];
-			Word w2 = w >> (x & WORD_BITS_MASK);
-			bool bit = w2 & 1;
-			return bit;
-			//return (data[(x >> WORD_BITS_L2)+y*ww] >> (x & WORD_BITS_MASK)) & 1;
-		}
-		void BitMatrix::xor_rows(int destination, int source) {
-			int base1 = ww * destination;
-			int base2 = ww * source;
-			for (int i = 0; i < ww; i++) data[base1+i] ^= data[base2+i];
-		}
-		void BitMatrix::xor_rows_skip_start(int destination, int source, int skip) {
-			int base1 = ww * destination;
-			int base2 = ww * source;
-			for (int i = skip; i < ww; i++) data[base1+i] ^= data[base2+i];
-		}
-		void BitMatrix::clear_rectangle(int min_x, int max_x, int min_y, int max_y) {
-			int start_word = min_x >> WORD_BITS_L2;
-			int end_word = (max_x-1) >> WORD_BITS_L2;
-			Word start_mask = (Word(1) << (min_x & WORD_BITS_MASK)) - 1;
-			Word end_mask = ~(~Word(0) >> (((max_x-1) & WORD_BITS_MASK) ^ WORD_BITS_MASK));
-			if (start_word == end_word) {
-				Word mask = start_mask | end_mask;
-				for (int y = min_y; y < max_y; y++) data[y*ww+start_word] &= mask;
-				return;
-			}
-			for (int y = min_y; y < max_y; y++) data[y*ww+start_word] &= start_mask;
-			for (int x = start_word + 1; x < end_word; x++) {
-				for (int y = min_y; y < max_y; y++) data[y*ww+start_word] = 0;
-			}
-			for (int y = min_y; y < max_y; y++) data[y*ww+end_word] &= end_mask;
-		}
-		int BitMatrix::normalize_and_rank() {
-			int ranks_found = 0;
-			for (int x = 0; x < w; x++) {
-				if (read_position(x, ranks_found)) {//row already in correct position
-					for (int y = ranks_found+1; y < h; y++) if (read_position(x,y)) xor_rows(y, ranks_found);
-					ranks_found++;
-				}
-				else {
-					int y = ranks_found+1;
-					while (y < h && !read_position(x, y)) y++;
-					if (y != h) {
-						xor_rows(ranks_found, y);
-						xor_rows(y, ranks_found);
-						for (++y; y < h; y++) if (read_position(x,y)) xor_rows(y, ranks_found);
-						ranks_found++;
-					}
-					else ;//skipped rank
-				}
-			}
-			return ranks_found;
-		}
-		int BitMatrix::large_normalize_and_rank() {
-			int ranks_found = 0;
-
-			//trying to minimize sweeps through memory... but not minimize actual math
-			//(minimizing math costs too much)
-			enum {STEP=24};//rows at once
-			//--: 306, 4: 263, 8: 249, 16: 246, 64: 239, 256: 237
-			//with "shortened" added it's now... 1: 241, 4: 205, 8: 199, 16: 197, 24: 188, 256: 183
-			int last_ranks_found = 0;
-			std::vector<int> rank_x;//tells us the first bit of each deferred rank in the range [last_ranks_found,ranks_found)
-			int virtual_h = STEP;//rows up to (but not including) virtual_h have already been partially normalized up to ranks_found
-			if (virtual_h > h) virtual_h = h;
-
-			//Word *base = &data[0];
-			for (int x = 0; x < w; x++) {
-				int shortened = last_ranks_found >> WORD_BITS_L2;
-				if (ranks_found >= virtual_h) {//time for a sweep
-					//because too many unused ranks built up
-					for (int y = virtual_h; y < h; y++) {
-						for (int rank = last_ranks_found; rank < ranks_found; rank++) {
-							int x2 = rank_x[rank-last_ranks_found];
-							//if (read_position(x2,y)) xor_rows(y, rank);
-							//if (read_position(x2,y)) for (int i = shortened; i < ww; i++) base[y*ww+i] ^= base[rank*ww+i];
-							if (read_position(x2,y)) xor_rows_skip_start(y, rank, shortened);
-						}
-					}
-					last_ranks_found = ranks_found;
-					rank_x.clear();
-					virtual_h = x + STEP;
-					if (virtual_h > h) virtual_h = h;
-				}
-				if (read_position(x, ranks_found)) {//row already in correct position
-					for (int y = ranks_found+1; y < virtual_h; y++) if (read_position(x,y)) xor_rows_skip_start(y, ranks_found, shortened);
-					rank_x.push_back(x);
-					ranks_found++;
-				}
-				else {
-					int y = ranks_found+1;
-					while (y < virtual_h && !read_position(x, y)) y++;
-					if (y == virtual_h) {
-						if (last_ranks_found != ranks_found) {//time for a sweep
-							//because we need to search past the end of the stuff that is usable atm
-							for (int y = virtual_h; y < h; y++) {
-								for (int rank = last_ranks_found; rank < ranks_found; rank++) {
-									int x2 = rank_x[rank-last_ranks_found];
-									if (read_position(x2,y)) xor_rows_skip_start(y, rank, shortened);
-								}
-							}
-							last_ranks_found = ranks_found;
-							rank_x.clear();
-							virtual_h = x + STEP;
-							if (virtual_h > h) virtual_h = h;
-						}
-						while (y < h && !read_position(x, y)) y++;//it's now safe to search past virtual_h, because the buffer is clear
-					}
-					if (y != h) {
-						int rfww = ranks_found * ww;
-						xor_rows_skip_start(ranks_found, y, shortened);
-						//for (int i = shortened; i < ww; i++) base[rfww+i] ^= base[y*ww+i];
-						xor_rows_skip_start(y, ranks_found, shortened);
-						//for (int i = shortened; i < ww; i++) base[y*ww+i] ^= base[rfww+i];
-						for (++y; y < virtual_h; y++) if (read_position(x,y)) xor_rows_skip_start(y, ranks_found, shortened);
-						//for (++y; y < virtual_h; y++) if (read_position(x,y)) for (int i = shortened; i < ww; i++) base[y*ww+i] ^= base[ranks_found*ww+i];
-						rank_x.push_back(x);
-						ranks_found++;
-					}
-					else ;//skipped rank
-				}
-			}
-			return ranks_found;
-		}
-
 
 	}//Tests
 }//PractRand

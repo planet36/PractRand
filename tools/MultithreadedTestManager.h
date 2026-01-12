@@ -81,7 +81,6 @@ public:
 public:
 	MultithreadedTestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_ = 1 << (27-10)) : TestManager(tests_, known_good_, max_buffer_amount_) {
 		//buffer1.resize(max_buffer_amount + Tests::TestBaseclass::REPEATED_BLOCKS);
-		for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
 	}
 	void test(Uint64 num_blocks) {
 		while (num_blocks) {

@@ -1,0 +1,972 @@
+*****************************************************************************
+0. Contents of this file
+*****************************************************************************
+0. Contents of this file
+1. Summary of test results
+2. Test Configurations & Usage
+3. Full results
+4. Details of the results format
+5. Tests that were not included
+
+This is about how I test the tests themselves.  I have used this methodology 
+for both individual tests and entire batteries of test.  Basically, I have a 
+very large set of bad PRNGs.  Deliberately bad - if I think a PRNG is too 
+good to be rejected by any modern (or near future) tests then I'll discard 
+it.  Then I use semi-automated means of testing the entire set with various 
+different test batteries or individual tests and collating the results.  
+This helps me figure out which tests are worth using, which aren't worth 
+using, and what sorts of tests should or shouldn't be added to a battery of 
+tests.  
+
+You might find the sets of PRNGs and scripts useful if you are trying to 
+test statistical tests.  Alternatively, you might find the results of 
+various tests summarized here useful in other ways.  This can answer broad 
+questions like "which test batteries are best?" (answer: PractRand of course, 
+though back when I first started these charts gjrand outperformed PractRand 
+version 0.92.  But since then I've updated PractRand several times, 
+with making it outperform other test batteries on these kinds of metrics as 
+one of my main goals).  Or it can answer narrower questions like, "what PRNG 
+algorithms pass TestU01 *Crush but fail Dieharder?" 
+(answer: simpleA, binarymult32, mulcrx64, ranrot32, and genindF(2)... plus a 
+lot more if you count those that pass BigCrush but fail Crush, which is 
+surprisingly common).  
+
+*****************************************************************************
+1. Summary of results
+*****************************************************************************
+
+The brief summary is this: by the metrics I'm using, from best to worst, the test 
+suites were: 
+PractRand (best), gjrand, TestU01, RaBiGeTe, Dieharder, and NIST STS (worst).  
+
+total RNGs per category
+category    ALL      recom.   simple   misc.    LCGish   cbuf     indirect
+number      190      19       50       19       33       29       40
+
+
+number of RNGs bias was found in VS test battery VS time, for all categories of PRNGs combined
+                   10 secs  1 min   5 mins   30 mins   1 hour    4 hours   8 hours   1 day     4 days
+PractRand std      43       65      83       104       112       130       136+      142+      147+
+gjrand mcp         52       67      90       --        102       --        124       --        134+
+TestU01 *Crush     20       --      --       58        --        68        --        --        --
+RaBiGeTe ext       19       26      31       40        45        --        --        --        --
+Dieharder (custom) 10       14      27       --        --        --        --        --        --
+Dieharder (-a)     --       --      --       --        17        --        --        --        --
+Times are very rough figures based upon modern desktop x86 CPUs, but using only one core (no multithreading).  
+(times were fairly similar on a variety of such CPUs)
+All results are based upon a set of 190 RNGs, listed below.  
+Some categories of RNGs were omitted - candidate RNGs were not counted, 
+nor were "Transforms applied to various low quality RNGs".  
+
+number of RNGs bias was found in VS test battery VS time, for each individual category of PRNG:
+
+simple PRNGs                10 secs  1 min    5 mins   30 mins  1 hour   4 hours  8 hours  1 day    4 days
+   PractRand std            21       29       31       43       45       50       53       55       57+
+   gjrand pmcp              17       22       28       --       ?        n/       ?        --       ?
+   TestU01 *Crush           9        --       --       17       --       19+      --       --       --
+   TestU01 *Crush ***       ?        ?        --       ?        ?        ?        ?        --       --
+   RaBiGeTe                 6+       7+       9+       9+       9+       --       --       --       --
+   dieharder (custom)       6        9+       12+      --       --       --       --       --       --
+   dieharder (-a)           --       --       --       --       7+       --       --       --       --
+   NIST STS                 
+	*** 10 sec                    21 (512 MB) 9 (SC)      6 (2 Mb)    17 (small)
+	*** 1 minute                  29 (4 GB)   --          7 (16 Mb)   22 (standard)
+	*** 5 minutes                 31 (16 GB)  --          9 (64 Mb)   28 (big)
+	*** 30 minutes                43 (128 GB) 17 (C)      9 (256 Mb)  --
+	*** 1 hour                    45 (256 GB) --          9 (512 Mb)   (huge)
+	*** 4 hours                   50 (1 TB)   19+ (BC)     --          --
+	*** 8 hours                   53 (2 TB)   --          --           (tera)
+	*** 1 day                     55 (4 TB)   --          --          --
+	*** 4 days                    57+ (16 TB)  --          --           (ten-tera)
+other PRNGs                 10 secs  1 min    5 mins   30 mins  1 hour   4 hours  8 hours  1 day    4 days
+   PractRand std            
+   gjrand pmcp              
+   TestU01 *Crush           
+   RaBiGeTe                 
+   dieharder (custom)       
+   dieharder (-a)           
+   NIST STS                 
+LCG-ish PRNGs               10 secs  1 min    5 mins   30 mins  1 hour   4 hours  8 hours  1 day    4 days
+   PractRand std            
+   gjrand pmcp              
+   TestU01 *Crush           
+   RaBiGeTe                 
+   dieharder (custom)       
+   dieharder (-a)           
+   NIST STS                 
+cyclic buffer-based PRNGs   10 secs  1 min    5 mins   30 mins  1 hour   4 hours  8 hours  1 day    4 days
+   PractRand std            
+   gjrand pmcp              
+   TestU01 *Crush           
+   RaBiGeTe                 
+   dieharder (custom)       
+   dieharder (-a)           
+   NIST STS                 
+indirection-based PRNGs	    10 secs  1 min    5 mins   30 mins  1 hour   4 hours  8 hours  1 day    4 days
+   PractRand std            
+   gjrand pmcp              
+   TestU01 *Crush           
+   RaBiGeTe                 
+   dieharder (custom)       
+   dieharder (-a)           
+   NIST STS                 
+
+
+*****************************************************************************
+2. Test Configurations & Usage
+*****************************************************************************
+
+PractRand std:
+	The software this document accompanies.  
+	configuration / usage:
+		The defeault settings on PractRand - core tests with standard folding.  
+		Used in single-threaded mode (also the default setting).  
+	speed:
+		On my computer, this tests about 256 gigabytes per hour on fast PRNGs.  
+		Time used is mostly linear with amount of data tested... 
+			not counting the time taken to generate interim results, 
+			which is usually between 0 and 2 seconds per set of results shown.  
+	strengths:
+		Exceptionally effective against a wide variety of types of PRNGs.  
+		Uses the least CPU time per biased PRNG found.  
+		No (realistic) maximum test length.  
+		Command line interface is easy to script with.  
+		...and also can be linked with and used as a C++ library.  
+		Output format is easy to parse, both for humans and scripts.  
+		Best overall results.  
+			Of course, to some extent that's a function of which PRNGs are tested
+			which I picked out
+		The only test suite to offer interim results.  
+	weaknesses:
+		Cheats slightly on all RNGs by looking at the metadata - 
+			it treats 8 bit RNGs slightly differently than 32 bit RNGs, etc
+		Tests are not completely independent.  
+		Requires lots of random numbers.  
+			if the PRNG being tested is very slow, this could be a problem
+	record notation:
+		Test failures are recorded as the smallest data size at which failure was detected.  
+			only sizes that are powers of 2 are tested, starting from 1 kilobyte
+		If no failures were found, instead the result is recorded as > X
+			where X is the largest size tested.
+		Failing is anything that PractRand explicitly evaluates as FAIL.  
+			Anything short of that is considered passing.  
+	link: https://pracrand.sourceforge.net/
+
+gjrand pmcp:
+	Quite obscure, but actually really good.  
+	configuration / usage:
+		I use pmcp (I think that stands for Parallel Master Control Program?)
+			I think mcp is equivalent, but doesn't share PRNG output between tests so it's slower.  
+		with the command line option for one of its standard sizes:
+			--small, --standard, --big, --huge, --tera, or --ten-tera
+		It also supports --tiny, but that's not much faster than --small so I don't bother with it.  
+		WARNING: only run one instance of pmcp at once.  Otherwise it can SILENTLY FAIL.  
+			Meaning it may produces output that superficially LOOKS correct but is actually GARBAGE.  
+		WARNING: the present working directory must be the path where pcmp and the other executables are located
+		I'm using gjrand version 4.2.1.  
+			There also exists a version 4.3.0, but I rejected it in favor of 4.2.1
+			Why?  ...I don't remember.  Might have been important, or maybe it was trivial.  
+	speed:
+		On my computer, --small takes about 10 seconds when using a single core
+			--standard takes about a minute
+			--big takes about 5 minutes
+			--huge takes about an hour
+			--tera takes about 8 hours
+			--ten-tera takes about 4 days
+		There's also --tiny, which takes about 3.5 seconds, but I don't use that one much.  
+	strengths:
+		Highly effective against a wide variety of types of PRNGs.  
+		Second best overall results by the metrics these charts focus on, after PractRand.  
+		Can useful summarize results with a small number of p-values.  
+		Number of failures found is more meaningful than with most other test batteries
+			In other batteries a single test algorithm rejecting a PRNG might produce anywhere from 1 to 1000 failing p-values (and thus that many reported failures), depending upon how that test was structured.
+			With gjrand, every testing algorithm produces exactly 1 p-value, and gets reported as exactly 1 failure.  Thus the maximum possible number of failures is only about 13.  
+		Decent command line interface aside from the problems mentioned earlier.  
+	weaknesses:
+		See the all-caps warnings in the configuration/usage section?  Those matter.  
+			Especially the first one.  It's incredibly painful if you have a large archive of test results, and then you realize that some of them are garbage but you can't even reliably tell which ones, and it will take months to rerun all your tests...  
+			Even aside from the problems with garbage output, lack of being able to run multiple instances at once can be a problem for some users.  Like me.  
+		I haven't dared to even try to build this on windows.  I doubt it would go well.  
+	record notation:
+		The results are recorded as a sequence of up to 6 characters.  
+			The first character represents the result of pmcp --small, then --standard, --big, --huge, --tera, and --ten-tera, in order.  
+			If no failures were detected, that is recorded as dash character (-) or a tilde character (~)
+				depending upon whether or not suspcious but non-failing results were present.  
+				for this purpose, I consider a test result as a failure if pmcp reports it as a grade 10 or above failure
+				and I consider a test result suspicious if pmcp reports it as grade 4 through 9 failure.  
+			Otherwise, the character is the number of tests failed, in hexadecimal, which can range from 1 to D.  
+			Thus, the best possible result is ------ (every test result was reported as no worse than grade 3)
+			The worst possible result is DDDDDD (every test result was reported as grade 10 or above)
+			If the result is shorter than 6 characters that means that the longest tests haven't yet been run.  
+				Often longer slower tests are omitted for lack of time, especially if shorter tests already showed decisive results.  
+	link: https://gjrand.sourceforge.net/
+
+TestU01 *Crush:
+	Meaning SmallCrush, Crush, and BigCrush from TestU01.  
+	configuration / usage:
+		Just the normal behavior of SmallCrush/Crush/BigCrush.  
+		The only thing I've meaningfully adjusted is interface.  
+	speed:
+		On my computer, SmallCrush takes maybe 10 seconds on very fast PRNGs.  
+		Crush, about half an hour, and BigCrush takes maybe 4 hours.  
+	strengths:
+		Can be linked with and used as a C++ library.  
+		Good academic credentials behind this.  
+			And it shows - you can read the paper this was published with, for instance.  
+		Decent results on most categories of PRNGs.  
+		Third best overall results by the metrics these charts focus on, after PractRand and gjrand.  
+		Guarantees that all subtest results are independant.  
+		Decent output summary format.  
+	weaknesses:
+		It actually does not test the lowest bit of PRNG output.  
+			Which is ridiculous.  It got them some advantages, but... it's still ridiculous.
+		I had to write my own scriptable interface (testing piped input etc).  
+		I have TestU01 working on Windows, but many have severe trouble with that.  
+		Because PRNG output is not shared between subtests, 
+			this is more sensitive to PRNG speed than you might expect.  
+		Doesn't support multithreading.  
+		Contrary to what you might expect, it's common for a PRNG to fail Crush yet pass BigCrush.  
+			So, you should never test with *only* BigCrush.  
+	record notation:
+		If no failures were found the result is recorded as pass if there were no suspicious results, 
+			or ~pass if there were suspicious results.  
+		Otherwise, results are recorded as X/Y/Z
+			Where X, Y, and Z are decimal numbers of tests failed.  
+			X is the number of tests failed in SmallCrush, Y corresponds to Crush, and Z to BigCrush
+			X, Y, or Z may also be ~0, which means no failure but at least one suspicious result.  
+		Thus, a result of 0/1/2 means SmallCrush was passed, but 1 subtest of Crush and 2 subtests of BigCrush were failed.  
+		Any p-value less than 1e-9 or greater than (1-1e-9) is considered a failure.  
+		Any non-failing p-value less than 1e-4 or greater than (1-1e-4) is considered suspicious.  
+	link: https://simul.iro.umontreal.ca/testu01/tu01.html
+
+RaBiGeTe:
+	I'm now using version 2.0 of this.  
+	configuration / usage:
+		I use a custom configuration, with 4 tests active: Short block, Windowed Autocorrelation, Rank, and Permutation
+			In my testing, Short block was by far the most important test, followed by a roughly 3-way tie between the other 3.  
+			Some other tests showed some value, but in the vast majority of cases it seemed that giving more CPU time to those 4 tests produced better outcomes than enabling a wider variety of tests.  
+			For Short block and Windowed Autocorrelation, I used the parameters from the Good'n'Fast preset.  
+				This was important, because using the parameters from the Extended preset resulted in too many p-values, causing the interface to become effectively unusable on longer test runs.  
+					Seriously, the program would lock up for multiple hours any time I asked it to do something simple like sort the p-values.  
+			For Rank and Permutation, I used the parameters from the Extended preset.  
+		If you wish to run a wider variety of test, my suggestion is start with the above 4, then add: Runs, Weight, Block gap dist, OET, Peak, Coupon, and the various Random Walk tests.  
+			That excludes the Partition, Linear Complexity, Serial, Non overlapping template matching, and DFT tests.  
+				Those tests take a ton of CPU time, but rarely detected any biases, and I've never seen them detect any that hadn't already been detected by other tests using the same or less data.  
+			That also excludes AMLS, Collision, Maurer, Long block, Blocks'n'Gaps, Serial two-bit, and Cumulative sums tests.  They don't take much CPU time, but contributed basically nothing.  
+		I test only one sample.  I then sort the p-values for that sample.  If any p-value is "fail" or less than 1e-10, that is counted as a failure.  
+			Note that this is contrary to the recommendations of the author, but it gave me better results than other methods I tried.  
+			p-values close to 1.0 are not considered failures - it frequently generates those even on known good PRNGs.  
+	speed:
+		I ran tests of lengths 1 megabit, 8 megabits, 32 megabits, 128 megabits, and 1 gigabit.  When I have more time I'll add 4 gigabits as well.  
+			Note that those are in units of *bits* not bytes, unlike for other test suites.  
+		Those test lengths took about ~2 seconds, ~9 seconds, ~50 seconds, ~4 minutes, and ~45 minutes, when forced to run on a single core.  
+			4 Gb looks to take a touch under 4 hours.  
+		If I have more time I might run longer tests on some PRNGs.  
+	strengths:
+		RaBiGeTe does not need as many bits to detect bias as most other test batteries.  
+		It performs quite decently on several categories of PRNGs.  
+			Not as wide a variety as the above test suites, but still a wide variety, and better than the above on some within that variety.  
+		Includes a GUI that lets you examine and visualize test results in a variety of ways.  
+		You can link in your PRNGs object code via dll.  
+	weaknesses:
+		It's fairly slow on a per-bit-tested basis.  
+		Scripting and automation of tests with this seems pretty much impossible, given the GUI interface.  
+			In particular, you can't pipe PRNG output to it.  PRNG's must either be written as a dll, or have output saved to a file.
+		The maximum test length seems to be just 4 gigabits.  You can set it to test more, but it silently adjusts test length down to 4 Gb.  
+			That's about a 3 hour test on my computer, btw.  
+		There are several categories of PRNGs it's hopeless against.  
+			For instance, large PRNGs.  Everything has trouble with them, but RaBiGeTe suffers even more than other test batteries when PRNGs get big.  
+				An example is mm32 (Mitchell & Moore's lagged sum PRNG, an old medium-large PRNG of very poor quality).  
+					EVERY other test battery (except STS, which shouldn't count) easily finds bias in mm32.  
+		Windows-only and closed source.  
+		It supports multithreading, but... actual performance is not matching its settings well in the current version.  
+			It sometimes maxes out all cores even when I tell it to only use 1 thread.  I've taken to locking it to a single core via CPU affinities in the task manager to avoid this.  
+			I'm not seeing the speedup I expect when it uses multiple cores.  I remember it getting more speedup from cores in an earlier version, but maybe my memory is wrong.  
+		Crashes once in a rare while.  
+	record notation:
+	link: http://cristianopi.altervista.org/RaBiGeTe_MT/
+
+Dieharder:
+	I'm using version 3.31.1
+	configuration / usage:
+		I use 4 different sets of tests within dieharder, which I refer to as DH0, DH1, DH2, and DHA.  
+		DHA involves invoking dieharder with the -a command line option, for all tests enabled.  
+			I do not recommend this, I just include it for completeness.  
+			The *reason* I don't recommend this is that several tests have serious problems.  
+				And many tests show little or no ability to detect bias.  
+				And the underlying framework limits the range of parameters to tests too much.  
+			ONLY the following tests show significant ability to detect bias:
+				dab_monobit2, dab_dct, dab_filltree, dab_filltree2, diehard_opso, diehard_oqso, dab_bytdistrib
+			Tests with particular problems (at default parameters) include:
+				MAJOR p-value issues
+					these issues result in false positive results occuring at significant rates
+					specific tests with this issue include:
+						marsaglia_tsang_gcd, sts_serial, rgb_lagged_sum
+				minor p-value issues
+					these issues rarely result in a good PRNG producing a fail message
+					but if used with meta-tests that amplify p-value issues even a little...
+						then problems become likely
+					specific tests with this issue include:
+						diehard_sums, diehard_runs, rgb_kstest
+				performance issues
+					these tests take a long time
+					specific tests with this issue include:
+						marsaglia_tsang_gcd, diehard_dna, rgb_bitdist, rgb_minimum_distance
+				data-dependent lock-ups
+					these tests sometimes just grind to a halt, depending upon the data being tested
+					specific tests with this issue include: diehard_2dsphere
+		DH0, DH1, and DH2 use the following tests
+			_     dab_monobit2  dab_dct  dab_filltree2  dab_filltree  dab_bytedistrib
+			DH0:  100000000     100000   --             --            --
+			DH1:  500000000     500000   5000000        15000000      51200000
+			DH2:  2000000000    3000000  48000000       48000000      512000000
+			The numbers listed are those used with the -t command line option.  
+				Where no number was listed, that test was omitted entirely.  
+			Thus, the actual command lines for testing ranrot32 with DH0 look like:
+				PractRand/RNG_output ranrot32 inf 0 | dieharder -g 200 -D 504 -d dab_monobit2 -t 100000000
+				PractRand/RNG_output ranrot32 inf 0 | dieharder -g 200 -D 504 -d dab_dct -t 100000
+			To go over the full details:
+				The calls to PractRand/RNG_output is to get random bytes to test.  
+					the "ranrot32" argument is the name of the generator to use
+					the "inf" argument is the number of bytes to generate, infinite in this case.  
+					the "0" is the seed to use
+				The calls to dieharder are to run the tests
+					the "-g 200" argument specifies that the bytes to test will be piped in throuh stdin
+					the "-D 504" argument specifies the formatting that the results will be printed with
+					the "-d dab_monobit2" or "-d dab_dct" arguments specify which test to use
+					the "-t 100000000" or "-t 100000" arguments specify how many bytes to test
+	speed: DH0 takes about 10 seconds, DH1 takes about a minute, DH2 takes about 5 minutes, and DHA 
+		takes about 1 hour.  
+	strengths:
+		The command line interface is decent for scripting.  
+		The output format is fairly readable.  
+	weaknesses:
+		I did mention that some tests have serious false positive issues.  
+		And others have milder p-value problems.  
+		And some lock up on some data.  
+		And most aren't any good at finding bias.  
+	record notation: in the "others" column I listed DH0, DH1, or DH2, 
+		whichever is the smallest test to fail a particular PRNG.  I 
+		list DHA seperately in the same column if it fails that.  
+	link: https://webhome.phy.duke.edu/~rgb/General/dieharder.php
+
+NIST STS (Statistical Test Suite)
+	I'm using a heavily customized version of STS 2.1.2.  My variant 
+	includes various alterations to improve scriptability, speed, and 
+	memory requirements.  
+	configuration / usage:
+		I've adjusted ALPHA from 0.01 to 0.001, the lowest value within 
+		their recommended range.  Aside from that, these are the 
+		parameters I'm using:
+		name      sequence length    num of sequences   disabled tests
+		STS0      256 kilobits       32                 TEST_FFT
+		STS1      2 megabits         32                 --
+		STS2      16 megabits        32                 --
+		STS3      128 megabits       32                 TEST_OVERLAPPING
+		Why?  Well, first of all, if you're using the results shown in the 
+		finalAnalysisReport, which are all basically metatests, then you 
+		can't reduce number of sequences much below 32 or the metatests 
+		it shows will be worthless.  Secondly, if your sequence lengths 
+		are too long then the overlapping templates test will produce 
+		false positives.  Likewise, if your sequence lengths are less then 
+		about 1 megabit then the FFT test will have problems, and if your 
+		sequence lengths are less than half a megabit then the universal 
+		test will have 	problems.  Also, if you see the random excursions 
+		text or its variant produce large numbers of slightly suspicious 
+		rows all at once, it's probably not important - I've seen it do 
+		that on multiple generators, and in every case so far it has been 
+		non-replicable when longer tests and/or different seeds were 
+		tried.  
+		Asside from those issues, more time testing is better, but... 
+		not by much.  A few seconds of gjrand testing outperforms an hour 
+		of STS testing by a very large margin.  Longer sequences generally 
+		work better than more samples, for a given total quantity of bits 
+		being tested.  When I have more spare CPU time I might add an STS4 
+		with longer (1 Gb) sequences, but there wouldn't be much 
+		difference anyway.  Plus I'd have to disable several tests - FFT, 
+		overlapping templates, and longest runs all yield garbage results 
+		at that test length.  
+		Anyway... as for what I consider a failure or suspicious...
+		since I'm working with finalAnalysisReport as-is, I'm limited 
+		to the two metatests it emphasizes.  Unfortunately, both tend to 
+		miss failures present in underlying data and exaggerate biases 
+		in the underlying tests, but they can be worked with.  The 
+		fractions shown on the right-hand side are more useful than 
+		the distribution on the left (the p-value summarizes the shown 
+		distribution only, that's all it does) - for those, for any 
+		tests *other* than the random excursions & variants, any 
+		result less than or equal to 29/32 is suspicious, and any 
+		result less than or equal to 27/32 is a failure.  For the 
+		random excursions & variants things are a bit messier, but 
+		any result where the numerator is at least 3 less than the 
+		denominator is suspicious, and any where it is at least 5 less 
+		than the denominator is a failure.  MAKE SURE you have the 
+		value of ALPHA adjusted to 0.001, otherwise very different 
+		thresholds should be used (24/32 for failure and 27/32 
+		for suspicioun on the default ALPHA of 0.01).  
+		As for the metatest shown on the left with the histogram and 
+		p-value... I count it as suspicious if the p-value is less 
+		than 0.001 (the same threshold it's marking with an asterisk 
+		if you have adjusted ALPHA the way I suggested) AND the 
+		histogram entry with the highest number (or at least one tied 
+		for highest) must be either the leftmost or rightmost column 
+		AND the test is not overlapping templates.  I count it as a 
+		failure if it meets the requirements to be suspicious and 
+		either the two left-most columns combined or the two 
+		rightmost colums combined contain at least 16 samples (out of 
+		32 total).  
+		Also, I completely ignore the left-hand metatest for the 
+		OverlappingTemplate test on STS2, and the other other 
+		metatest for that test on STS3 and longer.  Quality on that 
+		one degrades as sequence length (multiplied by square root 
+		of number of sequences) increases, and by STS2 it's marginal, 
+		in STS3 and longer it's too broken to safely use.  
+	speed:
+		Slow.  However, it's difficult to talk with precision on the 
+		subject, because numerous different parties, myself included, 
+		have applied different custom optimizations to STS.  Still, 
+		I'm counting STS0 as taking 10 seconds, STS1 as taking 1 minute, 
+		STS2 as taking half an hour, and STS3 as taking	an hour.  
+	strengths:
+		Name recognition.  This was published by NIST.  
+			National Institute of Standards and Technology
+				under the U.S. Department of Commerce.
+			and thus gets pushed hard by influential parties,
+				meaning legislators, regulators, and Pointy Haired Bosses.
+	weaknesses:
+		Very small variety of biases detectable.  
+			Generally not worth testing with unless it's mandatory.  
+		Very slow performance on a per-bit-tested basis.  
+			Pretty much everyone who uses this more than a tiny bit ends up 
+				customizing it to improve speed.  
+		Very high memory requirements.  
+			Pretty much everyone who uses this more than a tiny bit ends up 
+				customizing it to improve memory usage.  
+		Very poor output format
+			Summary result shows metatests only
+				which completely ignore the degree of failure on the root tests
+				where the best data is
+	record notation: in the "others" column I listed STS0, STS1, STS2, or STS3, 
+		whichever is the smallest test to fail a particular PRNG.  In rare 
+		cases I prefix the result with a tilde to show that it's more a 
+		suspicious result than a failure, but it's on the edge of a true 
+		failure, with a different seed it might fail.  
+	link: https://csrc.nist.gov/projects/random-bit-generation/documentation-and-software
+
+
+*****************************************************************************
+2. Full results
+*****************************************************************************
+
+
+recommended RNGs
+	RNG             Quality   PractRand   TestU01    RaBiGeTe    gjrand      others
+	_               rating    standard    *Crush     custom      pmcp
+	hc256           5         > 4 TB      pass       > 1 Gb      -----       -
+	trivium         5         > 4 TB      pass       > 1 Gb      -----_      -
+	efiix64x48      5         > 4 TB      pass?      > 1 Gb?     -----_      -
+	efiix32x48      5         > 4 TB      pass       > 1 Gb?     -----_      -
+	efiix16x48      5         > 4 TB      pass       > 1 Gb?     -----_      -
+	efiix8x48       5         > 4 TB      pass       > 1 Gb      -----_      -
+	isaac64x256     5         > 4 TB      pass       > 1 Gb?     -----       -
+	isaac32x256     5         > 4 TB      pass       > 1 Gb      -----       -
+	chacha(8+)      5         > 4 TB      pass?      > 1 Gb      -----_      -
+	salsa(8+)       5         > 4 TB      pass?      > 1 Gb      -----_      -
+	arbee           4         > 4 TB      pass?      > 1 Gb      -----_      -
+	mulbee          ?         ?           ?          ?           ?           ?
+	sha2_based_pool 4         > 16 TB     pass       > 1 Gb      ------      -
+
+	xsm64           4         > 16 TB     pass?      > 1 Gb?     -----_      -
+	xsm32           3         > 8 TB      pass       > 1 Gb?     ------      -
+	xsm16           2         ?           ?          ?           ?           ?
+	rarns64         1         > 8 TB?     ?          > 1 Gb?     ?           ?
+	rarns32         1         > 8 TB?     ?          > 1 Gb?     ?           ?
+	rarns16         1         8 TB        ?          > 1 Gb      ?           ?
+
+	mrsf64          1         > 32 TB     pass       > 1 Gb?     ------      ?
+	mrsf32          1         8 TB        pass       > 1 Gb?     ---~13      ?
+	mrc64           3         > 32 TB     pass?      > 1 Gb?     -----_      ?
+	mrc32           2         > 32 TB     pass       > 1 Gb?     ------      ?
+	mrc16           1         1 TB        pass       > 1 Gb?     ?           ?
+
+	jsf64           3         > 4 TB      pass?      > 1 Gb?     -----_      -
+	jsf32           3         > 4 TB      pass       > 1 Gb      ------      -
+	sfc64           3         > 4 TB      pass?      > 1 Gb?     -----_      -
+	sfc32           3         > 4 TB      pass       > 1 Gb      ------      -
+	sfc16           2         512 TB      pass       > 1 Gb      ------      -
+(usually "pass?" means that a lower quality variant of that algorithm passed so I didn't fully test the higher quality variant)
+
+non-recommended RNGs - simple (64)
+	RNG               Quality     PractRand   TestU01     RaBiGeTe    gjrand      others
+	                  subscores   standard    *Crush      custom      pmcp
+	xorshift32        0/0/0/0     64 KB       5/53/?      1 Mb        579CC       DH0, DHA, STS0
+	xorshift64        0/4/2/0     64 KB       1/25/?      1 Mb        55556       DH0, DHA
+	xorshift32of128   0/5/3/1     64 KB       0/6/?       1 Mb        11111       -
+	xoroshiro128plus  0/5/3/1     32 MB       pass        > 1 Gb      --111       -
+	xorwow32of96      0/5/3/1     2 MB        0/3/5       128 Mb      11344       -
+	xorwow32x6        1/5/4/1     16 MB       0/1/2       > 1 Gb      -1112       -
+	xsalta16x3        2/1/1/1     256 KB      0/1/3       128 Mb      11111       -
+	xsaltb16x3        2/1/1/1     1 GB        pass        > 1 Gb      --135       -
+	xsaltc16x3        1/1/1/1     4 GB        0/1/1       1 Gb        --124       -
+ 	xsaltd16x3        4/2/1/2     8 TB        pass        > 1 Gb      ----1       -
+	sapparot          0/2/2/1     16 MB       0/0/1       128 Mb      22345       -
+	sap16of48         1/1/1/1     64 KB       0/3/2       1 Mb        11124       -
+	sap32of96         4/3/3/1     2 MB        pass        8 Mb        11112       -
+	flea0             0/4/3/2     1 MB        pass        > 1 Gb      22245       -
+	jsf16             4/2/2/2     32 GB       pass        > 1 Gb      ------      -
+	sfc_v1_16         1/1/1/1     16 MB       1/7/?       1 Gb        -1124       DH2, DHA
+	sfc_v1_32         1/3/2/1     128 GB      0/2/7       > 1 Gb      ---12       -
+	sfc_v2_16         0/1/1/1     2 GB        0/1/0       > 1 Gb      ---23       DH2
+	sfc_v2_32         2/3/3/2     4 TB        0/0/1       > 1 Gb      ----1       -
+	sfc_v3_16         2/1/1/1     128 GB      pass        > 1 Gb      -----~      -
+	sfc_v3_32         5/3/3/2     > 2 TB      pass        > 1 Gb      ------      -
+	simpleA           1/3/3/1     2 GB        pass        32 Mb       12334       DH2
+	simpleB           0/1/1/0     128 MB      1/6/2       > 1 Gb      ---33       DH1
+	simpleC           0/1/1/1     32 GB       1/6/2       > 1 Gb      ---~1       -
+	simpleD           2/3/3/2     128 GB      pass        > 1 Gb      -1233       -
+	simpleE           3/3/3/2     2 TB        pass        > 1 Gb      -~113       -
+	simpleF           2/2/2/1     16 GB       pass        > 1 Gb      ---12       -
+	simpleG           1/3/3/2     128 GB      0/18/?      8 Mb        --255       DH1, DHA
+	simpleH           ?/?/?/?     4 GB        0/10/?      128 Mb      -133        DH1
+	simpleI           ?/?/?/?     1 TB        pass        > 1 Gb      ----3       -
+	simpleJ           ?/?/?/?     > 4 TB      pass        > 1 Gb      ------      -
+	trivium_weakenedA 4/4/3/3     > 16 TB     pass        > 1 Gb      ------      -
+	trivium_weakenedB 3/3/3/3     1 TB        pass        > 1 Gb      ----4       -
+	triviumishA                   256 GB      pass        > 1 Gb      ---33       -
+	triviumishB                   512 MB      0/1/0       1 Gb        1133        DH2, STS3
+	triviumishC                   256 GB      pass        > 1 Gb      ---2        -
+	triviumishD                   2 GB        pass        > 1 Gb      2233        DH0
+	mo_Lesr32         0/0/0/0     16 KB       7/?/?       1 Mb        888AD       DH0, DHA, STS1
+	mo_ResrRers32     4/2/2/2     2 TB        pass        > 1 Gb      ----~1      -
+	mo_Rers32of64     0/2/2/0     8 MB        0/10/?      8 Mb        44455       DH0, DHA
+	mo_Resdra32of64   1/2/2/1     512 MB      0/2/6       > 1 Gb      -~-5C       -
+	murmlacish        3/3/3/2     4 TB        0/1/0       > 1 Gb      ----2       -
+	gjishA            ?/?/?/?     32 GB       pass        > 1 Gb      ---12       -
+	gjishB            ?/?/?/?     > 16 TB     pass        > 1 Gb      ------      -
+	gjishC            ?/?/?/?     64 GB       0/1/4       > 1 Gb      --~11       DHA
+	gjishD            ?/?/?/?     128 GB      pass        > 1 Gb      --~12       -
+	ara16             2/1/1/1     256 MB      1/3/2       > 1 Gb      11111       -
+	ara32             4/3/3/1     1 GB        pass        > 1 Gb      11111       -
+	arx16             1/1/1/1     16 GB       1/3/2       > 1 Gb      -1122       -
+	arx32             4/3/3/2     2 TB        pass        > 1 Gb      ------      -
+	hara16            2/1/1/2     1 TB        pass        > 1 Gb      ~-----      -
+	harx16            2/1/1/2     128 GB      pass        > 1 Gb      ----~2      -
+	learx16           2/1/1/2     128 GB      pass        > 1 Gb      --1112      -
+	hlearx16          1/1/1/2     512 GB      pass        > 1 Gb      ---~~2      -
+	alearx16          4/1/1/3     16 TB       pass        > 1 Gb      ------      -
+	arac16            1/2/2/2     256 MB      0/1/1       > 1 Gb      ------      -
+	arac32                        512 MB      pass        > 1 Gb      ______      -
+	arxc16            5/2/2/3     > 16 TB     pass        > 1 Gb      ------      -
+	dmixc16                       4 GB        pass        > 1 Gb      -----       -
+	dmixc32                       > 4 TB      pass        > 1 Gb      -----       -
+	tridriven16                   8 MB        1/27/?      8 Mb        38AD        DH1, DHA, STS3
+	tridriven32                   64 GB       pass        > 1 Gb      ---~2       -
+	tridriven64                   > 4 TB      pass?       > 1 Gb?     -----       -
+	didriven64                    32 GB       0/1/1       > 1 Gb      -~22        -
+	*** 10 sec                    21 (512 MB) 9 (SC)      9 (8 Mb)    17 (small)
+	*** 1 minute                  29 (4 GB)   --          10 (32 Mb)  22 (standard)
+	*** 5 minutes                 31 (16 GB)  --          14 (128 Mb) 29 (big)
+	*** 30 minutes                43 (128 GB) 26 (C)      --          --
+	*** 1 hour                    45 (256 GB) --          17 (1 Gb)   39 (huge)
+	*** 4 hours                   50 (1 TB)   28 (BC)     --          --
+	*** 8 hours                   53 (2 TB)   --          --          ? (tera)
+	*** 1 day                     55 (4 TB)   --          --          --
+	*** 4 days                    57+ (16 TB) --          --          ? (ten-tera)
+	others: 8 found by Dieharder-A, 5/9/13 by Dieharder-0/1/2, and 1/2/2/5 by STS
+
+non-recommended RNGs - oddball: non-LCG multiplication based, variable rotations, etc (31)
+	RNG             Quality     PractRand   TestU01     RaBiGeTe    gjrand      others
+	                subscores   standard    *Crush      custom      pmcp
+	garthy16        0/1/1/1     64 MB       0/15/?      32 Mb       128CC       DH1
+	garthy32        2/3/3/1     1 TB        pass        1 Gb        --133       -
+	binarymult16    0/3/3/1     512 KB      1/31/2      1 Mb        2248D       DH0, DHA
+	binarymult32    2/4/3/2     2 MB        pass        8 Mb        11224       DH1
+	rxmult16        0/2/2/1     16 GB       ~pass       1 Gb        ------      -
+	multish3x32     1/3/3/2     16 GB       0/0/1       > 1 Gb      11111       -
+	multish4x16     1/2/2/1     512 KB      0/2/1       1 Mb        11111       -
+	mwrca16         0/0/0/0     16 MB       1/4/10      128 Mb      ~23AC       DH2
+	mwrca32         4/2/2/1     8 TB        pass        1 Gb        -----1      -
+	mwrca64         ?           > 8 TB?     pass?       > 1 Gb      _____       -
+	mwrcc16         0/1/1/1     128 MB      0/2/7       1 Mb        12447       DH0
+	mwrcc32         2/3/3/2     128 GB      0/0/1       8 Mb        13345       -
+	mwrcca16        0/1/1/1     512 MB      pass        128 Mb      ---~4       -
+	mwrcca32        4/3/3/2     > 32 TB     pass        128 Mb      -----1      -
+	old_mwlac16     2/2/2/2     128 GB      pass        > 1 Gb      ------      DHA
+	mwlac_varA      ?/1/1/?     8 GB        0/1/1       > 1 Gb      -111~4      -
+	mwlac_varB      ?/1/1/?     8 GB        0/2/2       > 1 Gb      -----4      -
+	mwlac_varC      ?/1/1/?     64 GB       ~pass       > 1 Gb      -----2      -
+	mwlac_varD      ?/1/1/?     256 MB      1/3/4       > 1 Gb      11111       -
+	mwlac_varE      ?/1/1/?     1 TB        pass        > 1 Gb      ------      -
+	mwlac_varF                  512 GB      pass        > 1 Gb      ----~       -
+	mo_Cmfr32       0/0/0/0     16 KB       6/58/?      1 Mb        58ABD       DH0, DHA, STS1
+	mo_Cmr32of64    3/2/2/2     4 GB        0/0/1       > 1 Gb      -1111       -
+	mulcr16         ?/1/1/2     128 MB      ~pass       > 1 Gb      -11--4      -
+	mulcr32         ?/3/3/?     > 4 TB      pass        > 1 Gb      ------      -
+	mmr16           ?/1/1/1     8 GB        0/1/1       > 1 Gb      -----3      -
+	mmr32           ?/3/3/3     > 16 TB     pass        > 1 Gb      11111       -
+	mulcrax8        ?/0/1/1     64 MB       2/35/??     32 Mb       11DDD       DH0, DHA
+	mulcrax16       ?/3/2/1     8 TB        pass        > 1 Gb      -----       -
+	mulcrax32       ?/4/3/1     > 16 TB     pass        > 1 Gb?     -----       -
+	mulcrx16        ?/2/2/1     2 MB        1/21/??     1 Mb        45678       DH0, DHA, STS0
+	mulcrx32        ?/4/3/1     8 MB        0/7/2       1 Mb        3335        DH0, DHA, STS2, SC-BR
+	mulcrx64        ?/5/4/1     64 MB       pass        8 Mb        2333        DH0, DHA, SC-BR, STS3
+	varrotA         ?/?/?/?     256 GB      pass        > 1 Gb      ----1       -
+	varrotB                     32 GB       0/1/1       > 1 Gb      --12        DH1, DHA
+	varrotC                     4 GB        0/1/6       > 1 Gb      --14        -
+	varrotD                     64 MB       0/18/?      32 Mb       ~344        DH0, DHA
+	varrotE                     64 GB       pass        > 1 Gb      ----1       -
+	varrotF                     16 MB       0/1/2       1 Gb        1125        -
+	lxwm16                      256 MB      ~0/4/5      > 1 Gb      1133        -
+	lxwm32                      64 GB       0/1/3       > 1 Gb?     ------      -
+	mrsf16                      ?           1/5/        ?           226BCC      ?
+	*** 10 sec                  12 (512 MB) 6 (SC)      10 (8 Mb)   14 (small)
+	*** 1 minute                12 (4 GB)   --          13 (32 Mb)  18 (standard)
+	*** 5 minutes               13 (16 GB)  --          16 (128 Mb)  19 (big)
+	*** 30 minutes              18 (128 GB) 13 (C)      --          --
+	*** 1 hour                  19 (256 GB) --          20 (1 Gb)   ~19 (huge)
+	*** 4 hours                 23 (1 TB)   16 (BC)     --          --
+	*** 8 hours                 24 (2 TB)   --          --          ~20+ (tera)
+	*** 1 day                   24 (4 TB)   --          --          --
+	*** 4 days                  27 (16 TB)  --          --          25+ (ten-tera)
+	others: 6 found by Dieharder-A, 8/9/10 by Dieharder-0/1/2, and 2/3/4/4? by STS0/1/2/3
+
+non-recommended RNGs - LCGs & related RNGs
+	RNG               Quality     PractRand   TestU01     RaBiGeTe    gjrand      others
+	                  subscores   standard    *Crush      custom      pmcp
+	lcg(16,32)        0/0/0/0     512 KB      6/48/??     1 Mb        7ACBB       DH1,DHA,STS2
+	lcg(16,40)        0/1/1/0     32 MB       1/29/??     1 Mb        3559B       DH2, STS3
+	lcg(16,48)        0/1/1/1     32 MB       1/7/??      1 Mb        23334       -
+	lcg(16,56)        0/2/1/1     128 MB      1/6/??      1 Mb        11223       -
+	lcg(16,64)        0/4/2/2     1 GB        0/3/4       8 Mb        11112       -
+	lcg(16,72)        1/4/2/2     4 GB        pass        8 Mb        -1111       -
+	lcg(16,80)        2/5/2/2     32 GB       pass?       32 Mb       --111       -
+	lcg(16,88)        ?/?/?/?     256 GB      pass?       128 Mb      ---11       -
+	lcg(16,96)        4/5/3/2     1 TB        pass?       128 Mb      ------      -
+	lcg(16,104)       ?/?/?/?     > 32 TB     pass?       1 Gb        ----__      -
+	lcg(16,112)       4/5/3/2     > 32 TB?    pass?       1 Gb        -----_      -
+	lcg(16,120)       4/5/3/2     > 32 TB?    pass?       1 Gb        ______      -
+	lcg(16,128)       4/5/3/2     > 32 TB?    pass?       > 1 Gb      ______      -
+	xlcg(16,32)       0/0/0/0     512 KB      10/?/?      8 Mb        59BBB       DH0,DHA,STS1
+	xlcg(16,48)       1/1/1/1     2 GB        0/2/3       > 1 Gb      ---24       -
+	xlcg(16,64)       3/4/2/2     512 GB      pass        > 1 Gb?     ----1       -
+	xlcg(16,80)       ?/5/2/2     > 1 TB      pass?       > 1 Gb?     ------      -
+	clcg(16,48)       1/?/?/?     2 MB        2/24/?      8 Mb        47B         DH1,DHA,STS2
+	clcg(16,56)       1/?/?/?     32 MB       1/9/?       8 Mb        2348?       -
+	clcg(16,64)       1/3/2/1     1 GB        0/4/?       128 Mb      -1323       -
+	clcg(16,72)       1/4/2/2     64 GB       0/1/1       1 Gb        ---11       -
+	clcg(16,80)       4/4/2/2     1 TB        pass        1 Gb        ----1       -
+	clcg(16,88)       ?/4/2/2     2 TB        pass?       1 Gb        ------      -
+	clcg(16,96)       ?/4/2/2     ?           pass?       > 1 Gb      ______      -
+	cxlcg(16,48)      1/?/?/?     2 MB        2/22/?      8 Mb        47BC        DH1,DHA,STS2
+	cxlcg(16,56)      0/?/?/?     32 MB       0/4/?       32 MB       2348        STS3
+	cxlcg(16,64)      0/3/2/1     1 GB        0/1/2       128 Mb      --122       -
+	cxlcg(16,72)      4/4/2/2     1 TB        pass        1 Gb        -----1      -
+	cxlcg(16,80)      4/4/2/2     > 16 TB     pass?       > 1 Gb      ------      -
+	np2clcg2_32       0/0/0/0     8 MB        3/?/?       8 Mb        8BCC        DH0,DHA,STS2
+	np2clcg2_39       ?/?/?/?     64 MB       1/17/38     > 1 Gb      1225        -
+	np2clcg2_45       ?/?/?/?     256 MB      1/8/21      > 1 Gb?     -111        -
+	np2clcg2_53       ?/?/?/?     ?           1/6/7       > 1 Gb?     -111        -
+	np2clcg2_60       ?/?/?/?     ?           0/1/0       > 1 Gb?     ----1       -
+	np2clcg2_64       ?/?/?/?     1 TB        pass        > 1 Gb?     ------      -
+	np2clcg2_67       ?/?/?/?     ?           pass?       > 1 Gb?     ----__      -
+	bblcg(32,160,32)  ?/5/3/0     128 MB      0/21/??     8 Mb        44555       DHA
+	bblcg(32,192,32)  ?/5/4/1     1 GB        0/11/??     128 Mb      -1144       -
+	bblcg(32,224,32)  ?/5/4/1     8 GB        0/2/5       1 Gb        ------      -
+	bblcg(32,256,32)  ?/5/5/2     > 4 TB      0/0/1       > 1 Gb      -----_      -
+	bblcg(32,288,32)  ?/5/5/2     > 16 TB?    pass        > 1 Gb?     -----_      -
+	bblcg(16,64,16)   0/4/2/0     128 KB      0/30/??     1 Mb        679BC       DH1, DHA
+	bblcg(16,128,15)  0/5/3/0     8 MB        0/12/4      8 Mb        13456       DH1, DHA
+	bblcg(16,128,16)  0/5/3/1     1 GB        0/2/3       32 Mb       -2223       -
+	bblcg(16,128,20)  ?/5/3/2     4 GB        0/6/21      8 Mb        -1134       -
+	bblcg(16,256,16)  0/5/5/1     1 GB        0/1/0       128 Mb      ~2223       -
+	bblcg(16,256,20)  ?/5/5/2     128 GB      pass        128 Mb      --~12       -
+	bblcg(16,256,24)  ?/5/5/2     32 TB       pass?       > 1 Gb      -----1      -
+	pcg32_norot       1/4/2/2     2 GB        0/1/2       8 Mb        ----1       -
+	pcg32             5/4/2/3     > 4 TB      pass        > 1 Gb      ------      -
+	cmrg32of192       5/5/4/3     > 16 TB     pass        > 1 Gb      ------      -
+	xsh_lcg_bad       4/5/5/2     > 16 TB     pass        > 1 Gb      ------      -
+	*** 10 sec                    17 (512 MB) 14 (SC)     16 (8 Mb)   16 (small)
+	*** 1 minute                  29 (4 GB)   --          19 (32 Mb)  25 (standard)
+	*** 5 minutes                 30 (16 GB)  --          26 (128 Mb) 27 (big)
+	*** 30 minutes                34 (128 GB) 31 (C)      --          --
+	*** 1 hour                    35 (256 GB) --          34 (1 Gb)   32 (huge)
+	*** 4 hours                   42 (1 TB)   32 (BC)     --          --
+	*** 8 hours                   43+(2 TB)   --          --          37 (tera)
+	*** 1 day                     43+(4 TB)   --          --          --
+	*** 4 days                    44+(16 TB)  --          --          39 (ten-tera)
+	others: 6 found by Dieharder-A, 1/3/3 by Dieharder-0/1/2, and 0/1/5/? by STS0/1/2/3
+	notes on the meaning of *lcg names:
+		lcg(X,Y) means an LCG with modulus 2^Y, discarding (Y-X) low bits to produce X bit output
+		clcg(X,Y) means lcg(X,Y-32) combined with a 32 bit non-power-of-2-modulus LCG
+		xlcg(X,Y) is similar to lcg(X,Y), but xor is used in place of addition
+			(i.e. equivalent to suppresing the carries on the addition in binary)
+		cxlcg(X,Y) means xlcg(X,Y-32) combined with a 32 bit non-power-of-2-modulus LCG
+		bigbadlcg(X,Y,Z) aka bblcg(X,Y,Z) means an LCG with modulus 2^Y, discarding (Y-X) low 
+			bits to produce X bit output, with a low-quality multiplier of (1 + 2^Z)
+
+non-recommended RNGs - cyclic buffer based (or other static structures)
+	RNG                 Quality     PractRand   TestU01     RaBiGeTe    gjrand      others
+	                    subscores   standard    *Crush      custom      pmcp
+	mm32                0/5/5/0     2 MB        1/8/12      > 1 Gb      45678       DH1
+	mm32_awc            0/5/5/1     256 MB      0/8/11      > 1 Gb?     34567       DH1
+	mm16of32            0/5/5/0     1 GB        0/0/2       > 1 Gb?     44555       DH2
+	mm16of32_awc        0/5/5/1     2 GB        0/0/1       > 1 Gb?     44555       DH2
+	mwc4691             1/5/5/1     2 GB        pass        > 1 Gb      -1111       -
+	cbuf_accum          0/5/5/2     128 MB      pass        > 1 Gb      14444       -
+	cbuf_accum_big      0/5/5/2     8 GB        ~pass       > 1 Gb?     --214       -
+	cbuf_2accum_small   0/5/4/2     512 GB      pass        > 1 Gb      --~22       -
+	cbuf_2accum         0/5/5/2     64 TB       pass        > 1 Gb?     ------      -
+	cbuf3tap_small      0/2/2/1     256 MB      0/1/2       > 1 Gb      -234        DH1
+	cbuf3tap            2/5/5/2     128 GB      pass        > 1 Gb?     --22        -
+	cbuf3tap_big        5/5/5/2     > 8 TB      pass?       > 1 Gb?     ----1       -
+	cbufa2tap_small     0/2/2/1     64 MB       0/13/?      8 Mb        5567A       DH0, DHA
+	cbufa2tap           2/5/5/2     32 GB       0/1/1       > 1 Gb      -1344       -
+	cbufa2tap_big       5/5/5/2     > 4 TB      pass        > 1 Gb?     ---12       -
+	dual_cbuf_small     0/5/5/2     4 MB        pass        32 Mb       12333       -
+	dual_cbuf           0/5/5/3     128 MB      pass?       > 1 Gb      -1112       -
+	dual_cbuf_big       0/5/5/1     8 GB        pass?       > 1 Gb?     --111       -
+	dual_cbufa_small    0/5/5/2     4 MB        pass        32 Mb       11112       -
+	dual_cbuf_accum     0/5/5/2     128 MB      pass?       > 1 Gb      --1112      -
+	fibmul16of32        1/5/5/1     16 GB       pass        > 1 Gb      --124       -
+	fibmul32of64        3/5/5/2     512 GB      pass        > 1 Gb?     ----1       -
+	fibmulmix16         ?/5/5/2     2 GB        pass        8 Mb        11345       DH2
+	fibmulmix32         ?/5/5/3     64 GB       pass?       8 Mb        1111        -
+	ranrot32small       ?/5/5/2     256 MB      0/1/0       8 Mb        44445       DH0, DHA
+	ranrot32            2/5/5/2     2 GB        pass        128 Mb      12222       DH2
+	ranrot32big         3/5/5/2     16 GB       pass?       > 1 Gb      ----2       -
+	ranrot3tap32small   ?/5/5/2     512 MB      pass        8 Mb        22444       DH2
+	ranrot3tap32        3/5/5/3     256 GB      pass        128 Mb      --222       -
+	ranrot3tap32big     4/5/5/3     4 TB        pass?       > 1 Gb      --~-2       -
+	ranrot32hetsmall    4/5/5/3     8 GB        pass        8 Mb        11234       DH2
+	ranrot32het         4/5/5/3     2 TB        pass        128 Mb      -~123       -
+	ranrot32hetbig      4/5/5/3     64 TB       pass?       > 1 Gb      ----1       -
+	mt19937_unhashed    2/5/5/1     16 GB       0/2/2       > 1 Gb      11122       -
+	mt19937             2/5/5/2     256 GB      0/2/2       > 1 Gb?     ---111      -
+	salsa(3 rounds)     0/5/5/0     4 KB        13/??/??    1 Mb        BBBCC       DH0, DHA, STS0
+	chacha(3 rounds)    0/5/5/1     32 MB       0/6/28      1 Mb        36999       DH1
+	salsa(4 rounds)     1/5/5/2     32 GB       ~pass       128 Mb      11257       DH2
+	chacha(4 rounds)    5/5/5/3     > 16 TB     pass        > 1 Gb      ------      -
+	chacha_weakenedA(12)            256 MB      0/6/13      ?           359         DH2
+	chacha_weakenedA(14)            64 GB       pass        ?           --23        -
+	chacha_weakenedA(16)            > 4 TB      pass?       ?           ------      -
+	chacha_weakenedB(7) 0/4/2/0     256 KB      3/25/?      ?           89AA        DH0, DHA
+	chacha_weakenedB(8) 0/4/2/0     4 MB        0/6/15      ?           5679        DH2
+	chacha_weakenedB(9) 0/4/2/0     128 MB      0/0/1       ?           33568       -
+	chacha_weakenedB(10)2/4/2/1     32 GB       pass        ?           -1113       -
+	chacha_weakenedB(11)3/4/2/2     4 TB        pass        ?           ------      -
+	*** 10 sec                      11 (512 MB) 2 (SC)      2 (8 Mb)    17 (small)
+	*** 1 minute                    16 (4 GB)   --          4 (32 Mb)   18 (standard)
+	*** 5 minutes                   21 (16 GB)  --          4 (128 MB)  24 (big)
+	*** 30 minutes                  23 (128 GB) 6 (C)       --          --
+	*** 1 hour                      24 (256 GB) --          6 (1 Gb)    25 (huge)
+	*** 4 hours                     26 (1 TB)   8 (BC)      --          --
+	*** 8 hours                     27 (2 TB)   --          --          29 (tera)
+	*** 1 day                       28 (4 TB)   --          --          --
+	*** 4 days                      28 (16 TB)  --          --          29 (ten-tera)
+	others: 2 found by Dieharder-A, 2/2/6 by Dieharder-0/1/2, and 2?/2? by STS0/1/2/3
+
+non-recommended RNGs - indirection based
+	RNG             Quality     PractRand   TestU01    RaBiGeTe    gjrand      others
+	                subscores   standard    *Crush     custom      pmcp
+	ibaa8x2         0/0/0/1     512 MB      0/8/19     1 Gb        -~8CC       STS3
+	ibaa8x4         1/1/1/2     8 GB        pass       > 1 Gb      --~12       -
+	ibaa8x8         4/3/2/3     1 TB        pass       > 1 Gb?     -----1      -
+	ibaa8x16        ?/?/?/?     > 16 TB     pass?      > 1 Gb?     -----       -
+	ibaa16x2        2/2/2/2     2 GB        pass       > 1 Gb      -1123       -
+	ibaa16x4        4/3/3/2     256 GB      pass?      > 1 Gb?     ----1       -
+	ibaa16x8        5/3/3/3     > 16 TB     pass?      > 1 Gb?     ------      -
+	ibaa32x2        4/3/3/2     2 GB        pass       > 1 Gb?     11111       -
+	ibaa32x4        4/3/3/2     256 GB      pass?      > 1 Gb?     --111       -
+	ibaa32x8        4/5/5/3     > 16 TB?    pass?      > 1 Gb?     ----1       -
+	ibaa32x16       4/5/5/3     > 16 TB?    pass?      > 1 Gb?     ------      -
+	efiix4x(1,0)    0/0/0/0     16 MB       2/42/??    32 Mb       19CC        ?
+	efiix4x(2,1)    1/0/1/1     16 GB       ~pass      > 1 Gb      ---15       ?
+	efiix4x(3,2)    4/2/2/3     128 TB      pass       > 1 Gb?     ------      ?
+	efiix4x(4,3)    5/4/3/4     > 128 TB?   pass?      > 1 Gb?     ______      ?
+	efiix8x(0,0)    4/1/1/2     8 TB        pass       > 1 Gb      ------      ?
+	efiix8x(1,0)    5/1/1/3     > 8 TB?     pass       > 1 Gb      --____      ?
+	efiix8x(0,1)    5/1/1/2     > 8 TB?     pass       > 1 Gb      --____      ?
+	rc4_weakenedA   1/5/5/2     8 GB        0/1/1      > 1 Gb      12226       -
+	rc4_weakenedB   2/5/5/2     256 GB      pass       > 1 Gb      ---~1       -
+	rc4_weakenedC   1/5/5/2     16 MB       0/27/?     128 Mb      15579       DH1, DHA
+	rc4_weakenedD   1/5/5/2     64 GB       pass       > 1 Gb      ----~4      -
+	rc4             4/5/5/3     1 TB        pass       > 1 Gb      -----2      -
+	isaac16x(2)     0/4/3/2     4 MB        0/0/1      1 Gb        ---14       -
+	isaac16x(3)     0/5/4/3     1 GB        pass       > 1 Gb      -----1      -
+	isaac16x(4)     4/5/5/4     2 TB        pass?      > 1 Gb?     ------      -
+	isaac16x(5)     ?/5/5/?     > 4 TB      pass?      > 1 Gb?     ______      -
+	isaac32x(2)     0/5/4/2     8 MB        pass       > 1 Gb      11112       -
+	isaac32x(3)     0/5/5/3     256 MB      pass       > 1 Gb?     --111       -
+	isaac32x(4)     4/5/5/4     4 TB        pass?      > 1 Gb?     -----1      -
+	isaac32x(5)     ?/5/5/?     > 4 TB      pass?      > 1 Gb?     -----       -
+	genindA(5)      0/5/5/1     128 MB      0/~0/1     1 Gb        25567       -
+	genindA(7)      3/5/5/2     256 GB      pass?      > 1 Gb      12334       -
+	genindA(9)      4/5/5/3     64 TB       pass?      > 1 Gb?     ------      -
+	genindB(1)      0/0/2/0     1 GB        0/52/?     1 Gb        ~~CCC       DH1, DHA
+	genindB(2)      1/1/3/1     16 GB       pass       > 1 Gb      ---4C       -
+	genindB(3)      1/3/4/2     512 GB      pass?      > 1 Gb?     ----2       -
+	genindB(4)      4/4/5/2     4 TB        pass?      > 1 Gb?     -----2      -
+	genindB(5)      ?/?/?/?     ?           pass?      > 1 Gb?     -----       -
+	genindC(2)      1/3/3/1     2 GB        0/2/2      1 Gb        -3444       -
+	genindC(3)      2/4/3/2     64 GB       pass       > 1 Gb      11344       -
+	genindC(4)      4/5/5/2     4 TB        pass?      > 1 Gb?     ----1       -
+	genindC(5)      4/5/5/3     > 16 TB     pass?      > 1 Gb?     -----1      -
+	genindD(3)      ?/5/5/?     256 MB      0/8/??     128 Mb      24557       DH0, DHA
+	genindD(6)      1/5/5/2     32 GB       pass       > 1 Gb      -1123       DH2
+	genindD(9)      3/5/5/3     2 TB        pass?      > 1 Gb?     ~~-~1       -
+	genindD(12)     ?/5/5/?     > 16 TB     pass?      > 1 Gb?     ------      -
+	genindE(1)      2/1/3/1     8 GB        pass       > 1 Gb      ---~3       -
+	genindE(2)      3/2/3/2     512 GB      pass?      > 1 Gb?     -~--1       -
+	genindE(3)      4/5/5/3     64 TB       pass?      > 1 Gb?     -~----      -
+	genindF(1)      1/2/3/2     256 MB      0/10/??    1 Gb        225AC       DH0, DHA, STS3
+	genindF(2)      1/2/3/2     16 GB       *pass      > 1 Gb?     --247       DH2
+	genindF(3)      2/5/5/2     128 GB      pass       > 1 Gb?     --~24       -
+	genindF(4)      3/5/5/3     1 TB        pass?      > 1 Gb?     ----~3      -
+	genindF(5)      4/5/5/3     32 TB       pass?      > 1 Gb?     -----~      -
+	*** 10 sec                  6 (512 MB)  0 (SC)     0 (8 Mb)    7 (small)
+	*** 1 minute                11 (4 GB)   --         0 (32 Mb)   10 (standard)
+	*** 5 minutes               16 (16 GB)  --         0 (128 Mb)  15 (big)
+	*** 30 minutes              20 (128 GB) 7 (C)      --          --
+	*** 1 hour                  24 (256 GB) --         2 (1 Gb)    19 (huge)
+	*** 4 hours                 29 (1 TB)   9 (BC)     --          --
+	*** 8 hours                 31 (2 TB)   --         --          27 (tera)
+	*** 1 day                   34 (4 TB)   --         --          --
+	*** 4 days                  34 (16 TB)  --         --          34 (ten-tera)
+	others: 4? found by Dieharder-A, 2/2/7 by Dieharder-0/1/2, and none by STS0/1/2/3
+	note: I wrote a few generic indirection-based PRNGs so there's more variety here.
+	They're generally pretty mediocre.  To keep quality low enough to find flaws 
+	in I mostly kept their accumulator / mixing pool down to a single word, and 
+	limited their word size to 16 bits.  To determine the size of their indirection 
+	arrays I gave them each a parameter that is the log2 of that size, and started 
+	it at the lowest value to fail at least 3 different test batteries (usually 
+	PractRand and gjrand make up two of those three, and the third is either 
+	TestU01 or Dieharder).  If that resulted in a size too small for indirection 
+	to occur then the PRNG was discarded.  From there I increased the 
+	log2-of-array-size parameter by 50% of the lowest value of that parameter, 
+	rounded down to a minimum of 1, and kept increasing it by that amount until it 
+	looked likely to pass all test batteries at the next size.  
+
+
+*****************************************************************************
+3. Details of the results format
+*****************************************************************************
+
+columns:
+	RNG
+		The name of the RNG algorithm used;
+		The name used is the name it is called in PractRand, not necessarily 
+		its real full name - for instance, hc256 instead of HC-256.  
+	PractRand standard
+		The PractRand standard tests are those returned by 
+		PractRand::Tests::Batteries::get_standard_tests().  
+		quirks:
+			test set is (slightly) dependent upon RNG metadata
+		speed on a fast RNG on my computer (in single-threaded mode):
+			1 GB: ~15 seconds
+			1 TB: ~4 hours
+		format:
+			The length of sequence required for the PractRand standard tests 
+			to detect bias.  If multiple seeds were tested, and bias was 
+			found in them at different sequence lengths, then the median 
+			result is used.  If bias was not found then the length of the 
+			longest sequence tested is recorded, with a ">" prefixed in 
+			front of it.  
+			Bias is considered to have been found when the standard tool 
+			rates the result as "FAIL" (with or without exclamation marks).  
+			(p-value threshold vary with circumstances but are typically 
+			near 1e-10 on the low side and 1 - 1e-10 on the high side)
+			The length is recorded as a number followed by KB, MB, GB, or 
+			TB.  Those stand for kilobyte, megabyte, gigabyte, or terabyte 
+			respectively.  These are the binary size prefixes, powers of 
+			1024, not the decimal size prefixes that are powers of 1000 - 
+			while standards bodies advocate weirder names for powers of 
+			1024, I follow the de facto standard of powers of 1024 when 
+			dealing with units of binary information (including 
+			derivatives of those, like binary information per time) and 
+			powers of 1000 when dealing with any other units.  
+			All lengths are rounded up to the nearest power of 2.  
+	TestU01 *Crush
+		This refers to the batteries "SmallCrush", "Crush", and "BigCrush" 
+		in TestU01.
+		quirks:
+			does not accept a sequence length parameter
+			works on RNGs outputing 31 bits per call:
+				on 32 bit RNGs it works but disregards the lowest bit?!?
+				on 8/16 bit RNGs, I concatonate multiple outputs together to produce a 32 bit output
+				on 64 bit RNGs... I am currently discarding the upper 32 bits to produce a 32 bit output
+					might, in the future, change that to returning half and buffering half for the next call
+			does not print any results until all are ready
+		optimal speed on my computer:
+			SmallCrush: ~8 seconds
+			Crush:      ~30 minutes
+			BigCrush:   ~4 hours
+		format:
+			If all 3 are passed then the result is recorded as "pass".  
+			If all 3 are passed, but only barely, the result is recorded as "~pass".
+			If all 3 are passed, but it is noticed that bit-reversed versions of the PRNG fail one or more, 
+				the result is recorded as "*pass" (note that this case is not checked systematically)
+			Otherwise, the result is recorded as X/Y/Z, where X is the 
+			number of tests failed in SmallCrush, Y is the number failed in 
+			Crush, and Z is the number failed in BigCrush.  
+			In some cases, Y or Z might be recorded as "??" meaning that the correspond test was not run - this is generally only the case if the preceding test failed large numbers of subtests (5 or more failures in SmallCrush, or 10 more failures in Crush).
+			Failure is defined as a p-value <= 1.0e-10 or >= (1 - 1.0e-10)
+	RaBiGeTe extended
+		This refers to the preset testing parameters named "extended", but see the quirks section.  
+		quirks:
+			In order to get 512 Mb samples to run on extended I had to disable the DFT test
+			I used a more recent version of RaBiGeTe that has not been publicly released at this time.  
+			I used RaBiGeTe in a slightly non-standard way, testing single long samples instead of many short samples.  
+				In my testing this method worked much better than the recommended way.  
+			It crashed several times during testing.  
+		speed on a fast RNG on my computer:
+			16 Mb: just over 1 minute
+			512 Mb: a little under 40 minutes
+		format:
+			The same format was used as for PractRand standard, with three exceptions.  
+			A result was considered a failure if any p-value was <= 1e-10, or if 5 or 
+			more p-values were <= 0.000001 or >= 0.999999, or if any p-values were 
+			omitted from the results.  I never consider a single p-value close to one  
+			a failure in RaBiGeTe even if it is exactly 1.0.  
+			The second exception is that lengths are listed in bits instead of bytes.  
+			The third exception is that if an RNG passed 512 megabits of testing then it was listed as "pass".  
+				... because RaBiGeTe was unable to test sequences longer than 512 Mb on the settings I used.  
+
+	If a result is listed as "?" that means that that test has not been run 
+	on that RNG.  If a result has a normal value followed by a "?" that 
+	means that either that result is strongly implied by tests on nearly 
+	equivalent RNGs, or that the test was run and is believed to have 
+	produced that result but the record-keeping involved was incomplete and 
+	I can't be sure without re-running the test.  
+
+
+*****************************************************************************
+4. Tests that were not included
+*****************************************************************************
+
+tests that were not included:
+	PractRand expanded standard
+		This test battery was not used because:
+			A. It significantly underperforms PractRand standard on fast RNGs.  
+			B. If I listed its test results here I'd have to update them 
+				every time I added a new test to it.  
+	TestU01 Rabbit
+		This test battery was not used because:
+			A. It consistently crashes if used on a long sequence
+			B. Its time to complete a test does not increase linearly with 
+				sequence length - in some cases it actually decreases with 
+				length.  This appears to be partially caused by the test 
+				set being a function of the testing length.  
+			C. Its results do not seem to improve in power with sequence 
+				length consistently enough.  
+	TestU01 Pseudo-diehard
+		This test battery was not used because its quality is too low.  
+	NIST RNG tests
+		This test battery was not used because:
+			A. Severe difficulty with longer test runs due to not only 
+				keeping the whole sequence in memory, but also 
+				inflating the sequence to store only one bit per byte.  
+			B. Poor quality relative to speed, poor maximum quality 
+				given the short maximum sample lengths.  
+
+
+*****************************************************************************

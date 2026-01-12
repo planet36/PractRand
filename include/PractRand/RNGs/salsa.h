@@ -20,8 +20,8 @@ namespace PractRand {
 
 				void _advance_1();
 				//void _reverse_1();
-				void _set_position(Uint64 low, Uint64 high);
-				void _get_position(Uint64 &low, Uint64 &high) const;
+				//void _set_position(Uint64 low, Uint64 high);
+				//void _get_position(Uint64 &low, Uint64 &high) const;
 
 				void _core();
 				Uint32 _refill_and_raw32();
@@ -32,7 +32,7 @@ namespace PractRand {
 					if (used < 16) return outbuf[used++];
 					return _refill_and_raw32();
 				}
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed( const Uint32 seed_and_iv[10], bool extend_cycle_ = false );
 				void seed_short( const Uint32 seed_and_iv[6], bool extend_cycle_ = false );
 				void walk_state(StateWalkingObject *walker);
@@ -55,12 +55,16 @@ namespace PractRand {
 		namespace Polymorphic {
 			class salsa : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(salsa)
-				salsa(Uint32 seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
-				void seed(Uint64 s);
+				salsa(PractRand::SEED_AUTO_TYPE _auto_, int num_rounds) { set_rounds(num_rounds); autoseed(); }
+				salsa(PractRand::SEED_NONE_TYPE _none_, int num_rounds) { set_rounds(num_rounds); }
+				salsa(Uint64 seed_, int num_rounds = 20, bool extend_cycle_ = false) { set_rounds(num_rounds); seed(seed_); }
+				salsa(Uint32 seed_and_iv[10], int num_rounds = 20, bool extend_cycle_ = false) { set_rounds(num_rounds); seed(seed_and_iv, extend_cycle_); }
+
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed(Uint32 seed_and_iv[10], bool extend_cycle_ = false);
 				void seed_short(Uint32 seed_and_iv[6], bool extend_cycle_ = false);
-				void seek_forward128 (Uint64 how_far_low64, Uint64 how_far_high64);
-				void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64);
+				void seek_forward (Uint64 how_far_low64, Uint64 how_far_high64);
+				void seek_backward(Uint64 how_far_low64, Uint64 how_far_high64);
 
 				//normally rounds is 8, 12, or 20, but lower and higher values are also possible
 				//default is 20

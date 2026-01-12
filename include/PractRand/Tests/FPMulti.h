@@ -42,6 +42,7 @@ namespace PractRand {
 			//static unsigned long count_leading_zeroes32( Uint32 value );
 			//const int stride_bits_L2, skip_platters;
 			bool autofail;
+			PractRand::RNGs::vRNG *internal_rng;
 			struct Platter {
 				Uint64 total_count;//total number of times this exponent has occurred
 
@@ -53,7 +54,11 @@ namespace PractRand {
 				double gap_expected_inverse;
 				Sint64 gap_product_extracted_L2;
 				Uint64 gap_hits;
-				double gap_warmed_up;
+
+				Uint64 gap_first_hit[1 << GAP_SIG_BITS];//4 kilobytes at current settings
+				Uint64 gap_unique_sigs;
+
+				//long gap_warmed_up;
 				//Uint32 history1[1 << GAP_SIG_BITS];//relative to this platter only
 				//Uint64 history2[1 << GAP_SIG_BITS];//global - implementation is not efficient
 				//Uint64 total_count;

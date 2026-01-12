@@ -60,7 +60,7 @@ namespace PractRand {
 				virtual void get_results ( std::vector<TestResult> &results ) {flush(true); Transforms::multiplex::get_results(results);}
 				virtual void flush(bool aggressive = true);
 			};
-			class shrink : public Transform_Baseclass {
+			/*class shrink : public Transform_Baseclass {
 			protected:
 				Uint8 sbox[65536];
 				int pattern;//
@@ -77,11 +77,19 @@ namespace PractRand {
 				virtual void init( RNGs::vRNG *known_good );
 				virtual std::string get_name() const;
 				virtual void test_blocks(TestBlock *data, int numblocks);
+			};*/
+			class classify128to8 : public Transform_Baseclass {
+			public:
+				PractRand::RNGs::Raw::arbee internal_rng;
+				classify128to8(const char *name_, const ListOfTests &testlist) : Transform_Baseclass(name_, testlist) {}
+				virtual void init(RNGs::vRNG *known_good);
+				virtual std::string get_name() const;
+				virtual void test_blocks(TestBlock *data, int numblocks);
 			};
 			class lowbits : public Transform_Baseclass {
 			protected:
 				int lowbitsL;//0 = 1 bit of output per input word, 1 = 2 bits of output per input word, 2=4,3=8,4=15,5=32
-				int unitsL;//-1= 4 bit input words, 0= 8 bit input words, 1 = 16 bit input words, 2 = 32, 3 = 64
+				int unitsL;//-2= 2 bit input words, -1= 4 bit input words, 0= 8 bit input words, 1 = 16 bit input words, 2 = 32, 3 = 64
 			public:
 				lowbits ( const char *name_, const ListOfTests &testlist, int lowbitsL_=1, int unitsL_=0 )
 				:
@@ -93,15 +101,6 @@ namespace PractRand {
 				virtual std::string get_name() const;
 				virtual void test_blocks(TestBlock *data, int numblocks);
 			};
-			/*class bitsyr8x8 : public Transform_Baseclass {
-			public:
-				bitsyr8x8 ( const char *name_, ListOfTests &testlist )
-					: Transform_Baseclass(name_, testlist) {}
-
-				virtual ~bitsyr8x8 ( );
-				virtual std::string get_name() const;
-				virtual void test_blocks(TestBlock *data, int numblocks);
-			};*/
 			class FirstNofM : public Transform_Baseclass {
 			protected:
 				int bytes_used;

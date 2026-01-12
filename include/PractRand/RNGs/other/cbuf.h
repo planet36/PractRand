@@ -4,7 +4,7 @@ RNGs in the mediocre directory are not intended for real world use
 only for research; as such they may get pretty sloppy in some areas
 
 This set is of RNGs that:
-1. use an array with repetitive access patterns - generally a Fibonacci-style cyclic buffer
+1. use an array with repetitive access patterns - generally a Lagged Fibonacci-style cyclic buffer
 2. don't use much flow control, variable shifts, etc
 3. are likely to have easily detectable bias
 */
@@ -13,45 +13,6 @@ namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
 			namespace NotRecommended {
-				//large-state LCGs with very poor constants
-				class bigbadlcg64X : public vRNG64 {
-					enum { MAX_N = 16 };
-					Uint64 state[MAX_N];
-					int n;
-				public:
-					int discard_bits;
-					int shift_i;
-					int shift_b;
-					Uint64 raw64();
-					bigbadlcg64X(int discard_bits_, int shift_);
-					//~bigbadlcgX();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
-				};
-				class bigbadlcg32X : public vRNG32 {
-				public:
-					bigbadlcg64X base_lcg;
-					bigbadlcg32X(int discard_bits_, int shift_);
-					Uint32 raw32();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
-				};
-				class bigbadlcg16X : public vRNG16 {
-				public:
-					bigbadlcg64X base_lcg;
-					bigbadlcg16X(int discard_bits_, int shift_);
-					Uint16 raw16();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
-				};
-				class bigbadlcg8X : public vRNG8 {
-				public:
-					bigbadlcg64X base_lcg;
-					bigbadlcg8X(int discard_bits_, int shift_);
-					Uint8 raw8();
-					std::string get_name() const;
-					void walk_state(StateWalkingObject *);
-				};
 
 				//Mitchell-Moore: LFib32(Uint32, 55, 24, ADD)
 				class mm32 : public vRNG32 {
@@ -169,6 +130,15 @@ namespace PractRand {
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
+				class dual_cbuf_big : public vRNG32 {
+					enum { L1 = 43, L2 = 97 };
+					Uint32 cbuf1[L1], cbuf2[L2];
+					Uint8 index1, index2;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
 				class dual_cbufa_small : public vRNG32 {
 					enum { L1 = 4, L2 = 5 };
 					Uint32 cbuf1[L1], cbuf2[L2], accum;
@@ -184,6 +154,78 @@ namespace PractRand {
 					Uint8 index1, index2;
 				public:
 					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class cbuf3tap_small : public vRNG16 {
+					enum {
+						LENGTH_L2 = 2,
+						LENGTH = 1 << LENGTH_L2
+					};
+					Uint16 cbuf[LENGTH];
+					Uint8 index;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class cbuf3tap : public vRNG16 {
+					enum {
+						LENGTH_L2 = 4,
+						LENGTH = 1 << LENGTH_L2
+					};
+					Uint16 cbuf[LENGTH];
+					Uint8 index;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class cbuf3tap_big : public vRNG16 {
+					enum {
+						LENGTH_L2 = 6,
+						LENGTH = 1 << LENGTH_L2
+					};
+					Uint16 cbuf[LENGTH];
+					Uint8 index;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class cbufa2tap_small : public vRNG16 {
+					enum {
+						LENGTH_L2 = 2,
+						LENGTH = 1 << LENGTH_L2
+					};
+					Uint16 cbuf[LENGTH], accum;
+					Uint8 index;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class cbufa2tap : public vRNG16 {
+					enum {
+						LENGTH_L2 = 4,
+						LENGTH = 1 << LENGTH_L2
+					};
+					Uint16 cbuf[LENGTH], accum;
+					Uint8 index;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class cbufa2tap_big : public vRNG16 {
+					enum {
+						LENGTH_L2 = 6,
+						LENGTH = 1 << LENGTH_L2
+					};
+					Uint16 cbuf[LENGTH], accum;
+					Uint8 index;
+				public:
+					Uint16 raw16();
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
@@ -285,7 +327,7 @@ namespace PractRand {
 				};
 				class fibmul32of64 : public vRNG32 {// 35 @ 3/2, 39 @ 7/5
 					enum {LAG1 = 7, LAG2 = 5};
-					Uint16 buffer[LAG1]; // LAG1 > LAG2 > 0
+					Uint64 buffer[LAG1]; // LAG1 > LAG2 > 0
 					Uint8 position;
 				public:
 					Uint32 raw32();
@@ -294,17 +336,56 @@ namespace PractRand {
 				};
 				class fibmulmix16 : public vRNG16 {
 					enum { LAG1 = 7, LAG2 = 3 };
-					Uint32 buffer[LAG1]; // LAG1 > LAG2 > 0
+					Uint16 buffer[LAG1]; // LAG1 > LAG2 > 0
 					Uint8 position;
 				public:
 					Uint16 raw16();
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
-				class mt19937_unhashed : public vRNG32 {// 
-					PractRand::RNGs::Raw::mt19937 implementation;
+				class fibmulmix32 : public vRNG32 {
+					enum { LAG1 = 7, LAG2 = 3 };
+					Uint32 buffer[LAG1]; // LAG1 > LAG2 > 0
+					Uint8 position;
 				public:
 					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class mt19937_unhashed : public vRNG32 {// 
+					PractRand::RNGs::Raw::NotRecommended::mt19937 implementation;//requires mt19937.h #included before fibonacci.h
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class chacha_weakenedA : public vRNG8 {
+					Uint8 state[9];
+					Uint8 buffer[9];
+					Uint8 bufpos, quality;
+					void refill();
+					Uint8 advance_and_refill_helper();
+				public:
+					chacha_weakenedA(int _quality) : quality(_quality), bufpos(9) {}
+					Uint8 raw8() {
+						if (bufpos < 9) return buffer[bufpos++];
+						return advance_and_refill_helper();
+					}
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class chacha_weakenedB : public vRNG8 {
+					Uint8 state[8];
+					Uint8 buffer[8];
+					Uint8 bufpos, quality;
+					void refill();
+					Uint8 advance_and_refill_helper();
+				public:
+					chacha_weakenedB(int _quality) : quality(_quality), bufpos(8) {}
+					Uint8 raw8() {
+						if (bufpos < 8) return buffer[bufpos++];
+						return advance_and_refill_helper();
+					}
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};

@@ -3,8 +3,9 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 
+#include "PractRand/RNGs/efiix8min.h"
 #include "PractRand/RNGs/efiix8x48.h"
 #include "PractRand/RNGs/efiix16x48.h"
 #include "PractRand/RNGs/efiix32x48.h"
@@ -16,45 +17,87 @@
 using namespace PractRand;
 using namespace PractRand::Internals;
 
+PRACTRAND__POLYMORPHIC_RNG_BASICS_C8(efiix8min)
+void PractRand::RNGs::Polymorphic::efiix8min::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
+std::string PractRand::RNGs::Polymorphic::efiix8min::get_name() const { return "efiix8min"; }
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C8(efiix8x48)
-void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix8x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 std::string PractRand::RNGs::Polymorphic::efiix8x48::get_name() const { return "efiix8x48"; }
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C16(efiix16x48)
-void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix16x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 std::string PractRand::RNGs::Polymorphic::efiix16x48::get_name() const { return "efiix16x48"; }
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(efiix32x48)
-void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix32x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
-//void PractRand::RNGs::Polymorphic::efiix32x48::seed(const Uint32 *seeds, int num_seeds, int quality) {implementation.seed(seeds, num_seeds, quality);}
-void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 std::string PractRand::RNGs::Polymorphic::efiix32x48::get_name() const { return "efiix32x48"; }
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(efiix64x48)
-void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix64x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return "efiix64x48"; }
 
+//#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
+	Word old = a + i; \
+	Word iterated = iteration_table[i % ITERATION_SIZE]; \
+	Word indirect = indirection_table[c % INDIRECTION_SIZE]; \
+	indirection_table[c % INDIRECTION_SIZE] = iterated; \
+	iteration_table[i++ % ITERATION_SIZE] = old; \
+	a = b + c; \
+	b = c ^ rotate ## BITS(iterated, BITS / 2); \
+	c = indirect + rotate ## BITS(old, SHIFT_AMOUNT); \
+	return iterated + indirect;
+
+
+//#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
+	Word old = rotate ## BITS(a, 2) ^ b; \
+	Word iterated = iteration_table[i % ITERATION_SIZE]; \
+	Word indirect = indirection_table[c % INDIRECTION_SIZE]; \
+	indirection_table[c % INDIRECTION_SIZE] = iterated; \
+	iteration_table[i % ITERATION_SIZE] = old; \
+	a = b + i++; \
+	b = c + old; \
+	c = indirect + rotate ## BITS(c, SHIFT_AMOUNT); \
+	return iterated + indirect;
+
+//#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
+	Word iterated = iteration_table[i % ITERATION_SIZE]; \
+	Word indirect = indirection_table[c % INDIRECTION_SIZE]; \
+	indirection_table[c % INDIRECTION_SIZE] = iterated + a; \
+	iteration_table[i % ITERATION_SIZE] = rotate ## BITS(indirect, b % BITS); \
+	Word old = a ^ b; \
+	a = b + i++; \
+	b = c + indirect; \
+	c = old + rotate ## BITS(c, SHIFT_AMOUNT); \
+	return b ^ iterated;
+
 #define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
-	Word iterated = iteration_table  [i % ITERATION_SIZE];\
-	Word indirect = indirection_table[c % INDIRECTION_SIZE];\
-	indirection_table[c % INDIRECTION_SIZE] = iterated + a;\
-	iteration_table  [i % ITERATION_SIZE  ] = indirect;\
-	Word old = a ^ b;\
-	a = b + i++;\
-	b = c + indirect;\
-	c = old + rotate ## BITS (c, SHIFT_AMOUNT);\
+	Word iterated = iteration_table[i % ITERATION_SIZE]; \
+	Word indirect = indirection_table[c % INDIRECTION_SIZE]; \
+	indirection_table[c % INDIRECTION_SIZE] = iterated + a; \
+	iteration_table[i % ITERATION_SIZE] = indirect; \
+	Word old = a ^ b; \
+	a = b + i++; \
+	b = c + indirect; \
+	c = old + rotate ## BITS(c, SHIFT_AMOUNT); \
 	return b ^ iterated;
 //current algorithm
-//perfect statistically (unless ITERATION_SIZE and word size are both very small), reasonably fast
+//perfect statistically (unless ITERATION_SIZE and BITS are both very small), reasonably fast
 //safe from a variety of attacks
 //but the "b ^ iterated" and "iterated + a" have too much in common, and the later can come right back out of the indirection pool right away
 //not much weakness, but some
 //alternatively, can return "b" alone - it's horrible at 8/16 bit, but acceptable at 32 and good at 64
 
+//later... It all looks solid to me right now
+//in particular, I said there was too much in common between "b ^ iterated" and "iterated + a", but I now disagree with my former self
+//"iterated + a" uses the old "a", while in terms of the old values the other is more "iterated ^ (c + indirect)".  
+//whereas if you try to compare to the next pass or previous pass, "iterated" has a largely unrelated value
+//curently my view is that the whole thing is good, specifically because all of the folowing requirements are met:
+//	the flow of information to output is one word per call
+//	the flow of information from the mixing pool to the tables is at least one word per call - arguablly more, because "c" is used to index in to the indirection table
+//	the flow of information from the tables to the mixing pool is one word per call
+//	the flow of information from the mixing pool to output is one word per call, and largely independent of the flow to the mixing pool
+//	the flow of information from the tables to output is one word per call
+//	passes statistical tests even with table sizes are very small
+//using only output, once the above requirements are met, I think the only way it breaks is if either there's a very obvious and simple flaw, or if the mixing isn't actually chaotic, both of which would have good odds of showing up in thorough testing
+//	...I suppose the mixing being too slow could also be a problem?  but since it does fine with table sizes set to 1, that's probably okay?
+//to be clear, I don't think those are the only possible set of sufficient requirements - for instance, I think output could be taken entirely from the mixing pool or entirely from the tables IFF both the flow from mixing to tables and the flow from tables to mixing were each clearly wider than the output rate
 
 //#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
 	Word iterated = iteration_table  [i % ITERATION_SIZE];\
@@ -101,6 +144,17 @@ std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return 
 //wider connection between mixing pool (a,b,c) and indirection pool (the two arrays) means it's now safe to use a simpler output function
 //...I think, anyway
 //but directly returning "old" means that if they guess (a,b,c) correctly once, they can figure out all other (a,b,c) sets from looking at the output
+
+#define _EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, ITER, IND, DO_RET) \
+	Word iterated = ITER;\
+	Word indirect = IND;\
+	IND = iterated + a;\
+	ITER = indirect;\
+	Word old = a ^ b; \
+	a = b + i++; \
+	b = c + indirect; \
+	c = old + rotate ## BITS(c, SHIFT_AMOUNT); \
+	if (DO_RET) return b ^ iterated;
 
 
 /*
@@ -185,46 +239,135 @@ Some oddities related to empirical quality vs parameterization visible there at 
 	I don't have much confidence in the 8 or 16 bit variants though
 */
 
-#define EFIIX_SEED3(WORD_BITS, SEEDING_ITER, SEEDING_IND) 
+#define EFIIX_SEED_SIMPLE_128(BITS, seed_low, seed_high) \
+	for (unsigned long x = 0; x < INDIRECTION_SIZE; x++) indirection_table[x] = x; \
+	for (unsigned long x = 0; x < ITERATION_SIZE; x++) iteration_table[x] = x; \
+	a = Uint ## BITS(seed_low); \
+	b = Uint ## BITS(seed_high); \
+	c = 0; i = 1; \
+	for (unsigned long x = 1; x < 64 / BITS; x++) { \
+		for (unsigned long y = 0; y < 16; y++) raw ## BITS(); \
+		a ^= Uint ## BITS(seed_low >> (BITS * x)); \
+		b ^= Uint ## BITS(seed_high >> (BITS * x)); \
+	} \
+	for (unsigned long x = 0; x < ITERATION_SIZE + INDIRECTION_SIZE + 16; x++) raw ## BITS();
 
-/*class efiix8_seeding_helper {
-public:
-	typedef Uint8 Word;
-	Word *iter_table;
-	Word *ind_table;
-	Word a, b, c, i;
-	int iter_size;
-	int ind_size;
+#define EFIIX_SEED_SIMPLE(BITS, _a, _b, _c) \
+	for (unsigned long x = 0; x < INDIRECTION_SIZE; x++) indirection_table[x] = x; \
+	for (unsigned long x = 0; x < ITERATION_SIZE; x++) iteration_table[x] = x; \
+	a = _a; b = _b; c = _c; i = 1; \
+	for (unsigned long x = 0; x < ITERATION_SIZE + INDIRECTION_SIZE + 16; x++) raw ## BITS();
+
+#define EFIIX_SEED_VECTOR_RAW(BITS, source, length) \
+	a = 0xDEADBEEF; b = 0; c = a; i = 0; \
+	for (unsigned long x = 0; x < INDIRECTION_SIZE; x++) indirection_table[x] = x; \
+	if (length < ITERATION_SIZE / 2) {\
+		for (unsigned long x = 0; x < length; x++) iteration_table[x] = source[x]; \
+		for (unsigned long x = length; x < ITERATION_SIZE / 2; x++) iteration_table[x] = x; \
+		for (unsigned long x = 0; x < length; x++) iteration_table[x + ITERATION_SIZE / 2] = source[x]; \
+		for (unsigned long x = length + ITERATION_SIZE / 2; x < ITERATION_SIZE; x++) iteration_table[x] = x; \
+		for (unsigned long x = 0; x < length * 2; x++) raw ## BITS(); \
+	}\
+	else {\
+		for (unsigned long x = 0; x < ITERATION_SIZE / 2; x++) iteration_table[x] = source[x]; \
+		for (unsigned long x = 0; x < ITERATION_SIZE / 2; x++) iteration_table[x + ITERATION_SIZE / 2] = source[x]; \
+		for (unsigned long x = 0; x < ITERATION_SIZE; x++) raw ## BITS(); \
+		length -= ITERATION_SIZE / 2;\
+		source += ITERATION_SIZE / 2;\
+		while (length >= ITERATION_SIZE / 2) {\
+			for (unsigned long x = 0; x < ITERATION_SIZE / 2; x++) iteration_table[x] ^= source[x]; \
+			for (unsigned long x = 0; x < ITERATION_SIZE / 2; x++) iteration_table[x + ITERATION_SIZE / 2] ^= source[x]; \
+			for (unsigned long x = 0; x < ITERATION_SIZE; x++) raw ## BITS(); \
+			length -= ITERATION_SIZE / 2;\
+			source += ITERATION_SIZE / 2;\
+		}\
+		if (length) {\
+			for (unsigned long x = 0; x < length; x++) iteration_table[x] ^= source[x]; \
+			for (unsigned long x = 0; x < length; x++) iteration_table[x + ITERATION_SIZE / 2] ^= source[x]; \
+			for (unsigned long x = 0; x < length << 1; x++) raw ## BITS(); \
+		}\
+	}\
+	for (unsigned long x = 0; x < ITERATION_SIZE + 16; x++) raw ## BITS();
+
+#define EFIIX_SEED_VECTOR_PUMP64(BITS, _seed_vector, _seed_length) \
+	a = b = c = i = 1;\
+	for (int w = 0; w < ITERATION_SIZE; w++) iteration_table[w] = w;\
+	for (int w = 0; w < INDIRECTION_SIZE; w++) indirection_table[w] = w;\
+	for (int w = 0; w < _seed_length; w++) {\
+		if (BITS == 64) { \
+			a ^= _seed_vector[w]; \
+			raw ## BITS(); raw ## BITS(); \
+		}\
+		else for (int bp = 0; bp < 64; bp += 2*BITS) {\
+			a ^= Word(_seed_vector[w] >> bp); \
+			b ^= Word(_seed_vector[w] >> (bp + BITS)); \
+			raw ## BITS(); raw ## BITS(); raw ## BITS(); \
+		}\
+		a ^= _seed_length;\
+	}\
+	for (int w = 0; w < ITERATION_SIZE; w++) raw8();\
+	for (int w = 0; w < INDIRECTION_SIZE * 2; w++) raw8();
+
+#define EFIIX_SEED_BRUTE_FORCE(BITS, _s1, _s2) \
+	{PractRand::RNGs::Raw::arbee seeder; \
+	Uint64 s1 = _s1, s2 = _s2;\
+	seeder.seed(s1, s2); \
+	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) indirection_table[w] = Word(seeder.raw64()); \
+	i = Word(seeder.raw64()); \
+	for (unsigned long w = 0; w < ITERATION_SIZE; w++) iteration_table[(w + i) % ITERATION_SIZE] = Word(seeder.raw64()); \
+	a = Word(seeder.raw64()); \
+	b = Word(seeder.raw64()); \
+	c = Word(seeder.raw64()); \
+	for (unsigned long w = 0; w < 64; w++) raw ## BITS(); \
+	seeder.raw64(); s1 += seeder.raw64(); s2 += seeder.raw64(); \
+	s1 ^= a; s2 ^= b; \
+	if (BITS < 32) {raw ## BITS(); raw ## BITS(); s1 = rotate64(s1, BITS) ^ a; s2 = rotate64(s2, BITS) ^ b;} \
+	if (BITS < 16) {raw ## BITS(); raw ## BITS(); s1 = rotate64(s1, BITS) ^ a; s2 = rotate64(s2, BITS) ^ b;} \
+	raw ## BITS(); raw ## BITS(); \
+	seeder.seed(s1, s2); \
+	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) indirection_table[w] ^= Word(seeder.raw64()); \
+	a ^= Word(seeder.raw64()); \
+	b ^= Word(seeder.raw64()); \
+	c ^= Word(seeder.raw64()); \
+	for (unsigned long w = 0; w < ITERATION_SIZE + 16; w++) raw ## BITS(); }
+
+#define EFIIX_SEED_FOLDING(BITS, SHIFT_AMOUNT, _s1, _s2, _s3) \
+	a = _s1; b = _s2; c = _s3;\
+	for (int w = 0; w < INDIRECTION_SIZE; w++) indirection_table[w] = w; \
+	for (unsigned long w = 0; w < 1 + 2; w++) { EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, 1, INDIRECTION_SIZE) } \
+	if (ITERATION_SIZE >= 2) { for (unsigned long w = 0; w < 1 + 2; w++) { EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, 1, INDIRECTION_SIZE) } } \
+	if (ITERATION_SIZE >= 4) { for (unsigned long w = 0; w < 1 + 2; w++) { EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, 4, INDIRECTION_SIZE) } } \
+	if (ITERATION_SIZE >= 8) { for (unsigned long w = 0; w < 1 + 2; w++) { EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, 8, INDIRECTION_SIZE) } } \
+	if (ITERATION_SIZE >= 16) { for (unsigned long w = 0; w < 1 + 2; w++) { EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, 16, INDIRECTION_SIZE) } } \
+	if (ITERATION_SIZE >= 32) { for (unsigned long w = 0; w < 1 + 2; w++) { EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT, 32, INDIRECTION_SIZE) } } \
 	;
-};*/
 
-#define EFIIX_SEED(BITS) \
-	PractRand::RNGs::Raw::arbee seeder;\
-	seeder.seed(s1, s2, s3, s4);\
-	for (unsigned long w=0; w < INDIRECTION_SIZE; w++) indirection_table[w] = Word(seeder.raw64());\
-	i = Word(seeder.raw64());\
-	for (unsigned long w=0; w < ITERATION_SIZE  ; w++) iteration_table  [(w+i)%ITERATION_SIZE] = Word(seeder.raw64());\
-	a = Word(seeder.raw64());\
-	b = Word(seeder.raw64());\
-	c = Word(seeder.raw64());\
-	for (unsigned long w=0; w < 64; w++) raw ## BITS();\
-	seeder.raw64(); s1 += seeder.raw64(); s2 += seeder.raw64(); s3 += seeder.raw64();\
-	seeder.seed(s1^a, s2^b, s3^c, ~s4);\
-	for (unsigned long w=0; w < INDIRECTION_SIZE; w++) indirection_table[w] ^= Word(seeder.raw64());\
-	for (unsigned long w=0; w < ITERATION_SIZE+16; w++) raw ## BITS();
-/*	on seeding:
-		two different seedings of seeder are needed because:
-			the first one gets things to a nice state, but might not be sufficiently secure
-			simply skipping some output makes part of the state secure, but...
-				parts of indirection_table remain unchanged no matter how much output is skipped
-		the second seed to seeder uses
-			(a,b,c) because it needs a function of the initial seed that is too complex for attacks
-				the 64 steps taken before that make (a,b,c) very complex because of the indirection
-			~s4 to guarantee that it can never be the same seed as was used in the first seeding
-			a function of the first seeders final state
-				because (a,b,c) may not be enough bits on smaller word sizes
-				not sure that really helps much though
-*/
+Uint8 PractRand::RNGs::Raw::efiix8min::raw8() {
+	//_EFIIX_ALGORITHM(8, 3, iteration_table[i%ITERATION_SIZE], indirection_table[c%INDIRECTION_SIZE], 1)
+	_EFIIX_ALGORITHM(8, 3, iteration_table, indirection_table, 1)
+}
+void PractRand::RNGs::Raw::efiix8min::seed(Uint64 seed_low, Uint64 seed_high) {
+	// only the lowest 48 bits of the 128 bit seed are used
+	a = Uint8(seed_low >> 0);
+	b = Uint8(seed_low >> 8);
+	c = Uint8(seed_low >> 16);
+	i = Uint8(seed_low >> 24);
+	iteration_table = Uint8(seed_low >> 32);
+	indirection_table = Uint8(seed_low >> 40);
+	for (int x = 0; x < 12; x++) raw8();
+	/*
+		redo tests
+	*/
+}
+void PractRand::RNGs::Raw::efiix8min::walk_state(StateWalkingObject *walker) {
+	walker->handle(a);
+	walker->handle(b);
+	walker->handle(c);
+	walker->handle(i);
+	walker->handle(iteration_table);
+	walker->handle(indirection_table);
+
+}
 
 
 PractRand::RNGs::Raw::efiix8x48::~efiix8x48() { std::memset(this, 0, sizeof(*this)); }
@@ -232,59 +375,18 @@ PractRand::RNGs::Raw::efiix16x48::~efiix16x48() { std::memset(this, 0, sizeof(*t
 PractRand::RNGs::Raw::efiix32x48::~efiix32x48() { std::memset(this, 0, sizeof(*this)); }
 PractRand::RNGs::Raw::efiix64x48::~efiix64x48() { std::memset(this, 0, sizeof(*this)); }
 
-
 Uint8 PractRand::RNGs::Raw::efiix8x48::raw8() {
 	typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(8, 3)
 }
-void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
-	//EFIIX_SEED(8)
-	a = b = c = i = 0;
-	iteration_table[0] = 0;
-	indirection_table[0] = 0;
-	//for (int x = 0; x < INDIRECTION_SIZE; x++) indirection_table[x] = x;
-	for (int x = 0; x < 1 + (64 / (8 * sizeof(Word))); x++) {
-		a += Word(s1); b += Word(s2); c += Word(s3); iteration_table[0] += Word(s4);
-		s1 >>= 8 * sizeof(Word); s2 >>= 8 * sizeof(Word); s3 >>= sizeof(Word); s4 >>= sizeof(Word);
-		enum { LESSER_SIZE = ITERATION_SIZE > INDIRECTION_SIZE ? INDIRECTION_SIZE : ITERATION_SIZE };
-		enum { GREATER_SIZE = ITERATION_SIZE > INDIRECTION_SIZE ? ITERATION_SIZE : INDIRECTION_SIZE };
-		if (!x) {
-			unsigned long mask = 1;
-			while (mask < LESSER_SIZE - 1) {
-				for (unsigned long y = 0; y <= mask; y++) {
-					Word iterated = iteration_table[i & mask & (ITERATION_SIZE - 1)];
-					Word indirect = indirection_table[c & mask & (INDIRECTION_SIZE - 1)];
-					indirection_table[c & mask] = iterated + a;
-					iteration_table[i & mask] = indirect;
-					Word old = a ^ b;
-					a = b + i++;
-					b = c + indirect;
-					c = old + rotate8(c, 3);
-					indirection_table[y + mask + 1] = b ^ iterated;
-				}
-				mask = (mask << 1) | 1;
-			}
-			while (mask < GREATER_SIZE - 1) {
-				for (unsigned long y = 0; y <= mask; y++) {
-					Word iterated = iteration_table[i & mask & (ITERATION_SIZE - 1)];
-					Word indirect = indirection_table[c & mask & (INDIRECTION_SIZE - 1)];
-					indirection_table[c & mask] = iterated + a;
-					iteration_table[i & mask] = indirect;
-					Word old = a ^ b;
-					a = b + i++;
-					b = c + indirect;
-					c = old + rotate8(c, 3);
-					//return b ^ iterated;
-				}
-				mask = (mask << 1) | 1;
-			}
-		}
-		else {
-			for (unsigned long y = 0; y < GREATER_SIZE; y++) raw8();
-		}
-	}
+void PractRand::RNGs::Raw::efiix8x48::add_entropy8(Uint8 value) {
+	a += value;
+	raw8();
 }
-void PractRand::RNGs::Raw::efiix8x48::seed(PractRand::RNGs::vRNG *source_rng) {
+void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 seed_low, Uint64 seed_high) {
+	EFIIX_SEED_SIMPLE_128(8, seed_low, seed_high)
+}
+/*void PractRand::RNGs::Raw::efiix8x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	a = source_rng->raw8();
 	b = source_rng->raw8();
 	c = source_rng->raw8();
@@ -297,7 +399,7 @@ void PractRand::RNGs::Raw::efiix8x48::seed(PractRand::RNGs::vRNG *source_rng) {
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw8();
-}
+}*/
 void PractRand::RNGs::Raw::efiix8x48::walk_state(StateWalkingObject *walker) {
 	for (unsigned long w = 0; w < ITERATION_SIZE; w++) walker->handle(iteration_table[w]);
 	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) walker->handle(indirection_table[w]);
@@ -309,13 +411,14 @@ void PractRand::RNGs::Raw::efiix8x48::walk_state(StateWalkingObject *walker) {
 
 
 Uint16 PractRand::RNGs::Raw::efiix16x48::raw16() {
-	typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
+	typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];//making sure they're powers of 2
 	EFIIX_ALGORITHM(16, 7)
 }
-void PractRand::RNGs::Raw::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
-	EFIIX_SEED( 16 )
+void PractRand::RNGs::Raw::efiix16x48::seed(Uint64 seed_low, Uint64 seed_high) {
+	EFIIX_SEED_SIMPLE_128(16, seed_low, seed_high)
+	//EFIIX_SEED_BRUTE_FORCE(16, _s1, _s2)
 }
-void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG *source_rng) {
+/*void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	a = source_rng->raw16();
 	b = source_rng->raw16();
 	c = source_rng->raw16();
@@ -328,7 +431,7 @@ void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG *source_rng) {
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw16();
-}
+}*/
 void PractRand::RNGs::Raw::efiix16x48::walk_state(StateWalkingObject *walker) {
 	for (unsigned long w = 0; w < ITERATION_SIZE; w++) walker->handle(iteration_table[w]);
 	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) walker->handle(indirection_table[w]);
@@ -353,10 +456,11 @@ static void mix4x32(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
 	d ^= c + b;
 	a += d ^ ((c << 8) | (c >> 24));
 }
-void PractRand::RNGs::Raw::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
-	EFIIX_SEED(32)
+void PractRand::RNGs::Raw::efiix32x48::seed(Uint64 seed_low, Uint64 seed_high) {
+	EFIIX_SEED_SIMPLE_128(32, seed_low, seed_high)
+	//EFIIX_SEED_BRUTE_FORCE(32, _s1, _s2)
 }
-void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG *source_rng) {
+/*void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	a = source_rng->raw32();
 	b = source_rng->raw32();
 	c = source_rng->raw32();
@@ -369,7 +473,7 @@ void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG *source_rng) {
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw32();
-}
+}*/
 //void PractRand::RNGs::Raw::efiix32x48::seed(const Word *seeds, int num_seeds, int seeding_quality) {
 //}
 void PractRand::RNGs::Raw::efiix32x48::walk_state(StateWalkingObject *walker) {
@@ -386,10 +490,27 @@ Uint64 PractRand::RNGs::Raw::efiix64x48::raw64() {
 	typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(64, 25)
 }
-void PractRand::RNGs::Raw::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
-	EFIIX_SEED( 64 )
+void PractRand::RNGs::Raw::efiix64x48::seed(Uint64 seed_low, Uint64 seed_high) {
+	EFIIX_SEED_SIMPLE_128(64, seed_low, seed_high)
+	//EFIIX_SEED_BRUTE_FORCE(64, _s1, _s2)
+
+	/*PractRand::RNGs::Raw::arbee seeder;
+	Uint64 s1 = _s1, s2 = _s2, s3 = _s3, s4 = _s4;
+	seeder.seed(s1, s2, s3, s4);
+	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) indirection_table[w] = Word(seeder.raw64());
+		i = Word(seeder.raw64());
+	for (unsigned long w = 0; w < ITERATION_SIZE; w++) iteration_table[(w + i) % ITERATION_SIZE] = Word(seeder.raw64());
+		a = Word(seeder.raw64());
+		b = Word(seeder.raw64());
+		c = Word(seeder.raw64());
+	for (unsigned long w = 0; w < 64; w++) raw64();//
+	seeder.raw64(); s1 += seeder.raw64(); s2 += seeder.raw64(); s3 += seeder.raw64();
+	seeder.seed(s1^a, s2^b, s3^c, ~s4);
+	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) indirection_table[w] ^= Word(seeder.raw64());
+	for (unsigned long w = 0; w < ITERATION_SIZE + 16; w++) raw64();//
+	*/
 }
-void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG *source_rng) {
+/*void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	a = source_rng->raw32();
 	b = source_rng->raw32();
 	c = source_rng->raw32();
@@ -402,7 +523,7 @@ void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG *source_rng) {
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw64();
-}
+}*/
 void PractRand::RNGs::Raw::efiix64x48::walk_state(StateWalkingObject *walker) {
 	for (unsigned long w = 0; w < ITERATION_SIZE; w++) walker->handle(iteration_table[w]);
 	for (unsigned long w = 0; w < INDIRECTION_SIZE; w++) walker->handle(indirection_table[w]);

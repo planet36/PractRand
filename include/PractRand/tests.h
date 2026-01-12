@@ -27,8 +27,10 @@ namespace PractRand {
 		double get_suspicion() const;
 		double get_weight() const {return weight;}
 		void set_weight(double weight_) {weight = weight_;}
+
 		static double pvalue_to_suspicion(double pvalue);
 		static double suspicion_to_pvalue(double suspicion);
+		static double normal_to_suspicion(double normal);
 	};
 	namespace Tests {
 		union TestBlock {

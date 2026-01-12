@@ -13,17 +13,17 @@ namespace PractRand {
 		protected:
 			enum { LEVELS = 32 };
 			VariableSizeCount<Uint16> counts[LEVELS];
-			long mask[LEVELS];
+			long mask[LEVELS];//there's no reason for an array of this, they should all be the same value, right?
 			long cur[LEVELS];
-			bool even[LEVELS];     // <4 is never used?
+			long even[LEVELS];     // <4 is never used?
 			long leftovers[LEVELS];// <4 is never used? <10 not really needed?
 			long warmup[LEVELS];   // <4 is never used?
 			long tbits;
 			long unitsL2;
-			bool unbalanced;
+			long mode;//mode 0 is original skips 0s, mode 1 is 'unbalanced' rounds towards, mode 2 is alternating (high hamming weights on even addresses, low on odd addresses)
 			Uint64 blocks;
 		public:
-			BCFN(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
+			BCFN(int unitsL2_ = 0, int tbits_ = 10, int mode_ = 2);
 			virtual void init( PractRand::RNGs::vRNG *known_good );
 			virtual void deinit( );
 			virtual std::string get_name() const;
@@ -33,7 +33,8 @@ namespace PractRand {
 
 			virtual void test_blocks(TestBlock *data, int numblocks);
 			void handle_high_levels_balanced   ( long level, long bits );
-			void handle_high_levels_unbalanced ( long level, long bits );
+			void handle_high_levels_unbalanced(long level, long bits);
+			void handle_high_levels_parity(long level, long bits);
 		};
 		class BCFN_FF : public TestBaseclass {
 		protected:

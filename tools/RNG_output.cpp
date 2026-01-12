@@ -28,10 +28,12 @@
 //specific RNG algorithms, to produce (pseudo-)random numbers
 #include "PractRand/RNGs/all.h"
 
+#include "PractRand/RNGs/other/mt19937.h"
 #include "PractRand/RNGs/other/transform.h"
-#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/lcgish.h"
+#include "PractRand/RNGs/other/oddball.h"
 #include "PractRand/RNGs/other/simple.h"
-#include "PractRand/RNGs/other/fibonacci.h"
+#include "PractRand/RNGs/other/cbuf.h"
 #include "PractRand/RNGs/other/indirection.h"
 #include "PractRand/RNGs/other/special.h"
 
@@ -40,6 +42,7 @@
 
 using namespace PractRand;
 #include "Candidate_RNGs.h"
+#include "dummy_rng.h"
 
 
 bool interpret_seed(const std::string &seedstr, Uint64 &seed) {
@@ -66,9 +69,17 @@ void print_usage(const char *program_name) {
 	std::cerr << "    error message if fewer than 16 bytes were successfully outputted.\n";
 	std::cerr << "usage:\n\t" << program_name << " RNG_name inf [64bit_hexadecimal_seed]\n";
 	std::cerr << "  as above, but it prints indefinitely, with no error message when aborted\n";
+	std::cerr << "usage:\n\t" << program_name << " num_rngs_in_set RNG_set\n";
+	std::cerr << "  Will print the number of RNGs in a particular list of RNGs.\n";
+	//            01234567890123456789012345678901234567890123456789012345678901234567890123456789
+	std::cerr << "  Supported RNG sets: recommended_rngs, nonrecommended_rngs, nonrecommended_rngs_simple, nonrecommended_rngs_lcgish, nonrecommended_rngs_cbuf, nonrecommended_rngs_indirect, and nonrecommended_rngs_oddball.\n";
 	std::cerr << "usage:\n\t" << program_name << " RNG_name name\n";
 	std::cerr << "  It prints the result of (RNG)->get_name()\n";
 	std::cerr << "  Which is often the same as the RNG_name parameter, but not always.\n";
+	std::cerr << "usage:\n\t" << program_name << " --version\n";
+	std::cerr << "  Will print the version number.\n";
+	std::cerr << "usage:\n\t" << program_name << " --help\n";
+	std::cerr << "  Will print this message.  So will any unrecognized command line.\n";
 	exit(0);
 }
 
@@ -81,24 +92,71 @@ void signal_handler(int param)
 
 #include "SeedingTester.h"
 
+const char *get_exec_name(const char *argv0) {
+	const char *p = std::strpbrk(argv0, "/\\");
+	if (p) return get_exec_name(p + 1);
+	else return argv0;
+}
+
 int main(int argc, char **argv) {
 #ifdef WIN32
 	_setmode( _fileno(stdout), _O_BINARY); // needed to allow binary stdout on windows
 #endif
+	if (argc <= 1) {
+		print_usage(argv[0]);
+	}
+	if (!std::strcmp(argv[1], "-version") || !std::strcmp(argv[1], "--version") || !std::strcmp(argv[1], "-v")) {
+		std::printf("%s version %s\n", get_exec_name(argv[0]), PractRand::version_str);
+		// arbitrarily declaring the version number of RNG_output to match the version number of PractRand
+		std::printf("A command line tool for generating a stream of random bytes.\n");
+		std::exit(0);
+	}
+	if (!std::strcmp(argv[1], "-help") || !std::strcmp(argv[1], "--help") || !std::strcmp(argv[1], "-h")) {
+		print_usage(get_exec_name(argv[0]));
+	}
 	if (argc < 3 || argc > 4) print_usage(argv[0]);
+
 	PractRand::initialize_PractRand();
 
 	RNG_Factories::register_recommended_RNGs();
 	RNG_Factories::register_nonrecommended_RNGs();
 	RNG_Factories::register_candidate_RNGs();
-	Seeder_MetaRNG::register_name();
+	//Seeder_MetaRNG::register_name();
+	FastSeeder128_MetaRNG::register_name();
+	RecursiveSeed64_MetaRNG::register_name();
 	EntropyPool_MetaRNG::register_name();
+	RNG_Factories::RNG_factory_index["dummy_rng"] = RNG_Factories::_generic_notrecommended_RNG_factory<dummy_rng>;
+
+	if (!std::strcmp(argv[1], "num_rngs_in_set")) {
+		int n = -1;
+		if (false);
+		else if (!std::strcmp(argv[2], "recommended_rngs")) n = PractRand::RNG_Sets::num_recommended_rngs;
+		else if (!std::strcmp(argv[2], "nonrecommended_rngs_simple")) n = PractRand::RNG_Sets::num_nonrecommended_simple;
+		else if (!std::strcmp(argv[2], "nonrecommended_rngs_lcgish")) n = PractRand::RNG_Sets::num_nonrecommended_lcgish;
+		else if (!std::strcmp(argv[2], "nonrecommended_rngs_cbuf")) n = PractRand::RNG_Sets::num_nonrecommended_cbuf;
+		else if (!std::strcmp(argv[2], "nonrecommended_rngs_indirect")) n = PractRand::RNG_Sets::num_nonrecommended_indirect;
+		else if (!std::strcmp(argv[2], "nonrecommended_rngs_oddball")) n = PractRand::RNG_Sets::num_nonrecommended_oddball;
+		else if (!std::strcmp(argv[2], "nonrecommended_rngs")) n = PractRand::RNG_Sets::num_nonrecommended;
+		else {
+			std::printf("unrecognized RNG set name ; options include recommended_rngs, nonrecommended_rngs_simple, nonrecommended_rngs_lcgish, nonrecommended_rngs_cbuf, nonrecommended_rngs_indirect, nonrecommended_rngs_oddball, and nonrecommended_rngs\n");
+			std::exit(1);
+		}
+		std::printf("%d\n", n);
+		std::exit(0);
+	}
+
 	std::string errmsg;
 	RNGs::vRNG *rng = RNG_Factories::create_rng(argv[1], &errmsg);
 
 	if (!rng) {
-		if (errmsg.empty()) { std::fprintf(stderr, "RNG_output ERROR: unrecognized RNG name\n"); print_usage(argv[0]); }
-		else { std::fprintf(stderr, "RNG_output ERROR: RNG_Factories returned error message:\n%s\n", errmsg.c_str()); exit(1); }
+		if (errmsg.empty()) {
+			std::fprintf(stderr, "unrecognized RNG name \"%s\".  aborting.\n", argv[1]);
+			std::exit(1);
+		}
+		else {
+			std::fprintf(stderr, "%s\n", errmsg.c_str());
+			std::exit(1);
+		}
 	}
 
 	double _n = atof(argv[2]);//should be atol, but on 32 bit systems that's too limited
@@ -106,6 +164,7 @@ int main(int argc, char **argv) {
 	if (_n <= 0 || _n >= 18446744073709551616.0) {
 		if (!strcmp(argv[2], "name")) {
 			std::printf("%s\n", rng->get_name().c_str());
+			delete rng;
 			exit(0);
 		}
 		else if (!strcmp(argv[2], "inf")) {
@@ -132,7 +191,7 @@ int main(int argc, char **argv) {
 	prev_handler = signal(SIGPIPE, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGPIPE has failed." << std::endl; }
 #endif  
 
-	enum {BUFFER_SIZE = 8};
+	enum {BUFFER_SIZE = 32};
 	//Uint64 buffer[BUFFER_SIZE];
 	PractRand::Tests::TestBlock buffer[BUFFER_SIZE];
 	while (n && !signaled) {
@@ -153,5 +212,6 @@ int main(int argc, char **argv) {
 	if (n && _n) {
 		std::cerr << "RNG_output ERROR: " << Uint64(_n) << " bytes were requested, but only " << (Uint64(_n) - n) << " bytes were written." << std::endl;
 	}
+	delete rng;
 	return 0;
 }

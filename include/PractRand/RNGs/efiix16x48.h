@@ -21,9 +21,8 @@ namespace PractRand {
 			public:
 				~efiix16x48();
 				Uint16 raw16();
-				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
-				void seed(Uint64 s) { seed(s, s, s, s); }
-				void seed(vRNG *source_rng);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
+				//void seed(vRNG *source_rng);
 				void walk_state(StateWalkingObject *walker);
 			};
 		}
@@ -31,9 +30,8 @@ namespace PractRand {
 		namespace Polymorphic {
 			class efiix16x48 : public vRNG16 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(efiix16x48)
-				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
-				void seed(Uint64 s);
-				void seed(vRNG *source_rng);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
+				//void seed(vRNG *source_rng);
 			};
 		}
 		PRACTRAND__LIGHT_WEIGHT_RNG(efiix16x48)

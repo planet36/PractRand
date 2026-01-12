@@ -13,9 +13,8 @@ namespace PractRand {
 				Uint32 a, b, c, counter;
 			public:
 				Uint32 raw32();
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed_fast(Uint64 s);
-				void seed(Uint32 s1, Uint32 s2, Uint32 s3);
 				void walk_state(StateWalkingObject *walker);
 			};
 		}
@@ -23,9 +22,8 @@ namespace PractRand {
 		namespace Polymorphic {
 			class sfc32 : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(sfc32)
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed_fast(Uint64 s);
-				void seed(Uint32 s1, Uint32 s2, Uint32 s3);
 			};
 		}
 		PRACTRAND__LIGHT_WEIGHT_RNG(sfc32)

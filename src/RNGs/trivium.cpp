@@ -4,7 +4,7 @@
 #include "PractRand/endian.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 
 #include "PractRand/RNGs/trivium.h"
 
@@ -13,8 +13,9 @@ using namespace PractRand;
 
 //polymorphic:
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(trivium)
-void PractRand::RNGs::Polymorphic::trivium::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::trivium::seed_fast(Uint64 s) { implementation.seed_fast(s, s); }
+void PractRand::RNGs::Polymorphic::trivium::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
+void PractRand::RNGs::Polymorphic::trivium::seed_fast(Uint64 s1, Uint64 s2, int quality) { implementation.seed_fast(s1, s2, quality); }
+void PractRand::RNGs::Polymorphic::trivium::seed_fast(Uint64 s) { implementation.seed_fast(s); }
 void PractRand::RNGs::Polymorphic::trivium::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::trivium::seed(const Uint8 *seed_and_iv, int length) { implementation.seed(seed_and_iv, length); }
 std::string PractRand::RNGs::Polymorphic::trivium::get_name() const {return "trivium";}
@@ -39,14 +40,19 @@ Uint64 PractRand::RNGs::Raw::trivium::raw64() {//LOCKED, do not change
 
 	return tmp_a ^ tmp_b ^ tmp_c;
 }
-void PractRand::RNGs::Raw::trivium::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::trivium::seed(Uint64 seed_low, Uint64 seed_high) {//LOCKED, do not change
 	//Triviums standard seeding algorithm adapted to PractRand interface
-	Uint8 vec[8];
+	//changed in version 0.96 to reflect that PractRand seeding is now 128 bit
+	Uint8 vec[16];
 	for (int i = 0; i < 8; i++) {
-		vec[i] = Uint8(s); 
-		s >>= 8;
+		vec[i] = Uint8(seed_low);
+		seed_low >>= 8;
 	}
-	seed(vec, 8);
+	for (int i = 0; i < 8; i++) {
+		vec[8+i] = Uint8(seed_high);
+		seed_high >>= 8;
+	}
+	seed(vec, 16);
 }
 void PractRand::RNGs::Raw::trivium::seed_fast(Uint64 s1, Uint64 s2, int quality) {//LOCKED, do not change
 	//a non-standard simplified 128-bit seeding algorithm
@@ -55,6 +61,9 @@ void PractRand::RNGs::Raw::trivium::seed_fast(Uint64 s1, Uint64 s2, int quality)
 	c[0] = 0;
 	c[1] = Uint64(7) << (128-111);
 	for (int i = 0; i < quality; i++) raw64();
+}
+void PractRand::RNGs::Raw::trivium::seed_fast(Uint64 seed_value) {//LOCKED, do not change
+	seed_fast(seed_value, 0, 9);
 }
 void PractRand::RNGs::Raw::trivium::seed(vRNG *seeder_rng) {//LOCKED, do not change
 	Uint64 s1 = seeder_rng->raw64();

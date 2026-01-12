@@ -10,7 +10,7 @@ protected:
 	int blocks_to_repeat;
 	Uint64 blocks_so_far;
 	bool freshly_created;
-	int prep_blocks(Uint64 &blocks);
+	int prep_blocks(Uint64 blocks);
 public:
 	const PractRand::RNGs::vRNG *get_rng() const {return rng;}//RNG being tested
 	Uint64 get_blocks_so_far() {return blocks_so_far;}//number of blocks tested
@@ -21,7 +21,7 @@ public:
 	//known_good_ = sometimes the tests or test manager need good random numbers for some reason
 	//max_buffer_amount_ = size in kilobytes of the maximum amount of random data to keep buffered up at on time
 
-	virtual ~TestManager();//destructor (destroys the tests in the ListOfTests)
+	virtual ~TestManager();//destructor (destroys the tests in the ListOfTests ; does NOT destroy the RNGs)
 
 	virtual void reset(PractRand::RNGs::vRNG *rng_ = NULL);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 
@@ -39,7 +39,6 @@ TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs:
 	max_buffer_amount = max_buffer_amount_;
 	prefix_blocks = 0;
 	main_blocks = 0;
-	for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
 	freshly_created = true;
 }
 TestManager::~TestManager() {
@@ -61,31 +60,49 @@ void TestManager::reset(PractRand::RNGs::vRNG *rng_) {
 	prefix_blocks = 0;
 	blocks_so_far = 0;
 }
-int TestManager::prep_blocks(Uint64 &blocks) {
+int TestManager::prep_blocks(Uint64 blocks) {
+	int new_prefix_blocks = blocks_to_repeat;
+	if (new_prefix_blocks > prefix_blocks + main_blocks)
+		new_prefix_blocks = prefix_blocks + main_blocks;
+	if (new_prefix_blocks) {
+		std::memcpy(
+			&buffer[0],
+			&buffer[prefix_blocks + main_blocks - new_prefix_blocks],
+			PractRand::Tests::TestBlock::SIZE * new_prefix_blocks
+			);
+	}
+	prefix_blocks = new_prefix_blocks;
+	main_blocks = (blocks > max_buffer_amount) ? max_buffer_amount : Uint32(blocks);
+	buffer[prefix_blocks].fill(rng, main_blocks);
+	blocks_so_far += main_blocks;
+	return main_blocks;
+
+	/*
 	Uint64 _delta_blocks = blocks;
 	if (_delta_blocks > max_buffer_amount) _delta_blocks = max_buffer_amount;
 	int delta_blocks = int(_delta_blocks);
-	blocks -= delta_blocks;
+	//blocks -= delta_blocks;
 	size_t repeat_region_start, repeat_region_size;
 	if (prefix_blocks + main_blocks >= blocks_to_repeat) {
 		repeat_region_start = prefix_blocks + main_blocks - blocks_to_repeat;
 		repeat_region_size = blocks_to_repeat;
 	}
 	else {
-		repeat_region_start = 0;
-		repeat_region_size = prefix_blocks + main_blocks;
+		repeat_region_start = 0;// bug - isn't always zero
+		repeat_region_size = prefix_blocks + main_blocks;// bug - isn't always this
 	}
-	if (repeat_region_start != 0)
+	if (repeat_region_start != 0 && repeat_region_size != 0)
 		std::memmove(&buffer[0], &buffer[repeat_region_start], repeat_region_size * PractRand::Tests::TestBlock::SIZE);
 	prefix_blocks = repeat_region_size;
 	main_blocks = delta_blocks;
 	buffer[prefix_blocks].fill(rng, main_blocks);
 	blocks_so_far += delta_blocks;
 	return delta_blocks;
+	*/
 }
 void TestManager::test(Uint64 num_blocks) {
 	while (num_blocks) {
-		prep_blocks(num_blocks);
+		num_blocks -= prep_blocks(num_blocks);
 		for (unsigned int i = 0; i < tests->tests.size(); i++)
 			tests->tests[i]->test_blocks(&buffer[prefix_blocks], main_blocks);
 	}

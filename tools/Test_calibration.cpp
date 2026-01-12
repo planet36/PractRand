@@ -11,14 +11,25 @@
 #include <algorithm>
 //#include <map>
 
+#if defined _MSC_VER && _MSC_VER >= 1800
+#include <intrin.h>
+#endif
 
 //master header, includes everything in PractRand for both 
 //  practical usage and research... 
 //  EXCEPT it does not include specific algorithms
 #include "PractRand_full.h"
 
-//using issue_error here
-#include "PractRand/rng_internals.h"
+//specific RNG algorithms, to produce (pseudo-)random numbers
+#include "PractRand/RNGs/all.h"
+#include "PractRand/RNGs/other/mt19937.h"
+#include "PractRand/RNGs/other/transform.h"
+#include "PractRand/RNGs/other/lcgish.h"
+#include "PractRand/RNGs/other/oddball.h"
+#include "PractRand/RNGs/other/simple.h"
+#include "PractRand/RNGs/other/cbuf.h"
+#include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/special.h"
 
 //specific testing algorithms, to detect bias in supposedly random numbers
 #include "PractRand/Tests/BCFN.h"
@@ -30,17 +41,10 @@
 #include "PractRand/Tests/BRank.h"
 #include "PractRand/Tests/CoupGap.h"
 #include "PractRand/Tests/mod3.h"
-
-//specific RNG algorithms, to produce (pseudo-)random numbers
-#include "PractRand/RNGs/all.h"
-#include "PractRand/RNGs/other/transform.h"
-#include "PractRand/RNGs/other/mult.h"
-#include "PractRand/RNGs/other/simple.h"
-#include "PractRand/RNGs/other/fibonacci.h"
-#include "PractRand/RNGs/other/indirection.h"
-#include "PractRand/RNGs/other/special.h"
+#include "PractRand/Tests/NearSeq.h"
 
 using namespace PractRand;
+using namespace PractRand::Internals;
 using namespace PractRand::Tests;
 
 //some helpers for the sample programs:
@@ -106,11 +110,12 @@ double ref_p129_with_formatting[] = {
 	0.999995, 0.999998, 0.999999, -1,
 	0.9999995, 0.9999998, 0.9999999, -2
 };
+
 void print_ss(const SampleSet &ss, const std::string &name, Uint64 blocks) {
 //	std::printf("{\"BCFN-%d/%d\",%7.0f,%5d, %d, {", tbits, 1<<stride_L2, double(Uint64(std::pow(2,length_L2) / 1024)), (int)ss.size(), (int)ss.num_duplicates());
 //	for (int i = 0; i < 117; i++) std::printf("%s%+7.3f", i ? "," : "", ss.get_result_by_percentile(ref_p[i]));
 //	std::printf("}, %+.4f, %+.4f, %.4f},\n", ss.get_result_by_percentile(0.5), ss.get_mean(), ss.get_stddev());
-	std::printf("{\"%s\",%9.0f,%5d,%4d, {", name.c_str(), (double)blocks, (long)ss.size(), (long)ss.num_duplicates());
+	std::printf("{\"%s\",%9.0f,%5ld,%4ld, {", name.c_str(), (double)blocks, (long)ss.size(), (long)ss.num_duplicates());
 	for (int i = 0; i < 129; i++) {
 		if (ref_p129[i] >= 0.01 && ref_p129[i] <= 0.99) std::printf("%s%+7.3f", i ? "," : "", ss.get_result_by_percentile(ref_p129[i]));
 		else std::printf("%s%+10.5f", i ? "," : "", ss.get_result_by_percentile(ref_p129[i]));
@@ -169,7 +174,7 @@ double fake_bcfn2(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n, double
 	std::vector<Uint64> table; table.resize(size, 0);
 	std::vector<double> probs; probs.resize(size);
 	for (Uint32 i = 0; i < size; i++) {
-		int ones = count_bits32(i);
+		int ones = count_ones32(i);
 		probs[i] = std::pow(p, ones) * std::pow(1-p, tbits-ones);
 	}
 	n = (n + 3) >> 3;
@@ -234,7 +239,7 @@ void print_fake_bcfn_dist(int tbits, int stride_L2, double length_L2, int sample
 		0.0062333780055594//16 Kbit
 	};
 	int level = stride_L2 + 3;
-	double even_chance = (level <= 15) ? chance_skipped[level] : (chance_skipped[15] * std::pow(0.5, 0.5 * (level-15)));
+	double even_chance = (level <= 15) ? chance_skipped[level] : (chance_skipped[14] * std::pow(0.5, 0.5 * (level-14)));
 	double p = unbalanced ? (even_chance + 1)*0.5 : 0.5;
 	double unskipped_chance = unbalanced ? 1 : 1 - even_chance;
 	ss = fake_bcfn_dist(&known_good, tbits, std::pow(2, length_L2 + 3 - level) * unskipped_chance - tbits + 1, samples, p);
@@ -255,7 +260,7 @@ void blah_bcfn() {
 Uint64 generate_binomial_dist(PractRand::RNGs::vRNG *known_good, Uint64 sample_length) {
 	//returns number of 0s in (sample_length) random bits
 	if (sample_length > 1ull << 12) {
-		double p = known_good->randf();
+		double p = known_good->rand_float();
 		double n = Tests::math_pvalue_to_normaldist(p);
 		double mean = sample_length * 0.5;
 		double dev = sqrt(sample_length * 0.5 * 0.5);
@@ -265,8 +270,8 @@ Uint64 generate_binomial_dist(PractRand::RNGs::vRNG *known_good, Uint64 sample_l
 	}
 	Uint32 len = sample_length;
 	Uint32 rv = 0;
-	for (; len >= 32; len -= 32) rv += Tests::count_bits32(known_good->raw32());
-	for (; len >= 8; len -= 8) rv += Tests::count_bits8(known_good->raw8());
+	for (; len >= 32; len -= 32) rv +=count_ones32(known_good->raw32());
+	for (; len >= 8; len -= 8) rv += count_ones8(known_good->raw8());
 	for (; len >= 1; len -= 1) rv += known_good->raw32() & 1;	
 	return rv;
 }
@@ -331,7 +336,7 @@ void blah_fpf_all2() {
 		for (int trial = 0; trial < 1 << 26; trial++) {
 			double sum = 0;
 			for (int p = 0; p < num_platters; p++) {
-				double susp = TestResult::pvalue_to_suspicion(known_good.randlf());
+				double susp = TestResult::pvalue_to_suspicion(known_good.rand_double());
 				sum += susp * susp - 4.162737902123020;
 			}
 			sum /= std::sqrt(double(num_platters));
@@ -359,82 +364,25 @@ void blah_fpf() {
 	}
 }
 
-void _set_shift_values(int shift1, int shift2, int shift3);
-struct CharPoly {
-	enum { WORDS = 3 };
-	typedef Uint16 Word;
-	enum { BITS = sizeof(Word) * 8 };
-	Word data[WORDS];
-
-	void zero() { std::memset(data, 0, WORDS * sizeof(Word)); }
-};
-CharPoly operator+(const CharPoly &a, const CharPoly &b) {
-	CharPoly rv;
-	for (int i = 0; i < CharPoly::WORDS; i++) rv.data[i] = a.data[i] + b.data[i];
-	return rv;
-}
-CharPoly mulx(const CharPoly &mod, const CharPoly &a) {
-	CharPoly rv = a;
-	int j;
-	if (rv.data[CharPoly::WORDS - 1] >> (CharPoly::BITS - 1)) {
-		for (j = CharPoly::WORDS - 1; j; j--)
-			rv.data[j] = ((rv.data[j - 1] >> (CharPoly::BITS - 1)) | (rv.data[j] << 1)) ^ mod.data[j];
-		rv.data[0] = (rv.data[0] << 1) ^ mod.data[j];
-	}
-	else {
-		for (j = CharPoly::WORDS - 1; j; j--)
-			rv.data[j] = (rv.data[j - 1] >> (CharPoly::BITS - 1)) | (rv.data[j] << 1);
-		rv.data[0] <<= 1;
-	}
-	return rv;
-}
-void blah_rarns_search_shifts() {
-	enum {
-		BITS = 16,
-		MIN_SHIFT1 = 0, MAX_SHIFT1 = BITS-1,
-		MIN_SHIFT2 = 0, MAX_SHIFT2 = BITS-1,
-		MIN_SHIFT3 = 0, MAX_SHIFT3 = BITS-1,
-	};
-	int shift1 = MIN_SHIFT1, shift2 = MIN_SHIFT2, shift3 = MIN_SHIFT3;
-	while (true) {
-		PractRand::RNGs::Raw::rarns16 rarns;
-		_set_shift_values(shift1, shift2, shift3);
-		rarns.seed(0);
-
-		if (++shift1 > MAX_SHIFT1) {
-			shift1 = MIN_SHIFT1;
-			if (++shift2 > MAX_SHIFT2) {
-				shift2 = MIN_SHIFT2;
-				if (++shift3 > MAX_SHIFT3) {
-					shift3 = MIN_SHIFT3;
-					break;
-				}
-			}
-		}
-	}
-}
-void blah_avalanche_grid() {
-	;
-}
-
-
 void find_test_distributions() {
 	std::time_t start_time = std::time(NULL);
 	std::clock_t start_clock = std::clock();
 
 	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
-	PractRand::RNGs::Polymorphic::efiix32x48 rng(&known_good);
+	PractRand::RNGs::Polymorphic::efiix64x48 rng(&known_good);
 
 	//Tests::ListOfTests tests(new Tests::BCFN2(2,13));
 	//Tests::ListOfTests tests(new Tests::Gap16());
 	//Tests::ListOfTests tests(new Tests::BRank(40));
 	//Tests::ListOfTests tests(new Tests::BCFN_FF(2, 13));
 	//Tests::ListOfTests tests(new Tests::mod3_simple());
-	Tests::ListOfTests tests(new Tests::mod3n(1));
+	//Tests::ListOfTests tests(new Tests::mod3n(1));
+	//Tests::ListOfTests tests(new Tests::GapUniversal2());
+	//Tests::ListOfTests tests(new Tests::NearSeq3());
 	//Tests::ListOfTests tests = Tests::Batteries::get_core_tests();
 	//Tests::ListOfTests tests = Tests::Batteries::get_expanded_core_tests();
-	//Tests::ListOfTests tests(new Tests::DistC6(9,0, 1,0,0));
+	Tests::ListOfTests tests(new Tests::DistC6(9,0, 1,0,0));
 	//Tests::ListOfTests tests(new Tests::DistC6(6,1, 1,0,0));
 	//Tests::ListOfTests tests(new Tests::DistC6(5,2, 1,0,0));
 	//Tests::ListOfTests tests(new Tests::DistC6(4,3, 0,0,1));
@@ -452,16 +400,26 @@ void find_test_distributions() {
 	//Uint64 test_size = 1 << 16;
 	//test_size *= Tests::TestBlock::SIZE;
 
-	std::map<std::string,std::map<Uint64,SampleSet> > data;
+	std::map<std::string, std::map<Uint64, SampleSet> > data;
 	Uint64 next_checkpoint = 1;
-	for (Uint64 n = 0; n <= 1ull<<30; n++) {
+	enum { LARGEST_SIZE_L2 = 36 };
+	enum { CHUNKY_L2 = 49 - (LARGEST_SIZE_L2 >= 34) ? LARGEST_SIZE_L2 + 4 : LARGEST_SIZE_L2 / 2 + 21 };
+	enum { CHUNKY = 1 << CHUNKY_L2 };
+	for (Uint64 n = 0; n <= 1ull << 30; n++) {
 		if (n == next_checkpoint) {
-			enum {CHUNKY = 1 << 12};
 			if (next_checkpoint < CHUNKY) next_checkpoint <<= 1; else next_checkpoint += CHUNKY;
 			std::printf("\n\n\n\n");
 			std::printf("==================================================\n");
-			if (n & 1023) std::printf("checkpoint @ %d\n", int(n));
-			else std::printf("checkpoint @ %dK\n", int(n) >> 10);
+			if (n & 1023) std::printf("checkpoint @ %d, time: ", int(n));
+			else std::printf("checkpoint @ %dK, time: ", int(n) >> 10);
+			unsigned int seconds = static_cast<unsigned long>(std::clock() - start_clock) / CLOCKS_PER_SEC;
+			unsigned int days = seconds / 86400; seconds -= days * 86400;
+			unsigned int hours = seconds / 3600; seconds -= hours * 3600;
+			unsigned int minutes = seconds / 60; seconds -= minutes * 60;
+			if (days) std::printf("%d days, ", days);
+			if (days || hours) std::printf("%d hours, ", hours);
+			if (days || hours || minutes) std::printf("%d minutes, ", minutes);
+			std::printf("%d seconds\n", minutes);
 			/*if (test_size < 10ull << 20) std::printf("for length = %d KB\n", test_size >> 10);
 			else if (test_size < 10ull << 30) std::printf("for length = %d MB\n", test_size >> 20);
 			else if (test_size < 10ull << 40) std::printf("for length = %d GB\n", test_size >> 30);
@@ -498,7 +456,8 @@ void find_test_distributions() {
 						if (p[i] >= 0.01 && p[i] <= 0.99) std::printf("%+7.3f", ss.get_result_by_percentile(p[i]));
 						else std::printf("%+10.5f", ss.get_result_by_percentile(p[i]));
 					}
-					std::printf("}, %+7.3f, %+7.3f, %7.3f, %d},\n", ss.get_result_by_percentile(0.50), ss.get_mean(), ss.get_stddev(), 0);
+					std::printf("},  %+8.4f, %+8.4f, %8.4f, %d},\n", ss.get_result_by_percentile(0.50), ss.get_mean(), ss.get_stddev(), 0);
+					std::fflush(stdout);
 					//std::printf("}},\n");
 
 					/*for (int L2 = 0; (2ull << L2) <= ss.rs.size(); L2++) {
@@ -514,7 +473,7 @@ void find_test_distributions() {
 			}
 		}
 		Uint64 blocks_so_far = 0;
-		for (int length_L2 = 10; length_L2 <= 25; length_L2 += 1) {
+		for (int length_L2 = 10; length_L2 <= 1ull << LARGEST_SIZE_L2; length_L2 += 1) {
 			if (length_L2 >= 10+3 && length_L2 < 99) {
 				Uint64 new_blocks = (5ull << (length_L2-3)) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
@@ -566,15 +525,77 @@ void find_test_distributions() {
 }
 
 static void calibrate_set_uniformity(SampleSet *calib, int n, PractRand::RNGs::vRNG *known_good) {
-	for (int i = 0; i < 1ull<<20; i++) {
+	for (int i = 0; i < 1ull << 27; i++) {
 		SampleSet tmp;
-		for (int j = 0; j < n; j++) tmp._add(known_good->randlf());
+		for (int j = 0; j < n; j++) tmp._add(known_good->rand_double());
 		tmp._normalize();
-		calib->_add(Tests::test_uniformity(tmp));
+		calib->_add(Tests::uniformity_test(tmp));
 	}
 	calib->_normalize();
 }
-static void simple_chisquare_test( PractRand::RNGs::vRNG *known_good ) {
+static void compare_set_uniformity_to_table_uniformity(int n, int m, PractRand::RNGs::vRNG *known_good) {
+	SampleSet _calib1, _calib2;
+	SampleSet *calib1 = &_calib1, *calib2 = &_calib2;
+	std::vector<Uint64> counts; counts.resize(m);
+	std::vector<double> probs; probs.resize(m, 1.0 / m);
+	for (int i = 0; i < 1ull << 20; i++) {
+		SampleSet tmp;
+		for (int j = 0; j < m; j++) counts[j] = 0;
+		for (int j = 0; j < n; j++) {
+			double rf = known_good->rand_double();
+			tmp._add(rf);
+			counts[std::floor(rf * m)]++;
+		}
+		tmp._normalize();
+		calib1->_add(Tests::uniformity_test(tmp));
+		calib2->_add(Tests::uniformity_test_with_brute_force(m, &probs[0], &counts[0], known_good));
+		//calib2->_add(Tests::uniformity_test(m, &probs[0], &counts[0]));
+	}
+	calib1->_normalize();
+	calib2->_normalize();
+	std::printf("compare_set_uniformity_to_table_uniformity(%6d,%4d)", n, m);
+	std::printf("    {%+6.3f,%7.3f}  ->  {%+9.3f,%7.4f}\n", calib1->get_mean(), calib1->get_stddev(), calib2->get_mean(), calib2->get_stddev());
+//	std::printf("calib1: p=.001:%+5.2f    p=0.01:%+5.2f    p=0.100:%+5.2f    p=0.500:%+5.2f    p=0.900:%+5.2f    p=0.990:%+5.2f    p=0.999:%+5.2f\n",
+//		calib1->get_result_by_percentile(.001), calib1->get_result_by_percentile(.01), calib1->get_result_by_percentile(.1), calib1->get_result_by_percentile(.5), calib1->get_result_by_percentile(.9), calib1->get_result_by_percentile(.99), calib1->get_result_by_percentile(.999));
+//	std::printf("calib2: p=.001:%+5.2f    p=0.01:%+5.2f    p=0.100:%+5.2f    p=0.500:%+5.2f    p=0.900:%+5.2f    p=0.990:%+5.2f    p=0.999:%+5.2f\n",
+//		calib2->get_result_by_percentile(.001), calib2->get_result_by_percentile(.01), calib2->get_result_by_percentile(.1), calib2->get_result_by_percentile(.5), calib2->get_result_by_percentile(.9), calib2->get_result_by_percentile(.99), calib2->get_result_by_percentile(.999));
+}
+static double lowest_of_N_imp1(int n, PractRand::RNGs::Polymorphic::vRNG *known_good) {
+	double lowest = known_good->rand_double();
+	for (int i = 1; i < n; i++) {
+		double cur = known_good->rand_double();
+		if (cur < lowest) lowest = cur;
+	}
+	return lowest;
+}
+static double lowest_of_N_imp2(double n, PractRand::RNGs::Polymorphic::vRNG *known_good) {
+	return 1 - std::pow(known_good->rand_double(), 1.0 / n);
+	//return 1 - std::pow(known_good->randlf(), 0.99 / n);
+	//return std::pow(known_good->randlf(), n);
+}
+static void validate_lowest_of_N(PractRand::RNGs::Polymorphic::vRNG *known_good) {
+	for (int n = 2; n < 10; n++) {
+		SampleSet set1, set2;
+		long size = 1 << 24;
+		for (long i = 0; i < size; i++) set1._add(lowest_of_N_imp1(n, known_good));
+		for (long i = 0; i < size; i++) set2._add(lowest_of_N_imp2(n, known_good));
+		set1._normalize();
+		set2._normalize();
+		double step = std::sqrt(1.0 / size);
+		double highest_error = 0;
+		double end = 1.0 - step * 0.5;
+		for (double p = step * 0.5; p < end; p += step) {
+			double v1 = set1.get_result_by_percentile(p);
+			double v2 = set2.get_result_by_percentile(p);
+			double dif = std::fabs(v1 - v2);
+			if (dif > highest_error) highest_error = dif;
+		}
+		highest_error /= step * std::sqrt(double(n));
+		std::printf("validate_lowest_of_N(): N=%d, highest_error= %.1f units    %s\n", n, highest_error, highest_error < 2.5 ? "pass" : highest_error < 6 ? "suspicious" : "FAIL");
+	}
+	std::printf("validate_lowest_of_N() finished\n");
+}
+static void simple_chisquare_test(PractRand::RNGs::vRNG *known_good) {
 	enum {SIZE = 1<<4};
 	Uint64 counts[SIZE];
 	double probs[SIZE];
@@ -583,7 +604,7 @@ static void simple_chisquare_test( PractRand::RNGs::vRNG *known_good ) {
 	for (int x = 0; x < SIZE; x++) probs[x] = 1.0 / SIZE;
 	for (int i = 0; i < N; i++) {
 		for (int x = 0; x < SIZE; x++) counts[x] = 0;
-		for (int x = 0; x < SIZE*100; x++) counts[known_good->randi(SIZE)]++;
+		for (int x = 0; x < SIZE * 100; x++) counts[known_good->rand_i32(SIZE)]++;
 		double r = PractRand::Tests::g_test(SIZE, &probs[0], &counts[0]);
 		double p = Tests::math_chisquared_to_pvalue(r, SIZE-1);
 		double r2 = Tests::math_chisquared_to_normal(r, SIZE-1);
@@ -595,20 +616,24 @@ static void simple_chisquare_test( PractRand::RNGs::vRNG *known_good ) {
 	ssB._normalize();
 	SampleSet calib;
 	calibrate_set_uniformity(&calib, N, known_good);
-	std::printf("simple_chisquare_test: %.4f  %.4f\n", calib.get_percentile(Tests::test_uniformity(ssA)), calib.get_percentile(Tests::test_uniformity(ssB)));
+	double unifA = Tests::uniformity_test(ssA);
+	double unifB = Tests::uniformity_test(ssB);
+	double pA = calib.get_percentile(unifA);
+	double pB = calib.get_percentile(unifB);
+	std::printf("simple_chisquare_test: uniformity%.3f->percentile%.4f  uniformity%.3f->percentile%.4f\n", unifA, pA, unifB, pB);
 }
 void verify_test_distributions() {
-	std::time_t start_time = std::time(NULL);
+	//std::time_t start_time = std::time(NULL);
 	std::clock_t start_clock = std::clock();
 
 	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 	PractRand::RNGs::Polymorphic::efiix32x48 rng(PractRand::SEED_AUTO);
 
-	//simple_chisquare_test(&known_good);
+	simple_chisquare_test(&known_good);
 
-	//Tests::ListOfTests tests = Tests::Batteries::get_core_tests();
+	Tests::ListOfTests tests = Tests::Batteries::get_core_tests();
 	//Tests::ListOfTests tests = Tests::Batteries::get_expanded_core_tests();
-	Tests::ListOfTests tests(new Tests::FPF(4, 14, 6));
+	//Tests::ListOfTests tests(new Tests::FPF(4, 14, 6));
 	//Tests::ListOfTests tests(new Tests::BRank(18));
 	//Tests::ListOfTests tests(new Tests::DistC6(9,0, 1,0,0));
 	//Tests::ListOfTests tests(new Tests::DistC6(6,1, 1,0,0));
@@ -624,12 +649,14 @@ void verify_test_distributions() {
 	for (Uint64 n = 0; n <= 1<<20; n++) {
 		if (n == next_checkpoint) {
 			SampleSet calib;
-			calibrate_set_uniformity(&calib, n, &known_good);
-			enum {CHUNKY = 1 << 8};
-			if (next_checkpoint < CHUNKY) next_checkpoint <<= 1; else next_checkpoint += CHUNKY;
 			std::printf("\n\n\n\n");
+			calibrate_set_uniformity(&calib, n, &known_good);
+			std::printf("calibration finished\n");
+			enum {CHUNKY = 1 << 12};
+			if (next_checkpoint < CHUNKY) next_checkpoint <<= 1; else next_checkpoint += CHUNKY;
 			std::printf("==================================================\n");
 			std::printf("checkpoint @ %d\n", int(n) );
+			std::printf("calibration = {%.3f:%.3f:%.3f:%.3f:%.3f:%.3f:%.3f}\n", calib.get_result_by_percentile(.001), calib.get_result_by_percentile(.01), calib.get_result_by_percentile(.1), calib.get_result_by_percentile(.5), calib.get_result_by_percentile(.9), calib.get_result_by_percentile(.99), calib.get_result_by_percentile(.999));
 			/*if (test_size < 10ull << 20) std::printf("for length = %d KB\n", test_size >> 10);
 			else if (test_size < 10ull << 30) std::printf("for length = %d MB\n", test_size >> 20);
 			else if (test_size < 10ull << 40) std::printf("for length = %d GB\n", test_size >> 30);
@@ -644,13 +671,14 @@ void verify_test_distributions() {
 					ss._normalize();
 					//if (ss.num_duplicates()) continue;
 					std::printf("\n\n name=\"%s\"; length_L2=%d;\n", name.c_str(), length_L2);
-					std::printf("total= %d; duplicates= %d;\n", ss.rs.size(), ss.num_duplicates());
+					std::printf("total= %lld; duplicates= %ld;\n", Uint64(ss.rs.size()), ss.num_duplicates());
 					if (!ss.num_duplicates()) {
-						double sum = Tests::test_uniformity(ss);
+						double sum = Tests::uniformity_test(ss);
 						double p = calib.get_percentile(sum);
-						std::printf("blah = %f of (%f:%f:%f)\n", sum, calib.get_result_by_percentile(.05), calib.get_result_by_percentile(.5), calib.get_result_by_percentile(.95));
-						std::printf("p = %f\n", p);
-						if (fabs(p-.5) > 0.499) std::printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						std::printf("p = %9.7f      raw uniformity = %+6.3f\n", p, sum);
+						if (fabs(p - .5) >= 0.49999) std::printf("!!!!!!!!!!!!!!!!!!");
+						if (fabs(p - .5) >= 0.4999) std::printf("!!!!!!!!!!!!!!!!!!");
+						if (fabs(p - .5) >= 0.499) std::printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 					}
 					std::printf("\n");
 				}
@@ -704,344 +732,89 @@ static int sum_of_bytes(Uint32 in) {
 	in += in >> 16;
 	return (in & 1023);
 }
-double gaussian_PDF(double x) {return std::exp( (x)*(x)*-0.5 ) * 0.3989422804014326779399460652221;}
-double denormalized_gaussian_PDF(double x) {return std::exp( (x)*(x)*-0.5 );}//does not seem to help any
-double calc_ziggurat_final_area(double x) {return x * gaussian_PDF(x) + Tests::math_normaldist_to_pvalue(-x);}
-double calc_ziggurat_area(double left_x, double right_x) {
-	double upper_y = gaussian_PDF(left_x);
-	double lower_y = gaussian_PDF(right_x);
-	return (upper_y - lower_y) * right_x;
-}
-double find_ziggurat_point(double old_x, double target_area) {
-	double area = 0;
-	double x = old_x;
-	double slope = 1;
-	for (int i = 0; i < 500; i++) {
-		double delta_x = (target_area - area) * slope * 0.875;
-		double new_x = x + delta_x;
-		double new_area = calc_ziggurat_area(old_x, new_x);
-		double delta_area = new_area - area;
-		if (new_area > target_area) {
-			slope *= 0.5;
-			continue;
-		}
-		if (!delta_area) return x;
-		slope = delta_x / delta_area;
-		if (slope > 1024) {slope = 1024; if (!x) slope = 1;}
-		area = new_area;
-		x = new_x;
-	}
-	return x;
-}
 
-	enum {TABLE_SIZE=1<<7};
-	static float table_y[TABLE_SIZE-1];
-	static float table_x[TABLE_SIZE-1];
-	static double tail_scale, tail_p, final_stripe_area;
-template<class RNG>
-double generate_gaussian( RNG &rng ) {
-	//*/
-	// 
-	// floats(17+4):   3: 26, 6: 29, 8: 32
-	// doubles(17+4):         6: 30, 8: 32
-	// floats(17+8):   3: 29
-	// doubles(17+8):  
-	// floats(17+4,lf): 3: >33
-	// floats(17+8,lf): 
-	static bool inited = false;
-	if (!inited) {
-		double a = 0.5 / TABLE_SIZE;
-		//generate initial guesses:
-		{
-			double ox = 0;
-			for (int i = 0; i < TABLE_SIZE-1; i++) {
-				ox = table_x[i] = find_ziggurat_point(ox, a);
-				table_y[i] = gaussian_PDF(table_x[i]);
-			}
-		}
-		final_stripe_area = calc_ziggurat_final_area(table_x[TABLE_SIZE-2]);
-		//refine guesses:
-		for (int i = 0; i < 200; i++) {
-			a += (final_stripe_area - a) / TABLE_SIZE / 1;
-			double ox = 0;
-			for (int i = 0; i < TABLE_SIZE-1; i++) {ox = table_x[i] = find_ziggurat_point(ox, a); table_y[i] = gaussian_PDF(table_x[i]);}
-			final_stripe_area = calc_ziggurat_final_area(table_x[TABLE_SIZE-2]);
-		}
+//#define GENERATE_GAUSSIAN() math_pvalue_to_normaldist(rng.rand_double()) //133
+#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_lookup3_linear(rng.raw64()) //277
+//#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_high_quality(rng.raw64(), rng.raw64(), rng.raw64())
+//#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_popcount_lookup_linear(rng.raw64(), rng.raw64()) //248
+//#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_popcount_lookup_quadratic(rng.raw64(), rng.raw64()) //233
+//#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_popcount_lookup_cubic(rng.raw64(), rng.raw64()) //222
+//#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_popcount_sum(rng.raw64(), rng.raw64()) //228
+//#define GENERATE_GAUSSIAN() PractRand::Internals::generate_gaussian_popcount_sum2(rng.raw64(), rng.raw64(), rng.raw64(), rng.raw64(), rng.raw64()) //114
+//#define GENERATE_GAUSSIAN() generate_with_ziggurat(rng) //173
 
-		//precalc a few extra details
-		tail_p = Tests::math_normaldist_to_pvalue(-table_x[TABLE_SIZE-2]);
-		tail_scale = table_x[TABLE_SIZE-2] / (table_x[TABLE_SIZE-2] * table_y[TABLE_SIZE-2] / final_stripe_area);
-		//for (int i = 0; i < TABLE_SIZE-1; i++) table_y[i] /= 0.39894228040143270;
-		inited = true;
-		std::printf("table_x = {"); for (int i = 0; i < TABLE_SIZE-1; i++) std::printf("%f, ", table_x[i]); std::printf("}\n"); 
-		std::printf("table_y = {"); for (int i = 0; i < TABLE_SIZE-1; i++) std::printf("%f, ", table_y[i]); std::printf("}\n"); 
-		std::printf("tail_p = %f; tail_scale = %f;\n", tail_p, tail_scale); 
-	}
-	while (true) {
-		unsigned long stripe = rng.raw16() & (TABLE_SIZE-1);
-		if (stripe < TABLE_SIZE-2) {//middle stripes
-			double x = rng.randf(-1,1) * table_x[stripe+1];
-			if (std::fabs(x) < table_x[stripe]) return x;
-			double y = rng.randf(table_y[stripe], table_y[stripe+1]);
-			if (y < gaussian_PDF(x)) return x;
-		}
-		else if (stripe == TABLE_SIZE-2) {//top stripe
-			double x = rng.randf(-1,1) * table_x[0];
-			double base_y = 0.39894228040143270;
-			double y = rng.randf(table_y[0], base_y);
-			if (y < gaussian_PDF(x)) return x;
-		}
-		else if (stripe == TABLE_SIZE-1) {//bottom stripe
-			double x = rng.randf(-1, 1) * tail_scale;
-			if (std::fabs(x) < table_x[TABLE_SIZE-2]) return x;
-			double p = rng.randf() * tail_p; 
-			double n = Tests::math_pvalue_to_normaldist(p);
-			if (x < 0) return n;
-			else return -n;
-		}
-		double p = rng.randlf();
-		return Tests::math_pvalue_to_normaldist(p);
-	}
-	return 0;//*/
-
-	/*
-	//17+0: 
-	//17+4: 
-	//17+8: 33+
-	double a, b, r;
-	do {
-		a = Sint32(rng.raw32()) / 2147483648.0;//rng.randf()*2-1;
-		b = Sint32(rng.raw32()) / 2147483648.0;//rng.randf()*2-1;
-		r = a*a + b*b;
-	}
-	while (r > 1.0);
-	double prod = std::sqrt(-2 * std::log(r) / r);
-	return a * prod;
-//	return b * prod;//*/
-
-/*	int s = sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32()) + 
-		sum_of_bytes(rng.raw32()) + sum_of_bytes(rng.raw32());
-	return (s - 2040) / 295.6;//*/
-
-	/*enum {NORMTABLE_SIZE=1<<9};
-	// 4: 17, 5: 19, 6: 21, 7: 22-23, 8: 24-25, 9: 26-27
-	static float normtable_a[NORMTABLE_SIZE];
-	static float normtable_b[NORMTABLE_SIZE];
-	static bool inited = false;
-	const double edge_cases = 0.1;
-	if (!inited) {
-		for (int i = 0; i < NORMTABLE_SIZE; i++) {
-			double f1, f2;
-			f1 = (i + 0.0) / NORMTABLE_SIZE;
-			f2 = (i + 1.0) / NORMTABLE_SIZE;
-			if (!i) f1 = edge_cases / NORMTABLE_SIZE;
-			else if (i == NORMTABLE_SIZE-1) f2 = 1 - edge_cases / NORMTABLE_SIZE;
-			double v1 = math_pvalue_to_normaldist(f1);
-			double v2 = math_pvalue_to_normaldist(f2);
-			normtable_a[i] = v1;
-			normtable_b[i] = (v2 - v1) / 4294967296.0;
-		}
-		inited = true;
-	}
-	int i = rng.raw16() & (NORMTABLE_SIZE-1);
-	return normtable_a[i] + normtable_b[i] * rng.raw32();//*/
-
-	
-	/*enum {NORMTABLE_SIZE=1<<10};
-	// 3: 17, 4: 21, 5: 23, 6: 25, 7: 26, 8: 27-28
-	static float normtable_a[NORMTABLE_SIZE-1];
-	static float normtable_b[NORMTABLE_SIZE-1];
-	static float normtable_c[NORMTABLE_SIZE];
-	static float normtable_d[NORMTABLE_SIZE];
-	static bool inited = false;
-	const double edge_cases = 0.1;
-	if (!inited) {
-		for (int i = 0; i < NORMTABLE_SIZE-1; i++) {
-			double f1, f2;
-			f1 = (i + 0.5) / NORMTABLE_SIZE;
-			f2 = (i + 1.5) / NORMTABLE_SIZE;
-			double v1 = math_pvalue_to_normaldist(f1);
-			double v2 = math_pvalue_to_normaldist(f2);
-			normtable_a[i] = v1;
-			normtable_b[i] = (v2 - v1) / 4294967296.0;
-		}
-		for (int i = 0; i < NORMTABLE_SIZE; i++) {
-			double f1, f2;
-			f1 = (i + 0.0) / NORMTABLE_SIZE / NORMTABLE_SIZE / 2;
-			f2 = (i + 1.0) / NORMTABLE_SIZE / NORMTABLE_SIZE / 2;
-			if (!i) f1 = edge_cases / NORMTABLE_SIZE;
-			double v1 = math_pvalue_to_normaldist(f1);
-			double v2 = math_pvalue_to_normaldist(f2);
-			normtable_c[i] = v1;
-			normtable_d[i] = (v2 - v1) / 4294967296.0;
-		}
-		inited = true;
-	}
-	int i = rng.raw16() & (NORMTABLE_SIZE-1);
-	if (i) return normtable_a[i-1] + normtable_b[i-1] * rng.raw32();
-	i = rng.raw16();
-	double rv = normtable_c[i&(NORMTABLE_SIZE-1)] + normtable_d[i&(NORMTABLE_SIZE-1)] * rng.raw32();
-	if (i & 32768) rv = -rv;
-	return rv;//*/
-
-	
-	/*enum {NORMTABLE_SIZE_L2=7};
-	enum {STRONG=1
-		,  WEAK =3
-	};
-	// test A
-	// Strong+Weak, Standards    3      4      5      6      7      8      9      10
-	// 1+0          full         15     17     19     21     22.5   24.5   26.5   ?
-	// 1+1          full         20     23.5   27     ?
-	// 2+0          full         24     28     ?
-	// 1+0          low          13     14     16     18     20     21     24     25
-	// 1+1          low          17     21     25     28?
-	// 2+0          low          22     25     28?    ?
-	// 1+2          low          21     25     29?
-	// test B
-	// Strong+Weak, Stds -0/4/8   3          4          5          6          7          8          9         10
-	// 1+0          full          ?          ?          ?          ?          ?          ?/16-      ?
-	// 1+1          full          ?          ?          ?          ?          ?          ?/24       ?
-	// 2+0          full          17         20         23         25         27         ?/26       ?
-	// 1+2          full          18/16-     22/16-     24/16-     26/19      28+2/22    ?/25       31/30     ?/31
-	// 1+3          full          20/16-     24/16-     25/18      27+1/22    31/28      32/30      ?
-	// 1+4          full          ?/17       ?/21       ?/24       ?/26       ?/29       ?/31       ?
-	// 1+7          full          ?/16-      ?/18       ?/22       ?/25       ?/27       ?          ?
-	// 2+2          full          21         23         25         27         ?          ?          ?
-	// 4+0          full          21         23         25         ?          ?          ?          ?
-	// 0+4          full          ?          ?          ?          ?          ?          ?          ?
-	// 1+8          full          23         25         26         27         ?          ?          ?
-	// 8+0          full          ?          ?          25+1       ?          ?          ?          ?
-	// ?+?          full          ?          ?          ?          ?          ?          ?          ?
-	enum {NORMTABLE_SIZE=1<<NORMTABLE_SIZE_L2};
-	static double normtable_a[NORMTABLE_SIZE];
-	static double normtable_b[NORMTABLE_SIZE];
-	static double normtable_c[NORMTABLE_SIZE];
-	static bool inited = false;
-	if (!inited) {
-		const double edge_cases = 3. / 32 / NORMTABLE_SIZE;
-		const double scale = std::sqrt(1.0 / double(STRONG+WEAK));
-		for (int i = 0; i < NORMTABLE_SIZE; i++) {
-			double f1, f2;
-			f1 = (i + 0.0) / NORMTABLE_SIZE;
-			f2 = (i + 1.0) / NORMTABLE_SIZE;
-			if (f1 < edge_cases) f1 = edge_cases;
-			if (f2 > 1-edge_cases) f2 = 1 - edge_cases;
-			double v1 = math_pvalue_to_normaldist(f1) * scale;
-			double v2 = math_pvalue_to_normaldist(f2) * scale;
-			normtable_a[i] = (v1+v2)/2;
-			normtable_b[i] = (v2 - v1) / 4294967296.0;
-			normtable_c[i] = normtable_a[i];
-		}
-
-		if (false) {
-			double sum = 0, sum2 = 0;
-			int n = 1<<28;
-			for (int i = 0; i < n; i++) {
-				double norm = normtable_a[i & (NORMTABLE_SIZE-1)];
-				norm += normtable_b[i & (NORMTABLE_SIZE-1)] * Sint32(rng.raw32());
-				sum += norm; sum2 += norm * norm;
-			}
-			sum /= n; sum2 /= n;
-			double dev = std::sqrt(sum2 - sum*sum);
-			for (int i = 0; i < NORMTABLE_SIZE; i++) {normtable_a[i] /= dev/scale; normtable_b[i] /= dev/scale;}
-		}
-		if (false) {
-			double sum = 0, sum2 = 0;
-			int n = 1<<28;
-			for (int i = 0; i < n; i++) {
-				double norm = normtable_c[i & (NORMTABLE_SIZE-1)];
-				sum += norm; sum2 += norm * norm;
-			}
-			sum /= n; sum2 /= n;
-			double dev = std::sqrt(sum2 - sum*sum);
-			for (int i = 0; i < NORMTABLE_SIZE; i++) normtable_c[i] /= dev/scale;
-		}
-		if (true) {
-			double sum = 0, sum2 = 0;
-			int n = 1<<28;
-			for (int i = 0; i < n; i++) {
-				double norm = 0;
-				for (int a = 0; a < STRONG; a++) {int index = rng.raw32(); norm += normtable_a[index & (NORMTABLE_SIZE-1)] + normtable_b[index & (NORMTABLE_SIZE-1)] * Sint32(rng.raw32());}
-				for (int a = 0; a < WEAK; a++) {int index = rng.raw32(); norm += normtable_a[index & (NORMTABLE_SIZE-1)];}
-				sum += norm; sum2 += norm * norm;
-			}
-			sum /= n; sum2 /= n;
-			double dev = std::sqrt(sum2 - sum*sum);
-			for (int i = 0; i < NORMTABLE_SIZE; i++) normtable_a[i] /= dev;
-			for (int i = 0; i < NORMTABLE_SIZE; i++) normtable_b[i] /= dev;
-		}
-
-		//for (int i = 0; i < NORMTABLE_SIZE; i++) std::printf("%s%+.11g, ", (i%16)?"":"\n", normtable_b[i]);
-		inited = true;
-	}
-	Uint32 indeces = rng.raw32();
-	int index; Sint32 u; double rv = 0;
-	for (int x = 0; x < STRONG; x++) {
-		index = indeces & (NORMTABLE_SIZE-1); indeces >>= NORMTABLE_SIZE_L2;
-		//index = rng.raw16() & (NORMTABLE_SIZE-1);
-		rv += normtable_a[index];
-		u = rng.raw32(); rv += normtable_b[index] * u;
-	}
-	if ((STRONG+WEAK) * NORMTABLE_SIZE_L2 > 32) indeces = rng.raw32();
-	for (int x = 0; x < WEAK; x++) {
-		index = indeces & (NORMTABLE_SIZE-1); indeces >>= NORMTABLE_SIZE_L2;
-		//index = rng.raw16() & (NORMTABLE_SIZE-1);
-		rv += normtable_a[index];
-	}
-	return rv;//*/
-
-}
-double generate_gaussian_( PractRand::RNGs::vRNG *rng ) {return generate_gaussian(*rng);}
 void test_normal_distribution_a() {
-	PractRand::RNGs::LightWeight::sfc32 rng( PractRand::SEED_AUTO );
-	//PractRand::RNGs::Polymorphic::sfc32 rng( PractRand::SEED_AUTO );
-	generate_gaussian(rng);
+	//PractRand::RNGs::LightWeight::sfc64 rng( PractRand::SEED_AUTO );
+	//PractRand::RNGs::Polymorphic::sfc64 rng( PractRand::SEED_AUTO );
+	//PractRand::RNGs::Polymorphic::mrsf64 rng( PractRand::SEED_AUTO );
+	PractRand::RNGs::LightWeight::mrsf64 rng(PractRand::SEED_AUTO);
+	GENERATE_GAUSSIAN();
 	std::clock_t bench_start, bench_end;
 	bench_start = std::clock();
 	while (bench_start == (bench_end = std::clock())) ;
 	bench_start = bench_end;
 	Uint32 count = 0;
-	while (CLOCKS_PER_SEC*0.5+1 > std::clock_t((bench_end = std::clock())-bench_start)) {
-		double a = generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng);
-		//generate_gaussian_(&rng); generate_gaussian_(&rng); generate_gaussian_(&rng); generate_gaussian_(&rng);
+	while (std::clock_t(CLOCKS_PER_SEC*1.25 + 1) > std::clock_t((bench_end = std::clock()) - bench_start)) {
+		double a = GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN() + GENERATE_GAUSSIAN();
 		count += a != -123456789;
 	}
 	double rate = count*8.0 / (double(std::clock_t(bench_end-bench_start))/CLOCKS_PER_SEC);
 	std::printf("gaussian speed: %.3f M / second\n", rate / 1000000.0 );
-	if (false) {
+	if (true) {
 		SampleSet ss; ss.rs.reserve(1<<27);
-		for (int n = 0; n <= 27; n++) {
-			for (int i = (1<<n) - ss.size(); i > 0; i--) ss._add(generate_gaussian(rng));
+		for (int n = 8; n <= 28; n+=4) {
+			for (long i = (1 << n) - ss.size(); i > 0; i--) ss._add(GENERATE_GAUSSIAN());
 			ss._normalize();
-			printf("test_normal_distribution_a0 : 2^%02d: mean:%+.5f, stddev:%.5f\n", n, ss.get_mean(), ss.get_stddev());
+			printf("test_normal_distribution_a0 : 2^%02d: mean:%+.5f, stddev:%.5f", n, ss.get_mean(), ss.get_stddev());
+			double cumulative_err = 0;
+			double cumulative_err2 = 0;
+			double highest_err = 0;
+			double lowest = 1.0, highest = 0.0;
+			for (long i = 0; i < ss.size(); i++) {
+				double expected_p = (i + 0.5) / ss.size();
+				double raw = ss.get_result_by_index(i);
+				double observed_p = PractRand::Tests::math_normaldist_to_pvalue(raw);
+				double err = std::fabs(expected_p - observed_p);
+				if (observed_p < lowest) {
+					lowest = observed_p;
+				}
+				if (observed_p > highest) highest = observed_p;
+				if (err > highest_err) highest_err = err;
+				cumulative_err += err;
+				cumulative_err2 += err * err;
+			}
+			printf(" err: %.5f  err2: %.5f  e.high:%.5f  extr: %3.1f  ex.ratio: %.2f\n", cumulative_err / ss.size(), std::sqrt(cumulative_err2 / ss.size()), highest_err, (lowest + (1-highest)) * (ss.size()-1.0), lowest / (lowest + (1.0 - highest)));
 		}
 	}
-	if (false) {
+	if (true) {
 		SampleSet ss; ss.rs.reserve(1<<27);
-		for (int n = 0; n <= 27; n++) {
-			for (int i = (1<<n) - ss.size(); i > 0; i--) ss._add(Tests::math_normaldist_to_pvalue(generate_gaussian(rng)));
+		for (int n = 8; n <= 24; n+=4) {
+			for (long i = (1 << n) - ss.size(); i > 0; i--) ss._add(Tests::math_normaldist_to_pvalue(GENERATE_GAUSSIAN()));
 			ss._normalize();
-			printf("test_normal_distribution_a1 : 2^%02d: %+f\n", n, Tests::test_uniformity(ss));
+			printf("test_normal_distribution_a1 : 2^%02d: uniformity %+f\n", n, Tests::uniformity_test(ss));
 		}
 	}
 	if (true) {
 		enum {TBITS=17};
 		std::vector<Uint64> counts; counts.resize(1<<TBITS, 0);
 		Uint64 total = 0;
-		enum {DISCARD_BITS = 4};
-		const double scale = std::pow(2.0, TBITS*1.0+DISCARD_BITS);
-		const double p_thresh = std::pow(0.5, DISCARD_BITS*1.0);
-		double n_thresh = 999999999999999.0;
-		if (p_thresh < 1) n_thresh = Tests::math_pvalue_to_normaldist(p_thresh);
+		const double p_thresh_low = 0.0;
+		const double p_thresh_high = 1.0;
+		double n_thresh_low = -999999999999999.0; if (p_thresh_low < 1) n_thresh_low = Tests::math_pvalue_to_normaldist(p_thresh_low);
+		double n_thresh_high = 999999999999999.0; if (p_thresh_high < 1) n_thresh_high = Tests::math_pvalue_to_normaldist(p_thresh_high);
+		const double scale = std::pow(2.0, TBITS) / (p_thresh_high - p_thresh_low);
 		for (int n = 16; n <= 40; n++) {
 			while (!(total >> n)) {
 				for (long i = 0; i < 1<<16; ) {
-					double norm = generate_gaussian(rng);
-					if (norm >= n_thresh) continue;
+					double norm = GENERATE_GAUSSIAN();
+					if (norm < n_thresh_low) continue;
+					if (norm > n_thresh_high) continue;
 					double p = Tests::math_normaldist_to_pvalue(norm);
-					Uint32 index = Uint32(std::floor(p*scale));
-					if (index > (1 << TBITS)) PractRand::issue_error();
+					if (p > p_thresh_high || p < p_thresh_low) PractRand::issue_error();
+					double a = p - p_thresh_low;
+					double index_f = a * scale;
+					long index = long(std::floor(index_f));
+					if (index & ~((1L << TBITS) - 1)) PractRand::issue_error();
 					counts[index]++;
 					i++;
 				}
@@ -1113,33 +886,378 @@ void test_sfc16() {
 		for (int i = 1; i < 65536; i++) {
 			after2_16 *= 1 - (1 / (p248 - i));
 		}
-		std::printf("chance of a seed leading to a cycle < 2**32: %g\n", 1 / (1 - after2_16));
+		std::printf("chance of a seed leading to a cycle < 2**32: %g\n", double(1 / (1 - after2_16)));
 		long double after2_24 = 1;
 		for (int i = 1; i < 65536 * 256; i++) {
 			after2_24 *= 1 - (1 / (p248 - i));
 		}
-		std::printf("chance of a seed leading to a cycle < 2**40: %g\n", 1 / (1 - after2_24));
+		std::printf("chance of a seed leading to a cycle < 2**40: %g\n", double(1 / (1 - after2_24)));
 		long double after2_32 = 1;
-		for (unsigned long i = 1; i < 65536 * 65536ul; i++) {
+		for (unsigned long long i = 1; i < 65536 * 65536ull; i++) {
 			after2_32 *= 1 - (1 / (p248 - i));
 		}
-		std::printf("chance of a seed leading to a cycle < 2**48: %f\n", 1 / (1 - after2_32));
+		std::printf("chance of a seed leading to a cycle < 2**48: %f\n", double(1 / (1 - after2_32)));
 	}
 }
 
 
+void compare_bernoulli_distribution_calculations() {
+	long long num_bits_L2 = 38;
+	long long num_bits = 1ull << num_bits_L2;
+	long long half_bits = num_bits >> 1;
+	long long region_boundary = half_bits - (1 << ((num_bits_L2 >> 1) - 1));
+	long long exponent = -num_bits;
+	long double p = 1.0;
+	long double prev_cdf = 0;
+
+	long double mean = num_bits / 2.0;
+	long double dev = std::sqrt(num_bits * 0.5 * 0.5);
+	long double delta = 1.0 / dev;
+
+	long double prev_cdf2 = 0;
+	long double prev_cdf3 = 0;
+	long double pdfdiff[2] = { 0, 0 };
+	long double cdfdiff[2] = { 0, 0 };
+
+	for (long long i = 0; i <= half_bits; i++) {
+		if (i) {
+			p /= i; p *= num_bits + 1 - i;
+		}
+		int tmp_exp; p = std::frexpl(p, &tmp_exp); exponent += tmp_exp;
+		long double tmp_p = 0; if (exponent > -1070) tmp_p = std::ldexpl(p, exponent);
+		long double new_cdf = prev_cdf + tmp_p;
+
+		double norm = (i - mean) * delta;
+		long double cdf2 = math_normaldist_to_pvalue(norm + 0.5 * delta);
+		long double pdf2 = math_normaldist_pdf(norm) * delta;
+		//long double pdf3 = (math_normaldist_pdf(norm + 0.25 * delta) + math_normaldist_pdf(norm - 0.25 * delta) - 1 * math_normaldist_pdf(norm)) * delta / 1;
+		long double cdf3 = prev_cdf3 + pdf2;
+		//cdf[i] = math_normaldist_to_pvalue(norm + 0.5 * delta);
+		//pdf[i] = math_normaldist_pdf(norm) * delta;
+
+		long ri = i < region_boundary ? 0 : 1;
+		pdfdiff[ri] += std::fabs(tmp_p - pdf2) * (i == half_bits ? 1 : 2);
+		cdfdiff[ri] += std::fabs(new_cdf - cdf2) * (i == half_bits ? 1 : 2);
+		if (i == half_bits) {
+			std::printf("pre-final CDFs:\n\t0: %.15f\n\t1: %.15f\n\t2: %.15f\n\t~: %.15f\n", double(prev_cdf), double(prev_cdf2), double(prev_cdf3), 0.5 - 0.5 * calculate_center_bit_combination_chance(num_bits_L2));
+		}
+		prev_cdf = new_cdf;
+		prev_cdf2 = cdf2;
+		prev_cdf3 = cdf3;
+	}
+	std::printf("final CDFs:\n\t0: %.15f\n\t1: %.15f\n\t2: %.15f\n\t~: %.15f\n", double(prev_cdf), double(prev_cdf2), double(prev_cdf3), 0.5 + 0.5 * calculate_center_bit_combination_chance(num_bits_L2));
+	std::printf("\n");
+	std::printf("region 0: PDF delta: %g\n", double(pdfdiff[0]));
+	std::printf("region 1: PDF delta: %g\n", double(pdfdiff[1]));
+	std::printf("combined: PDF delta: %g\n", double(pdfdiff[0] + pdfdiff[1]));
+	std::printf("\n");
+	std::printf("region 0: CDF delta: %g\n", double(cdfdiff[0]));
+	std::printf("region 1: CDF delta: %g\n", double(cdfdiff[1]));
+	std::printf("combined: CDF delta: %g\n", double(cdfdiff[0] + cdfdiff[1]));
+}
+
+void count_hash_deviation() {
+	Uint64 counts[65536];
+	long lowest_uniques = 99999;
+	long highest_uniques = 0;
+	long sum_uniques = 0;
+	for (long i = 0; i < 65536; i++) counts[i] = 0;
+	for (long y = 0; y < 65536; y++) {
+		Uint64 counts2[65536] = { 0 };
+		long uniques = 0;
+		for (long x = 0; x < 65536; x++) {
+			Uint16 hashed = x + PractRand::Internals::rotate16(x+y*0, 8);
+			counts[hashed]++;
+			if (!counts2[hashed]++) uniques++;
+		}
+		if (uniques < lowest_uniques) lowest_uniques = uniques;
+		if (uniques > highest_uniques) highest_uniques = uniques;
+		sum_uniques += uniques;
+	}
+	long lowest = 999999;
+	long highest = 0;
+	Sint64 total_err = 0;
+	for (long i = 0; i < 65536; i++) {
+		Sint64 c = counts[i];
+		if (c < lowest) lowest = c;
+		if (c > highest) highest = c;
+		total_err += std::abs(c - 65536);
+	}
+	std::printf("count_hash_deviation:\n\tlowest:  %ld\n\thighest: %ld\n\taverage error: %.5f\n\texpected: 65536.0\n", lowest, highest, total_err / 65536.0);
+	std::printf("\n\tuniques: lowest:  %ld\n\taverage: %.5f\n\thighest: %ld\n", lowest_uniques, sum_uniques / 65536.0, highest_uniques);
+}
+
+#if 0
+static const Uint8 count_high_zeroes_table[256] = {
+	//	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
+	8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4,//0
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,//1
+	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,//2
+	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,//3
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//4
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//5
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//6
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,//7
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//8
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//9
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//10
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//11
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//12
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//13
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//14
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//15
+};
+unsigned long check_count_high_zeroes64(Uint64 value) {
+	Uint8 count = 0;
+	if (!(value >> 32)) { count += 32; value <<= 32; }
+	if (!(value >> 48)) { count += 16; value <<= 16; }
+	if (!(value >> 56)) { count += 8; value <<= 8; }
+	return count_high_zeroes_table[value >> 56] + count;
+}
+
+void check_optimization() {
+	Uint64 lcg_state[4] = { 0, 0, 0, 0 };
+	Uint64 lcg_adder = 0x311A6E831C5ull;
+	for (Uint64 i = 0; i < 100000; i++) {
+		//just wanting to see the disassembly of this
+		Uint8 carry = 0;
+		check_count_high_zeroes64(i);
+		//carry = _addcarry_u64(carry, lcg_state[0], lcg_adder, &lcg_state[0]);
+		//carry = _addcarry_u64(carry, lcg_state[1], lcg_state[0], &lcg_state[1]);
+		//carry = _addcarry_u64(carry, lcg_state[2], lcg_state[1], &lcg_state[2]);
+		//carry = _addcarry_u64(carry, lcg_state[3], lcg_state[2], &lcg_state[3]);
+	}
+	if (lcg_state[0] == 0) std::printf("");
+}
+#endif
+
+#pragma intrinsic(_umul128)
+Uint64 _mulmod(Uint64 a, Uint64 b, Uint64 m) {
+	if (m <= 1) issue_error();
+	if (m >> 63) issue_error();//not confident this produces correct results when m is that close to the maximum
+	if (a >= m) a %= m;
+	if (b >= m) b %= m;
+	Uint64 product = 0, tmp = a;
+	while (b) {
+		if (b & 1) {
+			product += tmp;
+			if (product >= m) product -= m;
+		}
+		b >>= 1;
+		tmp <<= 1;
+		if (tmp >= m) tmp -= m;
+	}
+	return product;
+}
+Uint32 _expmod32(Uint32 _x, Uint32 _e, Uint32 _m) {
+	if (_m <= 1) issue_error();
+	if (_e >= _m) issue_error();
+	Uint64 x = _x, e = _e, m = _m;
+	if (x >= m) x %= m;
+	Uint64 result = 1, tmp = x;
+	while (e) {
+		if (e & 1) result = (result * tmp) % m;
+		e >>= 1;
+		tmp = (tmp * tmp) % m;
+	}
+	return result;
+}
+Uint64 _expmod64(Uint64 x, Uint64 e, Uint64 m) {
+	if (m <= 1) issue_error();
+	if (e >= m) issue_error();
+	if (m >> 63) issue_error();//not confident this produces correct results when m is that close to the maximum
+	if (x >= m) x %= m;
+	Uint64 result = 1, tmp = x;
+	while (e) {
+		if (e & 1) result = _mulmod(result, tmp, m);
+		e >>= 1;
+		tmp = _mulmod(tmp, tmp, m);
+	}
+	return result;
+}
+void check_np2lcg_optimization(const Uint64 modulus, const Uint64 multiplier, const Uint64 *factors, const Uint64 num_factors) {
+	if (double(multiplier) * double(modulus) >= 18446744073709551616.0) issue_error("overflow");
+	enum { WARMUP = 200 };
+	const Uint64 shift = std::ceil(std::log2(double(modulus)));
+	const Uint64 post_shift_multiplier = (1ull << shift) % modulus;
+	const Uint64 period = modulus - 1;
+	const Uint64 mask = (1ull << shift) - 1;
+	const Uint64 hard_max = mask + (multiplier - 1) * post_shift_multiplier;
+	const Uint64 max_loops = 1ull << 42;
+	Uint64 lowest_post_decrease = modulus, highest_post_increase = 1;
+	Uint64 current_value = 1;
+	Uint64 warmup = WARMUP;
+	Uint64 loops = modulus + WARMUP;
+	if (loops > max_loops) loops = max_loops;
+	/*
+		The classical modulus operation is a bit slow.  
+		So instead, I use a modulus value just under a power of 2, and adjust based upon a shift and multiply (though I choose my numbers such that the multiplication can be done with an LEA in most cases).  
+		This nominally works, but the result isn't strictly normalized.  That's fixable simply by loosening my definition of normalized... mostly.  
+		Unfortunately, playing fast and loose with normalization causes things to skip around in ways that may cause problems.  
+		But if I do the process twice, that's still faster than modulus, and the result seems to be perfect
+		...although the old zero was at one end of the range, but is now in the middle (well, near-ish to the end, but not actually at the end) - that tiny hiccup doesn't seem to hurt much though.  
+	*/
+	for (Uint64 i = loops; i > 0; i--) {
+		Uint64 next = current_value * multiplier;
+		next = (next & mask) + (next >> shift) * post_shift_multiplier;
+		next = (next & mask) + (next >> shift) * post_shift_multiplier;
+		//next = (next & mask) + (next >> shift) * post_shift_multiplier;
+		Uint64 prev = current_value;
+		current_value = next;
+		if (warmup) {warmup--;  continue;}
+		/*if (next > mask) issue_error("next > mask");
+		if (next <= post_shift_multiplier) {
+			std::printf("prev_value: %lld   next_value: %lld\n", prev, next);
+			issue_error("next < post_shift_multiplier");
+		}*/
+		//if (next < mask - modulus) issue_error("next < mask-modulus");
+		if (next < prev) {//decrease
+			if (next < lowest_post_decrease) {
+				lowest_post_decrease = next;
+			}
+		}
+		else if (next > prev) {//increase
+			if (next > highest_post_increase) {
+				highest_post_increase = next;
+			}
+		}
+		else {//skip this
+			issue_error("cycle length 1?");
+		}
+	}
+	Uint64 spread = highest_post_increase - lowest_post_decrease + 1;
+	std::printf("check_np2lcg_optimization result: spread = %lld, modulus = %lld, difference= %+lld, post-shift-multiplier: %lld, time: %.1f\n", spread, modulus, spread - modulus, post_shift_multiplier, std::clock() * (1.0 / CLOCKS_PER_SEC));
+}
+void check_np2lcg_multiplier() {
+	// everyone wants non-power-of-2-modulus LCGs to have maximal cycle lengths
+	// even I do, because without the benefits that grants (knowing the cycle length, knowing which cycle any given value is on, etc) I wouldn't bother even contemplating NP2LCGs
+	// despite the fact that, in my experience, maximal cycle length multipliers actually yield lower quality output, on average, than other multipliers
+	// and the fact that LCGs in general kind of suck, especially NP2LCGs
+
+	// this code, when given a prime modulus M and the prime factorization of (M-1), will search for maximum length cycles
+
+	//*
+	Uint64 modulus = (1ull << 10) - 3;
+	Uint64 factors[] = { 2, 2, 3, 5, 17, 0 };
+	Uint64 chosen_multiplier = 177;//*/
+	/*
+	Uint64 modulus = (1ull << 11) - 9;
+	Uint64 factors[] = { 2, 1019, 0 };
+	Uint64 chosen_multiplier = 913;//*/
+	/*
+	Uint64 modulus = (1ull << 13) - 1;
+	Uint64 factors[] = { 2, 3, 3, 5, 7, 13, 0 };
+	Uint64 chosen_multiplier = 2185;//*/
+	/*
+	Uint64 modulus = (1ull << 17) - 1;
+	Uint64 factors[] = { 2, 3, 5, 17, 257, 0 };
+	Uint64 chosen_multiplier = 8485;//*/
+	/*
+	Uint64 modulus = (1ull << 19) - 1;
+	Uint64 factors[] = { 2, 3, 3, 3, 7, 19, 73, 0 };
+	Uint64 chosen_multiplier = 5601;//*/
+	/*
+	Uint64 modulus = (1ull << 22) - 3;
+	Uint64 factors[] = { 2, 2, 3, 5, 5, 11, 31, 41, 0 };
+	Uint64 chosen_multiplier = 916;//*/
+	/*
+	Uint64 modulus = (1ull << 24) - 3;
+	Uint64 factors[] = { 2, 2, 3, 23, 89, 683, 0 };
+	Uint64 chosen_multiplier = 17880;//*/
+	/*
+	Uint64 modulus = (1ull << 26) - 5;
+	Uint64 factors[] = { 2, 479, 70051, 0 };
+	Uint64 chosen_multiplier = 14791;//*/
+	/*
+	Uint64 modulus = (1ull << 29) - 3;
+	Uint64 factors[] = { 2, 2, 7, 73, 262657, 0 };
+	Uint64 chosen_multiplier = 78944;//*/
+	/*
+	Uint64 modulus = (1ull << 31) - 1;
+	Uint64 factors[] = { 2, 3, 3, 7, 11, 31, 151, 331, 0 };
+	Uint64 chosen_multiplier = 16807;//*/
+	/*
+	Uint64 modulus = (1ull << 33) - 9;
+	Uint64 factors[] = { 2, 4294967291, 0 };
+	Uint64 chosen_multiplier = 10349;//*/
+	/*
+	Uint64 modulus = (1ull << 36) - 5;
+	Uint64 factors[] = { 2, 5, 6871947673, 0 };
+	Uint64 chosen_multiplier = 2027339;//*/
+	/*
+	Uint64 modulus = (1ull << 39) - 7;
+	Uint64 factors[] = { 2, 2, 2, 3, 3, 3, 5, 7, 13, 19, 37, 73, 109, 0 };
+	Uint64 chosen_multiplier = 42017;//*/
+	/*
+	Uint64 modulus = 1099511627689ull;//2 to the 40th power minus 87
+	Uint64 factors[] = { 2, 2, 2, 3, 3, 1487, 10269667, 0 };
+	Uint64 chosen_multiplier = 234283;//*/
+	/*
+	Uint64 modulus = 17592186044399ull;//2 to the 44th power minus 17
+	Uint64 factors[] = { 2, 7, 4583, 7993, 34303, 0 };
+	Uint64 chosen_multiplier = 89164;//*/
+	//*
+	/*
+	Uint64 modulus = 1125899906842079ull;//2 to the 50th power minus 545
+	Uint64 factors[] = { 2, 2467, 228192117317ull, 0 };
+	Uint64 chosen_multiplier = 11110;//*/
+	//*
+
+	long num_factors = 0;
+	Uint64 product = 1;
+	for (; factors[num_factors]; num_factors++) {
+		Uint64 factor = factors[num_factors];
+		product *= factor;
+	}
+	if (product != modulus - 1) issue_error("factors incorrect (1)");
+	if (chosen_multiplier) {
+		if (_expmod64(chosen_multiplier, product, modulus) != 1) issue_error("factors incorrect (2)");
+		check_np2lcg_optimization(modulus, chosen_multiplier, factors, num_factors);
+		return;//
+	}
+	Uint64 max_k = modulus;
+	if (max_k > 99999) max_k = 99999;
+	for (Uint64 k = 2; k < max_k; k++) {
+		bool passing = true;
+		if (modulus < (1ull << 32)) {
+			if (_expmod32(k, product, modulus) != 1) continue;
+			for (long fi = 0; fi < num_factors; fi++) {
+				if (_expmod32(k, product / factors[fi], modulus) == 1) { passing = false; fi = num_factors; }
+			}
+		}
+		else {
+			if (_expmod64(k, product, modulus) != 1) continue;
+			for (long fi = 0; fi < num_factors; fi++) {
+				if (_expmod64(k, product / factors[fi], modulus) == 1) { passing = false; fi = num_factors; }
+			}
+		}
+		if (!passing) continue;
+		std::printf("%lld is full cycle for modulus %lld\n", k, modulus);
+	}
+}
+
 int main(int argc, char **argv) {
 	PractRand::initialize_PractRand();
+	std::printf("initialized\n");
 	PractRand::self_test_PractRand();
+	std::printf("self-test completed\n");
+	PractRand::RNGs::Polymorphic::sfc64 known_good(PractRand::SEED_AUTO);
 
+	//nearseq2(); nearseq2(); nearseq2(); nearseq2(); nearseq2(); nearseq2(); nearseq2(); nearseq2();
 	//test_sfc16();
 	//blah_bcfn();
 	//blah_fpf_all2();
 	//blah_fpf();
-	find_test_distributions();
+	//find_test_distributions();
 	//count_period(new PractRand::RNGs::Polymorphic::NotRecommended::xlcg8of64_varqual(28));
+	//compare_bernoulli_distribution_calculations();
+	//validate_lowest_of_N(&known_good);
+	//for (int x = 0; x <= 22; x+=2) for (int y = 1; y <= 6 && y <= 1+(16/(x+4)); y++) compare_set_uniformity_to_table_uniformity(1 << x, 1 << y, &known_good);
 	//verify_test_distributions();
-	//test_normal_distribution_a();
+	test_normal_distribution_a();
+	//count_hash_deviation();
+	//check_np2lcg_multiplier();
+	//check_optimization();
 	//print_data();
 
 	/*	

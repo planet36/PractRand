@@ -2,7 +2,8 @@
 #include <cstdlib>
 #include <cmath>
 #include <ctime>
-#include <string>
+//#include <string>
+#include <cstring>
 #include <sstream>
 //#include <map>
 //#include <vector>
@@ -29,18 +30,26 @@
 //#include "PractRand/RNGs/rarns16.h"
 //#include "PractRand/RNGs/rarns32.h"
 //#include "PractRand/RNGs/rarns64.h"
+#include "PractRand/RNGs/other/mt19937.h"
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#else
+#include <x86intrin.h>
+#endif
 using namespace PractRand;
 #include "Candidate_RNGs.h"
+#include "dummy_rng.h"
 #include "measure_RNG_performance.h"
 
+PractRand::RNGs::Polymorphic::arbee known_good(SEED_AUTO);
 
 template<typename RNG> 
 double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	//no real point to benchmarking non-polymorphic RNGs - seeding is sufficiently slow that the overhead will be insignificant
 	RNG _rng(PractRand::SEED_AUTO);
 	PractRand::RNGs::vRNG *rng = &_rng;
-	enum {NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.1 + 0.5)};
+	enum {NUM_CLOCKS_TO_TEST = 1 + int(CLOCKS_PER_SEC * 0.3 + 0.5)};
 	PractRand::RNGs::LightWeight::sfc64 known_fast(13);
 	int clock0 = clock();
 	int clock1, clock2;
@@ -65,25 +74,38 @@ double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 }
 
 void benchmark_RNG_speeds() {
+	enum { DURATION_IN_CLOCK_TICKS = int(CLOCKS_PER_SEC * 0.9) + 1 };
 //#define PERF(RNG) printf("  %5.3f GB/s  :  %5.3f GB/s  :  %s\n", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >()/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, #RNG );
-#define PERF(RNG) printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >()/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
+#define PERF(RNG) printf(" %6.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >(DURATION_IN_CLOCK_TICKS)/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >(DURATION_IN_CLOCK_TICKS)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
 //#define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, #RNG );
-#define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
-#define PERF_CANIDATE(rng) { typedef Candidates:: raw_ ## rng RawRNG;typedef Candidates:: polymorphic_ ## rng PolymorphicRNG; const char *name = #rng ; printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG< RawRNG > >()/1024, measure_RNG_performance<PolymorphicRNG>()/1024, benchmark_seeding<PolymorphicRNG>()/1000, name ); }
-#define PERF_CHACHA(RNG,ROUNDS) { PractRand::RNGs::LightWeight::RNG light_rng(PractRand::SEED_AUTO); PractRand::RNGs::Polymorphic::RNG poly_rng(PractRand::SEED_AUTO); light_rng.set_rounds(ROUNDS); poly_rng.set_rounds(ROUNDS); printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s(%d)\n", _measure_RNG_performance_32(&light_rng)/1024, _measure_RNG_performance_32(&poly_rng)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG, ROUNDS );}
+#define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >(DURATION_IN_CLOCK_TICKS)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
+#define PERF_CANIDATE(rng) { typedef Candidates:: raw_ ## rng RawRNG;typedef Candidates:: polymorphic_ ## rng PolymorphicRNG; const char *name = #rng ; printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG< RawRNG > >(DURATION_IN_CLOCK_TICKS)/1024, measure_RNG_performance<PolymorphicRNG>(DURATION_IN_CLOCK_TICKS)/1024, benchmark_seeding<PolymorphicRNG>()/1000, name ); }
+#define PERF_CHACHA(RNG,ROUNDS) { PractRand::RNGs::LightWeight::RNG light_rng(PractRand::SEED_AUTO); PractRand::RNGs::Polymorphic::RNG poly_rng(PractRand::SEED_AUTO); light_rng.set_rounds(ROUNDS); poly_rng.set_rounds(ROUNDS); printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s(%d)\n", _measure_RNG_performance_32(&light_rng,DURATION_IN_CLOCK_TICKS)/1024, _measure_RNG_performance_32(&poly_rng,DURATION_IN_CLOCK_TICKS)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG, ROUNDS );}
+#define PERF_DUMMY() { printf("  ----- GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance<dummy_rng>(DURATION_IN_CLOCK_TICKS)/1024, benchmark_seeding<dummy_rng >()/1000, "dummy_rng" ); }
 //	printf("  light-weight   polymorphic    name\n");
 	printf("  light-weight   polymorphic    seeding       name\n");
-	printf("small fast RNGs:\n");
-	PERF(jsf32);
+	printf("small fast 64-bit RNGs:\n");
 	PERF(jsf64);
-	PERF(sfc32);
 	PERF(sfc64);
+	PERF(mrsf64);
+	PERF(mrc64);
+	printf("small fast 32-bit RNGs:\n");
+	PERF(jsf32);
+	PERF(sfc32);
+	PERF(mrsf32);
+	PERF(mrc32);
+	printf("dummy RNG: (varies / experimental / whatever)\n");
+	PERF_DUMMY()
 	printf("random access RNGs:\n");
-	PERF(xsm32);
-	PERF(xsm64);
-	PERF(rarns16);
-	PERF(rarns32);
-	PERF(rarns64);
+	//PERF(lcg64of128);
+	//PERF(xsm32);
+	//PERF(xsm64);
+	//PERF(rarns16);
+	//PERF(rarns32);
+	//PERF(rarns64);
+	PERF_CHACHA(chacha, 4);
+	PERF_CHACHA(chacha, 8);
+	PERF_CHACHA(salsa, 8);
 	printf("entropy pooling RNGs:\n");
 	PERF(arbee);
 	PERF_POLYMORPHIC_ONLY(sha2_based_pool);
@@ -94,22 +116,22 @@ void benchmark_RNG_speeds() {
 	PERF(isaac64x256);
 	PERF(efiix32x48);
 	PERF(efiix64x48);
-	//PERF(chacha);
 	PERF_CHACHA(chacha, 8);
 	PERF_CHACHA(chacha, 12);
 	PERF_CHACHA(chacha, 20);
-	//PERF(salsa);
-	PERF_CHACHA(salsa, 8);
 	PERF_CHACHA(salsa, 12);
 	PERF_CHACHA(salsa, 20);
-	printf("popular RNGs:\n");
-	PERF(mt19937);
+	//printf("popular RNGs:\n");
+	//PERF_POLYMORPHIC_ONLY(NotRecommended::mt19937)
 	printf("16 bit variants:\n");
 	PERF(sfc16);
+	PERF(mrc16);
 	PERF(efiix16x48);
+	//PERF(xsm16);
 	printf("8 bit variants:\n");
+	PERF(efiix8min);
 	PERF(efiix8x48);
-	printf("candidate RNGs: (not recommended, but almost)\n");
+	/*printf("candidate RNGs: (not recommended, but almost)\n");
 	PERF_CANIDATE(siphash);
 	PERF_CANIDATE(VeryFast32)
 	PERF_CANIDATE(VeryFast64)
@@ -124,6 +146,7 @@ void benchmark_RNG_speeds() {
 	PERF_CANIDATE(sfc_alternative16)
 	//	PERF_CANIDATE(mcx32)
 //	PERF_CANIDATE(mcx64)
+	*/
 #undef PERF
 #undef PERF_CANIDATE
 #undef PERF_POLYMORPHIC_ONLY
@@ -201,9 +224,30 @@ void benchmark_entropy_pool_input() {
 	POLYPERF(sha2_based)
 }
 
+const char *get_exec_name(const char *argv0) {
+	const char *p = std::strpbrk(argv0, "/\\");
+	if (p) return get_exec_name(p + 1);
+	else return argv0;
+}
+
 int main(int argc, char **argv) {
 	PractRand::initialize_PractRand();
 //	PractRand::self_test_PractRand();
+
+	if (argc > 1) {
+		const char *name = get_exec_name(argv[0]);
+		if (!std::strcmp(argv[1], "-version") || !std::strcmp(argv[1], "--version") || !std::strcmp(argv[1], "-v")) {
+			std::printf("%s version %s\n", name, PractRand::version_str);
+			// arbitrarily declaring the version number of RNG_benchmark to match the version number of PractRand
+			std::printf("Benchmarks all current recommended PRNGs in PractRand.\n");
+			//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
+			std::exit(0);
+		}
+		std::printf("usage: %s    (benchmarks all recommended PRNGs)\n", name);
+		std::printf("or: %s --help    (displays this message)\n", name);
+		std::printf("or: %s --version    (displays version information)\n", name);
+		std::exit(0);
+	}
 
 	printf("Random number generation speeds:\n");
 	benchmark_RNG_speeds();

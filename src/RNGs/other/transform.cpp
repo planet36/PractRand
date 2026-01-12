@@ -4,7 +4,7 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 #include "PractRand/tests.h"
 
 #include "PractRand/RNGs/other/transform.h"
@@ -13,22 +13,23 @@ namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
 			namespace NotRecommended {
-				void Transform64::seed(Uint64 s) {base_rng->seed(s);}
+				void Transform64::seed(Uint64 seed_low, Uint64 seed_high) { base_rng->seed(seed_low, seed_high); }
 				Uint64 Transform64::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform64::walk_state(StateWalkingObject *walker) {base_rng->walk_state(walker);}
 				Transform64::~Transform64() {delete base_rng;}
-				void Transform32::seed(Uint64 s) {base_rng->seed(s);}
+				void Transform32::seed(Uint64 seed_low, Uint64 seed_high) { base_rng->seed(seed_low, seed_high); }
 				Uint64 Transform32::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform32::walk_state(StateWalkingObject *walker) {base_rng->walk_state(walker);}
 				Transform32::~Transform32() {delete base_rng;}
-				void Transform16::seed(Uint64 s) {base_rng->seed(s);}
+				void Transform16::seed(Uint64 seed_low, Uint64 seed_high) { base_rng->seed(seed_low, seed_high); }
 				Uint64 Transform16::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform16::walk_state(StateWalkingObject *walker) {base_rng->walk_state(walker);}
 				Transform16::~Transform16() {delete base_rng;}
-				void Transform8::seed(Uint64 s) {base_rng->seed(s);}
+				void Transform8::seed(Uint64 seed_low, Uint64 seed_high) { base_rng->seed(seed_low, seed_high); }
 				Uint64 Transform8::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform8::walk_state(StateWalkingObject *walker) {base_rng->walk_state(walker);}
 				Transform8::~Transform8() {delete base_rng;}
+
 				void MultiplexTransformRNG::refill() { index = 0; }
 				Uint8 MultiplexTransformRNG::raw8() {
 					if (index >= Tests::TestBlock::SIZE) {
@@ -68,11 +69,11 @@ namespace PractRand {
 					Uint64 rv = *reinterpret_cast<Uint64*>(&buffer->as8[index - 8]);
 					return rv;
 				}
-				void MultiplexTransformRNG::seed(Uint64 seedval) {
+				void MultiplexTransformRNG::seed(Uint64 seed_low, Uint64 seed_high) {
 					index = 999999;
 					for (std::vector<vRNG*>::iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
 						vRNG *vrng = *it;
-						vrng->seed(seedval);
+						vrng->seed(seed_low, seed_high);
 					}
 				}
 				void MultiplexTransformRNG::seed(vRNG *seeder) {
@@ -118,6 +119,11 @@ namespace PractRand {
 					}
 					if (!walker->is_read_only()) index = 999999;
 				}
+				MultiplexTransformRNG::MultiplexTransformRNG(vRNG *base_rng) {
+					buffer = new Tests::TestBlock;
+					index = 99999;
+					source_rngs.push_back(base_rng);
+				}
 				MultiplexTransformRNG::MultiplexTransformRNG(const std::vector<vRNG*> &sources) {
 					buffer = new Tests::TestBlock;
 					index = 999999;
@@ -125,6 +131,18 @@ namespace PractRand {
 				}
 				MultiplexTransformRNG::~MultiplexTransformRNG() { delete buffer; buffer = nullptr; }
 
+
+				void AddToSeed::seed(Uint64 seed_low, Uint64 seed_high) {
+					seed_low += seed_modifier_low;
+					seed_high += seed_modifier_high + (seed_low < seed_modifier_low ? 1 : 0);
+					source_rngs[0]->seed(seed_low, seed_high);
+				}
+				void AddToSeed::refill() {
+					MultiplexTransformRNG::refill();
+					buffer->fill(source_rngs[0]);
+				}
+				std::string AddToSeed::get_name() const { return std::string("AddToSeed(") + source_rngs[0]->get_name() + ")"; }
+				int AddToSeed::get_native_output_size() const { return source_rngs[0]->get_native_output_size(); }
 
 				ReinterpretAsUnknown::ReinterpretAsUnknown( vRNG *rng ) : Transform8(rng) {
 					PractRand::Tests::TestBlock *block = new PractRand::Tests::TestBlock;
@@ -226,6 +244,126 @@ namespace PractRand {
 				}
 				std::string ReinterpretAs64::get_name() const {return std::string("As64(") + base_rng->get_name() + ")";}
 
+
+
+
+
+				void AddInfinitive::refill() {
+					MultiplexTransformRNG::refill();
+
+					buffer->fill(source_rngs[0]);
+					for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 8 && carry; i++) {
+						buffer->as64[i] += carry;
+						carry = buffer->as64[i] < carry ? 1 : 0;
+					}
+					// theoretically, carry can still be 1 after that... but it can't be higher than 1, and even 1 is functionally impossible unless the first PRNG is horribly broken
+
+					Uint8 final_carry = carry;
+					for (int sri = 1; sri < source_rngs.size(); sri++) {
+#if 0 // defined _MSC_VER && !defined PRACTRAND_NO_INTRINSICS
+						// todo: implement with _addcarry_u64 or whatever
+#else
+						Uint8 old_carry = 0;
+						for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 8; i++) {
+							Uint64 tmp = source_rngs[sri]->raw64() + old_carry;
+							Uint8 new_carry;
+							new_carry = (!tmp && old_carry) ? 1 : 0;
+							buffer->as64[i] += tmp;
+							new_carry += (buffer->as64[i] < tmp) ? 1 : 0;
+							old_carry = new_carry;
+						}
+						final_carry += old_carry;
+#endif
+					}
+					carry = final_carry;
+				}
+				std::string AddInfinitive::get_name() const {
+					std::string rv = "add_inf(";
+					for (int sri = 0; sri < source_rngs.size(); sri++) {
+						if (sri) rv += ",";
+						rv += source_rngs[sri]->get_name();
+					}
+					rv += ")";
+					return rv;
+				}
+				int AddInfinitive::get_native_output_size() const { return -1; }
+				void Add8::refill() {
+					MultiplexTransformRNG::refill();
+					PractRand::Tests::TestBlock tmp;
+					buffer->fill(source_rngs[0]);
+					for (int sri = 1; sri < source_rngs.size(); sri++) {
+						tmp.fill(source_rngs[sri]);
+						for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 1; i++) buffer->as8[i] += tmp.as8[i];
+					}
+				}
+				std::string Add8::get_name() const {
+					std::string rv = "add8(";
+					for (int sri = 0; sri < source_rngs.size(); sri++) {
+						if (sri) rv += ",";
+						rv += source_rngs[sri]->get_name();
+					}
+					rv += ")";
+					return rv;
+				}
+				int Add8::get_native_output_size() const { return 8; }
+				void Add16::refill() {
+					MultiplexTransformRNG::refill();
+					PractRand::Tests::TestBlock tmp;
+					buffer->fill(source_rngs[0]);
+					for (int sri = 1; sri < source_rngs.size(); sri++) {
+						tmp.fill(source_rngs[sri]);
+						for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 2; i++) buffer->as16[i] += tmp.as16[i];
+					}
+				}
+				std::string Add16::get_name() const {
+					std::string rv = "add16(";
+					for (int sri = 0; sri < source_rngs.size(); sri++) {
+						if (sri) rv += ",";
+						rv += source_rngs[sri]->get_name();
+					}
+					rv += ")";
+					return rv;
+				}
+				int Add16::get_native_output_size() const { return 64; }
+				void Add32::refill() {
+					MultiplexTransformRNG::refill();
+					PractRand::Tests::TestBlock tmp;
+					buffer->fill(source_rngs[0]);
+					for (int sri = 1; sri < source_rngs.size(); sri++) {
+						tmp.fill(source_rngs[sri]);
+						for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 4; i++) buffer->as32[i] += tmp.as32[i];
+					}
+				}
+				std::string Add32::get_name() const {
+					std::string rv = "add32(";
+					for (int sri = 0; sri < source_rngs.size(); sri++) {
+						if (sri) rv += ",";
+						rv += source_rngs[sri]->get_name();
+					}
+					rv += ")";
+					return rv;
+				}
+				int Add32::get_native_output_size() const { return 64; }
+				void Add64::refill() {
+					MultiplexTransformRNG::refill();
+					PractRand::Tests::TestBlock tmp;
+					buffer->fill(source_rngs[0]);
+					for (int sri = 1; sri < source_rngs.size(); sri++) {
+						tmp.fill(source_rngs[sri]);
+						for (int i = 0; i < PractRand::Tests::TestBlock::SIZE / 8; i++) buffer->as64[i] += tmp.as64[i];
+					}
+				}
+				std::string Add64::get_name() const {
+					std::string rv = "add64(";
+					for (int sri = 0; sri < source_rngs.size(); sri++) {
+						if (sri) rv += ",";
+						rv += source_rngs[sri]->get_name();
+					}
+					rv += ")";
+					return rv;
+				}
+				int Add64::get_native_output_size() const { return 64; }
+
 				void Xor::refill() {
 					MultiplexTransformRNG::refill();
 					PractRand::Tests::TestBlock tmp;
@@ -320,7 +458,7 @@ namespace PractRand {
 					return OutWord(buffer[index++]);
 				}
 
-				void GeneralizedTableTransform::seed(Uint64 s) {base_rng->seed(s);}
+				void GeneralizedTableTransform::seed(Uint64 seed_low, Uint64 seed_high) { base_rng->seed(seed_low, seed_high); }
 				Uint64 GeneralizedTableTransform::get_flags() const {
 					return base_rng->get_flags() | FLAG::USES_FLOW_CONTROL | FLAG::STATE_UNAVAILABLE;//not exactly, but close enough
 				}
@@ -403,8 +541,8 @@ namespace PractRand {
 					prev = Uint8(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle64::seed(Uint64 s) {
-					base_rng->seed(s);
+				void BaysDurhamShuffle64::seed(Uint64 seed_low, Uint64 seed_high) {
+					base_rng->seed(seed_low, seed_high);
 					for (int i = 0; i <= index_mask; i++) 
 						table[i] = base_rng->raw64();
 					for (int i = 0; i <= index_mask; i++) {raw64();raw64();}
@@ -432,8 +570,8 @@ namespace PractRand {
 					prev = Uint8(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle32::seed(Uint64 s) {
-					base_rng->seed(s);
+				void BaysDurhamShuffle32::seed(Uint64 seed_low, Uint64 seed_high) {
+					base_rng->seed(seed_low, seed_high);
 					for (int i = 0; i <= index_mask; i++) 
 						table[i] = base_rng->raw32();
 					for (int i = 0; i <= index_mask; i++)  {raw32();raw32();}
@@ -461,8 +599,8 @@ namespace PractRand {
 					prev = Uint8(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle16::seed(Uint64 s) {
-					base_rng->seed(s);
+				void BaysDurhamShuffle16::seed(Uint64 seed_low, Uint64 seed_high) {
+					base_rng->seed(seed_low, seed_high);
 					for (int i = 0; i <= index_mask; i++) 
 						table[i] = base_rng->raw32();
 					for (int i = 0; i <= index_mask; i++)  {raw16();raw16();}
@@ -490,8 +628,8 @@ namespace PractRand {
 					prev = Uint8(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle8::seed(Uint64 s) {
-					base_rng->seed(s);
+				void BaysDurhamShuffle8::seed(Uint64 seed_low, Uint64 seed_high) {
+					base_rng->seed(seed_low, seed_high);
 					for (int i = 0; i <= index_mask; i++) 
 						table[i] = base_rng->raw32();
 					for (int i = 0; i <= index_mask; i++)  {raw8();raw8();}

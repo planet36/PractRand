@@ -11,13 +11,17 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
 
 //for use in seeding & self-tests:
 #include "PractRand/RNGs/all.h"
 
+#ifdef PRACTRAND_FULL
+#include <map>
+#include "PractRand/test_helpers.h"
+#endif
+
 namespace PractRand {
-	const char *version_str = "0.95";
+	const char *version_str = "0.96";
 	SEED_AUTO_TYPE SEED_AUTO;
 	SEED_NONE_TYPE SEED_NONE;
 	void (*error_callback)(const char *) = NULL;
@@ -25,6 +29,7 @@ namespace PractRand {
 		if (error_callback) error_callback(msg);
 		else {
 			if (msg) std::fprintf(stderr, "%s\n", msg);
+			std::fprintf(stderr, "an error occurred, aborting\n");
 			std::exit(1);
 		}
 	}
@@ -135,7 +140,7 @@ namespace PractRand {
 	class GenericIntegerSeedingStateWalker : public StateWalkingObject {
 	public:
 		PractRand::RNGs::Raw::arbee seeder;
-		GenericIntegerSeedingStateWalker(Uint64 seed) : seeder(seed) {}
+		GenericIntegerSeedingStateWalker(Uint64 seed1, Uint64 seed2) : seeder(seed1, seed2) {}
 		virtual void handle(bool   &v) {v = (seeder.raw8() & 1) ? true : false;}
 		virtual void handle(Uint8  &v) {v = seeder.raw8 ();}
 		virtual void handle(Uint16 &v) {v = seeder.raw16();}
@@ -145,7 +150,7 @@ namespace PractRand {
 		virtual void handle(double &) {issue_error("RNGs with default integer seeding should not contain floating point values");}
 		virtual Uint32 get_properties() const { return FLAG_CLUMSY | FLAG_SEEDER; }
 	};
-	class GenericSeedingStateWalker : public StateWalkingObject {
+	/*class GenericSeedingStateWalker : public StateWalkingObject {
 	public:
 		PractRand::RNGs::vRNG *seeder;
 		GenericSeedingStateWalker(RNGs::vRNG *seeder_) : seeder(seeder_) {}
@@ -157,7 +162,7 @@ namespace PractRand {
 		virtual void handle(float  &) {issue_error("RNGs with default seeding should not contain floating point values");}
 		virtual void handle(double &) {issue_error("RNGs with default seeding should not contain floating point values");}
 		virtual Uint32 get_properties() const {return FLAG_CLUMSY | FLAG_SEEDER;}
-	};
+	};*/
 	namespace AutoSeeder {
 		enum {POOL_SIZE = 5};
 		static bool initialized = false;
@@ -215,12 +220,10 @@ namespace PractRand {
 				Uint32 seed_and_iv[10];
 				get_autoseed_fixed_entropy((Uint64*)&seed_and_iv[0], &seeder);
 
-				//I would prefer ChaCha, but the license is not 100% clear atm
-				//PractRand::RNGs::Polymorphic::chacha bootstrap(seed_and_iv, false);
-				PractRand::RNGs::Polymorphic::salsa bootstrap(seed_and_iv, false);
+				PractRand::RNGs::Polymorphic::chacha bootstrap(seed_and_iv, 10, false);
 
 				std::memset(seed_and_iv, 0, sizeof(seed_and_iv));
-				seeder.seed(bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64());
+				seeder.seed(&bootstrap);
 			}
 			virtual void handle(bool   &v) {v = (seeder.raw8() & 1) ? true : false;}
 			virtual void handle(Uint8  &v) {v = seeder.raw8 ();}
@@ -266,20 +269,39 @@ namespace PractRand {
 			virtual Uint32 get_properties() const {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 	}
-	Uint32 randi_fast_implementation(Uint32 random_value, Uint32 max) {
-		return Uint32((Uint64(max) * random_value) >> 32);
-	}
-	StateWalkingObject *int_to_rng_seed(Uint64 i) {
-		return new GenericIntegerSeedingStateWalker(i);
-	}
-	StateWalkingObject *vrng_to_rng_seeder(RNGs::vRNG *rng) {
-		return new GenericSeedingStateWalker(rng);
-	}
-	StateWalkingObject *get_autoseeder(const void *target) {
-		return new AutoSeeder::AutoSeedingStateWalker(target);
-	}
 	namespace Internals {
-		void test_random_access(PractRand::RNGs::vRNG *rng, PractRand::RNGs::vRNG *known_good, Uint64 period_low64, Uint64 period_high64) {
+		Uint32 rand_i32_fast_implementation(Uint32 random_value, Uint32 max) {
+			return Uint32((Uint64(max) * random_value) >> 32);
+		}
+		StateWalkingObject *int_to_rng_seeder(Uint64 seed_low, Uint64 seed_high) {
+			return new GenericIntegerSeedingStateWalker(seed_low, seed_high);
+		}
+		StateWalkingObject *vrng_to_rng_seeder(RNGs::vRNG *rng) {
+			Uint64 seed_low, seed_high; seed_low = rng->raw64(); seed_high = rng->raw64();// have to make sure they're generated in order
+			return new GenericIntegerSeedingStateWalker(seed_low, seed_high);
+		}
+		StateWalkingObject *get_autoseeder(const void *target) {
+			return new AutoSeeder::AutoSeedingStateWalker(target);
+		}
+		float rand_float_implementation(Uint32 raw) {
+			return  float((raw & ((PractRand::Uint32(1) << 24) - 1)) *  float(1.0 / 16777216.0));
+		}
+		double rand_double_implementation(Uint64 raw) {
+			return double(raw >> 11) * double(1.0 / 9007199254740992.0);
+			/*
+				Pros:
+					Fast.  Simple.  Reasonable.  
+				Cons:
+					the mean is NOT 0.5, but instead 0.49999999999999994448884876874217
+						pretty much all possible solutions make the output range [0.0-1.0] instead of [0.0-1.0)
+						which doesn't sound that bad really?
+						many solutions are also slower
+					not all values can be produced - all in [0.5,1.0) are produced, but between [0.0,0.5) many are ommitted
+						solutions are significantly slower?
+					if multiplication is slow, then the multiplication can be slower than add-reinterpret-subtract alternative
+			*/
+		}
+		void test_random_access(PractRand::RNGs::vRNG *rng, PractRand::RNGs::vRNG *known_good, Uint64 period_low64=0, Uint64 period_high64=0) {
 			Uint64 seed = known_good->raw64();
 			Uint8 a1, a2, a3, b1, b2, b3;
 			//basic check
@@ -293,7 +315,7 @@ namespace PractRand {
 			//check a longer range seek
 			seed = known_good->raw64();
 			rng->seed(seed);
-			int how_far = known_good->randi(13179);
+			int how_far = known_good->rand_i32(13179);
 			for (int i = 0; i < how_far; i++) rng->raw8();
 			a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
 			rng->seed(seed);
@@ -313,12 +335,12 @@ namespace PractRand {
 				rng->seed(seed);
 				while (delta) {
 					if (delta > 0) {
-						Uint64 adjust = known_good->randli(delta + 1);
+						Uint64 adjust = known_good->rand_i64(delta + 1);
 						rng->seek_forward(adjust);
 						delta -= adjust;
 					}
 					else {
-						Uint64 adjust = known_good->randli(1 - delta);
+						Uint64 adjust = known_good->rand_i64(1 - delta);
 						rng->seek_backward(adjust);
 						delta += adjust;
 					}
@@ -332,11 +354,11 @@ namespace PractRand {
 				rng->seed(seed);
 				a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();
 				rng->seed(seed);
-				rng->seek_forward128(period_low64, period_high64);
+				rng->seek_forward(period_low64, period_high64);
 				b1 = rng->raw8(); b2 = rng->raw8(); b3 = rng->raw8();
 				if (a1 != b1 || a2 != b2 || a3 != b3) PractRand::issue_error("PractRand::test_random_access failed (4)");
 				rng->seed(seed);
-				rng->seek_backward128(period_low64, period_high64);
+				rng->seek_backward(period_low64, period_high64);
 				b1 = rng->raw8(); b2 = rng->raw8(); b3 = rng->raw8();
 				if (a1 != b1 || a2 != b2 || a3 != b3) PractRand::issue_error("PractRand::test_random_access failed (5)");
 			}
@@ -344,6 +366,10 @@ namespace PractRand {
 	}
 	namespace RNGs {
 		vRNG::~vRNG() {}
+		void vRNG::get_maximum_seed(Uint64 &seed_low, Uint64 &seed_high) const {
+			seed_low = 0;
+			seed_high = 0;
+		}
 		long vRNG::serialize( char *buffer, long buffer_size ) {//returns serialized size, or zero on failure
 			SerializingStateWalker serializer(buffer, buffer_size);
 			walk_state(&serializer);
@@ -374,41 +400,43 @@ namespace PractRand {
 			walk_state(&deserializer);
 			return deserializer.size_used == size;
 		}
-		void vRNG::seed(Uint64 i) {
-			GenericIntegerSeedingStateWalker walker(i);
+		void vRNG::seed(Uint64 i1, Uint64 i2) {
+			GenericIntegerSeedingStateWalker walker(i1, i2);
 			walk_state(&walker);
 			flush_buffers();
 		}
 		void vRNG::seed_fast(Uint64 i) {
-			GenericIntegerSeedingStateWalker walker(i);
-			walk_state(&walker);
-			flush_buffers();
+			seed(i, 0);
 		}
 		void vRNG::seed(vRNG *rng) {
-			GenericSeedingStateWalker walker(rng);
-			walk_state(&walker);
-			flush_buffers();
+			Uint64 s1 = rng->raw64();
+			Uint64 s2 = rng->raw64();
+			seed(s1, s2);
 		}
 		void vRNG::autoseed() {
 			AutoSeeder::AutoSeedingStateWalker walker(this);
 			walk_state(&walker);
 			flush_buffers();
 		}
-		Uint32 vRNG::randi(Uint32 max) {
-			PRACTRAND__RANDI_IMPLEMENTATION(max)
+		Uint32 vRNG::rand_i32(Uint32 max) {
+			PRACTRAND__RANDI32_IMPLEMENTATION(max)
 		}
-		Uint64 vRNG::randli(Uint64 max) {
-			PRACTRAND__RANDLI_IMPLEMENTATION(max)
+		Uint64 vRNG::rand_i64(Uint64 max) {
+			PRACTRAND__RANDI64_IMPLEMENTATION(max)
 		}
-		Uint32 vRNG::randi_fast(Uint32 max) {
-			return randi_fast_implementation(raw32(), max);
+		Uint32 vRNG::rand_i32_fast(Uint32 max) {
+			return Internals::rand_i32_fast_implementation(raw32(), max);
 		}
-		float vRNG::randf() {PRACTRAND__RANDF_IMPLEMENTATION(*this)}
-		double vRNG::randlf() {PRACTRAND__RANDLF_IMPLEMENTATION(*this)}
-		double vRNG::gaussian() { return Internals::generate_gaussian_fast(raw64()); }
+		float vRNG::rand_float() { return Internals::rand_float_implementation(raw32()); }
+		double vRNG::rand_double() { return Internals::rand_double_implementation(raw64()); }
+		double vRNG::gaussian() {
+			Uint64 a = raw64();
+			Uint64 b = raw64();
+			return Internals::generate_gaussian_popcount_lookup_quadratic(a, b);
+		}
 		Uint64 vRNG::get_flags() const {return 0;}
-		void vRNG::seek_forward128 (Uint64, Uint64) {}
-		void vRNG::seek_backward128(Uint64, Uint64) {}
+		void vRNG::seek_forward (Uint64, Uint64) {}
+		void vRNG::seek_backward(Uint64, Uint64) {}
 		void vRNG::flush_buffers() {}
 
 
@@ -472,21 +500,113 @@ namespace PractRand {
 		bool vRNG::add_entropy_automatically(int milliseconds) {
 			return PractRand::Internals::add_entropy_automatically(this, milliseconds);
 		}
+
+		void vRNG8::add_entropy16(Uint16 value) { add_entropy8(Uint8(value >> 0)); add_entropy8(Uint8(value >> 8)); }
+		void vRNG8::add_entropy32(Uint32 value) { add_entropy8(Uint8(value >> 0)); add_entropy8(Uint8(value >> 8)); add_entropy8(Uint8(value >> 16)); add_entropy8(Uint8(value >> 24)); }
+		void vRNG8::add_entropy64(Uint64 value) {
+			add_entropy8(Uint8(value >> 0)); add_entropy8(Uint8(value >> 8)); add_entropy8(Uint8(value >> 16)); add_entropy8(Uint8(value >> 24));
+			add_entropy8(Uint8(value >> 32)); add_entropy8(Uint8(value >> 40)); add_entropy8(Uint8(value >> 48)); add_entropy8(Uint8(value >> 56));
+		}
+
+		void vRNG16::add_entropy8 (Uint8  value) { add_entropy16(value); }
+		void vRNG16::add_entropy32(Uint32 value) { add_entropy16(Uint16(value >> 0)); add_entropy16(Uint16(value >> 16)); }
+		void vRNG16::add_entropy64(Uint64 value) { add_entropy16(Uint16(value >> 0)); add_entropy16(Uint16(value >> 16)); add_entropy16(Uint16(value >> 32)); add_entropy16(Uint16(value >> 48)); }
+
+		void vRNG32::add_entropy8 (Uint8  value) { add_entropy32(value); }
+		void vRNG32::add_entropy16(Uint16 value) { add_entropy32(value); }
+		void vRNG32::add_entropy64(Uint64 value) { add_entropy32(Uint32(value >> 0)); add_entropy32(Uint32(value >> 32)); }
+
+		void vRNG64::add_entropy8 (Uint8  value) { add_entropy64(value); }
+		void vRNG64::add_entropy16(Uint16 value) { add_entropy64(value); }
+		void vRNG64::add_entropy32(Uint32 value) { add_entropy64(value); }
 	}
 	void self_test_PractRand() {
-		RNGs::Raw::mt19937::self_test();
+		//for these algorithms, I test against published test-vectors
 		RNGs::Raw::hc256::self_test();
 		RNGs::Raw::isaac32x256::self_test();
 		RNGs::Raw::trivium::self_test();
 		RNGs::Raw::chacha::self_test();
 		RNGs::Raw::salsa::self_test();
+		//RNGs::Raw::NotRecommended::mt19937::self_test();
+
+		//for these algorithms, I can't find any published test vectors, so I test against my own output
+		RNGs::Raw::jsf32::self_test();
+		RNGs::Raw::jsf64::self_test();
+
+		//for these algorithms, I don't yet have any tests at all:
+		//RNGs::Raw::isaac64x256::self_test();
+		//RNGs::Raw::sfc16::self_test();
+		//RNGs::Raw::sfc32::self_test();
+		//RNGs::Raw::sfc64::self_test();
 
 		RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
+		//random access checks
 		{RNGs::Polymorphic::chacha rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ull << 36); }
-		{RNGs::Polymorphic::salsa rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ull << 36); }
-		{RNGs::Polymorphic::xsm32 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1); }
-		{RNGs::Polymorphic::xsm64 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 0); }
+		{ RNGs::Polymorphic::salsa rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ull << 36); }
+		//Uint64 x = SEED_NONE;
+		//{RNGs::Polymorphic::xsm32 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1); }
+		//{RNGs::Polymorphic::xsm64 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 0); }
+		//{RNGs::Polymorphic::rarns16 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, (1ull << 48) - 1, 0); }
+		//{RNGs::Polymorphic::rarns32 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0xFfFfFfFfFfFfFfFfull, (1ull << 32) - 1); }
+		//{RNGs::Polymorphic::rarns64 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good); }
+
+		//in the full version, also test some things used by the tests themselves
+#ifdef PRACTRAND_FULL
+		// ilog2/count_low_bits/count_high_bits have different implementations for different ISAs and different compilers
+		// which makes it easy for bugs to slip by
+		// so some validation is needed
+		// of course, this is simply more opportunity for bugs... but hopefully this will notice if *changes* in behavior occur, when switching ISAs or compilers or something
+		using namespace PractRand::Internals;
+		for (long x = 0; x < 64 + 1; x++) {
+			Uint32 word32;
+			Uint64 word64;
+			if (x < 32) word32 = Uint32(1) << x; else word32 = 0;
+			if (x < 64) word64 = Uint64(1) << x; else word64 = 0;
+			long i;
+			i = ilog2_32(word32);
+			if (!word32 && i != -1) issue_error("self_test failure (ilog2_32 1)");
+			if (word32 && i != x) issue_error("self_test failure (ilog2_32 2)");
+			i = ilog2_64(word64);
+			if (!word64 && i != -1) issue_error("self_test failure (ilog2_64 1)");
+			if (word64 && i != x) issue_error("self_test failure (ilog2_64 2)");
+			i = count_low_zeroes32(word32);
+			if (word32 && i != x) issue_error("self_test failure (count_low_zeroes32 1)");
+			if (!word32 && i != 32) issue_error("self_test failure (count_low_zeroes32 2)");
+			i = count_low_zeroes64(word64);
+			if (word64 && i != x) issue_error("self_test failure (count_low_zeroes64 1)");
+			if (!word64 && i != 64) issue_error("self_test failure (count_low_zeroes64 2)");
+			i = count_high_zeroes32(word32);
+			if (word32 && i != 31 - x) issue_error("self_test failure (count_high_zeroes32 1)");
+			if (!word32 && i != 32) issue_error("self_test failure (count_high_zeroes32 2)");
+			i = count_high_zeroes64(word64);
+			if (word64 && i != 63 - x) issue_error("self_test failure (count_high_zeroes64 1)");
+			if (!word64 && i != 64) issue_error("self_test failure (count_high_zeroes64 1)");
+			i = count_ones32(word32 - 1);
+			if (word32 && i != x) issue_error("self_test failure (count_ones32 1)");
+			if (!word32 && i != 32) issue_error("self_test failure (count_ones32 2)");
+			i = count_ones64(word64 - 1);
+			if (word64 && i != x) issue_error("self_test failure (count_ones64 1)");
+			if (!word64 && i != 64) issue_error("self_test failure (count_ones64 2)");
+		}
+		if (count_ones32(0) != 0) issue_error("self_test failure (count_ones32 3)");
+		if (ilog2_32(0xF0F0F0F0) != 31) issue_error("self_test failure (ilog2_32 3)");
+		if (ilog2_32(0x0FF00FF0) != 27) issue_error("self_test failure (ilog2_32 4)");
+		if (ilog2_32(0) != -1) issue_error("self_test failure (ilog2_32 5)");
+		if (count_low_zeroes32(0xF0F0F0F0ull) != 4) issue_error("self_test failure (count_low_zeroes32 3)");
+		if (count_high_zeroes32(0xF0F0F0F0ull) != 0) issue_error("self_test failure (count_high_zeroes32 3)");
+		if (count_low_zeroes32(0x0F0F0F0Full) != 0) issue_error("self_test failure (count_low_zeroes32 4)");
+		if (count_high_zeroes32(0x0F0F0F0Full) != 4) issue_error("self_test failure (count_high_zeroes32 4)");
+
+		if (count_ones64(0) != 0) issue_error("self_test failure (count_ones64 3)");
+		if (ilog2_64(0xF0F0F0F0F0F0F0F0ull) != 63) issue_error("self_test failure (ilog2_64 3)");
+		if (ilog2_64(0x0FF00FF00FF00FF0ull) != 59) issue_error("self_test failure (ilog2_64 4)");
+		if (ilog2_64(0) != -1) issue_error("self_test failure (ilog2_64 5)");
+		if (count_low_zeroes64(0xF0F0F0F0F0F0F0F0ull) != 4) issue_error("self_test failure (count_low_zeroes64 3)");
+		if (count_high_zeroes64(0xF0F0F0F0F0F0F0F0ull) != 0) issue_error("self_test failure (count_high_zeroes64 3)");
+		if (count_low_zeroes64(0x0F0F0F0F0F0F0F0Full) != 0) issue_error("self_test failure (count_low_zeroes64 4)");
+		if (count_high_zeroes64(0x0F0F0F0F0F0F0F0Full) != 4) issue_error("self_test failure (count_high_zeroes64 4)");
+#endif
 	}
 	bool initialize_PractRand() {
 		if (!AutoSeeder::initialized) 

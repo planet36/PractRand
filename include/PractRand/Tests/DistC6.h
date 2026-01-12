@@ -68,5 +68,33 @@ namespace PractRand {
 			VariableSizeCount<Uint8> odd_counts;
 			//internal helpers:
 		};
+		class SimpleClassifyWord : public TestBaseclass {
+		public:
+			/*
+				broadly, every 16 bits gets classified down to just 3 bits, and an overlapping window of 8 such sets of 3 bits are fed in to a chi-squared test
+				could do a different classification scheme down to 2 bits
+				could also do a variant that operates on 32 bit words
+				currently uncallibrated
+			*/
+			SimpleClassifyWord();
+			virtual void init(PractRand::RNGs::vRNG *known_good);
+			virtual std::string get_name() const;
+			virtual void get_results(std::vector<TestResult> &results);
+
+			virtual void test_blocks(TestBlock *data, int numblocks);
+		protected:
+			Uint8 word_to_code(Uint16 word);
+			Uint32 word_to_reordered_code(Uint16 word);
+			enum { CODE_BITS = 3, OVERLAP_WINDOW = 8, TOTAL_BITS = CODE_BITS * OVERLAP_WINDOW };
+			Uint32 current;
+			Uint8 lookup_half[256];
+			Uint32 reordered_second_lookup[256];
+			Uint8 second_lookup[256];
+			Uint32 reorder_code[1 << CODE_BITS];
+			Uint32 warmup;
+			Uint32 reorder_mask;
+			double root_probs[8];
+			FixedSizeCount<Uint16, 1 << TOTAL_BITS> counts;
+		};
 	}//Tests
 }//PractRand

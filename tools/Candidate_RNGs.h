@@ -1,6 +1,5 @@
 namespace Candidates {
 
-
 /*
 Canidates currently under consideration:
 
@@ -81,6 +80,10 @@ For #2, VeryFast might be better than the current sfc, at least at 32 & 64 bit.
 For #3, sfc_alternative looks better than the current sfc.  
 
 */
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized" 
+
 #define POLYMORPHIC_CANDIDATE(rng, bits) \
 class polymorphic_ ## rng ## bits : public PractRand::RNGs::vRNG ## bits {\
 public:\
@@ -183,10 +186,101 @@ public:
 	Word _raw_native() {
 		Word old;
 		const Word K = Word(0x92ec64765925a395ull);
+		const Word K2 = Word(0xAbb32f3491032325ull);
+
+		/*
+		a = rotate(a, ROTATE) + b;//	16 bit: 128 MB			32 bit: 
+		b = rotate(b, RSHIFT) + a;
+		a = rotate(a, LSHIFT); b ^= a;
+		return b;//*/
+		/*
+		old = a + b;
+		a = rotate(a, ROTATE) + b;//	16 bit: 512 MB			32 bit: 1 TB
+		b = rotate(b, RSHIFT);
+		old ^= b;
+		b ^= a;
+		return old;//*/
+		/*
+		old = b + a;
+		a *= K;
+		//a += a << 3;
+		a ^= b + rotate(old, 13);
+		b += K;
+		return a;//*/
+		/*
+		old = a + b;
+		a ^= rotate(old, ROTATE) + rotate(a + (a << 3), 5);//	32 bit: 8 GB w/ counter, 16 GB (cycle exhaustion) w/ Weyl
+		b += 1;
+		return old;//*/
+		/*
+		a = rotate(a, ROTATE) ^ rotate(a, LSHIFT) ^ rotate(a, RSHIFT);//	32 bit: 
+		a += b;
+		b += K;
+		return a;//*/
+		/*
+		old = a * K;
+		a = b + c;
+		b = rotate(b, ROTATE) ^ c;// 32 bit: >256 GB, although 16 bit fails many tests at 128 MB
+		c = old;
+		return a;//*/
+		/*
+		old = a * K;
+		a = rotate(old, ROTATE) ^ (b + c);
+		b = c;// 16 bits: , 32 bits: 
+		c = old;
+		return a;//*/
+		/*old = a * K;// very fast
+		a = b + c;
+		b = rotate(c, ROTATE);// 16 bit: 128 MB, 32 bit: >8 TB
+		c = old;
+		return a;//*/
+		/*
+		old = a * K;
+		a += b;
+		b = rotate(b, ROTATE);// 32 bit: >32 TB, although 16 bit fails many tests at 64 MB
+		b ^= c;
+		c += old;
+		return old;//*/
+		/*											16,5,2	32,11,3	64,X,3	1	2	3	4	5	6	7	8	9	10	11	12	13	15	17	19	21	23	25	27	29	31	33	35	37	39	41	43	45	47	49	51	52	53	54	55	56	57	59	60	61	62	63
+		old = a + b;				//	INC:		512 KB	4 GB			16	18	20	23	25	30	30	32	34	35	37	36	35	34	38	39			36						34			34	32	32	30	29	30	30	30	30	30	28	28	27	19	18	15
+		a = rotate(a, 13); a ^= old; //	Weyl:		256 KB	8 GB			16	18	20	28	33	38	41	37	38	42	42	40	41			38			38						43				44	38	31	29	30	30	30	31	30	29	28	27	19	18	15
+		a += a << 3;				//	LEA-LCG:	512 KB	32 GB			16	18	20	34	37		43				47					>45													>45		39		38			39	39	36	31	27	19	18	15
+		//b += 1;
+		b += K;
+		//b += (b << 3) + K;
+		return old;//*/
+		/*
+		old = a + b;  //								INC		Weyl	LEA-LCG
+		a = (rotate(a, 13) * K) ^ old;//		32 bit: 8 GB	8 GB	64 GB
+		b += 1;// b + (b << 3) + K2;//53;//		64 bit: 128 GB	2 TB	>32 TB
+		return old;//*/
+		/*
+		old = a + b;  //								INC		Weyl	LEA-LCG
+		a = rotate(a, 13); a ^= old; a *= K;//	32 bit: 8 GB	8 GB	64 GB
+		b += 1;// b + (b << 3) + K2;//53;//		64 bit: 128 GB	32 TB	
+		return old;//*/
+		/*
+		a ^= b;
+		a = rotate(a, 13);
+		b = b + (b << 3) + (K2);// 32 bit: 256 GB
+		a *= K;
+		return a;//*/
 		/*
 		old = a + b;// irreversible, but fast and seems decent enough once the cycle length is long enough
-		a = rotate(a, RSHIFT) ^ old;
+		a = rotate(a, RSHIFT) ^ old;// 32 bit: fails every test simultaneously when its period is exhausted at 16 GB
 		b = rotate(b, ROTATE) + old;
+		return old;//*/
+		/*
+		old = a + b;// same thing but longer cycle, minimum cycle, and slower
+		a = rotate(a, RSHIFT) ^ old;// 32 bit: >128 TB
+		b = rotate(b, ROTATE) + old;
+		a += c++;
+		return old;//*/
+		/*
+		old = a + b;// same thing but no minimum cycle
+		a = rotate(a, RSHIFT) + b;// 32 bit: >128 TB
+		b = rotate(b, ROTATE) ^ c;
+		c = old;
 		return old;//*/
 		//now based upon alearx:
 		//a ^= rotate(b + c, LSHIFT);
@@ -197,8 +291,8 @@ public:
 		/*
 		old = a + b;
 		a = b ^ (b >> RSHIFT);
-		b = c + (c << LSHIFT);
-		c = old + rotate(c,ROTATE);// RSHIFT,LSHIFT,ROTATE : 7,3,9 @ 32 bit
+		b = c + (c << LSHIFT); // 16 bit: 32 GB if the final operation is +, 128 GB if it's ^
+		c = old ^ rotate(c,ROTATE);// RSHIFT,LSHIFT,ROTATE : 7,3,9 @ 32 bit
 		return old;//*/
 		//best quality: 16 bit fails @ 1 TB, but not as fast ;; switching "a += b ^ c;" for "a ^= b + c;" increases that to 2 TB
 		/*
@@ -210,26 +304,66 @@ public:
 		//faster, simpler, lower quality - just 5-6 ops, very few dependent
 		//16 bit: 64 MB, 32 bit: 32 GB
 		/*
-		old = a + b;
+		old = a + b; // very fast, but quality is too low
 		a = c + rotate(b,ROTATE);
 		b = c + (c << LSHIFT);
 		c ^= old;
 		return c;//*/
 		/*
-		old = a + b;// 6 ops with LEA, 7 with RISC, unfortunately more dependencies thtn desirable, test result:  16 bit: 256 GB
+		old = a + b;// 6 ops with LEA, 7 with RISC & no multiplication, unfortunately more dependencies than desirable, test result:  16 bit: 256 GB (1 TB if shifts are 3/9/4)
 		a = b + (b << RSHIFT);
 		b = rotate(b, LSHIFT) + c;
 		c = rotate(c, ROTATE) ^ old;
 		return old;//*/
-		//*
+		/*
+		old = a + b;// 6 ops but it requires fast multiplication, unfortunately more dependencies than desirable, test result:  16 bit: 16 TB
+		a = b * K;
+		b = rotate(b, LSHIFT) + c;
+		c = rotate(c, ROTATE) ^ old;
+		return old;//*/
+		/*
 		a += b;// 5 ops on all relevant archs, dependencies aren't too bad; test results:  16 bit: 16 GB, 32 bit: > 4 TB
 		b ^= c;//test results at 16 bit: PractRand std: 16 GB ; gjrand: ----1
 		c += a;//test results at 32 bit: PractRand std: >4 TB ; gjrand: ------
 		b = rotate(b, RSHIFT);
 		c = rotate(c, ROTATE);
 		return a;//*/
-		//another alternative, 5-7 ops
-		//16 bit: 256 MB, 32 bit: 2 TB
+		/*
+		a += b;// 5 ops on all relevant archs, dependencies aren't too bad; test results:  16 bit: 16 GB, 32 bit: ???
+		b ^= c;
+		c += a;
+		b += b << LSHIFT;
+		c = rotate(c, ROTATE);
+		return a;//*/
+		/*
+		a += b;// 5 ops but requires fast multiplication, dependencies aren't too bad; test results:  16 bit: 32 GB
+		b ^= c;
+		c += a;
+		b *= K;
+		c = rotate(c, ROTATE);
+		return a;//*/
+		/*
+		old = a;
+		a = b + c;// ~5 ops, dependencies are okay, speed is good ; test results:  16 bit: 4 GB, 32 bit: ???
+		b = c + old;
+		c = old ^ a;
+		c += (c << LSHIFT);
+		b = rotate(b, ROTATE);
+		return a;//*/
+		/*
+		a += b;// 6 ops with LEA, dependencies aren't too bad; test results:  16 bit: 128 GB, 32 bit: > 4 TB
+		b ^= c + (c << 2);
+		c += a;
+		b += b << 3;
+		c = rotate(c, ROTATE);
+		return a;//*/
+		/*
+		old = a * K;
+		a = rotate(a, ROTATE) ^ b;
+		b = c + old;
+		c = old;
+		return a;//*/
+		//another alternative, 4-7 ops ; 16 bit: 256 MB, 32 bit: 2 TB
 		/*
 		old = a + b;
 		a = b;
@@ -237,8 +371,7 @@ public:
 		c = rotate(c, ROTATE);
 		c += old;
 		return a;//*/
-		//uses multiplication, only 2 words, but pretty good asside from that:
-		//16: 16 MB, 32 bit: 8 TB
+		//uses multiplication, only 2 words, but pretty good asside from that ; 16: 16 MB, 32 bit: 8 TB
 		/*
 		old = a * Word(0x92ec64765925a395ull);
 		a = b ^ rotate(a, OUTPUT_BITS / 2);
@@ -251,19 +384,82 @@ public:
 		a ^= rotate(b, OUTPUT_BITS / 2);
 		b = old;
 		return a;//*/
-		/*old = (a ^ (a >> (OUTPUT_BITS/2)));
-		//c += (c << 3) + 1;
-		a += b + (b << 3);
-		b ^= old + ++c;
-		return a;*/
+		/*
+		old = a * K;
+		a = rotate(a, ROTATE) ^ b;
+		b = rotate(c, RSHIFT) + old;
+		c = old;
+		return a;//*/
+
+		// of further interest:
+
+		/*
+		old = a + b; // quite fast through polymorphic interface, but a little slow on raw/simple interface ; quality is... too low
+		a = b + rotate(c, 23); // moving the add to inside the rotate improves quality slightly, but worsens performance slightly
+		b = c + (c << 3);
+		c ^= old;
+		return c;//*/
+		/*
+		a += b;// somewhat fast through raw/simple interface, but slow on the polymorphic interface ; quality is... adequate
+		b ^= c;
+		c += a;
+		b = rotate(b, RSHIFT);
+		c = rotate(c, ROTATE);
+		return a;//*/
+		/*
+		old = a * K;// very fast ; 16 bit: 128 MB, 32 bit: >8 TB
+		a = b + c;
+		b = rotate(c, ROTATE);
+		c = old;
+		return a;//*/
+		/*
+		Uint64 tmp; // some portability problems, and speed is... adequate but not get, and it's both small and irreversible... but adequate for some purposes at 64 bit, and it's literally one register of state, two opcodes of execution, there's advantages to that sometimes
+		a = _wide_multiply(a, K, &tmp);
+		a ^= old;
+		return a;//*/
+		/*
+		Uint64 tmp; // some porttability problems again, but now it has quality
+		old = _wide_multiply(a, K, &tmp);
+		a = b ^ tmp;
+		b = old;
+		return a;//*/
+		/*
+		a += b;// 5 ops on all relevant archs, speed is decent on the Raw/Simple form ; test results:  16 bit: 16 GB, 32 bit: ???
+		b ^= c;
+		c += a;
+		b += b << LSHIFT;
+		c = rotate(c, ROTATE);
+		return a;//*/
+		/*
+		old = a;
+		a = b + c;// ~5 ops, dependencies are okay, speed is good ; test results:  16 bit: 4 GB, 32 bit: ???
+		b = c + old;
+		c = old ^ a;
+		c += (c << LSHIFT);
+		b = rotate(b, ROTATE);
+		return a;//*/
+		//*
+		old = a + b; // fastest PRNG in testing atm ; 16 bit: 8 MB, 32 bit: 2+ GB
+		a = b * K;
+		b = rotate(old, ROTATE);
+		return a;//*/
+
+
+		/*old = c+a;
+		//c = c * 9 + 149;
+		c *= Word(0x92ec64765925a395ull);
+		a += b;
+		b ^= old;
+		return old;//*/
 	}
 	void walk_state(StateWalkingObject *walker) {
 		walker->handle(a);
 		walker->handle(b);
 		walker->handle(c);
+		c |= 1;
 	}
 };
-class raw_VeryFast64 : public _VeryFast<Uint64,29,9,3> {public: Uint64 raw64() {return _raw_native();}};
+class raw_VeryFast64 : public _VeryFast<Uint64,29,9,3> {public: Uint64 raw64() {return _raw_native();}};//why are these so slow in the Light-Weight performance tests?
 class raw_VeryFast32 : public _VeryFast<Uint32,13,7,3> {public: Uint32 raw32() {return _raw_native();}};
 class raw_VeryFast16 : public _VeryFast<Uint16, 7,3,2> {public: Uint16 raw16() {return _raw_native();}};
 class raw_VeryFast8  : public _VeryFast<Uint8 , 3,2,2> {public: Uint8  raw8 () {return _raw_native();}};
@@ -835,7 +1031,7 @@ public:
 	std::string get_name() const { return implementation.get_name(); }
 };
 
-
+#pragma GCC diagnostic pop
 
 }//namespace Candidates
 #if defined RNG_from_name_h

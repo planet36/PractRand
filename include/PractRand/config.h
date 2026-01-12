@@ -5,6 +5,7 @@ Things to configure in this file:
 1.  Endianness (usually CPU dependent)
 2.  Thread-local-storage aka TLS (usually compiler dependent)
 3.  Integer types (compiler and CPU dependent)
+4.  Options to disable some exotic things (use of SIMD, and use of intrinsics)
 */
 
 /*
@@ -20,6 +21,7 @@ compile.  If the wrong one is defined then PractRand will mostly still work,
 though some kinds of things (particularly serialization) may not work 
 precisely as intended, and if the PractRands self-test function is called then 
 it may report an endianness error.  
+	Archiac endiannesses ("middle endian") are not supported.
 */
 #define PRACTRAND_TARGET_IS_LITTLE_ENDIAN 1
 //#define PRACTRAND_TARGET_IS_BIG_ENDIAN 1
@@ -71,31 +73,61 @@ namespace PractRand {
 	typedef signed int           Sint32;
 	typedef signed long long int Sint64;
 
-	//double-checking those integer sizes:
-	typedef char _compiletime_assert_uint8_size [(sizeof(Uint8 )==1) ? 1 : -1];
-	typedef char _compiletime_assert_uint16_size[(sizeof(Uint16)==2) ? 1 : -1];
-	typedef char _compiletime_assert_uint32_size[(sizeof(Uint32)==4) ? 1 : -1];
-	typedef char _compiletime_assert_uint64_size[(sizeof(Uint64)==8) ? 1 : -1];
-	typedef char _compiletime_assert_sint8_size [(sizeof(Sint8 )==1) ? 1 : -1];
-	typedef char _compiletime_assert_sint16_size[(sizeof(Sint16)==2) ? 1 : -1];
-	typedef char _compiletime_assert_sint32_size[(sizeof(Sint32)==4) ? 1 : -1];
-	typedef char _compiletime_assert_sint64_size[(sizeof(Sint64)==8) ? 1 : -1];
+	namespace Internals {
+		namespace Ignore {
+			//double-checking those integer sizes:
+			typedef char _compiletime_assert_uint8_size[(sizeof(Uint8) == 1) ? 1 : -1];
+			typedef char _compiletime_assert_uint16_size[(sizeof(Uint16) == 2) ? 1 : -1];
+			typedef char _compiletime_assert_uint32_size[(sizeof(Uint32) == 4) ? 1 : -1];
+			typedef char _compiletime_assert_uint64_size[(sizeof(Uint64) == 8) ? 1 : -1];
+			typedef char _compiletime_assert_sint8_size[(sizeof(Sint8) == 1) ? 1 : -1];
+			typedef char _compiletime_assert_sint16_size[(sizeof(Sint16) == 2) ? 1 : -1];
+			typedef char _compiletime_assert_sint32_size[(sizeof(Sint32) == 4) ? 1 : -1];
+			typedef char _compiletime_assert_sint64_size[(sizeof(Sint64) == 8) ? 1 : -1];
+		}
+	}
 }
 
 /* 
-4. SIMD stuff can greatly speed up the ChaCha RNG
-(not used by much yet, only ChaCha so far and only on MSVC)
+4. Options to disable some exotic things
 
-SIMD strongly NOT recommended at this time, as I haven't come up with a 
-clean way to force a properly aligned malloc to be used when appropriate.  
-(in theory the spec may guarantee that all mallocs are aligned 
-appropriately, but in practice that does not seem to be the case)
-I may have to have the Raw::ChaCha class contain pointers at memory blocks 
-instead of memory blocks themselves, there doesn't seem to be any other 
-way to allow a sane interface.  
+Some code in PractRand uses various non-portable optimizations for 
+performance reasons.  At compile time, PractRand checks preprocessor 
+flags to determine which things are safe to use.  However, this could 
+be handled incorrectly resulting in compile errors, or for some 
+reason be undesirable in some cases.  So here are options to 
+forcefully disable those code paths.  
+
+There are currently two options here, one for disabling use of SIMD, 
+the other for disabling use of bitwise intrinsics.  
+
+Disabling the SIMD code is currently recommended - while disabled SIMD 
+slows down the ChaCha implementation significantly, it's still a good 
+idea because I haven't come up with a clean way to force a properly 
+aligned malloc to be used when appropriate.  I may have to have the 
+Raw::ChaCha class contain pointers at memory blocks instead of memory 
+blocks themselves, there doesn't seem to be any other way to allow a 
+sane interface.  
+
+Disabling use of intrinsics is not recommended - so far as I know, 
+the code will avoid them any time it is appropriate to do so.  
+
+Enabling use of misaligned reads may be efficient on x86 and other 
+platforms that offer decent support for such, but slow on platforms 
+that have to emulate them via interrupts, crash on platforms that 
+don't support misaligned reads at all, or silently produce 
+incorrect results on platforms that do strange things with 
+misaligned addresses.  I don't think PractRand currently does 
+anything with misaligned addresses, but it has at times in the past 
+and may again at some point in the future.  
+
 */
 
 #define PRACTRAND_NO_SIMD
+
+//#define PRACTRAND_NO_INTRINSICS
+
+//#define PRACTRAND_ALLOW_MISALIGNED_READS
 
 #if defined _MSC_VER
 #define PRACTRAND_ALIGN_128 __declspec(align(16))

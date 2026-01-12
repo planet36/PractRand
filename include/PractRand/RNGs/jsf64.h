@@ -13,17 +13,17 @@ namespace PractRand {
 				Uint64 a, b, c, d;
 			public:
 				Uint64 raw64();
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed_fast(Uint64 s);
 				void walk_state(StateWalkingObject *walker);
-				//static void self_test();
+				static void self_test();
 			};
 		}
 		
 		namespace Polymorphic {
 			class jsf64 : public vRNG64 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(jsf64)
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed_fast(Uint64 s);
 			};
 		}

@@ -15,7 +15,7 @@ namespace PractRand {
 				Uint8 output_buffer[64];
 				Uint16 input_buffer_left, output_buffer_left, state_phase;
 
-				sha2_based_pool(Uint64 s) {seed(s);}
+				sha2_based_pool(Uint64 seed_low, Uint64 seed_high=0) {seed(seed_low, seed_high);}
 				sha2_based_pool(vRNG *seeder) {seed(seeder);}
 				sha2_based_pool(SEED_AUTO_TYPE ) {autoseed();}
 				sha2_based_pool(SEED_NONE_TYPE ) {reset_state();}
@@ -26,7 +26,7 @@ namespace PractRand {
 				Uint64 get_flags() const;
 
 				Uint8  raw8 ();
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void reset_state();
 				using vRNG::seed;
 				void walk_state(StateWalkingObject *walker);

@@ -2,8 +2,8 @@
 #include <string>
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
+#include <vector>
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
 
 #include "PractRand/RNGs/hc256.h"
 
@@ -13,7 +13,7 @@ using namespace PractRand;
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(hc256)
 std::string PractRand::RNGs::Polymorphic::hc256::get_name() const {return "hc256";}
 void PractRand::RNGs::Polymorphic::hc256::flush_buffers() {implementation.flush_buffers();}
-void PractRand::RNGs::Polymorphic::hc256::seed(Uint64 s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::hc256::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 void PractRand::RNGs::Polymorphic::hc256::seed(Uint32 key_and_iv[16]) { implementation.seed(key_and_iv); }
 void PractRand::RNGs::Polymorphic::hc256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 
@@ -119,15 +119,19 @@ void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
 	used = 0;
 }
 //Uint32 PractRand::RNGs::Raw::hc256::raw32() {//LOCKED, do not change
+//	// code was moved to the header file
 //	if (used < OUTPUT_BUFFER_SIZE) return outbuf[used++];
 //	_do_batch();
 //	return outbuf[used++];
 //}
-void PractRand::RNGs::Raw::hc256::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::hc256::seed(Uint64 seed_low, Uint64 seed_high) {//LOCKED, do not change
+	//changed in v0.96, to support 128 bit seeds - if the upper 64 bits are all zeros that should yield the same result as before
 	Uint32 seed_array[16];
-	seed_array[0] = Uint32(s);
-	seed_array[1] = Uint32(s >> 32);
-	for (int i = 2; i < 16; i++) seed_array[i] = 0;
+	seed_array[0] = Uint32(seed_low >> 0);
+	seed_array[1] = Uint32(seed_low >> 32);
+	seed_array[2] = Uint32(seed_high >> 0);
+	seed_array[3] = Uint32(seed_high >> 32);
+	for (int i = 4; i < 16; i++) seed_array[i] = 0;
 	seed(seed_array);
 }
 void PractRand::RNGs::Raw::hc256::seed(vRNG *seeder_rng) {//LOCKED, do not change
@@ -137,7 +141,7 @@ void PractRand::RNGs::Raw::hc256::seed(vRNG *seeder_rng) {//LOCKED, do not chang
 }
 void PractRand::RNGs::Raw::hc256::self_test() {
 	Raw::hc256 rng;
-	Uint32 key_and_iv[16] = {0};
+	Uint32 key_and_iv[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	rng.seed(key_and_iv);
 	if (rng.raw32() != 0x8589075b) issue_error("hc256::self_test() failed");
 	key_and_iv[8] = 1; rng.seed(key_and_iv); key_and_iv[8] = 0;
@@ -145,7 +149,7 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 	key_and_iv[0] = 0x55; rng.seed(key_and_iv); key_and_iv[0] = 0;
 	if (rng.raw32() != 0xfe4a401c) issue_error("hc256::self_test() failed");
 	rng.seed(key_and_iv);
-	Uint32 checksums[16] = {0};
+	Uint32 checksums[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	for (int x = 0; x < 1<<16; x++) {
 		for (int i = 0; i < 16; i++) checksums[i] ^= rng.raw32();
 	}

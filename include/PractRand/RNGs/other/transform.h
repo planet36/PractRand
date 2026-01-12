@@ -1,8 +1,7 @@
 
 #include <deque>
-//RNGs in the "other" directory are not intended for real world use
-//only for research; as such they may get pretty sloppy in some areas
-//and are usually not optimized
+//these RNGs are not actually RNGs, but instead transformations to be performed on RNGs
+//for instance, xoring the output of two PRNGs together
 namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
@@ -10,7 +9,7 @@ namespace PractRand {
 				class Transform64 : public vRNG64 {
 				public:
 					vRNG *base_rng;
-					void seed(Uint64 seed);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					Uint64 get_flags() const;
 					void walk_state(StateWalkingObject *walker);
 					Transform64(vRNG *rng) : base_rng(rng) {}
@@ -19,7 +18,7 @@ namespace PractRand {
 				class Transform32 : public vRNG32 {
 				public:
 					vRNG *base_rng;
-					void seed(Uint64 seed);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					Uint64 get_flags() const;
 					void walk_state(StateWalkingObject *walker);
 					Transform32(vRNG *rng) : base_rng(rng) {}
@@ -28,7 +27,7 @@ namespace PractRand {
 				class Transform16 : public vRNG16 {
 				public:
 					vRNG *base_rng;
-					void seed(Uint64 seed);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					Uint64 get_flags() const;
 					void walk_state(StateWalkingObject *walker);
 					Transform16(vRNG *rng) : base_rng(rng) {}
@@ -37,7 +36,7 @@ namespace PractRand {
 				class Transform8 : public vRNG8 {
 				public:
 					vRNG *base_rng;
-					void seed(Uint64 seed);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					Uint64 get_flags() const;
 					void walk_state(StateWalkingObject *walker);
 					Transform8(vRNG *rng) : base_rng(rng) {}
@@ -54,15 +53,25 @@ namespace PractRand {
 					Uint16 raw16();
 					Uint32 raw32();
 					Uint64 raw64();
-					void seed(Uint64 seedval);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					void seed(vRNG *seeder);
 					Uint64 get_flags() const;
 					void walk_state(StateWalkingObject *walker);
+					MultiplexTransformRNG(vRNG *);
 					MultiplexTransformRNG(const std::vector<vRNG*> &sources);
 					~MultiplexTransformRNG();
 					virtual int get_native_output_size() const;
 				};
 
+				class AddToSeed : public MultiplexTransformRNG {
+				public:
+					Uint64 seed_modifier_low, seed_modifier_high;
+					AddToSeed(vRNG *base_rng, Uint64 _seed_modifier_low, Uint64 _seed_modifier_high) : seed_modifier_low(_seed_modifier_low), seed_modifier_high(_seed_modifier_high), MultiplexTransformRNG(base_rng) {}
+					void seed(Uint64 seed_high, Uint64 seed_low);
+					void refill();
+					std::string get_name() const;
+					int get_native_output_size() const;
+				};
 				class GeneralizedTableTransform : public vRNG8 {//written for self-shrinking-generators, but also useful for other transforms
 				public:
 					struct Entry {
@@ -81,7 +90,7 @@ namespace PractRand {
 
 					std::string name;
 					vRNG *base_rng;
-					void seed(Uint64 seed);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					Uint64 get_flags() const;
 					std::string get_name() const ;
 					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), base_rng(rng), buf_count(0), buf_data(0), name(name_) {}
@@ -93,7 +102,7 @@ namespace PractRand {
 				//vRNG *apply_SimpleShrinkTransform(vRNG *base_rng);
 
 				class ReinterpretAsUnknown : public Transform8 {
-					Uint8 *buffer;//don't feel like requiring a header for TestBlock
+					Uint8 *buffer;
 					int index;
 					void refill();
 				public:
@@ -105,7 +114,7 @@ namespace PractRand {
 					virtual int get_native_output_size() const {return -1;}
 				};
 				class ReinterpretAs8 : public Transform8 {
-					Uint8 *buffer;//don't feel like requiring a header for TestBlock
+					Uint8 *buffer;
 					int index;
 					void refill();
 				public:
@@ -145,6 +154,42 @@ namespace PractRand {
 					std::string get_name() const;
 				};
 
+				class AddInfinitive : public MultiplexTransformRNG {
+					virtual void refill();
+					Uint8 carry;
+				public:
+					AddInfinitive(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources), carry(false) {}
+					std::string get_name() const;
+					int get_native_output_size() const;
+				};
+				class Add8 : public MultiplexTransformRNG {
+					virtual void refill();
+				public:
+					Add8(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
+					std::string get_name() const;
+					int get_native_output_size() const;
+				};
+				class Add16 : public MultiplexTransformRNG {
+					virtual void refill();
+				public:
+					Add16(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
+					std::string get_name() const;
+					int get_native_output_size() const;
+				};
+				class Add32 : public MultiplexTransformRNG {
+					virtual void refill();
+				public:
+					Add32(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
+					std::string get_name() const;
+					int get_native_output_size() const;
+				};
+				class Add64 : public MultiplexTransformRNG {
+					virtual void refill();
+				public:
+					Add64(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
+					std::string get_name() const;
+					int get_native_output_size() const;
+				};
 				class Xor : public MultiplexTransformRNG {
 					virtual void refill();
 				public:
@@ -256,7 +301,7 @@ namespace PractRand {
 					Uint8 index_shift;
 				public:
 					Uint64 raw64();
-					void seed(Uint64 s);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					void walk_state(StateWalkingObject *);
 					std::string get_name() const ;
 					BaysDurhamShuffle64(vRNG64 *rng, int table_size_L2, int shift=0) 
@@ -269,7 +314,7 @@ namespace PractRand {
 					Uint8 index_shift;
 				public:
 					Uint32 raw32();
-					void seed(Uint64 s);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					void walk_state(StateWalkingObject *);
 					std::string get_name() const ;
 					BaysDurhamShuffle32(vRNG32 *rng, int table_size_L2, int shift=0) 
@@ -282,7 +327,7 @@ namespace PractRand {
 					Uint8 index_shift;
 				public:
 					Uint16 raw16();
-					void seed(Uint64 s);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					void walk_state(StateWalkingObject *);
 					std::string get_name() const ;
 					BaysDurhamShuffle16(vRNG16 *rng, int table_size_L2, int shift=0) 
@@ -295,7 +340,7 @@ namespace PractRand {
 					Uint8 index_shift;
 				public:
 					Uint8 raw8();
-					void seed(Uint64 s);
+					void seed(Uint64 seed_high, Uint64 seed_low);
 					void walk_state(StateWalkingObject *);
 					std::string get_name() const ;
 					BaysDurhamShuffle8(vRNG8 *rng, int table_size_L2, int shift=0) 

@@ -1,27 +1,36 @@
-class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
+/*class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG *base_rng;
 	Uint64 current_seed;
+	Uint64 seed_mask;
+	int seed_bits;
 
 	std::set<Uint64> unordered_history;
 	std::deque<Uint64> history;
 	unsigned int history_limit;
 
-	Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : known_good(PractRand::SEED_NONE), history_limit(1024) {
-		base_rng = base_rng_;
+	void clear_history() {
+		unordered_history.clear();
+		history.clear();
+	}
+	Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_, int seed_bits_ = 64) : known_good(PractRand::SEED_NONE), base_rng(base_rng_), seed_bits(seed_bits_), history_limit(1024) {
+		if (seed_bits == 64) { seed_mask = ~0ull; }
+		else seed_mask = 1ull << seed_bits;
 		//current_seed = known_good.raw64();
 		//record_seed(current_seed);
 	}
 	~Seeder_MetaRNG() { delete base_rng; }
 	void autoseed() {
+		clear_history();
 		known_good.autoseed();
-		current_seed = known_good.raw64();
+		current_seed = known_good.raw64() & seed_mask;
 		record_seed(current_seed);
 	}
 	void seed(PractRand::Uint64 s) {
+		clear_history();
 		known_good.seed(s);
-		current_seed = known_good.raw64();
+		current_seed = known_good.raw64() & seed_mask;
 		record_seed(current_seed);
 	}
 	bool record_seed(Uint64 new_seed) {
@@ -35,15 +44,17 @@ public:
 		return true;
 	}
 	void evolve_seed() {
-		Uint64 bits_tried = 0;
+		Uint64 bits_to_try = seed_mask;
 		while (true) {
-			Uint64 bit = 1ull << known_good.randi(64);
+			Uint64 bit = 1ull << known_good.randi32(seed_bits);
 			Uint64 new_seed = current_seed ^ bit;
-			bits_tried |= bit;
 			if (record_seed(new_seed)) return;
-			if (0 == ~bits_tried) {
+			bits_to_try &= ~bit;
+			if (!bits_to_try) {// no possible seed exists at hamming distance 1, try higher hamming distances
 				while (true) {
-					if (record_seed(known_good.raw64())) return;
+					bit = 1ull << known_good.randi32(seed_bits);
+					new_seed ^= bit;
+					if (record_seed(new_seed)) return;
 				}
 			}
 		}
@@ -56,20 +67,342 @@ public:
 	}
 	std::string get_name() const {
 		std::ostringstream tmp;
-		tmp << "SeedingTester(" << base_rng->get_name() << ")";
+		tmp << "SeedingTester(" << base_rng->get_name();
+		if (seed_bits != 64) tmp << "," << seed_bits;
+		tmp << ")";
 		return tmp.str();
 	}
 	void walk_state(StateWalkingObject *) {}
 	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
-		if (params.size() != 1) {params.push_back("wrong number of parameters - should be SeedingTester(rng)"); return NULL; }
+		if (params.size() < 1 || params.size() > 2) { params.push_back("wrong number of parameters - should be SeedingTester(rng) or SeedingTester(rng,seed_bits)"); return NULL; }
 		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
+		int seeding_bits = 64;
+		if (params.size() == 2) seeding_bits = atoi(params[1].c_str());
+		if (seeding_bits < 32 || seeding_bits > 64) { params.push_back("SeedingTester(rng,seed_bits) - seed_bits should be at least 32 and no more than 64"); return NULL; }
 		if (!rng) return NULL;
-		return new Seeder_MetaRNG(rng);
+		return new Seeder_MetaRNG(rng, seeding_bits);
 	}
 	static void register_name() {
 		RNG_Factories::RNG_factory_index["SeedingTester"] = _factory;
 	}
 };
+class FastSeeder_MetaRNG : public PractRand::RNGs::vRNG64 {
+public:
+	//	Record keeping might have been a limiting factor, so I tried replacing it with a lighter-weight alternative here
+	//	Not sure that will actually help though - sometimes seeding the PRNG is the bigger performance issue
+	//	If this does well I might replace make this the default behavior of -ttseed64.  
+	//	It is doing well.  
+	//	despite the name, this calls the regular seed function, NOT seed_fast
+	PractRand::RNGs::Polymorphic::hc256 known_good;
+	PractRand::RNGs::vRNG *base_rng;
+	Uint64 current_seed;
+	Uint64 seed_mask;
+	int seed_bits;
+
+	typedef Uint16 HashType;
+	enum {
+		HISTORY_SIZE_L2 = 6,
+		HISTORY_SIZE = 1 << HISTORY_SIZE_L2,
+		HASHTABLE_BITS = 16, // must be at least 6, and must also be greater than HISTORY_SIZE_L2, but no more than the bits in HashType
+		HASHTABLE_SIZE = 1 << (HASHTABLE_BITS - 6),
+		MAX_HASHTABLE_BITS = 8 * sizeof(HashType)
+	};
+	typedef Uint8 _compile_time_assertion[HASHTABLE_BITS <= MAX_HASHTABLE_BITS ? 1 : -1];//if this is an error, then HashType needs to be a bigger integer type (about 10 lines up from here)
+	Uint32 warmup;
+	Uint32 index;
+	HashType ordered_history[HISTORY_SIZE];//history is kept in hashed format - we don't really need full details
+	Uint64 unordered_history[HASHTABLE_SIZE];//and unordered history is the actual hashtable
+
+	void clear_history() {
+		index = 0;
+		warmup = HISTORY_SIZE;
+		//for (int i = 0; i < HISTORY_SIZE; i++) ordered_history[i] = 0;
+		for (int i = 0; i < HASHTABLE_SIZE; i++) unordered_history[i] = 0;
+	}
+	FastSeeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_, int seed_bits_ = 64) : known_good(PractRand::SEED_NONE), base_rng(base_rng_), seed_bits(seed_bits_) {
+		if (seed_bits == 64) { seed_mask = ~0ull;  }
+		else seed_mask = (1ull << seed_bits) - 1;
+	}
+	~FastSeeder_MetaRNG() { delete base_rng; }
+	void autoseed() {
+		clear_history();
+		known_good.autoseed();
+		current_seed = known_good.raw64() & seed_mask;
+		record_seed(current_seed);
+	}
+	void seed(Uint64 seed_low, Uint64 seed_high) {
+		clear_history();
+		known_good.seed(seed_low, seed_high);
+		current_seed = known_good.raw64() & seed_mask;
+		record_seed(current_seed);
+	}
+	HashType calculate_hash(Uint64 seed) {
+		seed *= 0x9e3779b97f4a7c15ull; // hope the system has fast 64 bit multiplication, otherwise this isn't much of an optimization
+		seed = (seed >> 32) | (seed << 32);
+		seed *= 0x9e3779b97f4a7c15ull;
+		seed ^= seed >> 32;
+		seed *= 0x9e3779b97f4a7c15ull;
+		return HashType(seed >> (64 - HASHTABLE_BITS));
+	}
+	bool record_seed(Uint64 new_seed) {
+		HashType hash = calculate_hash(new_seed);
+		Uint64 &packed_word = unordered_history[hash >> 6];
+		Uint64 bit = 1ull << (hash & 63);
+		if (packed_word & bit) return false; // checked if the new hash is available
+		packed_word |= bit; // reserve the new hash
+		current_seed = new_seed;
+
+		Uint32 masked_index = index++ & (HISTORY_SIZE - 1);
+		HashType old_hash = ordered_history[masked_index];
+		ordered_history[masked_index] = hash;
+		if (warmup) { // check if there is an old hash that needs to be removed
+			warmup -= 1;
+		}
+		else {
+			Uint64 &old_packed_word = unordered_history[old_hash >> 6];
+			Uint64 old_bit = 1ull << (old_hash & 63);
+			old_packed_word &= ~old_bit; // the old hash is now removed
+		}
+		return true;
+	}
+	void evolve_seed() {
+		Uint64 bits_to_try = seed_mask;
+		while (true) {
+			Uint64 bit = 1ull << known_good.randi32(seed_bits);
+			Uint64 new_seed = current_seed ^ bit;
+			if (record_seed(new_seed)) return;
+			bits_to_try &= ~bit;
+			if (!bits_to_try) {// no possible seed exists at hamming distance 1, try higher hamming distances
+				while (true) {
+					bit = 1ull << known_good.randi32(seed_bits);
+					new_seed ^= bit;
+					if (record_seed(new_seed)) return;
+				}
+			}
+		}
+	}
+	Uint64 raw64() {
+		base_rng->seed(current_seed);
+		Uint64 rv = base_rng->raw64();
+		evolve_seed();
+		return rv;
+	}
+	std::string get_name() const {
+		std::ostringstream tmp;
+		tmp << "SeedingTester2(" << base_rng->get_name();
+		if (seed_bits != 64) tmp << "," << seed_bits;
+		tmp << ")";
+		return tmp.str();
+	}
+	void walk_state(StateWalkingObject *) {}
+	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
+		if (params.size() < 1 || params.size() > 2) { params.push_back("wrong number of parameters - should be SeedingTester2(rng) or SeedingTester2(rng,seed_bits)"); return NULL; }
+		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
+		int seeding_bits = 64;
+		if (params.size() == 2) seeding_bits = atoi(params[1].c_str());
+		if (seeding_bits < 15 || seeding_bits > 64) { params.push_back("SeedingTester2(rng,seed_bits) - seed_bits should be at least 15 and no more than 64 (default is 64)"); return NULL; }
+		if (!rng) return NULL;
+		return new FastSeeder_MetaRNG(rng, seeding_bits);
+	}
+	static void register_name() {
+		RNG_Factories::RNG_factory_index["SeedingTester2"] = _factory;
+	}
+};*/
+class FastSeeder128_MetaRNG : public PractRand::RNGs::vRNG64 {
+public:
+	//	Same thing, but 128 bit seed support this time
+	PractRand::RNGs::Polymorphic::hc256 known_good;
+	PractRand::RNGs::vRNG *base_rng;
+	//Uint64 current_seed_low, current_seed_high;
+	//Uint64 seed_mask_low, seed_mask_high;
+	int seed_bits;
+
+	typedef Uint16 HashType;
+	enum {
+		HISTORY_SIZE_L2 = 6,
+		HISTORY_SIZE = 1 << HISTORY_SIZE_L2,
+		HASHTABLE_BITS = 16, // must be at least 6, and must also be greater than HISTORY_SIZE_L2, but no more than the bits in HashType
+		HASHTABLE_SIZE = 1 << (HASHTABLE_BITS - 6),
+		MAX_HASHTABLE_BITS = 8 * sizeof(HashType)
+	};
+	typedef Uint8 _compile_time_assertion[HASHTABLE_BITS <= MAX_HASHTABLE_BITS ? 1 : -1];//if this is an error, then HashType needs to be a bigger integer type (about 10 lines up from here)
+	Uint32 warmup;
+	Uint32 index;
+	struct SeedType {
+		Uint64 low, high;
+		SeedType &operator^=(const SeedType &other) { low ^= other.low; high ^= other.high; return *this; }
+		SeedType &operator&=(const SeedType &other) { low &= other.low; high &= other.high; return *this; }
+		//SeedType operator~() { SeedType rv; rv.low = ~low; rv.high = ~high; return rv; }
+		operator bool() const { return low || high; }
+		void set_zero() { low = high = 0; }
+	};
+	SeedType current_seed, seed_mask;
+	HashType ordered_history[HISTORY_SIZE];//history is kept in hashed format - we don't really need full details
+	Uint64 unordered_history[HASHTABLE_SIZE];//and unordered history is the actual hashtable
+
+	void clear_history() {
+		index = 0;
+		warmup = HISTORY_SIZE;
+		//for (int i = 0; i < HISTORY_SIZE; i++) ordered_history[i] = 0; // doesn't need to be initialized, because warmup says there's nothing there
+		for (int i = 0; i < HASHTABLE_SIZE; i++) unordered_history[i] = 0;
+	}
+	FastSeeder128_MetaRNG(PractRand::RNGs::vRNG *base_rng_, int seed_bits_ = 128) : known_good(PractRand::SEED_NONE), base_rng(base_rng_), seed_bits(seed_bits_) {
+		if (seed_bits == 128) { seed_mask.low = seed_mask.high = ~0ull; }
+		else if (seed_bits >= 64) {
+			seed_mask.high = (1ull << (seed_bits - 64)) - 1;
+			seed_mask.low = ~0ull;
+		}
+		else {
+			seed_mask.high = 0;
+			seed_mask.low = (1ull << seed_bits) - 1;
+		}
+	}
+	~FastSeeder128_MetaRNG() { delete base_rng; }
+	void autoseed() {
+		clear_history();
+		known_good.autoseed();
+		current_seed.low = known_good.raw64();
+		current_seed.high = known_good.raw64();
+		current_seed &= seed_mask;
+		record_seed(current_seed);
+	}
+	void seed(Uint64 seed_low, Uint64 seed_high) {
+		clear_history();
+		known_good.seed(seed_low, seed_high);
+		current_seed.low = known_good.raw64();
+		current_seed.high = known_good.raw64();
+		current_seed &= seed_mask;
+		record_seed(current_seed);
+	}
+	HashType calculate_hash(SeedType seed) {
+		Uint64 hash2 = seed.high * 0x854DF6C09CF0E321ull; // hope the system has fast 64 bit multiplication, otherwise this sucks
+		Uint64 hash1 = seed.low * 0x9e3779b97f4a7c15ull;
+		hash1 ^= hash2;
+		hash1 ^= (hash2 << 32) | (hash2 >> 32);
+		hash1 *= 0x9e3779b97f4a7c15ull;
+		hash1 ^= hash1 >> 32;
+		hash1 *= 0x9e3779b97f4a7c15ull;
+		return HashType(hash1 >> (64 - HASHTABLE_BITS));
+	}
+	bool record_seed(SeedType new_seed) {
+		HashType hash = calculate_hash(new_seed);
+		Uint64 &packed_word = unordered_history[hash >> 6];//hashtable
+		Uint64 bit = 1ull << (hash & 63);
+		if (packed_word & bit) return false; // checked if the new hash is available
+		packed_word |= bit; // reserve the new hash
+		current_seed = new_seed;
+
+		Uint32 masked_index = index++ & (HISTORY_SIZE - 1);
+		HashType old_hash = ordered_history[masked_index];
+		ordered_history[masked_index] = hash;
+		if (warmup) { // check if there is an old hash that needs to be removed
+			warmup -= 1;
+		}
+		else {
+			Uint64 &old_packed_word = unordered_history[old_hash >> 6];
+			Uint64 old_bit = 1ull << (old_hash & 63);
+			old_packed_word &= ~old_bit; // the old hash is now removed
+		}
+		return true;
+	}
+	SeedType pick_random_bit(int seed_bits) {
+		int bit = known_good.rand_i32(seed_bits);
+		SeedType rv;
+		if (bit < 64) {
+			rv.high = 0;
+			rv.low = 1ull << bit;
+		}
+		else {
+			rv.low = 0;
+			rv.high = 1ull << (bit - 64);
+		}
+		return rv;
+	}
+	void evolve_seed() {
+		SeedType bits_untried = seed_mask;
+		int num_bits_left_to_try = seed_bits;
+		while (true) {
+			SeedType mutation = pick_random_bit(seed_bits);
+			SeedType new_seed = current_seed;
+			new_seed ^= mutation;
+			if (record_seed(new_seed)) return;
+			mutation &= bits_untried;
+			if (mutation) {
+				num_bits_left_to_try -= 1;
+				bits_untried ^= mutation;
+			}
+			if (!num_bits_left_to_try) {// no possible seed exists at hamming distance 1, try higher hamming distances
+				while (true) {
+					mutation = pick_random_bit(seed_bits);
+					new_seed ^= mutation;
+					if (record_seed(new_seed)) return;
+				}
+			}
+		}
+	}
+	Uint64 raw64() {
+		base_rng->seed(current_seed.low, current_seed.high);
+		Uint64 rv = base_rng->raw64();
+		evolve_seed();
+		return rv;
+	}
+	std::string get_name() const {
+		std::ostringstream tmp;
+		tmp << "SeedingTester(" << base_rng->get_name();
+		if (seed_bits != 128) tmp << "," << seed_bits;
+		tmp << ")";
+		return tmp.str();
+	}
+	void walk_state(StateWalkingObject *) {}
+	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
+		if (params.size() < 1 || params.size() > 2) { params.push_back("wrong number of parameters - should be SeedingTester128(rng) or SeedingTester128(rng,seed_bits)"); return NULL; }
+		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
+		int seeding_bits = 128;
+		if (params.size() == 2) seeding_bits = atoi(params[1].c_str());
+		if (seeding_bits < 16 || seeding_bits > 128) { params.push_back("SeedingTester(rng,seed_bits) - seed_bits should be at least 16 and no more than 128 (default is 128)"); return NULL; }
+		if (!rng) return NULL;
+		return new FastSeeder128_MetaRNG(rng, seeding_bits);
+	}
+	static void register_name() {
+		RNG_Factories::RNG_factory_index["SeedingTester"] = _factory;
+	}
+};
+class RecursiveSeed64_MetaRNG : public PractRand::RNGs::vRNG64 {
+public:
+	PractRand::RNGs::vRNG *base_rng;
+	PractRand::RNGs::vRNG *alternate_instance;
+
+	RecursiveSeed64_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : base_rng(base_rng_) {}
+	~RecursiveSeed64_MetaRNG() { delete base_rng; }
+	void autoseed() {
+		base_rng->autoseed();
+	}
+	void seed(Uint64 seed_low, Uint64 seed_high) {
+		base_rng->seed(seed_low, 0);
+	}
+	Uint64 raw64() {
+		Uint64 rv = base_rng->raw64();
+		base_rng->seed(rv, 0);
+		return rv;
+	}
+	std::string get_name() const {
+		std::ostringstream tmp;
+		tmp << "RecursiveSeed64(" << base_rng->get_name() << ")";
+		return tmp.str();
+	}
+	void walk_state(StateWalkingObject *) {}
+	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
+		if (params.size() != 1) { params.push_back("wrong number of parameters - should be RecursiveSeed64(rng)"); return NULL; }
+		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
+		int seeding_bits = 64;
+		if (!rng) return NULL;
+		return new RecursiveSeed64_MetaRNG(rng);
+	}
+	static void register_name() {
+		RNG_Factories::RNG_factory_index["RecursiveSeed64"] = _factory;
+	}
+};
+
 class EntropyPool_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	typedef PractRand::Uint64 Transform;
@@ -101,26 +434,26 @@ public:
 		current_seed.resize(len);
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
-	void seed(PractRand::Uint64 s) {
-		known_good.seed(s);
+	void seed(Uint64 seed_low, Uint64 seed_high) {
+		known_good.seed(seed_low, seed_high);
 		int len = (min_length + max_length) / 2;
 		current_seed.resize(len);
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
 	Transform pick_random_transform(const std::vector<Uint8> &message) {
 		while (true) {
-			if (known_good.randf() < 0.96) {//toggle bit
-				return known_good.randi(message.size() * 8) + (Uint64(0) << 56);
+			if (known_good.rand_float() < 0.999) {//toggle bit
+				return known_good.rand_i32(message.size() * 8) + (Uint64(0) << 56);
 			}
-			if (known_good.randf() < 0.50) {//insertion
+			if (known_good.rand_float() < 0.50) {//insertion
 				if (message.size() >= max_length) continue;
 				//low 8 bits = value to insert ; next 28 bits = position to insert at ; top 8 bits = action type
-				Uint64 position = known_good.randi(message.size() + 1);
+				Uint64 position = known_good.rand_i32(message.size() + 1);
 				return known_good.raw8() + (position << 8) + (Uint64(1) << 56);
 			}
 			else {//deletion
 				if (message.size() <= min_length) continue;
-				Uint64 position = known_good.randi(message.size());
+				Uint64 position = known_good.rand_i32(message.size());
 				return message[position] + (position << 8) + (Uint64(2) << 56);
 			}
 		}
@@ -160,7 +493,7 @@ public:
 	}
 	void apply_inverse_transform(std::vector<Uint8> &message, Transform transform) {
 		switch (transform >> 56) {
-		case 0://reverse a toggle bit by doing the same thign
+		case 0://reverse a toggle bit by doing the same thing
 			apply_transform(message, transform);
 			break;
 		case 1://reverse an insertion with a deletion
@@ -173,7 +506,8 @@ public:
 	}
 	PractRand::Uint64 hash_message(const std::vector<Uint8> &message) {
 		base_entropy_pool->reset_entropy();
-		base_entropy_pool->add_entropy_N(&message[0], message.size());
+		if (!message.empty())
+			base_entropy_pool->add_entropy_N(&message[0], message.size());
 		//base_entropy_pool->add_entropy64(0);
 		base_entropy_pool->flush_buffers();
 		return base_entropy_pool->raw64();
@@ -186,7 +520,7 @@ public:
 	}
 	int hamming_distance(const Uint8 *message1, const Uint8 *message2, int n) {
 		Uint32 sum = 0;
-		for (int i = 0; i < n; i++) sum += PractRand::Tests::count_bits8(message1[i] ^ message2[i]);
+		for (int i = 0; i < n; i++) sum += PractRand::Internals::count_ones8(message1[i] ^ message2[i]);
 		return sum;
 	}
 	bool check_conflict(const std::vector<Uint8> &message) {

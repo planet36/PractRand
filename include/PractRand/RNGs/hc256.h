@@ -32,7 +32,7 @@ namespace PractRand {
 				//  initialization vector.  Each number in the sequence is a 
 				//  32 bit value.  Seeding is very slow.  
 				void seed(Uint32 key_and_iv[16]);
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed(vRNG *seeder_rng);
 				static void self_test();
 			};
@@ -41,7 +41,7 @@ namespace PractRand {
 		namespace Polymorphic {
 			class hc256 : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(hc256)
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed(Uint32 seed_and_iv[16]);
 				void seed(vRNG *seeder_rng);
 				void flush_buffers();

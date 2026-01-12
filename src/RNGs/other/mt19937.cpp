@@ -2,26 +2,29 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 
-#include "PractRand/RNGs/mt19937.h"
+#include "PractRand/RNGs/other/mt19937.h"
 #include "PractRand/RNGs/jsf32.h"
 
 using namespace PractRand;
 
 //polymorphic:
-PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(mt19937)
-void PractRand::RNGs::Polymorphic::mt19937::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::mt19937::seed(Uint32 s[], int seed_length) {implementation.seed(s, seed_length);}
-void PractRand::RNGs::Polymorphic::mt19937::flush_buffers() {implementation.flush_buffers();}
-std::string PractRand::RNGs::Polymorphic::mt19937::get_name() const {return "mt19937";}
+//PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(mt19937)
+void PractRand::RNGs::Polymorphic::NotRecommended::mt19937::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
+void PractRand::RNGs::Polymorphic::NotRecommended::mt19937::seed(Uint32 s[], int seed_length) { implementation.seed(s, seed_length); }
+void PractRand::RNGs::Polymorphic::NotRecommended::mt19937::flush_buffers() { implementation.flush_buffers(); }
+Uint64 PractRand::RNGs::Polymorphic::NotRecommended::mt19937::get_flags() const { return implementation.FLAGS; }
+std::string PractRand::RNGs::Polymorphic::NotRecommended::mt19937::get_name() const { return "mt19937"; }
+void PractRand::RNGs::Polymorphic::NotRecommended::mt19937::walk_state(StateWalkingObject *walker) { implementation.walk_state(walker); }
+Uint32 PractRand::RNGs::Polymorphic::NotRecommended::mt19937::raw32() { return implementation.raw32(); }
 
 //raw:
 static inline unsigned long twist32( unsigned long m, unsigned long s0, unsigned long s1 ) {
 	static const unsigned long gfsr_twist_table[2] = {0, 0x9908b0dful};
 	return m ^ gfsr_twist_table[s1&1] ^ (((s0&0x80000000ul)|(s1&0x7ffffffful))>>1);
 }
-void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change
+void PractRand::RNGs::Raw::NotRecommended::mt19937::_advance_state() {//LOCKED, do not change
 	Uint32 *p = state;
 	long i;
 	for( i = ARRAY_SIZE - OFFSET; i--; ++p )
@@ -32,31 +35,42 @@ void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change
 
 	used = 0;
 }
-Uint32 PractRand::RNGs::Raw::mt19937::raw32() {//LOCKED, do not change
+Uint32 PractRand::RNGs::Raw::NotRecommended::mt19937::raw32() {//LOCKED, do not change
 	Uint32 r = untempered_raw32();
 	r ^= (r >> 11);
 	r ^= (r <<  7) & 0x9d2c5680u;
 	r ^= (r << 15) & 0xefc60000u;
 	return r ^ (r >> 18);
 }
-void PractRand::RNGs::Raw::mt19937::seed(Uint64 s) {
+void PractRand::RNGs::Raw::NotRecommended::mt19937::seed(Uint64 seed_low, Uint64 seed_high) {
 	//LOCKED, do not change
 	//exception: revised behavior of seeds >= 2**32 in version 0.87
-	if (s < (Uint64(1) << 32)) {
-		state[0] = Uint32(s);
-		for (long i=1; i < ARRAY_SIZE; i++) {
-			state[i] = 1812433253UL * (state[i-1] ^ (state[i-1] >> 30)) + i;
+	//exception: revised to support 128 bit seeds in version 0.96 - seeds less than 2**64 will still produce the same results
+	if (!seed_high) {
+		if (seed_low < (Uint64(1) << 32) && !seed_high) {
+			state[0] = Uint32(seed_low);
+			for (long i = 1; i < ARRAY_SIZE; i++) {
+				state[i] = 1812433253UL * (state[i - 1] ^ (state[i - 1] >> 30)) + i;
+			}
+			used = ARRAY_SIZE;
 		}
-		used = ARRAY_SIZE;
+		else {
+			Uint32 seed_array[2];
+			seed_array[0] = Uint32(seed_low >> 0);
+			seed_array[1] = Uint32(seed_low >> 32);
+			seed(seed_array, 2);
+		}
 	}
 	else {
-		Uint32 seed_array[2];
-		seed_array[0] = Uint32(s >> 0);
-		seed_array[1] = Uint32(s >> 32);
-		seed(seed_array, 2);
+		Uint32 seed_array[4];
+		seed_array[0] = Uint32(seed_low >> 0);
+		seed_array[1] = Uint32(seed_low >> 32);
+		seed_array[2] = Uint32(seed_high >> 0);
+		seed_array[3] = Uint32(seed_high >> 32);
+		seed(seed_array, 4);
 	}
 }
-void PractRand::RNGs::Raw::mt19937::seed(Uint32 s[], int seed_length) {//LOCKED, do not change
+void PractRand::RNGs::Raw::NotRecommended::mt19937::seed(Uint32 s[], int seed_length) {//LOCKED, do not change
 	int i, j, k;
 	seed(19650218UL);
 	i=1; j=0;
@@ -77,7 +91,7 @@ void PractRand::RNGs::Raw::mt19937::seed(Uint32 s[], int seed_length) {//LOCKED,
 	}
 	state[0] = 0x80000000UL;
 }
-void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::NotRecommended::mt19937::walk_state(StateWalkingObject *walker) {
 	//LOCKED, do not change
 	//exception - in version 0.85 added check for invalid state
 	walker->handle(used);
@@ -90,9 +104,9 @@ void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
 		if (successive_zeroes == ARRAY_SIZE) state[0] = 1;
 	}
 }
-void PractRand::RNGs::Raw::mt19937::self_test() {
+void PractRand::RNGs::Raw::NotRecommended::mt19937::self_test() {
 	const Uint64 expected = 0x7d9883055dc1141ull;
-	Raw::mt19937 rng; rng.seed(1371941);
+	Raw::NotRecommended::mt19937 rng; rng.seed(1371941);
 	Uint64 checksum = 0;
 	for (int i = 0; i < 8192; i++) {
 		checksum ^= checksum << 24;

@@ -1,9 +1,5 @@
 namespace PractRand {
 	namespace Tests {
-		/*
-			to do:
-				consider more complex forms, like a BCFN-equivalent or somesuch
-		*/
 		class mod3_simple : public TestBaseclass {
 		public:
 			virtual void init(PractRand::RNGs::vRNG *known_good);
@@ -26,6 +22,7 @@ namespace PractRand {
 			unsigned long index;
 			void update_index(Word byte);
 		};
+
 		class mod3n : public TestBaseclass {
 		public:
 			mod3n(int block_fraction_);//0 is all, 1 is half, 2 is a quarter, 3 is an 8th, etc

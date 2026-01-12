@@ -1,16 +1,36 @@
 
 /*
-RNGs in the mediocre directory are not intended for real world use
+RNGs in the this directory are not intended for real world use
 only for research; as such they may get pretty sloppy in some areas
 
 This set is of RNGs that do not make any significant use of:
-	multiplication/division, arrays, flow control, complex math functions
+	multiplication/division, arrays, flow control, complex math functions, variable shifts
 */
 
 namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
 			namespace NotRecommended {
+				class zeroes : public vRNG32 {
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class weyl32 : public vRNG32 {
+					Uint32 step, state;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class weyl64 : public vRNG64 {
+					Uint64 step, state;
+				public:
+					Uint64 raw64();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
 				class xsalta16x3 : public vRNG16 {
 					Uint16 a, b, c;
 				public:
@@ -76,28 +96,28 @@ namespace PractRand {
 				class xorshift32of128 : public vRNG32 {
 					xorshift64of128 impl;
 				public:
-					Uint32 raw32() {return Uint32(impl.raw64());}
+					Uint32 raw32() { return Uint32(impl.raw64()); }
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
 				class xorshift16of32 : public vRNG16 {
 					xorshift32 impl;
 				public:
-					Uint16 raw16() {return Uint16(impl.raw32());}
+					Uint16 raw16() { return Uint16(impl.raw32()); }
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
 				class xorshift32of64 : public vRNG32 {
 					xorshift64 impl;
 				public:
-					Uint32 raw32() {return Uint32(impl.raw64());}
+					Uint32 raw32() { return Uint32(impl.raw64()); }
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
 
 				class xorshift32x4 : public vRNG32 {
 					//recommended at the top of Marsaglias 2003 xorshift paper
-					Uint32 x,y,z,w;
+					Uint32 x, y, z, w;
 				public:
 					Uint32 raw32();
 					std::string get_name() const;
@@ -120,7 +140,7 @@ namespace PractRand {
 				};
 				class xorwow32x6 : public vRNG32 {
 					//recommended at the top of Marsaglias 2003 xorshift paper
-					Uint32 x,y,z,w,v,d;
+					Uint32 x, y, z, w, v, d;
 				public:
 					Uint32 raw32();
 					std::string get_name() const;
@@ -135,13 +155,16 @@ namespace PractRand {
 				};
 				class xoroshiro128plus : public vRNG64 {
 					// from David Blackman and Sebastiano Vigna (vigna@acm.org), see http://vigna.di.unimi.it/xorshift/
-					Uint64 state0, state1;
+					Uint64 state[2];
+					static void _advance_state(Uint64 *state);
 				public:
 					Uint64 raw64();
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
+					void seek_forward(Uint64 how_far_low64, Uint64 how_far_high64 = 0);
+					void seek_backward(Uint64 how_far_low64, Uint64 how_far_high64 = 0);
 				};
-				class xoroshiro128plus_2p64 : public vRNG64 {
+				class xoroshiro128plus_2p64 : public xoroshiro128plus {
 					// as xoroshiro128plus, but it skips 2**64-1 outputs between each pair of outputs (testing its recommended parallel sequences)
 					Uint64 state0, state1;
 				public:
@@ -184,11 +207,10 @@ namespace PractRand {
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
-				
+
 				//the low quality variant of the FLEA RNG by Robert Jenkins
-				//(he named this variant flea0)
-				class flea32x1 : public vRNG32 {
-					enum {SIZE = 1};
+				class flea0 : public vRNG32 {
+					enum { SIZE = 1 };
 					Uint32 a[SIZE], b, c, d, i;
 				public:
 					Uint32 raw32();
@@ -204,7 +226,7 @@ namespace PractRand {
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
-				class sfc_v1_32: public vRNG32 {
+				class sfc_v1_32 : public vRNG32 {
 					Uint32 a, b, counter;
 				public:
 					Uint32 raw32();
@@ -316,6 +338,27 @@ namespace PractRand {
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
+				class simpleH : public vRNG32 {
+					Uint32 a, b, c;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class simpleI : public vRNG32 {
+					Uint32 a, b, c;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class simpleJ : public vRNG32 {
+					Uint32 a, b, c;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
 				class trivium_weakenedA : public vRNG32 {
 					Uint64 a, b;
 				public:
@@ -327,6 +370,34 @@ namespace PractRand {
 					Uint32 a, b, c;
 				public:
 					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class triviumishA : public vRNG16 {
+					Uint16 a, b, c;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class triviumishB : public vRNG32 {
+					Uint32 a, b, c;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class triviumishC : public vRNG64 {
+					Uint64 a, b, c;
+				public:
+					Uint64 raw64();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class triviumishD : public vRNG64 {
+					Uint64 a, b, c;
+				public:
+					Uint64 raw64();
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
@@ -417,6 +488,13 @@ namespace PractRand {
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
+				class ara64 : public vRNG64 {//add, bit rotate, add
+					Uint64 a, b, c;
+				public:
+					Uint64 raw64();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
 				class arx16 : public vRNG16 {//add, bit rotate, xor
 					Uint16 a, b, c;
 				public:
@@ -473,10 +551,67 @@ namespace PractRand {
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};
+				class arac32 : public vRNG32 {//add, bit rotate, add (with counter)
+					Uint32 a, b, c, counter;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
 				class arxc16 : public vRNG16 {//add, bit rotate, xor (with counter)
 					Uint16 a, b, c, counter;
 				public:
 					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class lcg32of48_accum8_ADC_hash : public vRNG32 {
+					Uint8 lcg[6];
+					Uint8 accum;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class dmixc16 : public vRNG16 {
+					Uint16 a, b, c;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class dmixc32 : public vRNG32 {
+					Uint32 a, b, c;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class tridriven16 : public vRNG16 {
+					Uint16 a, b, c;
+				public:
+					Uint16 raw16();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class tridriven32 : public vRNG32 {
+					Uint32 a, b, c;
+				public:
+					Uint32 raw32();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class tridriven64 : public vRNG64 {
+					Uint64 a, b, c;
+				public:
+					Uint64 raw64();
+					std::string get_name() const;
+					void walk_state(StateWalkingObject *);
+				};
+				class didriven64 : public vRNG64 {
+					Uint64 a, b;
+				public:
+					Uint64 raw64();
 					std::string get_name() const;
 					void walk_state(StateWalkingObject *);
 				};

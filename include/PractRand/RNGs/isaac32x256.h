@@ -28,7 +28,7 @@ namespace PractRand {
 					if ( used >= SIZE ) _advance_state();
 					return results[used++];
 				}
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed(Uint32 s[256]);
 				void seed(vRNG *seeder_rng);
 				void walk_state(StateWalkingObject *walker);
@@ -39,7 +39,7 @@ namespace PractRand {
 		namespace Polymorphic {
 			class isaac32x256 : public vRNG32 {
 				PRACTRAND__POLYMORPHIC_RNG_BASICS_H(isaac32x256)
-				void seed(Uint64 s);
+				void seed(Uint64 seed_low, Uint64 seed_high = 0);
 				void seed(vRNG *seeder_rng);
 				void flush_buffers();
 			};

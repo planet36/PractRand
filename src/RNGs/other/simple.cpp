@@ -1,9 +1,11 @@
 #include <string>
 #include <sstream>
+#include <vector>
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include "PractRand/xbg_helpers.h"
+#include <vector>
 
 #include "PractRand/RNGs/other/simple.h"
 
@@ -12,6 +14,26 @@ namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
 			namespace NotRecommended {
+				Uint32 zeroes::raw32() { return 0; }
+				std::string zeroes::get_name() const { return "zeroes"; }
+				void zeroes::walk_state(StateWalkingObject *) { return; }
+
+				Uint32 weyl32::raw32() { return state += step; }
+				std::string weyl32::get_name() const { return "weyl32"; }
+				void weyl32::walk_state(StateWalkingObject *walker) {
+					walker->handle(step);
+					step |= 1;
+					walker->handle(state);
+				}
+
+				Uint64 weyl64::raw64() { return state += step; }
+				std::string weyl64::get_name() const { return "weyl64"; }
+				void weyl64::walk_state(StateWalkingObject *walker) {
+					walker->handle(step);
+					step |= 1;
+					walker->handle(state);
+				}
+
 				Uint16 xsalta16x3::raw16() {//slightly more complex output function
 					Uint16 tmp, old;
 					tmp = a + c + ((b >> 11) | (b << 5));
@@ -50,6 +72,20 @@ namespace PractRand {
 				}
 				std::string xsaltc16x3::get_name() const { return "xsaltc16x3"; }
 				void xsaltc16x3::walk_state(StateWalkingObject *walker) {
+					walker->handle(a); walker->handle(b); walker->handle(c);
+					if (!a && !b && !c) a = 1;
+				}
+				Uint16 xsaltd16x3::raw16() {//slightly more complex output function...
+					Uint16 tmp, old;
+					tmp = a + rotate16(a+b, 8);
+					old = a;
+					a = b ^ (b >> 3);//quality seemed a bit too high for a non-recommended PRNG, so I adjusted the shift constants to lower it slightly
+					b = c ^ (c << 13);//8,3,13,11: 4 TB
+					c = c ^ (c >> 11) ^ old;
+					return tmp;
+				}
+				std::string xsaltd16x3::get_name() const { return "xsaltd16x3"; }
+				void xsaltd16x3::walk_state(StateWalkingObject *walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 					if (!a && !b && !c) a = 1;
 				}
@@ -191,17 +227,40 @@ namespace PractRand {
 					walker->handle(state0);
 					walker->handle(state1);
 				}
+				void xoroshiro128plus::_advance_state(Uint64 *state) {
+					//Uint64 result = state[0] + state[1];
+					Uint64 tmp = state[0] ^ state[1];
+					state[0] = ((state[0] << 55) | (state[0] >> (64 - 55))) ^ tmp ^ (tmp << 14);
+					state[1] = ((tmp << 36) | (tmp >> (64 - 36)));
+					//return result;
+				}
 				Uint64 xoroshiro128plus::raw64() {
-					Uint64 result = state0 + state1;
-					Uint64 tmp = state0 ^ state1;
-					state0 = ((state0 << 55) | (state0 >> (64 - 55))) ^ tmp ^ (tmp << 14);
-					state1 = ((tmp << 36) | (tmp >> (64 - 36)));
+					Uint64 result = state[0] + state[1];
+					Uint64 tmp = state[0] ^ state[1];
+					state[0] = ((state[0] << 55) | (state[0] >> (64 - 55))) ^ tmp ^ (tmp << 14);
+					state[1] = ((tmp << 36) | (tmp >> (64 - 36)));
 					return result;
 				}
 				std::string xoroshiro128plus::get_name() const { return "xoroshiro128plus"; }
 				void xoroshiro128plus::walk_state(StateWalkingObject *walker) {
-					walker->handle(state0);
-					walker->handle(state1);
+					walker->handle(state[0]);
+					walker->handle(state[1]);
+				}
+				void xoroshiro128plus::seek_forward(Uint64 how_far_low64, Uint64 how_far_high64) {
+					Uint64 charpoly[2];
+					// ideally calculate the characteristic polynomial only once, then disable the generate_xbg_characteristic_polynomial call, replace it with some constants
+					Internals::XBG_helpers::generate_xbg_characteristic_polynomial64x(2, _advance_state, charpoly);
+					Uint64 distance_code[2];
+					Internals::XBG_helpers::generate_xbg_distance_code64x(2, charpoly, distance_code, false, how_far_low64, how_far_high64);
+					Internals::XBG_helpers::fastforward_xbg64x(2, state, _advance_state, distance_code);
+				}
+				void xoroshiro128plus::seek_backward(Uint64 how_far_low64, Uint64 how_far_high64) {
+					Uint64 charpoly[2];
+					// ideally calculate the characteristic polynomial only once, then disable the generate_xbg_characteristic_polynomial call, replace it with some constants
+					Internals::XBG_helpers::generate_xbg_characteristic_polynomial64x(2, _advance_state, charpoly);
+					Uint64 distance_code[2];
+					Internals::XBG_helpers::generate_xbg_distance_code64x(2, charpoly, distance_code, true, how_far_low64, how_far_high64);
+					Internals::XBG_helpers::fastforward_xbg64x(2, state, _advance_state, distance_code);
 				}
 				Uint64 xoroshiro128plus_2p64::raw64() {
 					Uint64 result = state0 + state1;
@@ -311,7 +370,7 @@ namespace PractRand {
 					walker->handle(c);
 				}
 
-				Uint32 flea32x1::raw32() {
+				Uint32 flea0::raw32() {
 					enum { SHIFT1 = 15, SHIFT2 = 27 };
 					Uint32 e = a[d % SIZE];
 					a[d % SIZE] = ((b << SHIFT1) | (b >> (32 - SHIFT1)));
@@ -320,8 +379,8 @@ namespace PractRand {
 					d = e + c;
 					return b;
 				}
-				std::string flea32x1::get_name() const { return "flea32x1"; }
-				void flea32x1::walk_state(StateWalkingObject *walker) {
+				std::string flea0::get_name() const { return "flea0"; }
+				void flea0::walk_state(StateWalkingObject *walker) {
 					for (int z = 0; z < SIZE; z++) walker->handle(a[z]);
 					walker->handle(b);
 					walker->handle(c);
@@ -659,6 +718,50 @@ namespace PractRand {
 					walker->handle(c);
 					walker->handle(d);
 				}
+				Uint32 simpleH::raw32() {
+					Uint32 old = a + b;
+					a ^= b + c;
+					b = c + (c << 3);
+					c = rotate(c, 7) + old;
+					return a;
+				}
+				std::string simpleH::get_name() const { return "simpleH"; }
+				void simpleH::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint32 simpleI::raw32() {
+					Uint32 tmp = b + c;
+					b = rotate32(b, 19);
+					Uint32 old = a + (a << 3);
+					a ^= tmp;
+					b += c;
+					c ^= old;
+					return old;
+				}
+				std::string simpleI::get_name() const { return "simpleI"; }
+				void simpleI::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint32 simpleJ::raw32() {
+					Uint32 tmp = b + c;
+					b ^= a;
+					c = rotate32(c, 11);
+					Uint32 old = a + (a << 3);
+					a ^= tmp;
+					b += c;
+					c += old;
+					return old;
+				}
+				std::string simpleJ::get_name() const { return "simpleJ"; }
+				void simpleJ::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
 
 				static Uint64 shift_array64(Uint64 vec[2], unsigned long bits) {
 					bits -= 64;
@@ -695,6 +798,58 @@ namespace PractRand {
 				}
 				std::string trivium_weakenedB::get_name() const { return "trivium_weakenedB"; }
 				void trivium_weakenedB::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint16 triviumishA::raw16() {
+					Uint16 rv = a ^ b ^ c;
+					a = rotate16(a, 4) + (b | c);
+					b = rotate16(b, 7) + (a | c);
+					c = rotate16(c, 11) + (a | b);
+					return rv;
+				}
+				std::string triviumishA::get_name() const { return "triviumishA"; }
+				void triviumishA::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint32 triviumishB::raw32() {
+					Uint32 rv = a ^ b;
+					a = rotate32(a, 11) + (b | c);
+					b = rotate32(b, 14) + (a | c);
+					c = rotate32(c, 19) + (a | b);
+					return rv;
+				}
+				std::string triviumishB::get_name() const { return "triviumishB"; }
+				void triviumishB::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint64 triviumishC::raw64() {
+					Uint64 rv = a ^ b;
+					a = rotate64(a, 17) + (b | c);
+					b = rotate64(b, 24) + (a | c);
+					c = rotate64(c, 39) + (a | b);
+					return rv;
+				}
+				std::string triviumishC::get_name() const { return "triviumishC"; }
+				void triviumishC::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint64 triviumishD::raw64() {
+					Uint64 rv = a;
+					a = rotate64(a, 21) ^ b;
+					b = rotate64(b, 29) + (a | c);
+					c = rotate64(c, 37) + (a | b);
+					return rv;
+				}
+				std::string triviumishD::get_name() const { return "triviumishD"; }
+				void triviumishD::walk_state(StateWalkingObject *walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -856,6 +1011,18 @@ namespace PractRand {
 					walker->handle(b);
 					walker->handle(c);
 				}
+				Uint64 ara64::raw64() {
+					a += rotate64(b + c, 11);
+					b += rotate64(c + a, 19);
+					c += rotate64(a + b, 25);
+					return a;
+				}
+				std::string ara64::get_name() const { return "ara64"; }
+				void ara64::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
 				Uint16 arx16::raw16() {
 					a ^= rotate16(b + c, 3);
 					b ^= rotate16(c + a, 5);
@@ -956,6 +1123,19 @@ namespace PractRand {
 					walker->handle(c);
 					walker->handle(counter);
 				}
+				Uint32 arac32::raw32() {
+					a += rotate32(b + c, 7) + counter++;
+					b += rotate32(c + a, 11);
+					c += rotate32(a + b, 15);
+					return a;
+				}
+				std::string arac32::get_name() const { return "arac32"; }
+				void arac32::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+					walker->handle(counter);
+				}
 				Uint16 arxc16::raw16() {
 					a ^= rotate16(b + c, 3) + counter++;
 					b ^= rotate16(c + a, 5);
@@ -969,7 +1149,120 @@ namespace PractRand {
 					walker->handle(c);
 					walker->handle(counter);
 				}
+				static void ADC8(Uint8 &destination, Uint8 source, Uint8 &carry) {
+					Uint16 tmp = destination;
+					tmp += carry & 1;
+					tmp += source;
+					destination = Uint8(tmp);
+					carry = Uint8(tmp >> 8);
+				}
+				Uint32 lcg32of48_accum8_ADC_hash::raw32() {
+					Uint8 carry = 0;
+					ADC8(lcg[0], 69, carry);
+					ADC8(lcg[1], lcg[0], carry);
+					ADC8(lcg[2], lcg[1], carry);
+					ADC8(lcg[3], lcg[2], carry);
+					ADC8(lcg[4], lcg[3], carry);
+					ADC8(lcg[5], lcg[4], carry);
 
+					Uint8 tmp[6]; for (int i = 0; i < 6; i++) tmp[i] = lcg[i];
+					ADC8(accum, tmp[5], carry);
+					ADC8(tmp[2], accum, carry);
+					ADC8(accum, tmp[2], carry);
+					ADC8(tmp[0], accum, carry);
+					ADC8(tmp[3], tmp[0], carry);
+					ADC8(tmp[1], tmp[3], carry);
+					ADC8(tmp[4], tmp[1], carry);
+					tmp[4] = (tmp[4] << 4) | (tmp[4] >> 4);
+					ADC8(tmp[0], tmp[4], carry);
+					ADC8(tmp[5], tmp[0], carry);
+					ADC8(tmp[0], tmp[5], carry);
+					ADC8(tmp[3], tmp[0], carry);
+					ADC8(tmp[2], tmp[3], carry);
+					ADC8(tmp[5], tmp[2], carry);
+					ADC8(tmp[3], tmp[5], carry);
+					Uint32 r = (Uint32(tmp[3]) << 0) | (Uint32(tmp[4]) << 8) | (Uint32(tmp[5]) << 16) | (Uint32(tmp[2]) << 24);
+					return r;
+				}
+				std::string lcg32of48_accum8_ADC_hash::get_name() const { return "lcg32of48_accum8_ADC_hash"; }
+				void lcg32of48_accum8_ADC_hash::walk_state(PractRand::StateWalkingObject *walker) {
+					for (int i = 0; i < 6; i++) walker->handle(lcg[i]);
+					walker->handle(accum);
+				}
+				Uint16 dmixc16::raw16() {
+					Uint16 tmp = b + c++;
+					a = rotate16(a, 11);
+					a += tmp;
+					b = rotate16(b, 3);
+					b ^= a;
+					return tmp;//*/
+				}
+				std::string dmixc16::get_name() const { return "dmixc16"; }
+				void dmixc16::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint32 dmixc32::raw32() {
+					Uint32 tmp = b + c++;
+					a = rotate32(a, 14);
+					a += tmp;
+					b = rotate32(b, 5);
+					b ^= a;
+					return tmp;//*/
+				}
+				std::string dmixc32::get_name() const { return "dmixc32"; }
+				void dmixc32::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint16 tridriven16::raw16() {
+					a = a * 9 + 149;
+					b = rotate16(b, 13) ^ a;
+					c = rotate16(c, 5) + b;
+					return c;
+				}
+				std::string tridriven16::get_name() const { return "tridriven16"; }
+				void tridriven16::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint32 tridriven32::raw32() {
+					a = a * 9 + 149;
+					b = rotate32(b, 25) ^ a;
+					c = rotate32(c, 10) + b;
+					return c;
+				}
+				std::string tridriven32::get_name() const { return "tridriven32"; }
+				void tridriven32::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint64 tridriven64::raw64() {
+					a = a * 9 + 149;
+					b = rotate64(b, 37) ^ a;
+					c = rotate64(c, 14) + b;
+					return c;
+				}
+				std::string tridriven64::get_name() const { return "tridriven64"; }
+				void tridriven64::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+					walker->handle(c);
+				}
+				Uint64 didriven64::raw64() {
+					a = a * 9 + 149;
+					b += rotate64(a^b, 37);
+					return b;
+				}
+				std::string didriven64::get_name() const { return "didriven64"; }
+				void didriven64::walk_state(StateWalkingObject *walker) {
+					walker->handle(a);
+					walker->handle(b);
+				}
 			}
 		}
 	}

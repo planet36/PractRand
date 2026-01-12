@@ -9,8 +9,12 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
+#ifdef __GNUC__
+#include <x86intrin.h>
+#endif
 #include <string>
 #include <ctime>
+#include <chrono>
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
@@ -18,7 +22,7 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 
 
 
@@ -35,6 +39,16 @@ Two functions are performed that may need to use platform-specific functionality
 */
 
 using namespace PractRand;
+
+Sint64 PractRand::Internals::high_resolution_time() {
+#if defined _MSC_VER && ((defined _M_IX86 && _M_IX86 >= 500) || defined _M_X64 || defined _M_AMD64)
+	return __rdtsc();
+#elif defined __GNUC__
+	return __rdtsc();
+#else
+	return std::chrono::high_resolution_clock();
+#endif
+}
 
 bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng, int milliseconds ) {
 	//the intention is for "millisecond" to be an amount of time that this function is permitted to spend on obtaining entropy
@@ -83,7 +97,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		//mostly safe to use even on platforms where it won't work
 		std::FILE *f;
 		Uint64 buf[N64];
-		if (f = std::fopen("/dev/urandom", "rb")) {
+		if ((f = std::fopen("/dev/urandom", "rb"))) {
 			if (std::fread(buf,N64*sizeof(buf[0]),1,f) == 1) {
 				for (int i = 0; i < N64; i++) rng->add_entropy64(buf[i]);
 				std::fclose(f);

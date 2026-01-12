@@ -29,6 +29,8 @@ namespace PractRand {
 			//    bits
 			//        bits is the number of bits produced at a time by the targetted PRNG
 			//        its value can normally be produced with a call to vRNG::get_native_output_size()
+			//        it's normally 8, 16, 32, 64, or -1
+			//        -1 indicates an unknown or non-standard value
 			//    folding
 			//        folding refers to the process by which additional datastreams are constructed from subsets of the original datastream
 			//        each datastream, including the original (raw PRNG output) gets its own copy of the tests working on it
@@ -52,11 +54,11 @@ namespace PractRand {
 			//    apply_extended_folding(get_expanded_core_tests);
 			//
 
-			//recommended tests
-			ListOfTests get_core_tests();
-
-			//extra tests
-			ListOfTests get_expanded_core_tests();
+			//pre-folding test lists
+			ListOfTests get_core_tests();//recommended tests
+			ListOfTests get_expanded_core_tests();//more varied set of tests
+			//ListOfTests get_big_core_tests();//recommended tests... if you have tons of memory
+			//ListOfTests get_big_expanded_core_tests();//more varied set of tests that also requires tons of memory
 
 			//apply standard foldings to a test set:
 			ListOfTests apply_standard_foldings(int bits, ListOfTests(*base_tests)());

@@ -3,10 +3,10 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 
-#include "PractRand/RNGs/mt19937.h"
-#include "PractRand/RNGs/other/fibonacci.h"
+#include "PractRand/RNGs/other/mt19937.h"
+#include "PractRand/RNGs/other/cbuf.h"
 
 using namespace PractRand;
 using namespace PractRand::Internals;
@@ -15,95 +15,6 @@ namespace PractRand {
 	namespace RNGs {
 		namespace Polymorphic {
 			namespace NotRecommended {
-				bigbadlcg64X::bigbadlcg64X(int discard_bits_, int shift_bits_) : discard_bits(discard_bits_) {
-					int max_discard_bits = MAX_N * 64 - 64;
-					if (discard_bits_ < 0 || discard_bits_ > max_discard_bits) issue_error("bigbadlcg64 - discard_bits out of range (0 <= discard_bits <= ?960?)");
-					n = (discard_bits_ + 63) / 64 + 1;
-					shift_i = shift_bits_ / 64;
-					shift_b = shift_bits_ & 63;
-					if (shift_bits_ < 1 || shift_bits_ > discard_bits_) issue_error("bigbadlcg64 - shift_bits out of range (1 <= shift_bits <= discard_bits)");
-				}
-				//bigbadlcgX::~bigbadlcgX() { delete[] state; }
-				Uint64 bigbadlcg64X::raw64() {
-					static const Uint64 K = 0xB5;//0xA3EC647659359ACDull;
-					Uint64 olda[MAX_N];
-					for (int i = 0; i < n; i++) olda[i] = state[i];
-					Uint64 rv = state[n - 1];
-					if (discard_bits & 63) {
-						int b = discard_bits & 63;
-						rv = (rv << (64 - b)) | (state[n - 2] >> b);
-					}
-					bool carry = false;
-					if (shift_b) {
-						if (true) {
-							Uint64 old = olda[0] << shift_b;
-							state[shift_i] += old;
-							carry = state[shift_i] < old;
-						}
-						for (int i = shift_i+1; i < n; i++) {
-							Uint64 old = (olda[i - shift_i] << shift_b) | (olda[i - shift_i - 1] >> (64 - shift_b));
-							state[i] += old;
-							bool c1 = state[i] < old;
-							state[i] += carry ? 1 : 0;
-							bool c2 = carry && !state[i];
-							carry = c1 || c2;
-						}
-					}
-					else {
-						if (true) {
-							Uint64 old = olda[0];
-							state[shift_i] += old;
-							bool carry = state[shift_i] < old;
-						}
-						for (int i = shift_i+1; i < n; i++) {
-							Uint64 old = olda[i - shift_i];
-							state[i] += old;
-							bool c1 = state[i] < old;
-							state[i] += carry ? 1 : 0;
-							bool c2 = carry && !state[i];
-							carry = c1 || c2;
-						}
-					}
-					state[0] += K;
-					state[1] += (state[0] < K) ? 1 : 0;
-					if (state[1] == 0 && state[0] < K) {
-						for (int i = 2; i < n && !state[i - 1]; i++) state[i]++;
-					}
-					return rv;
-				}
-				std::string bigbadlcg64X::get_name() const {
-					std::ostringstream str;
-					str << "bigbadlcgX(64," << (discard_bits + OUTPUT_BITS) << "," << (shift_i * 64 + shift_b) << ")";
-					return str.str();
-				}
-				void bigbadlcg64X::walk_state(StateWalkingObject *walker) {
-					for (int i = 0; i < n; i++) walker->handle(state[i]);
-				}
-				bigbadlcg32X::bigbadlcg32X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint32 bigbadlcg32X::raw32() { return Uint32(base_lcg.raw32()); }
-				std::string bigbadlcg32X::get_name() const {
-					std::ostringstream str;
-					str << "bigbadlcgX(32," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";
-					return str.str();
-				}
-				void bigbadlcg32X::walk_state(StateWalkingObject *walker) { base_lcg.walk_state(walker); }
-				bigbadlcg16X::bigbadlcg16X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint16 bigbadlcg16X::raw16() { return Uint16(base_lcg.raw64()); }
-				std::string bigbadlcg16X::get_name() const {
-					std::ostringstream str;
-					str << "bigbadlcgX(16," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";
-					return str.str();
-				}
-				void bigbadlcg16X::walk_state(StateWalkingObject *walker) { base_lcg.walk_state(walker); }
-				bigbadlcg8X::bigbadlcg8X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint8 bigbadlcg8X::raw8() { return Uint8(base_lcg.raw32()); }
-				std::string bigbadlcg8X::get_name() const {
-					std::ostringstream str;
-					str << "bigbadlcgX(8," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";
-					return str.str();
-				}
-				void bigbadlcg8X::walk_state(StateWalkingObject *walker) { base_lcg.walk_state(walker); }
-
 				Uint8 lfsr_medium::raw8() {
 					if (used < SIZE) return cbuf[used++];
 					for (int i = 0; i < LAG; i++) {
@@ -352,6 +263,27 @@ namespace PractRand {
 					if (index2 > L2) index2 %= L2;
 					if (!index2) index2 = L2;
 				}
+				Uint32 dual_cbuf_big::raw32() {
+					Uint32 tmp1, tmp2;
+					tmp1 = cbuf1[--index1];
+					tmp2 = cbuf2[--index2];
+					cbuf1[index1] = tmp1 + tmp2;
+					cbuf2[index2] = ((tmp1 << 11) | (tmp1 >> 21)) ^ tmp2;
+					if (!index1) index1 = L1;
+					if (!index2) index2 = L2;
+					return tmp1 + tmp2;
+				}
+				std::string dual_cbuf_big::get_name() const { return "dual_cbuf_big"; }
+				void dual_cbuf_big::walk_state(StateWalkingObject *walker) {
+					walker->handle(index1);
+					walker->handle(index2);
+					for (int i = 0; i < L1; i++) walker->handle(cbuf1[i]);
+					for (int i = 0; i < L2; i++) walker->handle(cbuf2[i]);
+					if (index1 > L1) index1 %= L1;
+					if (!index1) index1 = L1;
+					if (index2 > L2) index2 %= L2;
+					if (!index2) index2 = L2;
+				}
 				Uint32 dual_cbufa_small::raw32() {
 					Uint32 tmp1, tmp2;
 					tmp1 = cbuf1[--index1];
@@ -399,10 +331,104 @@ namespace PractRand {
 					if (!index2) index2 = L2;
 				}
 
+				Uint16 cbuf3tap_small::raw16() {
+					index = (index + 1) & (LENGTH - 1);
+					Uint16 tmp1 = cbuf[index];
+					Uint16 tmp2 = cbuf[index ^ (LENGTH / 2)];
+					Uint16 tmp3 = cbuf[(index + 3) & (LENGTH - 1)];
+					cbuf[index] = rotate16(tmp2 + tmp3, 12) ^ rotate16(tmp1 + tmp2, 5);
+					return tmp1;
+				}
+				std::string cbuf3tap_small::get_name() const { return "cbuf3tap_small"; }
+				void cbuf3tap_small::walk_state(StateWalkingObject *walker) {
+					walker->handle(index);
+					index &= LENGTH - 1;
+					for (int i = 0; i < LENGTH; i++) walker->handle(cbuf[i]);
+				}
+				Uint16 cbuf3tap::raw16() {
+					index = (index + 1) & (LENGTH - 1);
+					Uint16 tmp1 = cbuf[index];
+					Uint16 tmp2 = cbuf[index ^ (LENGTH / 2)];
+					Uint16 tmp3 = cbuf[(index + 3) & (LENGTH - 1)];
+					cbuf[index] = rotate16(tmp2 + tmp3, 12) ^ rotate16(tmp1 + tmp2, 5);
+					return tmp1;
+				}
+				std::string cbuf3tap::get_name() const { return "cbuf3tap"; }
+				void cbuf3tap::walk_state(StateWalkingObject *walker) {
+					walker->handle(index);
+					index &= LENGTH - 1;
+					for (int i = 0; i < LENGTH; i++) walker->handle(cbuf[i]);
+				}
+				Uint16 cbuf3tap_big::raw16() {
+					index = (index + 1) & (LENGTH - 1);
+					Uint16 tmp1 = cbuf[index];
+					Uint16 tmp2 = cbuf[index ^ (LENGTH / 2)];
+					Uint16 tmp3 = cbuf[(index + 3) & (LENGTH - 1)];
+					cbuf[index] = rotate16(tmp2 + tmp3, 12) ^ rotate16(tmp1 + tmp2, 5);
+					return tmp1;
+				}
+				std::string cbuf3tap_big::get_name() const { return "cbuf3tap_big"; }
+				void cbuf3tap_big::walk_state(StateWalkingObject *walker) {
+					walker->handle(index);
+					index &= LENGTH - 1;
+					for (int i = 0; i < LENGTH; i++) walker->handle(cbuf[i]);
+				}
+
+				Uint16 cbufa2tap_small::raw16() {
+					index &= LENGTH - 1;
+					accum += accum << 3;
+					Uint16 tmp1 = cbuf[index];
+					Uint16 tmp2 = cbuf[index ^ (LENGTH / 2)];
+					accum = rotate16(accum, 8) ^ (tmp1 + tmp2);
+					cbuf[index] = accum;
+					index--;
+					return accum;
+				}
+				std::string cbufa2tap_small::get_name() const { return "cbufa2tap_small"; }
+				void cbufa2tap_small::walk_state(StateWalkingObject *walker) {
+					walker->handle(index);
+					walker->handle(accum);
+					for (int i = 0; i < LENGTH; i++) walker->handle(cbuf[i]);
+				}
+				Uint16 cbufa2tap::raw16() {
+					// L	2	4	8	16	32	64
+					// Q	22	26	33	35	40	>41
+					index &= LENGTH - 1;
+					accum += accum << 3;
+					Uint16 tmp1 = cbuf[index];
+					Uint16 tmp2 = cbuf[index ^ (LENGTH / 2)];
+					accum = rotate16(accum, 8) ^ (tmp1 + tmp2);
+					cbuf[index] = accum;
+					index--;
+					return accum;
+				}
+				std::string cbufa2tap::get_name() const { return "cbufa2tap"; }
+				void cbufa2tap::walk_state(StateWalkingObject *walker) {
+					walker->handle(index);
+					walker->handle(accum);
+					for (int i = 0; i < LENGTH; i++) walker->handle(cbuf[i]);
+				}
+				Uint16 cbufa2tap_big::raw16() {
+					index &= LENGTH - 1;
+					accum += accum << 3;
+					Uint16 tmp1 = cbuf[index];
+					Uint16 tmp2 = cbuf[index ^ (LENGTH / 2)];
+					accum = rotate16(accum, 8) ^ (tmp1 + tmp2);
+					cbuf[index] = accum;
+					index--;
+					return accum;
+				}
+				std::string cbufa2tap_big::get_name() const { return "cbufa2tap_big"; }
+				void cbufa2tap_big::walk_state(StateWalkingObject *walker) {
+					walker->handle(index);
+					walker->handle(accum);
+					for (int i = 0; i < LENGTH; i++) walker->handle(cbuf[i]);
+				}
+
 
 
 				Uint32 ranrot32small::raw32() {
-					if (position) return buffer[--position];
+					/*if (position < LAG1) return buffer[position++];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] =
 							((buffer[i + LAG1 - LAG1] << ROT1) | (buffer[i + LAG1 - LAG1] >> (sizeof(buffer[0]) * 8 - ROT1))) +
@@ -412,6 +438,19 @@ namespace PractRand {
 						buffer[i] =
 							((buffer[i - 0] << ROT1) | (buffer[i - 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
 							((buffer[i - LAG2] << ROT2) | (buffer[i - LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
+					}
+					position = 0;
+					return buffer[position++];*/
+					if (position) return buffer[--position];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] =
+							((buffer[i + 0] << ROT1) | (buffer[i + 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
+							((buffer[i - (LAG1 - LAG2)] << ROT2) | (buffer[i - (LAG1 - LAG2)] >> (sizeof(buffer[0]) * 8 - ROT2)));
+					}
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] =
+							((buffer[i + 0] << ROT1) | (buffer[i + 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
+							((buffer[i + LAG2] << ROT2) | (buffer[i + LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -424,15 +463,15 @@ namespace PractRand {
 				}
 				Uint32 ranrot32::raw32() {
 					if (position) return buffer[--position];
-					for (unsigned long i = 0; i < LAG2; i++) {
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
 						buffer[i] =
 							((buffer[i + LAG1 - LAG1] << ROT1) | (buffer[i + LAG1 - LAG1] >> (sizeof(buffer[0]) * 8 - ROT1))) +
-							((buffer[i + LAG1 - LAG2] << ROT2) | (buffer[i + LAG1 - LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
+							((buffer[i + LAG2 - LAG1] << ROT2) | (buffer[i + LAG2 - LAG1] >> (sizeof(buffer[0]) * 8 - ROT2)));
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
 						buffer[i] =
-							((buffer[i - 0] << ROT1) | (buffer[i - 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
-							((buffer[i - LAG2] << ROT2) | (buffer[i - LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
+							((buffer[i + 0] << ROT1) | (buffer[i + 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
+							((buffer[i + LAG2] << ROT2) | (buffer[i + LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -445,15 +484,15 @@ namespace PractRand {
 				}
 				Uint32 ranrot32big::raw32() {
 					if (position) return buffer[--position];
-					for (unsigned long i = 0; i < LAG2; i++) {
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
 						buffer[i] =
 							((buffer[i + LAG1 - LAG1] << ROT1) | (buffer[i + LAG1 - LAG1] >> (sizeof(buffer[0]) * 8 - ROT1))) +
-							((buffer[i + LAG1 - LAG2] << ROT2) | (buffer[i + LAG1 - LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
+							((buffer[i + LAG2 - LAG1] << ROT2) | (buffer[i + LAG2 - LAG1] >> (sizeof(buffer[0]) * 8 - ROT2)));
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
 						buffer[i] =
-							((buffer[i - 0] << ROT1) | (buffer[i - 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
-							((buffer[i - LAG2] << ROT2) | (buffer[i - LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
+							((buffer[i + 0] << ROT1) | (buffer[i + 0] >> (sizeof(buffer[0]) * 8 - ROT1))) +
+							((buffer[i + LAG2] << ROT2) | (buffer[i + LAG2] >> (sizeof(buffer[0]) * 8 - ROT2)));
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -469,12 +508,19 @@ namespace PractRand {
 				}
 				Uint32 ranrot3tap32small::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					/*Uint32 old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
 					for (unsigned long i = LAG2; i < LAG1; i++) {
 						buffer[i] = old = func(buffer[i], buffer[i - LAG2], old);
+					}*/
+					Uint32 old = buffer[0];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2 - LAG1], old);
+					}
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2], old);
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -490,12 +536,12 @@ namespace PractRand {
 				}
 				Uint32 ranrot3tap32::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
-					for (unsigned long i = 0; i < LAG2; i++) {
-						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
+					Uint32 old = buffer[0];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2 - LAG1], old);
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
-						buffer[i] = old = func(buffer[i], buffer[i - LAG2], old);
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2], old);
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -511,12 +557,12 @@ namespace PractRand {
 				}
 				Uint32 ranrot3tap32big::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
-					for (unsigned long i = 0; i < LAG2; i++) {
-						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
+					Uint32 old = buffer[0];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2 - LAG1], old);
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
-						buffer[i] = old = func(buffer[i], buffer[i - LAG2], old);
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2], old);
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -533,12 +579,12 @@ namespace PractRand {
 				}
 				Uint32 ranrot32hetsmall::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
-					for (unsigned long i = 0; i < LAG2; i++) {
-						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
+					Uint32 old = buffer[0];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2 - LAG1], old);
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
-						buffer[i] = old = func(buffer[i], buffer[i - LAG2], old);
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2], old);
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -555,12 +601,12 @@ namespace PractRand {
 				}
 				Uint32 ranrot32het::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
-					for (unsigned long i = 0; i < LAG2; i++) {
-						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
+					Uint32 old = buffer[0];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2 - LAG1], old);
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
-						buffer[i] = old = func(buffer[i], buffer[i - LAG2], old);
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2], old);
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -577,12 +623,12 @@ namespace PractRand {
 				}
 				Uint32 ranrot32hetbig::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
-					for (unsigned long i = 0; i < LAG2; i++) {
-						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
+					Uint32 old = buffer[0];
+					for (long i = LAG1 - 1; i >= LAG1 - LAG2; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2 - LAG1], old);
 					}
-					for (unsigned long i = LAG2; i < LAG1; i++) {
-						buffer[i] = old = func(buffer[i], buffer[i - LAG2], old);
+					for (long i = LAG1 - LAG2 - 1; i >= 0; i--) {
+						buffer[i] = old = func(buffer[i], buffer[i + LAG2], old);
 					}
 					position = LAG1;
 					return buffer[--position];
@@ -595,15 +641,15 @@ namespace PractRand {
 				}
 
 				Uint16 fibmul16of32::raw16() {
-					if (position) return Uint16(buffer[--position] >> 16);
+					if (position < LAG1) return Uint16(buffer[position++] >> 16);
 					for (unsigned long i = 0; i < LAG2; i++) {
-						buffer[i] = buffer[i+LAG1-LAG1] * buffer[i+LAG1-LAG2];
+						buffer[i] = buffer[i] * buffer[i+LAG1-LAG2];
 					}
 					for (unsigned long i = LAG2; i < LAG1; i++) {
 						buffer[i] = buffer[i] * buffer[i-LAG2];
 					}
-					position = LAG1;
-					return Uint16(buffer[--position] >> 16);
+					position = 0;
+					return Uint16(buffer[position++] >> 16);
 				}
 				std::string fibmul16of32::get_name() const {return "fibmul16of32";}
 				void fibmul16of32::walk_state(StateWalkingObject *walker) {
@@ -613,15 +659,15 @@ namespace PractRand {
 					for (int i = 0; i < LAG1; i++) buffer[i] |= 1;
 				}
 				Uint32 fibmul32of64::raw32() {
-					if (position) return Uint32(buffer[--position] >> 32);
+					if (position < LAG1) return Uint32(buffer[position++] >> 32);
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = buffer[i+LAG1-LAG1] * buffer[i+LAG1-LAG2];
 					}
 					for (unsigned long i = LAG2; i < LAG1; i++) {
 						buffer[i] = buffer[i] * buffer[i-LAG2];
 					}
-					position = LAG1;
-					return Uint32(buffer[--position] >> 32);
+					position = 0;
+					return Uint32(buffer[position++] >> 32);
 				}
 				std::string fibmul32of64::get_name() const {return "fibmul32of64";}
 				void fibmul32of64::walk_state(StateWalkingObject *walker) {
@@ -631,7 +677,7 @@ namespace PractRand {
 					for (int i = 0; i < LAG1; i++) buffer[i] |= 1;
 				}
 				Uint16 fibmulmix16::raw16() {
-					if (position) return buffer[--position];
+					if (position < LAG1) return buffer[position++];
 					Uint16 prev = buffer[LAG1 - 1];
 					enum {
 						SH1  = 0
@@ -642,19 +688,64 @@ namespace PractRand {
 						Uint16 a = buffer[i + LAG1 - LAG1];
 						Uint16 b = buffer[i + LAG1 - LAG2];
 						a = rotate16(a, SH1); b = rotate16(b, SH2); prev += rotate16(prev, SH3);
-						prev = buffer[i] = (a * (b | 1)) ^ prev;
+						Uint16 product = a * (b | 1);
+						//product ^= product >> 8; // fixes BRank failure
+						prev ^= product;
+						//prev ^= prev >> 8; // does NOT fix BRank failure
+						buffer[i] = prev;
 					}
 					for (unsigned long i = LAG2; i < LAG1; i++) {
 						Uint16 a = buffer[i];
 						Uint16 b = buffer[i - LAG2];
 						a = rotate16(a, SH1); b = rotate16(b, SH2); prev += rotate16(prev, SH3);
-						prev = buffer[i] = (a * (b | 1)) ^ prev;
+						Uint16 product = a * (b | 1);
+						//product ^= product >> 8; // fixes BRank failure
+						prev ^= product;
+						//prev ^= prev >> 8; // does NOT fix BRank failure
+						buffer[i] = prev;
 					}
-					position = LAG1;
-					return buffer[--position];
+					position = 0;
+					return buffer[position++];
 				}
 				std::string fibmulmix16::get_name() const { return "fibmulmix16"; }
 				void fibmulmix16::walk_state(StateWalkingObject *walker) {
+					walker->handle(position);
+					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
+					if (position >= LAG1) position %= LAG1;
+				}
+				Uint32 fibmulmix32::raw32() {
+					if (position < LAG1) return buffer[position++];
+					Uint32 prev = buffer[LAG1 - 1];
+					enum {
+						SH1 = 3
+						, SH2 = 5
+						, SH3 = 19
+					};
+					for (unsigned long i = 0; i < LAG2; i++) {
+						Uint32 a = buffer[i + LAG1 - LAG1];
+						Uint32 b = buffer[i + LAG1 - LAG2];
+						a = rotate32(a, SH1); b = rotate32(b, SH2); prev += rotate32(prev, SH3);
+						Uint32 product = a * (b | 1);
+						//product ^= product >> 16; // fixes BRank failure
+						prev ^= product;
+						//prev ^= prev >> 16; // does NOT fix BRank failure
+						buffer[i] = prev;
+					}
+					for (unsigned long i = LAG2; i < LAG1; i++) {
+						Uint32 a = buffer[i];
+						Uint32 b = buffer[i - LAG2];
+						a = rotate32(a, SH1); b = rotate32(b, SH2); prev += rotate32(prev, SH3);
+						Uint32 product = a * (b | 1);
+						//product ^= product >> 16; // fixes BRank failure
+						prev ^= product;
+						//prev ^= prev >> 16; // does NOT fix BRank failure
+						buffer[i] = prev;
+					}
+					position = 0;
+					return buffer[position++];
+				}
+				std::string fibmulmix32::get_name() const { return "fibmulmix32"; }
+				void fibmulmix32::walk_state(StateWalkingObject *walker) {
 					walker->handle(position);
 					for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
 					if (position >= LAG1) position %= LAG1;
@@ -667,6 +758,109 @@ namespace PractRand {
 				std::string mt19937_unhashed::get_name() const {return "mt19937_unhashed";}
 				void mt19937_unhashed::walk_state(StateWalkingObject *walker) {
 					implementation.walk_state(walker);
+				}
+
+				void chacha_weakenedA::refill() {
+					for (int i = 0; i < 9; i++) buffer[i] = state[i];
+					for (int i = 0; i < quality; i++) {
+						// chacha/salsa use 4x4 matrix of 32 bit values, here I'll use a 3x3 matrix of 8 bit values to reduce quality
+						Uint8 tmp, offset;
+						offset = 0;
+						tmp = buffer[0 + offset];
+						buffer[0 + offset] = buffer[1 + offset] + buffer[2 + offset];
+						buffer[1 + offset] = buffer[2 + offset] ^ tmp;
+						buffer[2 + offset] = rotate8(tmp, 3);
+						offset = 3;
+						tmp = buffer[0 + offset];
+						buffer[0 + offset] = buffer[1 + offset] + buffer[2 + offset];
+						buffer[1 + offset] = buffer[2 + offset] ^ tmp;
+						buffer[2 + offset] = rotate8(tmp, 4);
+						offset = 6;
+						tmp = buffer[0 + offset];
+						buffer[0 + offset] = buffer[1 + offset] + buffer[2 + offset];
+						buffer[1 + offset] = buffer[2 + offset] ^ tmp;
+						buffer[2 + offset] = rotate8(tmp, 5);
+						//buffer[0] += buffer[3]; buffer[3] += buffer[6]; buffer[7] += buffer[4]; buffer[4] += buffer[1];
+						i++;
+						if (i >= quality) break;
+						offset = 0;
+						tmp = buffer[3 + offset];
+						buffer[3 + offset] = buffer[6 + offset] + buffer[2 + offset];
+						buffer[6 + offset] = buffer[0 + offset] ^ tmp;
+						buffer[0 + offset] = rotate8(tmp, 3);
+						offset = 1;
+						tmp = buffer[3 + offset];
+						buffer[3 + offset] = buffer[6 + offset] + buffer[2 + offset];
+						buffer[6 + offset] = buffer[0 + offset] ^ tmp;
+						buffer[0 + offset] = rotate8(tmp, 4);
+						offset = 2;
+						tmp = buffer[3 + offset];
+						buffer[3 + offset] = buffer[6 + offset] + buffer[2 + offset];
+						buffer[6 + offset] = buffer[0 + offset] ^ tmp;
+						buffer[0 + offset] = rotate8(tmp, 5);
+					}
+					/*
+						9 outputs per buffer, revised version
+							Quality			3	4	5	6	7	8	9	10	11	12	13	14	15	16
+							PRstd			10	11	12	12	15	18	18	22	25	28	30	36	39	43+
+							gj tiny/sm/st	DDD	CCD	CCC	BBC	BBC	AAB	AAB	47B	46A	135	-27	---	---	---
+							gj big/huge												8	2	-1	--
+							gj tera/TT															-?
+							diehard 0/1/2	2	2	2	2	2	2	2	2	22	-~2	112	---	---	---
+							diehard a										3	-	-	-	-	-
+							TestU01 SC/C/BC	F	F	F	D	A	5	6	3!	~!	-6	-9!	---	--	
+
+						PRstd			10	10	15	16	25	26	38						9 outputs per buffer (canonical for this PRNG)
+						PRstd			10	13	15	16	18	27	35						8 outputs per buffer
+					*/
+				}
+				Uint8 chacha_weakenedA::advance_and_refill_helper() {
+					if (!++state[0]) if (!++state[4]) if (!++state[8]) if (!++state[3]) if (!++state[7]) if (!++state[2]) ++state[6];//cycle length is 2**56 times however many outputs are read from each buffer
+					refill();
+					bufpos = 1;
+					return buffer[0];
+				}
+				std::string chacha_weakenedA::get_name() const { return std::string("chacha_weakenedA(") + std::to_string(quality) + ")"; }
+				void chacha_weakenedA::walk_state(StateWalkingObject *walker) {
+					for (int i = 0; i < 9; i++) walker->handle(state[i]);
+					for (int i = 0; i < 9; i++) walker->handle(buffer[i]);
+					walker->handle(bufpos);
+					if (bufpos > 8) bufpos = 8;
+					//walker->handle(quality);
+				}
+
+				void chacha_weakenedB::refill() {
+					for (int i = 0; i < 8; i++) buffer[i] = state[i];
+					for (int i = 0; i < quality; i++) {
+						// matrix is 2x2x2 this time ; sure that's an extra dimension, but it's still smaller
+						buffer[0] += buffer[1]; buffer[1] += buffer[2]; buffer[2] += buffer[3]; buffer[3] ^= buffer[0]; buffer[0] = rotate8(buffer[0], 3);
+						buffer[4] += buffer[5]; buffer[5] += buffer[6]; buffer[6] += buffer[7]; buffer[7] ^= buffer[4]; buffer[5] = rotate8(buffer[5], 3);
+						if (++i >= quality) break;
+						buffer[0] += buffer[2]; buffer[2] += buffer[4]; buffer[4] ^= buffer[6]; buffer[6] += buffer[0]; buffer[0] = rotate8(buffer[0], 5);
+						buffer[1] += buffer[3]; buffer[3] += buffer[5]; buffer[5] ^= buffer[7]; buffer[7] += buffer[1]; buffer[5] = rotate8(buffer[5], 4);
+						if (++i >= quality) break;
+						buffer[0] += buffer[4]; buffer[4] ^= buffer[1]; buffer[1] += buffer[5]; buffer[5] += buffer[0]; buffer[1] = rotate8(buffer[1], 4);
+						buffer[2] += buffer[6]; buffer[6] ^= buffer[3]; buffer[3] += buffer[7]; buffer[7] += buffer[2]; buffer[3] = rotate8(buffer[3], 3);
+					}
+					for (int i = 0; i < 8; i++) buffer[i] += state[i];
+					/*
+						Quality		2	3	4	5	6	7	8	9	10	11	12
+						PRstd		10	12	11	12	15	18	22	27	35	42	
+					*/
+				}
+				Uint8 chacha_weakenedB::advance_and_refill_helper() {
+					if (!++state[0]) if (!++state[1]) if (!++state[2]) if (!++state[3]) if (!++state[4]) if (!++state[5]) ++state[6];//cycle length is 2**56 times however many outputs are read from each buffer
+					refill();
+					bufpos = 1;
+					return buffer[0];
+				}
+				std::string chacha_weakenedB::get_name() const { return std::string("chacha_weakenedB(") + std::to_string(quality) + ")"; }
+				void chacha_weakenedB::walk_state(StateWalkingObject *walker) {
+					for (int i = 0; i < 8; i++) walker->handle(state[i]);
+					for (int i = 0; i < 8; i++) walker->handle(buffer[i]);
+					walker->handle(bufpos);
+					if (bufpos > 8) bufpos = 8;
+					//walker->handle(quality);
 				}
 			}
 		}

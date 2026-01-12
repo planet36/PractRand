@@ -3,7 +3,7 @@
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
+#include <vector>
 
 #include "PractRand/sha2.h"
 
@@ -59,10 +59,11 @@ void PractRand::RNGs::Polymorphic::sha2_based_pool::flush_buffers() {
 	if (output_buffer_left != 0) output_buffer_left = 0;//refill_output_buffer();
 }
 
-void PractRand::RNGs::Polymorphic::sha2_based_pool::seed(Uint64 s) {
+void PractRand::RNGs::Polymorphic::sha2_based_pool::seed(Uint64 seed_low, Uint64 seed_high) {
 	unsigned long i;
-	for (i = 0; i < 8; i++) state[i] = Uint8(s >> (i*8));
-	for (; i < STATE_SIZE; i++) state[i] = 0;
+	for (i = 0; i < 8; i++) state[i] = Uint8(seed_low >> (i * 8));
+	for (i = 0; i < 8; i++) state[i + 8] = Uint8(seed_high >> (i * 8));
+	for (i = 16; i < STATE_SIZE; i++) state[i] = 0;
 	input_buffer_left = 128;
 	output_buffer_left = 0;
 	state_phase = 0;

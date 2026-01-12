@@ -2,8 +2,8 @@
 #include <string>
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
+#include <vector>
 #include "PractRand/rng_helpers.h"
-#include "PractRand/rng_internals.h"
 
 #include "PractRand/RNGs/isaac32x256.h"
 #include "PractRand/RNGs/isaac64x256.h"
@@ -12,13 +12,13 @@ using namespace PractRand;
 
 //polymorphic:
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C32(isaac32x256)
-void PractRand::RNGs::Polymorphic::isaac32x256::seed(Uint64 s) { implementation.seed(s); }
+void PractRand::RNGs::Polymorphic::isaac32x256::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
 void PractRand::RNGs::Polymorphic::isaac32x256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac32x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac32x256::get_name() const {return "isaac32x256";}
 
 PRACTRAND__POLYMORPHIC_RNG_BASICS_C64(isaac64x256)
-void PractRand::RNGs::Polymorphic::isaac64x256::seed(Uint64 s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::isaac64x256::seed(Uint64 seed_low, Uint64 seed_high) {implementation.seed(seed_low, seed_high);}
 void PractRand::RNGs::Polymorphic::isaac64x256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac64x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return "isaac64x256";}
@@ -112,13 +112,16 @@ void PractRand::RNGs::Raw::isaac32x256::seed(Uint32 s[256]) {//LOCKED, do not ch
 	for (int i = 0; i < 256; i++) state[i] = s[i];
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac32x256::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac32x256::seed(Uint64 seed_low, Uint64 seed_high) {//LOCKED, do not change
 	//changed in 0.85 to improve seeding quality
 	//and to make it more similar to the reference seeding algorithm
 	//(which can't be used directly since it takes a non-standard seed structure)
-	state[0] = Uint32(s);
-	state[1] = Uint32(s>>32);
-	for (int i = 2; i < SIZE; i++) state[i] = 0;
+	//changed in 0.96 to expand seed to 128 bits - seeds less than 2**64 should still produce the same results
+	state[0] = Uint32(seed_low);
+	state[1] = Uint32(seed_low >> 32);
+	state[2] = Uint32(seed_high);
+	state[3] = Uint32(seed_high >> 32);
+	for (int i = 4; i < SIZE; i++) state[i] = 0;
 	_seed(true);
 }
 void PractRand::RNGs::Raw::isaac32x256::seed(vRNG *seeder_rng) {//LOCKED, do not change
@@ -160,11 +163,12 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 #define rngstep64(mix,a,b,mm,m,m2,r,x) \
 { \
   x = *m;  \
-  a = (a^(mix)) + *(m2++); \
+  a = (mix) + *(m2++); \
   *(m++) = y = ind64(mm,x) + a + b; \
   *(r++) = b = ind64(mm,y>>SIZE_L2) + x; \
 }
 void PractRand::RNGs::Raw::isaac64x256::_advance_state() {//do not change
+	// changed for version 0.96: the rngstep64 macro was implemented incorrectly, fixed now
 	Uint64 *m, *m2, *mend, *r;
 	Uint64 x, y;
 	m = state;
@@ -241,12 +245,14 @@ void PractRand::RNGs::Raw::isaac64x256::seed(Uint64 s[256]) {//LOCKED, do not ch
 	for (int i = 0; i < 256; i++) state[i] = s[i];
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac64x256::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac64x256::seed(Uint64 seed_low, Uint64 seed_high) {//LOCKED, do not change
 	//changed in 0.85 to improve seeding quality
+	//changed in 0.96 to support 128 bit seeds (seeds that fit in 64 bits should still produce the same results)
 	//and to make it more similar to the reference seeding algorithm
 	//(which can't be used directly since it takes a non-standard seed structure)
-	state[0] = s;
-	for (int i = 1; i < SIZE; i++) state[i] = 0;
+	state[0] = seed_low;
+	state[1] = seed_high;
+	for (int i = 2; i < SIZE; i++) state[i] = 0;
 	_seed(true);
 }
 void PractRand::RNGs::Raw::isaac64x256::seed(vRNG *seeder_rng) {//LOCKED, do not change
