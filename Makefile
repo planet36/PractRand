@@ -5,7 +5,7 @@
 # https://www.pcg-random.org/posts/how-to-test-with-practrand.html
 # https://espadrine.github.io/blog/posts/a-primer-on-randomness.html
 
-export LC_ALL := C
+export LC_ALL = C
 
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
@@ -25,7 +25,6 @@ CPPFLAGS += -Iinclude
 CXXFLAGS = -std=c++20
 CXXFLAGS += -pipe -Wall -Wextra -Wpedantic -Wfatal-errors
 CXXFLAGS += -O3 -flto=auto -march=native -fno-math-errno
-
 #CXXFLAGS += -march=raptorlake
 
 LDLIBS = -pthread
