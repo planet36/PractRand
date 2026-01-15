@@ -28,7 +28,7 @@ CXXFLAGS += -O3 -flto=auto -march=native -fno-math-errno
 
 #CXXFLAGS += -march=raptorlake
 
-LDLIBS += -pthread
+LDLIBS = -pthread
 
 all: $(BINS)
 
