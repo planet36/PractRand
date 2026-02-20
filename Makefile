@@ -20,7 +20,7 @@ BIN_DEPS = $(BIN_SRCS:.cpp=.d)
 BINS = $(basename $(BIN_SRCS))
 
 CPPFLAGS = -MMD -MP
-CPPFLAGS += -Iinclude
+CPPFLAGS += -I include
 
 CXXFLAGS = -std=c++20
 CXXFLAGS += -pipe -Wall -Wextra -Wpedantic -Wfatal-errors
