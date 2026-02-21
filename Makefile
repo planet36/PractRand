@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: Steven Ward
-# SPDX-License-Identifier: OSL-3.0
+# SPDX-License-Identifier: MPL-2.0
 
 # https://pracrand.sourceforge.net/installation.txt
 # https://www.pcg-random.org/posts/how-to-test-with-practrand.html
