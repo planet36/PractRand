@@ -24,7 +24,10 @@ CPPFLAGS += -I include
 
 CXXFLAGS = -std=c++20
 CXXFLAGS += -pipe -Wall -Wextra -Wpedantic -Wfatal-errors
-CXXFLAGS += -O3 -flto=auto -march=native
+CXXFLAGS += -O3 -flto=auto
+CXXFLAGS += -Wno-unused-function
+CXXFLAGS += -march=native
+#CXXFLAGS += -march=x86-64-v3
 #CXXFLAGS += -march=raptorlake
 
 LDLIBS = -pthread
