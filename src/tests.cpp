@@ -6208,7 +6208,7 @@ void PractRand::Tests::CoupGap::get_results(std::vector<TestResult> &results) {
 void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
 	if (autofail) return;
 	int i;
-	Uint32 ofs = Uint32(blocks_tested) * TestBlock::SIZE;
+	[[maybe_unused]] Uint32 ofs = Uint32(blocks_tested) * TestBlock::SIZE;
 	int max = TestBlock::SIZE * numblocks;
 	for (i = 0; i < max; i++, ofs++) {
 		unsigned long sym = data[0].as8[i];
