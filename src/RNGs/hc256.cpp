@@ -130,7 +130,7 @@ void PractRand::RNGs::Raw::hc256::seed(vRNG *seeder_rng) {//LOCKED, do not chang
 	seed(seed_array);
 }
 void PractRand::RNGs::Raw::hc256::self_test() {
-	Raw::hc256 rng;
+	Raw::hc256 rng{};
 	Uint32 key_and_iv[16] = {0};
 	rng.seed(key_and_iv);
 	if (rng.raw32() != 0x8589075b) issue_error("hc256::self_test() failed");
