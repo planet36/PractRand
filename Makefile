@@ -30,6 +30,8 @@ CXXFLAGS += -march=native
 #CXXFLAGS += -march=x86-64-v3
 #CXXFLAGS += -march=raptorlake
 
+#LDFLAGS =
+
 LDLIBS = -pthread
 
 all: $(BINS)
