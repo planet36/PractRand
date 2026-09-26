@@ -1,5 +1,7 @@
 #pragma once
 
+#include <print>
+
 //template<typename RNG> double measure_RNG_performance();
 //returns mebibytes per second, of calls to raw64() on 64 bit RNGs or raw32 on other RNGs
 
@@ -23,7 +25,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 	//just to make very sure that some smart compiler won't optimize everything away:
 	Uint16 a = 0;
 	for (const auto i : buffy) a |= i;
-	if (a == 0) std::printf("unlikely!");
+	if (a == 0) std::print("unlikely!");
 
 	return rate;
 }
@@ -47,7 +49,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 	//just to make very sure that some smart compiler won't optimize everything away:
 	Uint32 a = 0;
 	for (const auto i : buffy) a |= i;
-	if (a == 0) std::printf("unlikely!");
+	if (a == 0) std::print("unlikely!");
 
 	return rate;
 }
@@ -71,7 +73,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG* rng) {
 	//just to make very sure that some smart compiler won't optimize everything away:
 	Uint64 a = 0;
 	for (const auto i : buffy) a |= i;
-	if (a == 0) std::printf("unlikely!");
+	if (a == 0) std::print("unlikely!");
 
 	return rate;
 }
