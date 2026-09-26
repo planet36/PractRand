@@ -93,7 +93,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int LAG = 25; //0 < LAG < SIZE-2
 					Uint8 cbuf[55]{};
 					Uint8 table1[256]{}, table2[256]{};
-					Uint8 used;
+					Uint8 used{};
 				public:
 					lfsr_medium();
 					Uint8 raw8() override;

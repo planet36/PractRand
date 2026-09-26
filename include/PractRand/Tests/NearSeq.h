@@ -51,7 +51,7 @@ namespace PractRand::Tests {
 			//FixedSizeCount<Uint16, 1 << RARES_SIZE_L2> count_rares;
 			//FixedSizeCount<Uint16, NUM_BUCKETS * EXTRA_WORDS * 16> count_region;
 			//void handle_rare(Uint8 one);
-			Uint8 *lookup_table;//used by core_to_index
+			Uint8 *lookup_table{nullptr};//used by core_to_index
 			Uint8 *lookup_table2{};//used by is_core_good
 			int core_to_index(const Word *core) const;//returns -1 on invalid core
 			int is_core_good(const Word *core) const;
@@ -116,8 +116,8 @@ namespace PractRand::Tests {
 			Uint64 _total_cores{};
 			Uint64 _total_invalid_cores{};
 
-			Sint8 *lookup_table1;//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
-			Uint8 *lookup_table2;//hamming distance from idealized value for core block
+			Sint8 *lookup_table1{nullptr};//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
+			Uint8 *lookup_table2{nullptr};//hamming distance from idealized value for core block
 
 			[[nodiscard]] Sint8 lookup1(Word value) const {
 				if constexpr (BITS_PER_BLOCK < WORD_BITS) value &= (1UL << BITS_PER_BLOCK) - 1;

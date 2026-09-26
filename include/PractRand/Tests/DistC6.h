@@ -25,7 +25,7 @@ namespace PractRand::Tests {
 			//precalcs:
 			int bits_per_sample;
 			int size;
-			Uint32 mask_pre;
+			Uint32 mask_pre{Uint32(-1)};
 			Uint32 lookup_table[ENABLE_8_BIT_BYPASS ? 256 : 65]{};//reorder_bits(reorder_codes(transform_bitcount( X ))) or reorder_bits(reorder_codes(transform_bitcount(count_bits8( X ))))
 			Uint8 reorder_codes_table[64]{};
 			Uint8 unreorder_codes_table[64]{};

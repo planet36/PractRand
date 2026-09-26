@@ -51,7 +51,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class MultiplexTransformRNG : public vRNG {
 				public:
 					PractRand::Tests::TestBlock *buffer;
-					int index;
+					int index{999999};
 					virtual void refill();
 					std::vector<vRNG *> source_rngs;
 
@@ -100,7 +100,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				class ReinterpretAsUnknown : public Transform8 {
 					Uint8 *buffer;//don't feel like requiring a header for TestBlock
-					int index;
+					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
 					explicit ReinterpretAsUnknown( vRNG *rng );
@@ -112,7 +112,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 				class ReinterpretAs8 : public Transform8 {
 					Uint8 *buffer;//don't feel like requiring a header for TestBlock
-					int index;
+					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
 					explicit ReinterpretAs8( vRNG *rng );
@@ -122,7 +122,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 				class ReinterpretAs16 : public Transform16 {
 					Uint16 *buffer;
-					int index;
+					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
 					explicit ReinterpretAs16( vRNG *rng );
@@ -132,7 +132,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 				class ReinterpretAs32 : public Transform32 {
 					Uint32 *buffer;
-					int index;
+					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
 					explicit ReinterpretAs32( vRNG *rng );
@@ -142,7 +142,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 				class ReinterpretAs64 : public Transform64 {
 					Uint64 *buffer;
-					int index;
+					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
 					explicit ReinterpretAs64( vRNG *rng );
@@ -187,7 +187,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
-					int index;
+					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
 					explicit Discard16to8(vRNG *base_rng_);
@@ -199,7 +199,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
-					int index;
+					int index{8192 / 32};
 					void refill();
 				public:
 					explicit Discard32to8(vRNG *base_rng_);
@@ -211,7 +211,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
-					int index;
+					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
 					explicit Discard64to8(vRNG *base_rng_);
@@ -223,7 +223,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using OutWord = Uint16;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
-					int index;
+					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
 					explicit Discard32to16(vRNG *base_rng_);
@@ -235,7 +235,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using OutWord = Uint16;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
-					int index;
+					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
 					explicit Discard64to16(vRNG *base_rng_);
@@ -247,7 +247,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using OutWord = Uint32;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
-					int index;
+					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
 					explicit Discard64to32(vRNG *base_rng_);

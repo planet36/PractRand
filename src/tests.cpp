@@ -1801,8 +1801,7 @@ PractRand::Tests::DistC6::DistC6 (
 	bits_clipped_1(bits_clipped_1_),
 	bits_clipped_2(bits_clipped_2_),
 	bits_per_sample(3 + unitsL - bits_clipped_0 - bits_clipped_1 - bits_clipped_2),
-	size(1 << (bits_per_sample * length)),
-	mask_pre(Uint32(-1))
+	size(1 << (bits_per_sample * length))
 {
 //	mode = mode_;
 
@@ -6450,7 +6449,7 @@ void PractRand::Tests::BRank::test_blocks(TestBlock *data, int numblocks) {
 	}
 }
 
-PractRand::Tests::NearSeq::NearSeq() : lookup_table(nullptr) {
+PractRand::Tests::NearSeq::NearSeq() {
 	//if (false);
 	//else if (BITS_PER_BLOCK == 8) verify_NearSeq_byte_code8(NearSeq_byte_code8);
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
@@ -6746,7 +6745,7 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 	blocks_tested += numblocks;
 }
 
-PractRand::Tests::NearSeq2::NearSeq2() : lookup_table1(nullptr), lookup_table2(nullptr) {
+PractRand::Tests::NearSeq2::NearSeq2() {
 	//if (false);
 	//else if (BITS_PER_BLOCK == 8) verify_NearSeq_byte_code8(NearSeq_byte_code8);
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
