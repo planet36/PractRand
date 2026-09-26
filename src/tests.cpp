@@ -6283,13 +6283,13 @@ void PractRand::Tests::BRank::PerSize::reset() {
 	outliers_overflow = 0;
 }
 void PractRand::Tests::BRank::deinit( ) {
-	if (in_progress) delete in_progress;
+	delete in_progress;
 	in_progress = nullptr;
 }
 void PractRand::Tests::BRank::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 	for (unsigned int i = 0; i < ps.size(); i++) ps[i].reset();
 	saved_time = 0;
-	if (in_progress) delete in_progress;
+	delete in_progress;
 	in_progress = nullptr;
 	pick_next_size();
 }
