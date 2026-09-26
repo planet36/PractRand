@@ -1836,7 +1836,7 @@ int PractRand::Tests::DistC6::transform_bitcount ( int bit_count ) const {
 		if (k < min) k = min;
 		if (k > max) k = max;
 	}
-	return (((k >> bits_clipped_0) + (1 << (bits_per_sample-1)))) & ((1 << bits_per_sample) - 1);
+	return ((k >> bits_clipped_0) + (1 << (bits_per_sample-1))) & ((1 << bits_per_sample) - 1);
 }
 void PractRand::Tests::DistC6::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	counts.set_size(size);
@@ -8238,8 +8238,8 @@ void PractRand::Tests::TripleMirrorFreq::test_blocks(TestBlock *data, int numblo
 				Uint8 a = data[0].as8[base_pos - 0], b = data[0].as8[base_pos - ofs], c = data[0].as8[base_pos - ofs - ofs];// if BLOCK_STEP is used
 				//b -= a; a -= c; // nope.  these hurt more than they help, typically
 				index |= (static_cast<unsigned long>(a & ((1 << SIZE1) - 1))) << (SIZE2 + SIZE3);
-				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << (SIZE3);
-				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << (0);
+				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << SIZE3;
+				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << 0;
 				counts.increment(index);
 			}
 		}
@@ -8464,8 +8464,8 @@ void PractRand::Tests::TripleMirrorCoup::test_blocks(TestBlock *data, int numblo
 				Uint8 a = data->as8[base_pos - 0], b = data->as8[base_pos - ofs], c = data->as8[base_pos - ofs - ofs];// if BLOCK_STEP is used
 				//b -= a; a -= c; // nope.  these hurt more than they help, typically
 				index |= (static_cast<unsigned long>(a & ((1 << SIZE1) - 1))) << (SIZE2 + SIZE3);
-				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << (SIZE3);
-				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << (0);
+				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << SIZE3;
+				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << 0;
 				counts.increment(index);
 				if (0 == ~(coup_masks[index >> 6] |= (index & 63))) {
 					//we *might* have completed a coupon set here
