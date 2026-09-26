@@ -56,7 +56,7 @@ PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 #include <chrono>
 using TimeUnit = std::chrono::system_clock::rep;
 TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
-double get_time_period() { return std::chrono::system_clock::period().num / static_cast<double>(std::chrono::system_clock::period().den); }
+double get_time_period() { return std::chrono::system_clock::period::num / static_cast<double>(std::chrono::system_clock::period::den); }
 
 /*
 A minimal RNG implementation, just enough to make it usable.
@@ -152,13 +152,13 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	if constexpr (false) {// 12 characters?
 		bool printed = false;
 		double susp = result.get_suspicion();
-		if (result.type == result.TYPE_PASSFAIL) {
+		if (result.type == PractRand::TestResult::TYPE_PASSFAIL) {
 			std::printf("  %s    ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
 		}
-		else if (result.type == result.TYPE_RAW) {
+		else if (result.type == PractRand::TestResult::TYPE_RAW) {
 			std::printf("            ");
 		}
-		else if (result.type == result.TYPE_BAD_P || result.type == result.TYPE_BAD_S || result.type == result.TYPE_RAW_NORMAL) {
+		else if (result.type == PractRand::TestResult::TYPE_BAD_P || result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) {
 			std::printf("S=~%+6.1f   ", susp);
 			printed = true;
 		}
@@ -174,16 +174,16 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 
 	//RESULT AS A p-value
 	if constexpr (true) {// 14 characters?
-		if (result.type == result.TYPE_PASSFAIL) {
+		if (result.type == PractRand::TestResult::TYPE_PASSFAIL) {
 			std::printf("  %s      ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
 		}
-		else if (result.type == result.TYPE_RAW) {
+		else if (result.type == PractRand::TestResult::TYPE_RAW) {
 			std::printf("              ");
 		}
-		else if (result.type == result.TYPE_BAD_P || result.type == result.TYPE_GOOD_P || result.type == result.TYPE_RAW_NORMAL) {
+		else if (result.type == PractRand::TestResult::TYPE_BAD_P || result.type == PractRand::TestResult::TYPE_GOOD_P || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) {
 			double p = result.get_pvalue();
 			double a = std::abs(p-0.5);
-			std::printf((result.type != result.TYPE_GOOD_P) ? "p~= " : "p = ");
+			std::printf((result.type != PractRand::TestResult::TYPE_GOOD_P) ? "p~= " : "p = ");
 			if (a > 0.49) {
 				double s = result.get_suspicion();
 				double ns = std::abs(s) + 1;
@@ -198,14 +198,14 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 					if (dig < 10) std::printf(" ");
 				}
 			}
-			else if (result.type == result.TYPE_GOOD_P) { std::printf("%5.3f     ", p); }
+			else if (result.type == PractRand::TestResult::TYPE_GOOD_P) { std::printf("%5.3f     ", p); }
 			else if (a >= 0.4) {                          std::printf("%4.2f      ", p); }
 			else {                                        std::printf("%3.1f       ", p); }
 		}
-		else if (result.type == result.TYPE_BAD_S || result.type == result.TYPE_GOOD_S) {
+		else if (result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_GOOD_S) {
 			double s = result.get_suspicion();
 			double p = result.get_pvalue();
-			std::printf((result.type == result.TYPE_BAD_S || result.type == result.TYPE_RAW_NORMAL) ? "p~=" : "p =");
+			std::printf((result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) ? "p~=" : "p =");
 			if (p >= 0.01 && p <= 0.99) { std::printf(" %.3f     ", p); }
 			else {
 				double ns = std::abs(s) + 1;

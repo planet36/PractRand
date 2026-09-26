@@ -405,7 +405,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle64::walk_state(StateWalkingObject *walker) {
 					base_rng->walk_state(walker);
-					if (!(walker->get_properties() & walker->FLAG_CLUMSY)) {
+					if (!(walker->get_properties() & StateWalkingObject::FLAG_CLUMSY)) {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
@@ -434,7 +434,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle32::walk_state(StateWalkingObject *walker) {
 					base_rng->walk_state(walker);
-					if (!(walker->get_properties() & walker->FLAG_CLUMSY)) {
+					if (!(walker->get_properties() & StateWalkingObject::FLAG_CLUMSY)) {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
@@ -463,7 +463,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle16::walk_state(StateWalkingObject *walker) {
 					base_rng->walk_state(walker);
-					if (!(walker->get_properties() & walker->FLAG_CLUMSY)) {
+					if (!(walker->get_properties() & StateWalkingObject::FLAG_CLUMSY)) {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
@@ -492,7 +492,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle8::walk_state(StateWalkingObject *walker) {
 					base_rng->walk_state(walker);
-					if (!(walker->get_properties() & walker->FLAG_CLUMSY)) {
+					if (!(walker->get_properties() & StateWalkingObject::FLAG_CLUMSY)) {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
