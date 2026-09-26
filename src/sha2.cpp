@@ -1,7 +1,7 @@
-#include "PractRand/config.h"
 #include "PractRand/endian.h"
 #include "PractRand/sha2.h"
 #include <bit>
+#include <cstdint>
 #include <cstring>
 
 namespace PractRand::Crypto {

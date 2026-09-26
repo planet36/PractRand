@@ -1,8 +1,7 @@
 #pragma once
 
-#include "config.h"
-
 #include <bit>
+#include <cstdint>
 
 static_assert(std::endian::native == std::endian::little, "PractRand requires a little-endian target");
 

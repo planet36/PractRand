@@ -1,9 +1,9 @@
 #include "PractRand/RNGs/isaac32x256.h"
 #include "PractRand/RNGs/isaac64x256.h"
-#include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <cstdint>
 #include <cstring>
 #include <string>
 

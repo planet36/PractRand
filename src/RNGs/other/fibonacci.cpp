@@ -1,10 +1,10 @@
 #include "PractRand/RNGs/mt19937.h"
 #include "PractRand/RNGs/other/fibonacci.h"
-#include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 #include <bit>
+#include <cstdint>
 #include <sstream>
 #include <string>
 

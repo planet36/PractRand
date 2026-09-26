@@ -1,10 +1,10 @@
 #include "PractRand.h"
-#include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_internals.h"
 #include "PractRand/test_helpers.h"
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <cstdlib>
 //#include <list>
 #include <map>

@@ -13,7 +13,6 @@
 #include "PractRand/Tests/coup16.h"
 #include "PractRand/Tests/mod3.h"
 #include "PractRand/Tests/transforms.h"
-#include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
@@ -24,6 +23,7 @@
 #include <algorithm>
 #include <bit>
 #include <cmath>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>

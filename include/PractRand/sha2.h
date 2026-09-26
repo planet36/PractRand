@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PractRand/config.h"
+#include <cstdint>
 
 namespace PractRand::Crypto {
 		class SHA2_512 {

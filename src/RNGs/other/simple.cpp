@@ -1,9 +1,9 @@
 #include "PractRand/RNGs/other/simple.h"
-#include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 #include <bit>
+#include <cstdint>
 #include <sstream>
 #include <string>
 

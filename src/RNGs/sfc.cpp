@@ -1,11 +1,11 @@
 #include "PractRand/RNGs/sfc16.h"
 #include "PractRand/RNGs/sfc32.h"
 #include "PractRand/RNGs/sfc64.h"
-#include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 #include <bit>
+#include <cstdint>
 #include <string>
 
 using namespace PractRand;
