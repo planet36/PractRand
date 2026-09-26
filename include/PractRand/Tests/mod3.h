@@ -35,9 +35,9 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
 			int block_fraction;
-			int block_scale;
-			Sint64 block_phase;
-			Sint64 total_blocks_on;
+			int block_scale{};
+			Sint64 block_phase{};
+			Sint64 total_blocks_on{};
 			static constexpr int EXP = 9;//the number of words used in an overlapping sample; 9 matches what gjrand does, I'd like 10 but in the leveled version with all the extra cache used it may not be worth it
 			static constexpr int K = ((EXP & 1) ? 3 : 1) * ((EXP & 2) ? 9 : 1) * ((EXP & 4) ? 81 : 1) * ((EXP & 8) ? 6561 : 1);
 			static constexpr int KRNDUPA = K | (K >> 1) | (K >> 2) | (K >> 3) | (K >> 4) | (K >> 5) | (K >> 6) | (K >> 7);
@@ -47,10 +47,10 @@ namespace PractRand::Tests {
 			static constexpr int LEVELS = 16;
 			static constexpr bool PACKED_INDEX = true;
 			struct PerLevel {
-				unsigned long index;
-				Uint8 remainder;
-				Uint8 warmup;
-				bool odd;
+				unsigned long index{};
+				Uint8 remainder{};
+				Uint8 warmup{};
+				bool odd{};
 				FixedSizeCount<Uint16, PACKED_INDEX ? K : P2> counts;
 			};
 			PerLevel levels[LEVELS];

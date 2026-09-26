@@ -256,8 +256,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 
 				class BaysDurhamShuffle64 final : public Transform64 {
-					Uint64 table[256];
-					Uint8 prev;
+					Uint64 table[256]{};
+					Uint8 prev{};
 					Uint8 index_mask;
 					Uint8 index_shift;
 				public:
@@ -270,8 +270,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						: Transform64(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle32 final : public Transform32 {
-					Uint32 table[256];
-					Uint8 prev;
+					Uint32 table[256]{};
+					Uint8 prev{};
 					Uint8 index_mask;
 					Uint8 index_shift;
 				public:
@@ -284,8 +284,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						: Transform32(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle16 final : public Transform16 {
-					Uint16 table[256];
-					Uint8 prev;
+					Uint16 table[256]{};
+					Uint8 prev{};
 					Uint8 index_mask;
 					Uint8 index_shift;
 				public:
@@ -298,8 +298,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						: Transform16(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle8 final : public Transform8 {
-					Uint8 table[256];
-					Uint8 prev;
+					Uint8 table[256]{};
+					Uint8 prev{};
 					Uint8 index_mask;
 					Uint8 index_shift;
 				public:

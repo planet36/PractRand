@@ -43,16 +43,16 @@ namespace PractRand::Tests {
 			struct Bucket {
 				Uint64 sequence[SEQUENCE_WORDS];
 			};
-			Bucket buckets[NUM_BUCKETS];
-			Uint64 core_distances[MAX_CORE_DISTANCES];
-			Uint64 sum_extra_distances[MAX_CORE_DISTANCES];//sum of all overall distances at a given core distances... divide by the same index on core_distance to get the average
+			Bucket buckets[NUM_BUCKETS]{};
+			Uint64 core_distances[MAX_CORE_DISTANCES]{};
+			Uint64 sum_extra_distances[MAX_CORE_DISTANCES]{};//sum of all overall distances at a given core distances... divide by the same index on core_distance to get the average
 			//Uint32 rare_index;
 			//Uint32 rare_warmup;
 			//FixedSizeCount<Uint16, 1 << RARES_SIZE_L2> count_rares;
 			//FixedSizeCount<Uint16, NUM_BUCKETS * EXTRA_WORDS * 16> count_region;
 			//void handle_rare(Uint8 one);
 			Uint8 *lookup_table;//used by core_to_index
-			Uint8 *lookup_table2;//used by is_core_good
+			Uint8 *lookup_table2{};//used by is_core_good
 			int core_to_index(const Word *core) const;//returns -1 on invalid core
 			int is_core_good(const Word *core) const;
 			int get_core_distance(const Word *core, int bucket_index) const;
@@ -112,9 +112,9 @@ namespace PractRand::Tests {
 				Uint64 extra_counts[HDIST_BINS][EXTRA_BITS];
 				void reset();
 			};
-			Bucket buckets[NUM_BUCKETS];
-			Uint64 _total_cores;
-			Uint64 _total_invalid_cores;
+			Bucket buckets[NUM_BUCKETS]{};
+			Uint64 _total_cores{};
+			Uint64 _total_invalid_cores{};
 
 			Sint8 *lookup_table1;//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
 			Uint8 *lookup_table2;//hamming distance from idealized value for core block

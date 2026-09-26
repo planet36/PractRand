@@ -12,13 +12,13 @@ namespace PractRand::RNGs {
 				static constexpr int OUTPUT_BITS = 32;
 				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::OUTPUT_IS_BUFFERED | FLAG::OUTPUT_IS_HASHED | FLAG::ENDIAN_SAFE | FLAG::CRYPTOGRAPHIC_SECURITY;
 			protected:
-				Uint32 outbuf[16];
-				Uint32 state[16];
+				Uint32 outbuf[16]{};
+				Uint32 state[16]{};
 				Uint32 used{};
 				Uint32 position_overflow{};
 				Uint8 rounds{20};
 				bool extend_cycle{};//true allows carries from the position field to overflow in to the upper word of the IV
-				Uint8 padding[1];//just to make the size a round number
+				Uint8 padding[1]{};//just to make the size a round number
 
 				void _advance_1();
 				//void _reverse_1();

@@ -11,10 +11,10 @@ namespace PractRand::RNGs::Polymorphic {
 				static constexpr int STATE_SIZE = 128 - 24;
 				static constexpr int INPUT_BUFFER_SIZE = 128;
 				static constexpr int OUTPUT_BUFFER_SIZE = 64;
-				Uint8 state[STATE_SIZE];
-				Uint8 input_buffer[128];
-				Uint8 output_buffer[64];
-				Uint16 input_buffer_left, output_buffer_left, state_phase;
+				Uint8 state[STATE_SIZE]{};
+				Uint8 input_buffer[128]{};
+				Uint8 output_buffer[64]{};
+				Uint16 input_buffer_left{}, output_buffer_left{}, state_phase{};
 
 				sha2_based_pool(Uint64 s) {seed(s);}
 				sha2_based_pool(vRNG *seeder) {seed(seeder);}

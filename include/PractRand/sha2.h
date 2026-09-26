@@ -5,14 +5,14 @@
 namespace PractRand::Crypto {
 		class SHA2_512 {
 			typedef Uint64 Word;
-			Word state[8];
-			Uint64 length;
+			Word state[8]{};
+			Uint64 length{};
 			union InputBlock {
 				Word as_word[16];
 				Uint8 as_byte[16 * sizeof(Word)];
 			};
-			InputBlock input_buffer;
-			unsigned long leftover_input_bytes;
+			InputBlock input_buffer{};
+			unsigned long leftover_input_bytes{};
 			void process_block();
 			void process_final_block();
 			Word endianness_word(Word);

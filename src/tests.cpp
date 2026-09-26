@@ -266,11 +266,11 @@ PractRand::Tests::RawTestCalibrationData_129 *PractRand::Tests::RawTestCalibrati
 class TestCalibrationData {
 	//const PractRand::Tests::RawTestCalibrationData_117 * raw;
 	const PractRand::Tests::RawTestCalibrationData_129 * raw;
-	double p_threshold;
-	double low_sample, high_sample;
-	double low_a, high_a;
-	double low_b, high_b;
-	double mid_sample;
+	double p_threshold{};
+	double low_sample{}, high_sample{};
+	double low_a{}, high_a{};
+	double low_b{}, high_b{};
+	double mid_sample{};
 	void init() {
 		Uint64 n = raw->num_samples;
 		double p1, p2;

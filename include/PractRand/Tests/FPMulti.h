@@ -40,7 +40,7 @@ namespace PractRand::Tests {
 			//static constexpr int COUP_MASK_SIZE = 1 << (COUP_SIG_BITS - COUP_WORD_SIZE_L2);
 			//static unsigned long count_leading_zeroes32( Uint32 value );
 			//const int stride_bits_L2, skip_platters;
-			bool autofail;
+			bool autofail{};
 			struct Platter {
 				Uint64 total_count;//total number of times this exponent has occurred
 
@@ -68,7 +68,7 @@ namespace PractRand::Tests {
 				//FixedSizeCount<Uint16, 1024> coup_count;
 				void reset(PractRand::RNGs::vRNG *known_good, unsigned long e);
 			};
-			Platter platter[MAX_EXP + 1];
+			Platter platter[MAX_EXP + 1]{};
 			void process(Uint64 position, unsigned long exp, unsigned long sig);
 		public:
 			FPMulti();// (int stride_bits_L2_ = 6, int skip_platters_ = 6);

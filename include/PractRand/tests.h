@@ -45,7 +45,7 @@ namespace PractRand {
 		class ListOfTests;
 		class TestBaseclass {
 		protected:
-			Uint64 blocks_tested;
+			Uint64 blocks_tested{};
 		public:
 			virtual void init(PractRand::RNGs::vRNG *known_good);
 			virtual void deinit() {}

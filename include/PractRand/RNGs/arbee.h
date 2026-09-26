@@ -11,7 +11,7 @@ namespace PractRand::RNGs {
 				static constexpr int OUTPUT_BITS = 64;
 				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION;
 			protected:
-				Uint64 a, b, c, d, i;
+				Uint64 a{}, b{}, c{}, d{}, i{};
 				void mix();
 			public:
 				arbee() {reset_entropy();}

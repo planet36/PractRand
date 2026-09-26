@@ -36,7 +36,7 @@ namespace PractRand::Tests {
 			};
 			//PractRand::RNGs::Raw::arbee internal_rng;
 			//state:
-			Pattern patterns[1 << PATTERN_INDEX_BITS];
+			Pattern patterns[1 << PATTERN_INDEX_BITS]{};
 			FixedSizeCount<Uint8, 1 << TABLE_SIZE_L2> counts;
 			//Uint64 lifespan;
 			//internal helpers:

@@ -20,25 +20,25 @@ namespace PractRand::Tests {
 			void pick_next_size();
 			void finish_matrix();
 
-			Uint64 saved_time;
+			Uint64 saved_time{};
 
 			//partially complete matrix:
 			BitMatrix *in_progress{nullptr};
-			Uint32 blocks_in_progress;
-			int size_index;//which PerSize is active atm?
+			Uint32 blocks_in_progress{};
+			int size_index{};//which PerSize is active atm?
 
 			//stats:
 			class PerSize {
 			public:
 				//PerSize() {}
-				Uint32 size;
-				Uint64 time_per;
-				Uint64 total;
+				Uint32 size{};
+				Uint64 time_per{};
+				Uint64 total{};
 				static constexpr int NUM_COUNTS = 10;
 				static constexpr int MAX_OUTLIERS = 100;
-				Uint64 counts[NUM_COUNTS];
+				Uint64 counts[NUM_COUNTS]{};
 
-				Uint64 outliers_overflow;
+				Uint64 outliers_overflow{};
 				std::vector<Uint32> outliers;
 				void reset();
 			};

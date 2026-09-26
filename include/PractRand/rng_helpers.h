@@ -68,7 +68,7 @@ namespace PractRand {
 		static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;\
 		static constexpr int OUTPUT_BITS = Raw:: RNG ::OUTPUT_BITS;\
 		static constexpr int FLAGS = Raw:: RNG ::FLAGS;\
-		Raw:: RNG implementation;\
+		Raw:: RNG implementation{};\
 		RNG (Uint64 s) {seed(s);}\
 		RNG (vRNG *seeder) {seed(seeder);}\
 		RNG (SEED_AUTO_TYPE ) {autoseed();}\

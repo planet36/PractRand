@@ -5,9 +5,9 @@ namespace PractRand::Tests {
 			static constexpr int BUFFER_SIZE_L2 = 12; // must be at least 8
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
 			static constexpr int MAX_DUPLICATES = 32;
-			Uint32 buffer[1 << BUFFER_SIZE_L2];
-			Uint64 counts[MAX_DUPLICATES];
-			int num_buffered;
+			Uint32 buffer[1 << BUFFER_SIZE_L2]{};
+			Uint64 counts[MAX_DUPLICATES]{};
+			int num_buffered{};
 			void flush_buffer();
 		public:
 			Birthday32();
@@ -23,13 +23,13 @@ namespace PractRand::Tests {
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
 			static constexpr int MAX_DUPLICATES = 64;
 			static constexpr int SORT_HELPER_BITS = 10;
-			Uint64 buffer[1 << BUFFER_SIZE_L2];
-			Uint64 counts[MAX_DUPLICATES];
+			Uint64 buffer[1 << BUFFER_SIZE_L2]{};
+			Uint64 counts[MAX_DUPLICATES]{};
 			static void _histogram_in_place_sort64(Uint64 *base, long length, long bits_already, Uint32 freq_counts[1 << SORT_HELPER_BITS]);
 			static void _histogram_in_place_sort64(Uint64 *base, long length);
 			static void _histogram_sort64(Uint64 *base, long length, long bits_already, Uint32 freq_counts[1 << SORT_HELPER_BITS]);
 			static void _histogram_sort64(Uint64 *base, long length);
-			int num_buffered;
+			int num_buffered{};
 			void flush_buffer();
 		public:
 			Birthday64();
@@ -83,16 +83,16 @@ namespace PractRand::Tests {
 			typedef BirthdayHelpers::i128 i128;
 			static constexpr int SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS;
 			static constexpr int DO_LARGEST_SPACING = 1;
-			bool autofail;
-			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS];
+			bool autofail{};
+			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS]{};
 			//i128 buffer[1 << BUFFER_SIZE_L2];//can't have arrays this large inside a class due to object file or executable file format constraints
 			//std::vector<i128> buffer;// ... and the STL vector implementation I'm using throws some kind of exception if it exceeds about 4 GB or so
 			i128 *buffer;
-			Uint64 num_buffered;
+			Uint64 num_buffered{};
 			virtual Uint64 flush_buffer();
 			double duplicates;
 			double expected_duplicates;
-			double longest_spacing;
+			double longest_spacing{};
 			int buffer_size_L2;
 			int bits_to_use;
 		public:
@@ -129,14 +129,14 @@ namespace PractRand::Tests {
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
 			Uint64 flush_buffer() override;
 			static Uint64 get_target_num_at_bufsize(int bufsize_L2_);
-			unsigned int already_sorted;//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold
+			unsigned int already_sorted{};//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold
 
-			double score;//for scoring method 2
+			double score{};//for scoring method 2
 			static double evaluate_score(double lambda, Uint64 duplicates);
 
 			void do_incomplete_buffer();
-			double incomplete_duplicates;
-			double incomplete_expected_duplicates;
+			double incomplete_duplicates{};
+			double incomplete_expected_duplicates{};
 		public:
 			BirthdaySystematic128(int max_bufsize_L2_ = 28);
 			void init(PractRand::RNGs::vRNG *known_good) override;
@@ -154,17 +154,17 @@ namespace PractRand::Tests {
 			//i128 buffer[1 << BUFFER_SIZE_L2];
 			//std::vector<i128> buffer;
 			i128 *buffer;
-			int num_buffered;
+			int num_buffered{};
 			int buffer_size_L2;
 			int filter_bits;
-			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS];
-			bool autofail;
+			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS]{};
+			bool autofail{};
 			void flush_buffer();
 
-			double score_sum_log;
-			double score_sum_log2;
-			double score_sum_log_sqr;
-			Uint64 count;
+			double score_sum_log{};
+			double score_sum_log2{};
+			double score_sum_log_sqr{};
+			Uint64 count{};
 			static void _lookup_constants(int buffer_size_L2, long double *offset, long double *deviation, long double *samples);
 		public:
 			BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);

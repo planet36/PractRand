@@ -12,13 +12,13 @@ namespace PractRand::Tests {
 //			FixedSizeCount<Uint8, 256*MAX_CURRENT_AGE> count_gaps_by_oldest_sym;
 
 //			Uint32 last_sym_pos[256];
-			unsigned long oldest_sym;
-			unsigned long youngest_sym;
-			Uint8 next_younger_sym[256];
-			bool sym_has_appeared[256];
-			int symbols_ready;
+			unsigned long oldest_sym{};
+			unsigned long youngest_sym{};
+			Uint8 next_younger_sym[256]{};
+			bool sym_has_appeared[256]{};
+			int symbols_ready{};
 
-			Uint32 autofail;
+			Uint32 autofail{};
 //			Uint64 blocks;
 		public:
 			CoupGap() = default;

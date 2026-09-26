@@ -9,7 +9,7 @@ protected:
 	unsigned int max_buffer_amount;
 	int prefix_blocks;
 	int main_blocks;
-	int blocks_to_repeat;
+	int blocks_to_repeat{};
 	Uint64 blocks_so_far;
 	bool freshly_created;
 	int prep_blocks(Uint64 &blocks);

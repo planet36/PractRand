@@ -6,7 +6,7 @@ class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG *base_rng;
-	Uint64 current_seed;
+	Uint64 current_seed{};
 
 	std::set<Uint64> unordered_history;
 	std::deque<Uint64> history;
@@ -83,7 +83,7 @@ public:
 	unsigned int min_length, max_length;
 	unsigned int history_length{16384};
 	std::vector<Uint8> current_seed;
-	Transform last_transform;
+	Transform last_transform{};
 	std::multiset<Uint64> unordered_history;//hashes only
 	std::deque<std::pair<std::multiset<Uint64>::iterator, Transform> > history;//hashes first, then transform applied - newest at front
 

@@ -7,7 +7,7 @@ namespace PractRand::Tests::Transforms {
 			protected:
 				ListOfTests subtests;
 				std::string name;
-				Uint64 blocks_already;//# of blocks outputed to subtests
+				Uint64 blocks_already{};//# of blocks outputed to subtests
 			public:
 				multiplex ( const char *name_, const ListOfTests &testlist );
 				void init( RNGs::vRNG *known_good ) override;
@@ -33,8 +33,8 @@ namespace PractRand::Tests::Transforms {
 				std::vector<Uint64> lengths;
 				std::vector<Uint64> blocks_already_per;
 				Uint64 total_length;
-				Uint64 phase;
-				unsigned int which;
+				Uint64 phase{};
+				unsigned int which{};
 			public:
 				switching( const char *name_, const ListOfTests &testlist,
 					std::vector<Uint64> lengths_ );
@@ -50,7 +50,7 @@ namespace PractRand::Tests::Transforms {
 				int flush_size;
 			protected:
 				std::vector<TestBlock> buffered;
-				int leftovers;//if non-zero then the last buffered block is treated as unready
+				int leftovers{};//if non-zero then the last buffered block is treated as unready
 			public:
 				Transform_Baseclass( const char *name_, const ListOfTests &testlist, int flush_size_ = 4*1024 ) :
 					multiplex(name_, testlist), flush_size(flush_size_)
@@ -63,7 +63,7 @@ namespace PractRand::Tests::Transforms {
 			};
 			class shrink : public Transform_Baseclass {
 			protected:
-				Uint8 sbox[65536];
+				Uint8 sbox[65536]{};
 				int pattern;//
 				int outbitsL;//1,2,4, or 8
 				int unitsL;//0= 8 bit input words, 1 = 16 bit input words
@@ -107,7 +107,7 @@ namespace PractRand::Tests::Transforms {
 			protected:
 				int bytes_used;
 				int bytes_stride;
-				int input_phase;
+				int input_phase{};
 			public:
 				FirstNofM ( const char *name_, const ListOfTests &testlist, int bytes_used_, int bytes_stride_ )
 				:

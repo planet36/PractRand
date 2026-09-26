@@ -20,9 +20,9 @@ namespace PractRand::Tests {
 			FixedSizeCount<Uint8, SIZE1 + SIZE2 + SIZE3> counts;
 			std::vector<Uint32> extreme_lags;
 			void increment_lag(Uint32 lag);
-			bool autofail;
-			Uint32 last[65536];
-			int warmup;
+			bool autofail{};
+			Uint32 last[65536]{};
+			int warmup{};
 		};
 		class Rep16 : public TestBaseclass {
 		public:

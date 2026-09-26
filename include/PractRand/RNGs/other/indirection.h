@@ -14,8 +14,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//the classic cryptographic RNG
 				class rc4 : public vRNG8 {
 				protected:
-					Uint8 arr[256];
-					Uint8 a, b;
+					Uint8 arr[256]{};
+					Uint8 a{}, b{};
 				public:
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -52,7 +52,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class ibaa8 : public vRNG8 {
 					int table_size_L2;
 					Uint8 *table;
-					Uint8 a, b, left;
+					Uint8 a{}, b{}, left{};
 				public:
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -63,7 +63,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class ibaa16 : public vRNG16 {
 					int table_size_L2;
 					Uint16 *table;
-					Uint16 a, b, left;
+					Uint16 a{}, b{}, left{};
 				public:
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -74,7 +74,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class ibaa32 : public vRNG32 {
 					int table_size_L2;
 					Uint32 *table;
-					Uint32 a, b, left;
+					Uint32 a{}, b{}, left{};
 				public:
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -87,7 +87,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class isaac32_varqual : public vRNG32 {
 					int table_size_L2;
 					Uint32 *table;
-					Uint32 a, b, c, left;
+					Uint32 a{}, b{}, c{}, left{};
 				public:
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -99,7 +99,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class isaac16_varqual : public vRNG16 {
 					int table_size_L2;
 					Uint16 *table;
-					Uint16 a, b, c, left;
+					Uint16 a{}, b{}, c{}, left{};
 				public:
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -114,7 +114,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int indirection_table_size_m1;
 					Uint8 *iteration_table;
 					Uint8 *indirection_table;
-					Uint8 a, b, c, i;
+					Uint8 a{}, b{}, c{}, i{};
 				public:
 					Uint8 raw8() override;
 					void walk_state(StateWalkingObject *) override;
@@ -129,7 +129,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int indirection_table_size_m1;
 					Uint8 *iteration_table;
 					Uint8 *indirection_table;
-					Uint8 a, b, c, i;
+					Uint8 a{}, b{}, c{}, i{};
 					Uint8 raw4();
 					static Uint8 rotate4(Uint8 value, int bits);
 				public:
@@ -144,7 +144,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class genindA : public vRNG16 {
 					// 4:25, 5:27, 6:32, 7:38, 8:41, 9:46
 					Uint16 *table;
-					Uint16 a, i;
+					Uint16 a{}, i{};
 					int table_size_mask;
 					int shift;
 				public:
@@ -160,7 +160,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int shift;
 					int table_size_mask;
 					Uint16 *table;
-					Uint16 a, b, i;
+					Uint16 a{}, b{}, i{};
 				public:
 					genindB(int size_L2);
 					~genindB() override;
@@ -173,7 +173,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					// 1*:23, 2:31, 3:36, 4:42
 					Uint16 *table;
 					Sint16 left;
-					Uint16 a;
+					Uint16 a{};
 					int table_size_L2;
 				public:
 					Uint16 raw16() override {
@@ -190,7 +190,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					//fairly solid, RC4-style
 					// 2:25, 3:27, 4:30, 5:32, 6:35, 7:37, 8:39, 9:41, 10:43
 					Uint16 *table;
-					Uint16 a, i;
+					Uint16 a{}, i{};
 					Uint16 mask;
 					Uint16 table_size_L2;
 				public:
@@ -205,7 +205,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					// 1:33, 2:39, 3:46
 					Uint16 *table1;
 					Uint16 *table2;
-					Uint16 a, i;
+					Uint16 a{}, i{};
 					Uint16 mask;
 					Uint16 table_size_L2;
 				public:
@@ -220,7 +220,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					// 1:28, 2:34, 3:37, 4:40, 5:45
 					Uint16 *table1;
 					Uint16 *table2;
-					Uint16 a, i;
+					Uint16 a{}, i{};
 					Uint16 mask;
 					Uint16 table_size_L2;
 				public:

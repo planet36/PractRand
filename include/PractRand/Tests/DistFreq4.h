@@ -19,7 +19,7 @@ namespace PractRand::Tests {
 			static constexpr int POSITIONS1_L2 = 0; //	4,8:38		0,10:38		0,8(8):>39		0(8),8(8):>39		0,11:39
 			static constexpr int POSITIONS2_L2 = 10;
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + POSITIONS1_L2 + POSITIONS2_L2;
-			int blocks_till_next;
+			int blocks_till_next{};
 			int blocks_per;
 			FixedSizeCount<Uint8, 1 << TOTAL_INDEX_BITS> counts;
 		};
@@ -44,9 +44,9 @@ namespace PractRand::Tests {
 			static constexpr int REGION_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS3_L2;
 			static constexpr int PASSES_PER_REGION = 1 << 14; //
 			static constexpr int NUMBER_OF_REGIONS = 1 << POSITIONS2_L2;
-			int regions_tested;
-			int passes_till_next_region;
-			int blocks_till_next_pass;
+			int regions_tested{};
+			int passes_till_next_region{};
+			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
 			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
@@ -72,7 +72,7 @@ namespace PractRand::Tests {
 			static constexpr int SIZE3 = 3;
 			static constexpr int POSITIONS_L2 = 6;//can't exceed (10-SAMPLE_ALIGN_L2) atm
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
-			int blocks_till_next_pass;
+			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
 			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
@@ -97,15 +97,15 @@ namespace PractRand::Tests {
 			static constexpr int SIZE3 = 3;
 			static constexpr int POSITIONS_L2 = 4;//can't exceed (6-ALIGN_L2) atm
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
-			Uint64 saved_blocks[MAX_LEVELS * 2];
-			char level_state[MAX_LEVELS];
+			Uint64 saved_blocks[MAX_LEVELS * 2]{};
+			char level_state[MAX_LEVELS]{};
 			//states:
 			//0: no blocks saved
 			//1: 1 block saved
 			//2: 2 blocks saved, in order
 			//3: 2 blocks saved, reverse order
-			char level_polarity[MAX_LEVELS];// 0:
-			int blocks_till_next_pass;
+			char level_polarity[MAX_LEVELS]{};// 0:
+			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int minimum_level;
 			FixedSizeCount<Uint16, MAX_LEVELS << TOTAL_INDEX_BITS> counts;
@@ -131,15 +131,15 @@ namespace PractRand::Tests {
 			static constexpr int POSITIONS_L2 = 6;//can't exceed (10-SAMPLE_ALIGN_L2) atm
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
 			static constexpr int COUP_BUCKETS = 256;
-			Uint64 pass_number;
-			int blocks_till_next_pass;
+			Uint64 pass_number{};
+			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
 			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
-			Uint64 coup_masks[1 << (TOTAL_INDEX_BITS >> 6)];
-			Uint64 coup_counts[COUP_BUCKETS];
-			Uint64 coup_last[1 << POSITIONS_L2];
-			Uint64 coup_collected;
+			Uint64 coup_masks[1 << (TOTAL_INDEX_BITS >> 6)]{};
+			Uint64 coup_counts[COUP_BUCKETS]{};
+			Uint64 coup_last[1 << POSITIONS_L2]{};
+			Uint64 coup_collected{};
 			// index order, from high to low:  (pos), (window1), (window2), (window3)
 		};
 		class QuadFreq : public TestBaseclass {//not yet implemented
@@ -165,9 +165,9 @@ namespace PractRand::Tests {
 			static constexpr int REGION_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS4_L2;
 			static constexpr int PASSES_PER_REGION = 1 << 14; //
 			static constexpr int NUMBER_OF_REGIONS = 1 << POSITIONS2_L2;
-			int regions_tested;
-			int passes_till_next_region;
-			int blocks_till_next_pass;
+			int regions_tested{};
+			int passes_till_next_region{};
+			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
 			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
@@ -186,7 +186,7 @@ namespace PractRand::Tests {
 		protected:
 			static constexpr int LPERM_BUCKETS = 1 << 15; // do not change
 			int word_bits;// 8, 16, 32, or 64 bits; 16 is recommended
-			int blocks_till_next_pass;
+			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
 			FixedSizeCount<Uint16, LPERM_BUCKETS> lperm_counts;//consider: also doing longer range tests on the comparisons done here

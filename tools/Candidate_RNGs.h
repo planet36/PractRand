@@ -96,7 +96,7 @@ public:\
 	polymorphic_ ## rng ## bits (PractRand::SEED_NONE_TYPE) {}\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
 	polymorphic_ ## rng ## bits (Uint64 seed_value) {seed(seed_value);}\
-	ImplementationType implementation;\
+	ImplementationType implementation{};\
 	Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
 	void walk_state(StateWalkingObject *walker) override {implementation.walk_state(walker);}\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
@@ -107,7 +107,7 @@ public:\
 	typedef raw_ ## rng ## bits ImplementationType;\
 	static constexpr int OUTPUT_BITS = ImplementationType ::OUTPUT_BITS;\
 	static constexpr int FLAGS = ImplementationType ::FLAGS;\
-	ImplementationType implementation; \
+	ImplementationType implementation{}; \
 	polymorphic_ ## rng ## bits(PractRand::SEED_NONE_TYPE) {}\
 	polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
 	polymorphic_ ## rng ## bits (Uint64 seed_value) {implementation.seed(seed_value);}\
@@ -789,7 +789,7 @@ public:
 	polymorphic_siphash(PractRand::SEED_NONE_TYPE) {}
 	polymorphic_siphash(PractRand::SEED_AUTO_TYPE) { autoseed(); }
 	polymorphic_siphash(Uint64 seed_value) { seed(seed_value); }
-	ImplementationType implementation;
+	ImplementationType implementation{};
 	Uint64 raw64() override { return implementation.raw64(); }
 	void walk_state(StateWalkingObject *walker) override { implementation.walk_state(walker); }
 	[[nodiscard]] std::string get_name() const override { return implementation.get_name(); }
