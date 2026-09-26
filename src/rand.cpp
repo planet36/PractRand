@@ -90,7 +90,7 @@ namespace PractRand {
 		Uint16 pop16() {Uint16 tmp=pop8 (); tmp|=Uint16(pop8 ())<< 8; return tmp;}
 		Uint32 pop32() {Uint32 tmp=pop16(); tmp|=Uint32(pop16())<<16; return tmp;}
 		Uint64 pop64() {Uint64 tmp=pop32(); tmp|=Uint64(pop32())<<32; return tmp;}
-		void handle(bool   &v) override {v = pop8() ? true : false;}
+		void handle(bool   &v) override {v = pop8() != 0;}
 		void handle(Uint8  &v) override {v = pop8();}
 		void handle(Uint16 &v) override {v = pop16();}
 		void handle(Uint32 &v) override {v = pop32();}
@@ -98,7 +98,7 @@ namespace PractRand {
 		void handle(float  &v) override {
 			Uint16 tmp_exp = pop16();
 			Uint32 tmp_sig = pop32();
-			bool sign = (tmp_exp & 1) ? true : false;
+			bool sign = (tmp_exp & 1) != 0;
 			int exp = tmp_exp >> 1;
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0F : 1.0F) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
@@ -106,7 +106,7 @@ namespace PractRand {
 		void handle(double &v) override {
 			Uint16 tmp_exp = pop16();
 			Uint64 tmp_sig = pop64();
-			bool sign = (tmp_exp & 1) ? true : false;
+			bool sign = (tmp_exp & 1) != 0;
 			int exp = tmp_exp >> 1;
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0 : 1.0) * std::ldexp(static_cast<double>(tmp_sig), exp-64);
@@ -138,7 +138,7 @@ namespace PractRand {
 	public:
 		PractRand::RNGs::Raw::arbee seeder;
 		explicit GenericIntegerSeedingStateWalker(Uint64 seed) : seeder(seed) {}
-		void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
+		void handle(bool   &v) override {v = (seeder.raw8() & 1) != 0;}
 		void handle(Uint8  &v) override {v = seeder.raw8 ();}
 		void handle(Uint16 &v) override {v = seeder.raw16();}
 		void handle(Uint32 &v) override {v = seeder.raw32();}
@@ -151,7 +151,7 @@ namespace PractRand {
 	public:
 		PractRand::RNGs::vRNG *seeder;
 		explicit GenericSeedingStateWalker(RNGs::vRNG *seeder_) : seeder(seeder_) {}
-		void handle(bool   &v) override { v = (seeder->raw8() & 1) ? true : false; }
+		void handle(bool   &v) override { v = (seeder->raw8() & 1) != 0; }
 		void handle(Uint8  &v) override {v = seeder->raw8 ();}
 		void handle(Uint16 &v) override {v = seeder->raw16();}
 		void handle(Uint32 &v) override {v = seeder->raw32();}
@@ -224,7 +224,7 @@ namespace PractRand {
 				std::memset(seed_and_iv, 0, sizeof(seed_and_iv));
 				seeder.seed(bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64());
 			}
-			void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
+			void handle(bool   &v) override {v = (seeder.raw8() & 1) != 0;}
 			void handle(Uint8  &v) override {v = seeder.raw8 ();}
 			void handle(Uint16 &v) override {v = seeder.raw16();}
 			void handle(Uint32 &v) override {v = seeder.raw32();}
@@ -258,7 +258,7 @@ namespace PractRand {
 					for (int i = 0; i < 4; i++) seeder.raw64();//strength of Trivium might be improved by skipping a few outputs after seeding
 				}
 			}
-			void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
+			void handle(bool   &v) override {v = (seeder.raw8() & 1) != 0;}
 			void handle(Uint8  &v) override {v = seeder.raw8 ();}
 			void handle(Uint16 &v) override {v = seeder.raw16();}
 			void handle(Uint32 &v) override {v = seeder.raw32();}

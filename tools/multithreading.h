@@ -139,7 +139,7 @@ namespace Threading {
 	}
 	bool Lock::try_enter() {
 		//return TryEnterCriticalSection((CRITICAL_SECTION*)&impl_data) ? true : false;
-		return pthread_mutex_trylock( reinterpret_cast<pthread_mutex_t *>(&impl_data) ) ? false : true;
+		return pthread_mutex_trylock( reinterpret_cast<pthread_mutex_t *>(&impl_data) ) == 0;
 	}
 	//how to implement this in pthreads?
 	/*void Lock::_assert_is_held() {
