@@ -8448,7 +8448,8 @@ void PractRand::Tests::TripleMirrorCoup::test_blocks(TestBlock *data, int numblo
 				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << SIZE3;
 				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << 0;
 				counts.increment(index);
-				if (0 == ~(coup_masks[index >> 6] |= (index & 63))) {
+				coup_masks[index >> 6] |= (index & 63);
+				if (0 == ~coup_masks[index >> 6]) {
 					//we *might* have completed a coupon set here
 					bool completion = true;
 					unsigned long region_end = (base_index + (1 << (SIZE1 + SIZE2 + SIZE3))) >> 6;
