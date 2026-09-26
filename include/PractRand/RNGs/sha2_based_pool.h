@@ -17,7 +17,7 @@ namespace PractRand::RNGs::Polymorphic {
 				Uint16 input_buffer_left{}, output_buffer_left{}, state_phase{};
 
 				explicit sha2_based_pool(Uint64 s) {seed(s);}
-				explicit sha2_based_pool(vRNG *seeder) {seed(seeder);}
+				explicit sha2_based_pool(vRNG* seeder) {seed(seeder);}
 				explicit sha2_based_pool(SEED_AUTO_TYPE ) {autoseed();}
 				explicit sha2_based_pool(SEED_NONE_TYPE ) {reset_state();}
 				sha2_based_pool() {reset_state();}
@@ -30,7 +30,7 @@ namespace PractRand::RNGs::Polymorphic {
 				void seed(Uint64 s) override;
 				void reset_state();
 				using vRNG::seed;
-				void walk_state(StateWalkingObject *walker) override;
+				void walk_state(StateWalkingObject* walker) override;
 				void reset_entropy() override {reset_state();}
 				void add_entropy8 (Uint8  value) override;
 				void add_entropy16(Uint16 value) override;

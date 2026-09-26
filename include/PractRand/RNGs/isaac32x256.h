@@ -30,8 +30,8 @@ namespace PractRand::RNGs {
 				}
 				void seed(Uint64 s);
 				void seed(const Uint32 s[256]);
-				void seed(vRNG *seeder_rng);
-				void walk_state(StateWalkingObject *walker);
+				void seed(vRNG* seeder_rng);
+				void walk_state(StateWalkingObject* walker);
 				static void self_test();
 			};
 		}
@@ -40,7 +40,7 @@ namespace PractRand::RNGs {
 			class isaac32x256 final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(isaac32x256)
 				void seed(Uint64 s) override;
-				void seed(vRNG *seeder_rng) override;
+				void seed(vRNG* seeder_rng) override;
 				void flush_buffers() override;
 			};
 		}

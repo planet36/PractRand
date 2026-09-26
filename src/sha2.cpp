@@ -172,7 +172,7 @@ namespace PractRand::Crypto {
 		void SHA2_512::endianness_state() {
 			using Constants = SHA2_512_constants;
 			if (Constants::REVERSE_ENDIANNESS) {
-				for (auto & i : state) {
+				for (auto& i : state) {
 					i = endianness_word(i);
 				}
 			}
@@ -180,12 +180,12 @@ namespace PractRand::Crypto {
 		void SHA2_512::endianness_input() {
 			using Constants = SHA2_512_constants;
 			if (Constants::REVERSE_ENDIANNESS) {
-				for (auto & i : input_buffer.as_word) {
+				for (auto& i : input_buffer.as_word) {
 					i = endianness_word(i);
 				}
 			}
 		}
-		void SHA2_512::handle_input ( const Uint8 *input, unsigned long input_length ) {
+		void SHA2_512::handle_input ( const Uint8* input, unsigned long input_length ) {
 			using Constants = SHA2_512_constants;
 			unsigned long input_left = input_length;
 			length += input_length;

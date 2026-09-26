@@ -14,8 +14,8 @@ using namespace PractRand;
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(trivium)
 void PractRand::RNGs::Polymorphic::trivium::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::trivium::seed_fast(Uint64 s) { implementation.seed_fast(s, s); }
-void PractRand::RNGs::Polymorphic::trivium::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::trivium::seed(const Uint8 *seed_and_iv, int length) { implementation.seed(seed_and_iv, length); }
+void PractRand::RNGs::Polymorphic::trivium::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::trivium::seed(const Uint8* seed_and_iv, int length) { implementation.seed(seed_and_iv, length); }
 std::string PractRand::RNGs::Polymorphic::trivium::get_name() const {return "trivium";}
 
 static Uint64 shift_array64( Uint64 vec[2], unsigned long bits ) {
@@ -41,7 +41,7 @@ Uint64 PractRand::RNGs::Raw::trivium::raw64() {//LOCKED, do not change
 void PractRand::RNGs::Raw::trivium::seed(Uint64 s) {//LOCKED, do not change
 	//Triviums standard seeding algorithm adapted to PractRand interface
 	Uint8 vec[8];
-	for (auto & i : vec) {
+	for (auto& i : vec) {
 		i = Uint8(s);
 		s >>= 8;
 	}
@@ -55,12 +55,12 @@ void PractRand::RNGs::Raw::trivium::seed_fast(Uint64 s1, Uint64 s2, int quality)
 	c[1] = Uint64(7) << (128-111);
 	for (int i = 0; i < quality; i++) raw64();
 }
-void PractRand::RNGs::Raw::trivium::seed(vRNG *seeder_rng) {//LOCKED, do not change
+void PractRand::RNGs::Raw::trivium::seed(vRNG* seeder_rng) {//LOCKED, do not change
 	Uint64 s1 = seeder_rng->raw64();
 	Uint64 s2 = seeder_rng->raw64();
 	seed_fast(s1, s2, 3);
 }
-void PractRand::RNGs::Raw::trivium::seed(const Uint8 *seed_and_iv, int length) {//LOCKED, do not change
+void PractRand::RNGs::Raw::trivium::seed(const Uint8* seed_and_iv, int length) {//LOCKED, do not change
 	//standard algorithm for Trivium, not a good match for PractRand
 	if (length > 20) issue_error("trivium seeded with invalid length");
 
@@ -97,7 +97,7 @@ void PractRand::RNGs::Raw::trivium::seed(const Uint8 *seed_and_iv, int length) {
 			8 -
 	*/
 }
-void PractRand::RNGs::Raw::trivium::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::trivium::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
 	walker->handle(a[0]);
 	walker->handle(a[1]);

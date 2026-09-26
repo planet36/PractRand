@@ -21,7 +21,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return arr[Uint8(arr[a++] + arr[b])];
 				}
 				std::string rc4::get_name() const {return "rc4";}
-				void rc4::walk_state(StateWalkingObject *walker) {
+				void rc4::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					if (walker->is_clumsy() && !walker->is_read_only()) {
@@ -35,7 +35,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						}
 					}
 					else {
-						for (auto & i : arr) walker->handle(i);
+						for (auto& i : arr) walker->handle(i);
 					}
 				}
 
@@ -78,7 +78,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					const int half_size = 1<<(table_size_L2-1);
 					const int mask = (1<<table_size_L2)-1;
-					Uint8 *base = &table[mask+1];
+					Uint8* base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
 						Uint8 x = 0, y = 0;
 						x = base[i];
@@ -97,7 +97,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp << "ibaa8x" << table_size;
 					return tmp.str();
 				}
-				void ibaa8::walk_state(StateWalkingObject *walker) {
+				void ibaa8::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);walker->handle(b);
 					int table_size = 1<<table_size_L2;
 					for (int i = 0; i < table_size * 2; i++) walker->handle(table[i]);
@@ -114,7 +114,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					const int half_size = 1<<(table_size_L2-1);
 					const int mask = (1<<table_size_L2)-1;
-					Uint16 *base = &table[mask+1];
+					Uint16* base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
 						Uint16 x = 0, y = 0;
 						x = base[i];
@@ -133,7 +133,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp << "ibaa16x" << table_size;
 					return tmp.str();
 				}
-				void ibaa16::walk_state(StateWalkingObject *walker) {
+				void ibaa16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);walker->handle(b);
 					int table_size = 1<<table_size_L2;
 					for (int i = 0; i < table_size * 2; i++) walker->handle(table[i]);
@@ -150,7 +150,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					const int half_size = 1<<(table_size_L2-1);
 					const int mask = (1<<table_size_L2)-1;
-					Uint32 *base = &table[mask+1];
+					Uint32* base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
 						Uint32 x = 0, y = 0;
 						x = base[i];
@@ -169,7 +169,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp << "ibaa32x" << table_size;
 					return tmp.str();
 				}
-				void ibaa32::walk_state(StateWalkingObject *walker) {
+				void ibaa32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);walker->handle(b);
 					unsigned long table_size = 1<<table_size_L2;
 					for (unsigned long i = 0; i < table_size * 2; i++) walker->handle(table[i]);
@@ -181,7 +181,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				ibaa32::~ibaa32() {delete[] table;}
 
 
-				#define ind32(mm,x)  (*reinterpret_cast<Uint32 *>((reinterpret_cast<Uint8 *>(mm)) + ((x) & ((MASK)<<2))))
+				#define ind32(mm,x)  (*reinterpret_cast<Uint32*>((reinterpret_cast<Uint8*>(mm)) + ((x) & ((MASK)<<2))))
 				#define rngstep32(mix,a,b,mm,m,m2,r,x) \
 				{ \
 				  x = *m;  \
@@ -195,7 +195,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					const int HALF_SIZE = 1<<(table_size_L2-1);
 					const int MASK = (1<<table_size_L2)-1;
-					Uint32 *base = &table[MASK+1];
+					Uint32* base = &table[MASK+1];
 					Uint32 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
 					Uint32 x = 0, y = 0;
 					//m = base;
@@ -238,7 +238,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp << "isaac32x" << table_size;
 					return tmp.str();
 				}
-				void isaac32_varqual::walk_state(StateWalkingObject *walker) {
+				void isaac32_varqual::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);walker->handle(b);walker->handle(c);
 					unsigned long table_size = 1<<table_size_L2;
 					for (unsigned long i = 0; i < table_size*2; i++) walker->handle(table[i]);
@@ -255,7 +255,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 
-				#define ind16(mm,x)  (*reinterpret_cast<Uint16 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((MASK)<<1))))
+				#define ind16(mm,x)  (*reinterpret_cast<Uint16*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((MASK)<<1))))
 				#define rngstep16(mix,a,b,mm,m,m2,r,x) \
 				{ \
 				  x = *m;  \
@@ -269,7 +269,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					const int HALF_SIZE = 1<<(table_size_L2-1);
 					const int MASK = (1<<table_size_L2)-1;
-					Uint16 *base = &table[MASK+1];
+					Uint16* base = &table[MASK+1];
 					Uint16 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
 					Uint16 x = 0, y = 0;
 					//m = base;
@@ -313,7 +313,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp << "isaac16x" << table_size;
 					return tmp.str();
 				}
-				void isaac16_varqual::walk_state(StateWalkingObject *walker) {
+				void isaac16_varqual::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);walker->handle(b);walker->handle(c);
 					unsigned long table_size = 1<<table_size_L2;
 					for (unsigned long i = 0; i < table_size*2; i++) walker->handle(table[i]);
@@ -375,7 +375,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					c = old + std::rotl( c, 3 );
 					return b;*/
 				}
-				void efiix8_varqual::walk_state(StateWalkingObject *walker) {
+				void efiix8_varqual::walk_state(StateWalkingObject* walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c); walker->handle(i);
 					for (int x = 0; x <= iteration_table_size_m1  ; x++) walker->handle(iteration_table[  x]);
 					for (int x = 0; x <= indirection_table_size_m1; x++) walker->handle(indirection_table[x]);
@@ -473,7 +473,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint8 efiix4_varqual::raw8() {
 					Uint8 rv = raw4() & 15; return rv | ((raw4() & 15) << 4);
 				}
-				void efiix4_varqual::walk_state(StateWalkingObject *walker) {
+				void efiix4_varqual::walk_state(StateWalkingObject* walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c); walker->handle(i);
 					for (int x = 0; x <= iteration_table_size_m1  ; x++) walker->handle(iteration_table[  x]);
 					for (int x = 0; x <= indirection_table_size_m1; x++) walker->handle(indirection_table[x]);
@@ -516,7 +516,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a += table[i1] + o + i++;
 					return o;
 				}
-				void genindA::walk_state(StateWalkingObject *walker) {
+				void genindA::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(i);
 					for (int x = 0; x <= table_size_mask; x++) walker->handle(table[x]);
@@ -539,8 +539,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 genindB::raw16() {
 					int i1 = a >> (16 - shift);
 					int i2 = i++ & table_size_mask;
-					Uint16 &t1 = table[i1];
-					Uint16 &t2 = table[i2];
+					Uint16& t1 = table[i1];
+					Uint16& t2 = table[i2];
 					Uint16 old = a ^ i;
 					a ^= t2 + b;
 					b = std::rotl(b, 5) + old;
@@ -548,7 +548,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					t2 = old;
 					return a;
 				}
-				void genindB::walk_state(StateWalkingObject *walker) {
+				void genindB::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(i);
@@ -574,7 +574,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					//int size = 1 << table_size_L2;
 					int half_size = 1 << (table_size_L2 - 1);
 					int mask = half_size - 1;
-					Uint16 *table2 = table + half_size;
+					Uint16* table2 = table + half_size;
 					for (int i = 0; i < half_size; i++) {
 						Uint16 o = table[i];
 						table[i] += a;
@@ -588,7 +588,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					left = (1 << table_size_L2) - 1;
 					return table[left--];
 				}
-				void genindC::walk_state(StateWalkingObject *walker) {
+				void genindC::walk_state(StateWalkingObject* walker) {
 					int size = 1 << table_size_L2;
 					walker->handle(left);
 					if (left >= size) left = -1;
@@ -620,7 +620,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = std::rotl(a, 5);
 					return tmp;
 				}
-				void genindD::walk_state(StateWalkingObject *walker) {
+				void genindD::walk_state(StateWalkingObject* walker) {
 					walker->handle(i);
 					walker->handle(a);
 					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table[i_]);
@@ -651,13 +651,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = B + A;
 					if (i > mask) {
 						i = 0;
-						Uint16 *tmp = table1;
+						Uint16* tmp = table1;
 						table1 = table2;
 						table2 = tmp;
 					}
 					return B;
 				}
-				void genindE::walk_state(StateWalkingObject *walker) {
+				void genindE::walk_state(StateWalkingObject* walker) {
 					walker->handle(i);
 					i &= mask;
 					walker->handle(a);
@@ -693,7 +693,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a += o1 ^ o2;
 					return a;
 				}
-				void genindF::walk_state(StateWalkingObject *walker) {
+				void genindF::walk_state(StateWalkingObject* walker) {
 					walker->handle(i);
 					i &= mask;
 					walker->handle(a);

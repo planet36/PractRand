@@ -38,7 +38,7 @@ template<typename RNG>
 double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	//no real point to benchmarking non-polymorphic RNGs - seeding is sufficiently slow that the overhead will be insignificant
 	RNG _rng(PractRand::SEED_AUTO);
-	PractRand::RNGs::vRNG *rng = &_rng;
+	PractRand::RNGs::vRNG* rng = &_rng;
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.1 + 0.5);
 	PractRand::RNGs::LightWeight::sfc64 known_fast(13);
 	long clock0 = clock();
@@ -68,7 +68,7 @@ void benchmark_RNG_speeds() {
 #define PERF(RNG) printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >()/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
 //#define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, #RNG );
 #define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
-#define PERF_CANIDATE(rng) { typedef Candidates:: raw_ ## rng RawRNG;typedef Candidates:: polymorphic_ ## rng PolymorphicRNG; const char *name = #rng ; printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG< RawRNG > >()/1024, measure_RNG_performance<PolymorphicRNG>()/1024, benchmark_seeding<PolymorphicRNG>()/1000, name ); }
+#define PERF_CANIDATE(rng) { typedef Candidates:: raw_ ## rng RawRNG;typedef Candidates:: polymorphic_ ## rng PolymorphicRNG; const char* name = #rng ; printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG< RawRNG > >()/1024, measure_RNG_performance<PolymorphicRNG>()/1024, benchmark_seeding<PolymorphicRNG>()/1000, name ); }
 #define PERF_CHACHA(RNG,ROUNDS) { PractRand::RNGs::LightWeight::RNG light_rng(PractRand::SEED_AUTO); PractRand::RNGs::Polymorphic::RNG poly_rng(PractRand::SEED_AUTO); light_rng.set_rounds(ROUNDS); poly_rng.set_rounds(ROUNDS); printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s(%d)\n", measure_RNG_performance_32(&light_rng)/1024, measure_RNG_performance_32(&poly_rng)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG, ROUNDS );}
 //	printf("  light-weight   polymorphic    name\n");
 	printf("  light-weight   polymorphic    seeding       name\n");
@@ -135,7 +135,7 @@ union DataBlock {
 	Uint32 as32[SIZE/4];
 	Uint64 as64[SIZE/8];
 };
-#define DECLARE_EP_BENCH_FUNC(bits) double benchmark_entropy_pool_ ## bits (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
+#define DECLARE_EP_BENCH_FUNC(bits) double benchmark_entropy_pool_ ## bits (PractRand::RNGs::vRNG& entropy_pool, DataBlock* data) {\
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;\
 	long clock0 = clock();\
 	long clock1, clock2;\
@@ -157,7 +157,7 @@ DECLARE_EP_BENCH_FUNC(8)
 DECLARE_EP_BENCH_FUNC(16)
 DECLARE_EP_BENCH_FUNC(32)
 DECLARE_EP_BENCH_FUNC(64)
-double benchmark_entropy_pool_N (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
+double benchmark_entropy_pool_N (PractRand::RNGs::vRNG& entropy_pool, DataBlock* data) {\
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
@@ -179,7 +179,7 @@ void benchmark_random_access_rngs() {
 	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data{};
-	for (auto & i : data.as64) i = rng.raw64();
+	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
 #define POLYPERF(a) {printf("  %s\n", a.get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
@@ -190,7 +190,7 @@ void benchmark_entropy_pool_input() {
 	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data{};
-	for (auto & i : data.as64) i = rng.raw64();
+	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
 #define POLYPERF(a) {printf("  %s\n", a.get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
@@ -198,7 +198,7 @@ void benchmark_entropy_pool_input() {
 	POLYPERF(sha2_based)
 }
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
 	PractRand::initialize_PractRand();
 	PractRand::hook_error_handler(PractRand::print_err);
 //	PractRand::self_test_PractRand();

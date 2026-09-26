@@ -19,7 +19,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string xsalta16x3::get_name() const { return "xsalta16x3"; }
-				void xsalta16x3::walk_state(StateWalkingObject *walker) {
+				void xsalta16x3::walk_state(StateWalkingObject* walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 					if (!a && !b && !c) a = 1;
 				}
@@ -33,7 +33,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return c + ((tmp << 5) | (tmp >> 11));
 				}
 				std::string xsaltb16x3::get_name() const { return "xsaltb16x3"; }
-				void xsaltb16x3::walk_state(StateWalkingObject *walker) {
+				void xsaltb16x3::walk_state(StateWalkingObject* walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 					if (!a && !b && !c) a = 1;
 				}
@@ -46,7 +46,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a + b;
 				}
 				std::string xsaltc16x3::get_name() const { return "xsaltc16x3"; }
-				void xsaltc16x3::walk_state(StateWalkingObject *walker) {
+				void xsaltc16x3::walk_state(StateWalkingObject* walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 					if (!a && !b && !c) a = 1;
 				}
@@ -58,7 +58,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string xorshift32::get_name() const { return "xorshift32"; }
-				void xorshift32::walk_state(StateWalkingObject *walker) {
+				void xorshift32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					if (!a) a = 1;
 				}
@@ -69,7 +69,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string xorshift64::get_name() const { return "xorshift64"; }
-				void xorshift64::walk_state(StateWalkingObject *walker) {
+				void xorshift64::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					if (!a) a = 1;
 				}
@@ -98,17 +98,17 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return low;
 				}
 				std::string xorshift64of128::get_name() const { return "xorshift64of128"; }
-				void xorshift64of128::walk_state(StateWalkingObject *walker) {
+				void xorshift64of128::walk_state(StateWalkingObject* walker) {
 					walker->handle(low); walker->handle(high);
 					if (!high && !low) low = 1;
 				}
 
 				std::string xorshift32of128::get_name() const { return "xorshift32of128"; }
-				void xorshift32of128::walk_state(StateWalkingObject *walker) { impl.walk_state(walker); }
+				void xorshift32of128::walk_state(StateWalkingObject* walker) { impl.walk_state(walker); }
 				std::string xorshift32of64::get_name() const { return "xorshift32of64"; }
-				void xorshift32of64::walk_state(StateWalkingObject *walker) { impl.walk_state(walker); }
+				void xorshift32of64::walk_state(StateWalkingObject* walker) { impl.walk_state(walker); }
 				std::string xorshift16of32::get_name() const { return "xorshift16of32"; }
-				void xorshift16of32::walk_state(StateWalkingObject *walker) { impl.walk_state(walker); }
+				void xorshift16of32::walk_state(StateWalkingObject* walker) { impl.walk_state(walker); }
 
 				Uint32 xorshift32x4::raw32() {
 					Uint32 tmp = x ^ (x << 15);
@@ -120,7 +120,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return w;
 				}
 				std::string xorshift32x4::get_name() const { return "xorshift32x4"; }
-				void xorshift32x4::walk_state(StateWalkingObject *walker) {
+				void xorshift32x4::walk_state(StateWalkingObject* walker) {
 					walker->handle(x);
 					walker->handle(y);
 					walker->handle(z);
@@ -136,7 +136,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return x + i;
 				}
 				std::string xorwow32plus32::get_name() const { return "xorwow32plus32"; }
-				void xorwow32plus32::walk_state(StateWalkingObject *walker) {
+				void xorwow32plus32::walk_state(StateWalkingObject* walker) {
 					walker->handle(x);
 					if (!x) x = 1;
 					walker->handle(i);
@@ -146,7 +146,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a + impl.raw32();
 				}
 				std::string xorwow32of96::get_name() const { return "xorwow32of96"; }
-				void xorwow32of96::walk_state(StateWalkingObject *walker) {
+				void xorwow32of96::walk_state(StateWalkingObject* walker) {
 					impl.walk_state(walker);
 					walker->handle(a);
 				}
@@ -161,7 +161,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return v + d;
 				}
 				std::string xorwow32x6::get_name() const { return "xorwow32x6"; }
-				void xorwow32x6::walk_state(StateWalkingObject *walker) {
+				void xorwow32x6::walk_state(StateWalkingObject* walker) {
 					walker->handle(x);
 					walker->handle(y);
 					walker->handle(z);
@@ -184,7 +184,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a + b;
 				}
 				std::string xorshift128plus::get_name() const { return "xorshift128plus"; }
-				void xorshift128plus::walk_state(StateWalkingObject *walker) {
+				void xorshift128plus::walk_state(StateWalkingObject* walker) {
 					walker->handle(state0);
 					walker->handle(state1);
 				}
@@ -196,7 +196,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return result;
 				}
 				std::string xoroshiro128plus::get_name() const { return "xoroshiro128plus"; }
-				void xoroshiro128plus::walk_state(StateWalkingObject *walker) {
+				void xoroshiro128plus::walk_state(StateWalkingObject* walker) {
 					walker->handle(state0);
 					walker->handle(state1);
 				}
@@ -222,7 +222,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return result;
 				}
 				std::string xoroshiro128plus_2p64::get_name() const { return "xoroshiro128plus_2p64"; }
-				void xoroshiro128plus_2p64::walk_state(StateWalkingObject *walker) {
+				void xoroshiro128plus_2p64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state0);
 					walker->handle(state1);
 				}
@@ -249,7 +249,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string tinyMT::get_name() const { return "tinyMT"; }
-				void tinyMT::walk_state(StateWalkingObject *walker) {
+				void tinyMT::walk_state(StateWalkingObject* walker) {
 					walker->handle(state[0]);
 					walker->handle(state[1]);
 					walker->handle(state[2]);
@@ -270,7 +270,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a ^ b;
 				}
 				std::string sapparot::get_name() const { return "sapparot"; }
-				void sapparot::walk_state(StateWalkingObject *walker) {
+				void sapparot::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 				}
@@ -286,7 +286,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b;
 				}
 				std::string sap16of48::get_name() const { return "sap16of48"; }
-				void sap16of48::walk_state(StateWalkingObject *walker) {
+				void sap16of48::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -302,7 +302,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b;
 				}
 				std::string sap32of96::get_name() const { return "sap32of96"; }
-				void sap32of96::walk_state(StateWalkingObject *walker) {
+				void sap32of96::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -319,8 +319,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b;
 				}
 				std::string flea32x1::get_name() const { return "flea32x1"; }
-				void flea32x1::walk_state(StateWalkingObject *walker) {
-					for (auto & z : a) walker->handle(z);
+				void flea32x1::walk_state(StateWalkingObject* walker) {
+					for (auto& z : a) walker->handle(z);
 					walker->handle(b);
 					walker->handle(c);
 					walker->handle(d);
@@ -408,7 +408,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string sfc_v1_16::get_name() const { return "sfc_v1_16"; }
-				void sfc_v1_16::walk_state(StateWalkingObject *walker) {
+				void sfc_v1_16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(counter);
@@ -421,7 +421,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string sfc_v1_32::get_name() const { return "sfc_v1_32"; }
-				void sfc_v1_32::walk_state(StateWalkingObject *walker) {
+				void sfc_v1_32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(counter);
@@ -434,7 +434,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string sfc_v2_16::get_name() const { return "sfc_v2_16"; }
-				void sfc_v2_16::walk_state(StateWalkingObject *walker) {
+				void sfc_v2_16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(counter);
@@ -447,7 +447,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string sfc_v2_32::get_name() const { return "sfc_v2_32"; }
-				void sfc_v2_32::walk_state(StateWalkingObject *walker) {
+				void sfc_v2_32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(counter);
@@ -460,7 +460,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string sfc_v3_16::get_name() const { return "sfc_v3_16"; }
-				void sfc_v3_16::walk_state(StateWalkingObject *walker) {
+				void sfc_v3_16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(counter);
@@ -473,7 +473,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string sfc_v3_32::get_name() const { return "sfc_v3_32"; }
-				void sfc_v3_32::walk_state(StateWalkingObject *walker) {
+				void sfc_v3_32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(counter);
@@ -495,7 +495,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!(a|b) && !(c|d)) d++;
 					for (int i = 0; i < 20; i++) raw16();
 					*/
-				void jsf16::walk_state(StateWalkingObject *walker) {
+				void jsf16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -527,7 +527,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (int i = 0; i < 20; i++) raw32();
 				}
 				std::string tyche::get_name() const { return "tyche"; }
-				void tyche::walk_state(StateWalkingObject *walker) {
+				void tyche::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -550,7 +550,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b;
 				}
 				std::string tyche16::get_name() const { return "tyche16"; }
-				void tyche16::walk_state(StateWalkingObject *walker) {
+				void tyche16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -567,7 +567,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b;
 				}
 				std::string simpleA::get_name() const { return "simpleA"; }
-				void simpleA::walk_state(StateWalkingObject *walker) {
+				void simpleA::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -582,7 +582,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string simpleB::get_name() const { return "simpleB"; }
-				void simpleB::walk_state(StateWalkingObject *walker) {
+				void simpleB::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -597,7 +597,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string simpleC::get_name() const { return "simpleC"; }
-				void simpleC::walk_state(StateWalkingObject *walker) {
+				void simpleC::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -612,7 +612,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp;
 				}
 				std::string simpleD::get_name() const { return "simpleD"; }
-				void simpleD::walk_state(StateWalkingObject *walker) {
+				void simpleD::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -625,7 +625,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return old;
 				}
 				std::string simpleE::get_name() const { return "simpleE"; }
-				void simpleE::walk_state(StateWalkingObject *walker) {
+				void simpleE::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -639,7 +639,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return c;
 				}
 				std::string simpleF::get_name() const { return "simpleF"; }
-				void simpleF::walk_state(StateWalkingObject *walker) {
+				void simpleF::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -653,7 +653,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a + c;
 				}
 				std::string simpleG::get_name() const { return "simpleG"; }
-				void simpleG::walk_state(StateWalkingObject *walker) {
+				void simpleG::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -678,7 +678,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp_a ^ tmp_b;
 				}
 				std::string trivium_weakenedA::get_name() const { return "trivium_weakenedA"; }
-				void trivium_weakenedA::walk_state(StateWalkingObject *walker) {
+				void trivium_weakenedA::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 				}
@@ -696,7 +696,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp_a ^ tmp_b ^ tmp_c;
 				}
 				std::string trivium_weakenedB::get_name() const { return "trivium_weakenedB"; }
-				void trivium_weakenedB::walk_state(StateWalkingObject *walker) {
+				void trivium_weakenedB::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -707,7 +707,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return state;
 				}
 				std::string mo_Lesr32::get_name() const { return "mo_Lesr32"; }
-				void mo_Lesr32::walk_state(StateWalkingObject *walker) {
+				void mo_Lesr32::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
 				Uint32 mo_ResrRers32::raw32() {
@@ -716,7 +716,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a ^ b;
 				}
 				std::string mo_ResrRers32::get_name() const { return "mo_ResrRers32"; }
-				void mo_ResrRers32::walk_state(StateWalkingObject *walker) {
+				void mo_ResrRers32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 				}
@@ -725,7 +725,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return Uint32(state);
 				}
 				std::string mo_Rers32of64::get_name() const { return "mo_Rers32of64"; }
-				void mo_Rers32of64::walk_state(StateWalkingObject *walker) {
+				void mo_Rers32of64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
 				Uint32 mo_Resr32of64::raw32() {
@@ -733,7 +733,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return Uint32(state);
 				}
 				std::string mo_Resr32of64::get_name() const { return "mo_Resr32of64"; }
-				void mo_Resr32of64::walk_state(StateWalkingObject *walker) {
+				void mo_Resr32of64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
 				Uint32 mo_Resdra32of64::raw32() {
@@ -742,7 +742,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return Uint32(state);
 				}
 				std::string mo_Resdra32of64::get_name() const { return "mo_Resdra32of64"; }
-				void mo_Resdra32of64::walk_state(StateWalkingObject *walker) {
+				void mo_Resdra32of64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
 				Uint32 murmlacish::raw32() {
@@ -758,7 +758,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					str << "murmlacish";
 					return str.str();
 				}
-				void murmlacish::walk_state(StateWalkingObject *walker) {
+				void murmlacish::walk_state(StateWalkingObject* walker) {
 					walker->handle(state1);
 					walker->handle(state2);
 					walker->handle(state3);
@@ -771,7 +771,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string gjishA::get_name() const { return "gjishA"; }
-				void gjishA::walk_state(StateWalkingObject *walker) {
+				void gjishA::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -784,7 +784,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string gjishB::get_name() const { return "gjishB"; }
-				void gjishB::walk_state(StateWalkingObject *walker) {
+				void gjishB::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -797,7 +797,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string gjishC::get_name() const { return "gjishC"; }
-				void gjishC::walk_state(StateWalkingObject *walker) {
+				void gjishC::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -828,7 +828,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string gjishD::get_name() const { return "gjishD"; }
-				void gjishD::walk_state(StateWalkingObject *walker) {
+				void gjishD::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -841,7 +841,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string ara16::get_name() const { return "ara16"; }
-				void ara16::walk_state(StateWalkingObject *walker) {
+				void ara16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -853,7 +853,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string ara32::get_name() const { return "ara32"; }
-				void ara32::walk_state(StateWalkingObject *walker) {
+				void ara32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -865,7 +865,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string arx16::get_name() const { return "arx16"; }
-				void arx16::walk_state(StateWalkingObject *walker) {
+				void arx16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -877,7 +877,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string arx32::get_name() const { return "arx32"; }
-				void arx32::walk_state(StateWalkingObject *walker) {
+				void arx32::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -889,7 +889,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string hara16::get_name() const { return "hara16"; }
-				void hara16::walk_state(StateWalkingObject *walker) {
+				void hara16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -901,7 +901,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string harx16::get_name() const { return "harx16"; }
-				void harx16::walk_state(StateWalkingObject *walker) {
+				void harx16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -914,7 +914,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string learx16::get_name() const { return "learx16"; }
-				void learx16::walk_state(StateWalkingObject *walker) {
+				void learx16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -926,7 +926,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string hlearx16::get_name() const { return "hlearx16"; }
-				void hlearx16::walk_state(StateWalkingObject *walker) {
+				void hlearx16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -939,7 +939,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string alearx16::get_name() const { return "alearx16"; }
-				void alearx16::walk_state(StateWalkingObject *walker) {
+				void alearx16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -952,7 +952,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string arac16::get_name() const { return "arac16"; }
-				void arac16::walk_state(StateWalkingObject *walker) {
+				void arac16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);
@@ -965,7 +965,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return a;
 				}
 				std::string arxc16::get_name() const { return "arxc16"; }
-				void arxc16::walk_state(StateWalkingObject *walker) {
+				void arxc16::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					walker->handle(c);

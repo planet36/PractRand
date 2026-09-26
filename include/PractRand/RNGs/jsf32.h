@@ -17,9 +17,9 @@ namespace PractRand::RNGs {
 				Uint32 raw32();
 				void seed(Uint64 s);
 				void seed_fast(Uint64 s);
-				void seed(vRNG *seeder_rng);
+				void seed(vRNG* seeder_rng);
 				void seed(Uint32 seed1, Uint32 seed2, Uint32 seed3, Uint32 seed4);//custom seeding
-				void walk_state(StateWalkingObject *walker);
+				void walk_state(StateWalkingObject* walker);
 				//static void self_test();
 			};
 		}

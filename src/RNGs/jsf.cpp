@@ -61,7 +61,7 @@ void PractRand::RNGs::Raw::jsf32::seed_fast(Uint64 s) {
 	d = b;
 	for (int i = 0; i < 8; i++) raw32();
 }
-void PractRand::RNGs::Raw::jsf32::seed(vRNG *seeder_rng) {//custom seeding
+void PractRand::RNGs::Raw::jsf32::seed(vRNG* seeder_rng) {//custom seeding
 	a = b = seeder_rng->raw32();
 	c = d = seeder_rng->raw32();
 	for (int i = 0; i < 4; i++) raw32();//4
@@ -85,7 +85,7 @@ void PractRand::RNGs::Raw::jsf32::seed(Uint32 seed1, Uint32 seed2, Uint32 seed3,
 	}
 	for (int i = 0; i < 12; i++) raw32();//12
 }
-void PractRand::RNGs::Raw::jsf32::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::jsf32::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
 	//exception to the locked status -
 	//   when more bad cycles are found, more code might be added to prohibit them
@@ -123,7 +123,7 @@ void PractRand::RNGs::Raw::jsf64::seed_fast(Uint64 s) {
 	b = c = d = s;
 	for (int i = 0; i < 8; i++) raw64();
 }
-void PractRand::RNGs::Raw::jsf64::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::jsf64::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
 	//exception: changed in 0.87 to to reduce correlation between similar seeds
 	walker->handle(a);

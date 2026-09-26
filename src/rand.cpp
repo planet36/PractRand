@@ -18,39 +18,39 @@
 #include "PractRand/RNGs/all.h"
 
 namespace PractRand {
-	const char *version_str = "0.95" "-planet36";
+	const char* version_str = "0.95" "-planet36";
 	SEED_AUTO_TYPE SEED_AUTO;
 	SEED_NONE_TYPE SEED_NONE;
 	void print_err(const char* msg) { (void)std::fputs(msg, stderr); (void)std::fputc('\n', stderr); }
-	void (*error_callback)(const char *) = nullptr;
-	void issue_error ( const char *msg) {
+	void (*error_callback)(const char*) = nullptr;
+	void issue_error ( const char* msg) {
 		if (error_callback) { error_callback(msg); }
 		else {
 			if (msg) (void)std::fprintf(stderr, "%s\n", msg);
 			std::exit(1);
 		}
 	}
-	void hook_error_handler(void (*callback)(const char *msg)) {
+	void hook_error_handler(void (*callback)(const char* msg)) {
 		error_callback = callback;
 	}
 	class SerializingStateWalker final : public StateWalkingObject {
 	public:
-		char *buffer;
+		char* buffer;
 		std::size_t max_size;
 		std::size_t size_used{};
-		SerializingStateWalker( char *buffer_, std::size_t max_size_ )
+		SerializingStateWalker( char* buffer_, std::size_t max_size_ )
 			: buffer(buffer_), max_size(max_size_)
 		{}
 		void push(Uint8 value) {
 			std::size_t index = size_used++;
 			if (index < max_size) buffer[index] = value;
 		}
-		void handle(bool   &v) override {push(v ? 1 : 0);}
-		void handle(Uint8  &v) override {push(v);}
-		void handle(Uint16 &v) override {auto tmp=Uint8 (v); handle(tmp); tmp=Uint8 (v>> 8); handle(tmp);}
-		void handle(Uint32 &v) override {auto tmp=Uint16(v); handle(tmp); tmp=Uint16(v>>16); handle(tmp);}
-		void handle(Uint64 &v) override {auto tmp=Uint32(v); handle(tmp); tmp=Uint32(v>>32); handle(tmp);}
-		void handle(float  &v) override {
+		void handle(bool& v) override {push(v ? 1 : 0);}
+		void handle(Uint8& v) override {push(v);}
+		void handle(Uint16& v) override {auto tmp=Uint8 (v); handle(tmp); tmp=Uint8 (v>> 8); handle(tmp);}
+		void handle(Uint32& v) override {auto tmp=Uint16(v); handle(tmp); tmp=Uint16(v>>16); handle(tmp);}
+		void handle(Uint64& v) override {auto tmp=Uint32(v); handle(tmp); tmp=Uint32(v>>32); handle(tmp);}
+		void handle(float& v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::abs(v);
@@ -61,7 +61,7 @@ namespace PractRand {
 			auto tmp_sig = Uint32(std::ldexp(n - 0.5, 32));
 			handle(tmp_sig);
 		}
-		void handle(double &v) override {
+		void handle(double& v) override {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::abs(v);
@@ -76,10 +76,10 @@ namespace PractRand {
 	};
 	class DeserializingStateWalker : public StateWalkingObject {
 	public:
-		const char *buffer;
+		const char* buffer;
 		std::size_t max_size;
 		std::size_t size_used{};
-		DeserializingStateWalker( const char *buffer_, std::size_t max_size_ )
+		DeserializingStateWalker( const char* buffer_, std::size_t max_size_ )
 			: buffer(buffer_), max_size(max_size_)
 		{}
 		Uint8 pop8() {
@@ -90,12 +90,12 @@ namespace PractRand {
 		Uint16 pop16() {Uint16 tmp=pop8 (); tmp|=Uint16(pop8 ())<< 8; return tmp;}
 		Uint32 pop32() {Uint32 tmp=pop16(); tmp|=Uint32(pop16())<<16; return tmp;}
 		Uint64 pop64() {Uint64 tmp=pop32(); tmp|=Uint64(pop32())<<32; return tmp;}
-		void handle(bool   &v) override {v = pop8() != 0;}
-		void handle(Uint8  &v) override {v = pop8();}
-		void handle(Uint16 &v) override {v = pop16();}
-		void handle(Uint32 &v) override {v = pop32();}
-		void handle(Uint64 &v) override {v = pop64();}
-		void handle(float  &v) override {
+		void handle(bool& v) override {v = pop8() != 0;}
+		void handle(Uint8& v) override {v = pop8();}
+		void handle(Uint16& v) override {v = pop16();}
+		void handle(Uint32& v) override {v = pop32();}
+		void handle(Uint64& v) override {v = pop64();}
+		void handle(float& v) override {
 			Uint16 tmp_exp = pop16();
 			Uint32 tmp_sig = pop32();
 			bool sign = (tmp_exp & 1) != 0;
@@ -103,7 +103,7 @@ namespace PractRand {
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0F : 1.0F) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
 		}
-		void handle(double &v) override {
+		void handle(double& v) override {
 			Uint16 tmp_exp = pop16();
 			Uint64 tmp_sig = pop64();
 			bool sign = (tmp_exp & 1) != 0;
@@ -122,13 +122,13 @@ namespace PractRand {
 		}
 	public:
 		PrintingStateWalker() = default;
-		void handle(bool   &v) override { pre(); outbuf << v; }
-		void handle(Uint8  &v) override { pre(); outbuf << v; }
-		void handle(Uint16 &v) override { pre(); outbuf << v; }
-		void handle(Uint32 &v) override { pre(); outbuf << v; }
-		void handle(Uint64 &v) override { pre(); outbuf << v; }
-		void handle(float  &v) override { pre(); outbuf << v; }
-		void handle(double &v) override { pre(); outbuf << v; }
+		void handle(bool& v) override { pre(); outbuf << v; }
+		void handle(Uint8& v) override { pre(); outbuf << v; }
+		void handle(Uint16& v) override { pre(); outbuf << v; }
+		void handle(Uint32& v) override { pre(); outbuf << v; }
+		void handle(Uint64& v) override { pre(); outbuf << v; }
+		void handle(float& v) override { pre(); outbuf << v; }
+		void handle(double& v) override { pre(); outbuf << v; }
 
 		Uint32 get_properties() const override { return FLAG_CLUMSY; }
 		std::string get_string() const { return outbuf.str(); }
@@ -138,26 +138,26 @@ namespace PractRand {
 	public:
 		PractRand::RNGs::Raw::arbee seeder;
 		explicit GenericIntegerSeedingStateWalker(Uint64 seed) : seeder(seed) {}
-		void handle(bool   &v) override {v = (seeder.raw8() & 1) != 0;}
-		void handle(Uint8  &v) override {v = seeder.raw8 ();}
-		void handle(Uint16 &v) override {v = seeder.raw16();}
-		void handle(Uint32 &v) override {v = seeder.raw32();}
-		void handle(Uint64 &v) override {v = seeder.raw64();}
-		void handle(float  &) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
-		void handle(double &) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
+		void handle(bool& v) override {v = (seeder.raw8() & 1) != 0;}
+		void handle(Uint8& v) override {v = seeder.raw8 ();}
+		void handle(Uint16& v) override {v = seeder.raw16();}
+		void handle(Uint32& v) override {v = seeder.raw32();}
+		void handle(Uint64& v) override {v = seeder.raw64();}
+		void handle(float&) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
+		void handle(double&) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
 		[[nodiscard]] Uint32 get_properties() const override { return FLAG_CLUMSY | FLAG_SEEDER; }
 	};
 	class GenericSeedingStateWalker : public StateWalkingObject {
 	public:
-		PractRand::RNGs::vRNG *seeder;
-		explicit GenericSeedingStateWalker(RNGs::vRNG *seeder_) : seeder(seeder_) {}
-		void handle(bool   &v) override { v = (seeder->raw8() & 1) != 0; }
-		void handle(Uint8  &v) override {v = seeder->raw8 ();}
-		void handle(Uint16 &v) override {v = seeder->raw16();}
-		void handle(Uint32 &v) override {v = seeder->raw32();}
-		void handle(Uint64 &v) override {v = seeder->raw64();}
-		void handle(float  &) override {issue_error("RNGs with default seeding should not contain floating point values");}
-		void handle(double &) override {issue_error("RNGs with default seeding should not contain floating point values");}
+		PractRand::RNGs::vRNG* seeder;
+		explicit GenericSeedingStateWalker(RNGs::vRNG* seeder_) : seeder(seeder_) {}
+		void handle(bool& v) override { v = (seeder->raw8() & 1) != 0; }
+		void handle(Uint8& v) override {v = seeder->raw8 ();}
+		void handle(Uint16& v) override {v = seeder->raw16();}
+		void handle(Uint32& v) override {v = seeder->raw32();}
+		void handle(Uint64& v) override {v = seeder->raw64();}
+		void handle(float&) override {issue_error("RNGs with default seeding should not contain floating point values");}
+		void handle(double&) override {issue_error("RNGs with default seeding should not contain floating point values");}
 		[[nodiscard]] Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 	};
 	namespace AutoSeeder {
@@ -171,9 +171,9 @@ namespace PractRand {
 			PractRand::RNGs::Polymorphic::sha2_based_pool entropy_pool;
 			//PractRand::RNGs::Polymorphic::arbee entropy_pool;
 			enough_entropy_found = entropy_pool.add_entropy_automatically(1);
-			for (auto & i : shared_entropy) i = entropy_pool.raw64();
+			for (auto& i : shared_entropy) i = entropy_pool.raw64();
 		}
-		static void get_autoseed_fixed_entropy(Uint64 entropy[5], [[maybe_unused]] const void *target) {
+		static void get_autoseed_fixed_entropy(Uint64 entropy[5], [[maybe_unused]] const void* target) {
 			// NOT thread-safe the first time it's run
 			if (!initialized) initialize();
 #if defined PRACTRAND_THREAD_LOCAL_STORAGE
@@ -212,7 +212,7 @@ namespace PractRand {
 		class AutoSeedingStateWalker : public StateWalkingObject {
 		public:
 			PractRand::RNGs::Polymorphic::arbee seeder;
-			explicit AutoSeedingStateWalker([[maybe_unused]] const void *target) {
+			explicit AutoSeedingStateWalker([[maybe_unused]] const void* target) {
 				//get_autoseed_entropy(&seeder, target);
 				Uint32 seed_and_iv[10] = {0};
 				get_autoseed_fixed_entropy(reinterpret_cast<Uint64*>(&seed_and_iv[0]), &seeder);
@@ -224,20 +224,20 @@ namespace PractRand {
 				std::memset(seed_and_iv, 0, sizeof(seed_and_iv));
 				seeder.seed(bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64(), bootstrap.raw64());
 			}
-			void handle(bool   &v) override {v = (seeder.raw8() & 1) != 0;}
-			void handle(Uint8  &v) override {v = seeder.raw8 ();}
-			void handle(Uint16 &v) override {v = seeder.raw16();}
-			void handle(Uint32 &v) override {v = seeder.raw32();}
-			void handle(Uint64 &v) override {v = seeder.raw64();}
-			void handle([[maybe_unused]] float  &v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			void handle([[maybe_unused]] double &v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			void handle(bool& v) override {v = (seeder.raw8() & 1) != 0;}
+			void handle(Uint8& v) override {v = seeder.raw8 ();}
+			void handle(Uint16& v) override {v = seeder.raw16();}
+			void handle(Uint32& v) override {v = seeder.raw32();}
+			void handle(Uint64& v) override {v = seeder.raw64();}
+			void handle([[maybe_unused]] float& v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			void handle([[maybe_unused]] double& v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
 			[[nodiscard]] Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 		class CryptoAutoSeedingStateWalker : public StateWalkingObject {
 		public:
 			//PractRand::RNGs::Polymorphic::sha2_based_pool seeder;
 			PractRand::RNGs::Polymorphic::trivium seeder;
-			explicit CryptoAutoSeedingStateWalker(void *ptr1) : seeder(PractRand::SEED_NONE) {
+			explicit CryptoAutoSeedingStateWalker(void* ptr1) : seeder(PractRand::SEED_NONE) {
 				PractRand::RNGs::Polymorphic::sha2_based_pool entropy_pool;
 				if (!entropy_pool.add_entropy_automatically())
 					issue_error("PractRand: failed to obtain entropy for cryptographic quality autoseeding");
@@ -252,36 +252,36 @@ namespace PractRand {
 					//what we're supposed to do:
 					constexpr int B = 20;
 					Uint8 s[B];
-					for (auto & i : s) i = entropy_pool.raw8();
+					for (auto& i : s) i = entropy_pool.raw8();
 					seeder.seed(s, B);
 					std::memset(s, 0, B);
 					for (int i = 0; i < 4; i++) seeder.raw64();//strength of Trivium might be improved by skipping a few outputs after seeding
 				}
 			}
-			void handle(bool   &v) override {v = (seeder.raw8() & 1) != 0;}
-			void handle(Uint8  &v) override {v = seeder.raw8 ();}
-			void handle(Uint16 &v) override {v = seeder.raw16();}
-			void handle(Uint32 &v) override {v = seeder.raw32();}
-			void handle(Uint64 &v) override {v = seeder.raw64();}
-			void handle(float  &) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			void handle(double &) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			void handle(bool& v) override {v = (seeder.raw8() & 1) != 0;}
+			void handle(Uint8& v) override {v = seeder.raw8 ();}
+			void handle(Uint16& v) override {v = seeder.raw16();}
+			void handle(Uint32& v) override {v = seeder.raw32();}
+			void handle(Uint64& v) override {v = seeder.raw64();}
+			void handle(float&) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
+			void handle(double&) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
 			[[nodiscard]] Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 	}
 	Uint32 randi_fast_implementation(Uint32 random_value, Uint32 max) {
 		return Uint32((Uint64(max) * random_value) >> 32);
 	}
-	StateWalkingObject *int_to_rng_seed(Uint64 i) {
+	StateWalkingObject* int_to_rng_seed(Uint64 i) {
 		return new GenericIntegerSeedingStateWalker(i);
 	}
-	StateWalkingObject *vrng_to_rng_seeder(RNGs::vRNG *rng) {
+	StateWalkingObject* vrng_to_rng_seeder(RNGs::vRNG* rng) {
 		return new GenericSeedingStateWalker(rng);
 	}
-	StateWalkingObject *get_autoseeder(const void *target) {
+	StateWalkingObject* get_autoseeder(const void* target) {
 		return new AutoSeeder::AutoSeedingStateWalker(target);
 	}
 	namespace Internals {
-		void test_random_access(PractRand::RNGs::vRNG *rng, PractRand::RNGs::vRNG *known_good, Uint64 period_low64, Uint64 period_high64) {
+		void test_random_access(PractRand::RNGs::vRNG* rng, PractRand::RNGs::vRNG* known_good, Uint64 period_low64, Uint64 period_high64) {
 			Uint64 seed = known_good->raw64();
 			Uint8 a1 = 0, a2 = 0, a3 = 0, b1 = 0, b2 = 0, b3 = 0;
 			//basic check
@@ -347,19 +347,19 @@ namespace PractRand {
 	}
 	namespace RNGs {
 		vRNG::~vRNG() = default;
-		long vRNG::serialize( char *buffer, long buffer_size ) {//returns serialized size, or zero on failure
+		long vRNG::serialize( char* buffer, long buffer_size ) {//returns serialized size, or zero on failure
 			SerializingStateWalker serializer(buffer, buffer_size);
 			walk_state(&serializer);
 			if (serializer.size_used <= static_cast<std::size_t>(buffer_size)) return serializer.size_used;
 			return 0;
 		}
-		char *vRNG::serialize( std::size_t *size_ ) {//returns malloced block, or NULL on error, sets *size to size of block
+		char* vRNG::serialize( std::size_t* size_ ) {//returns malloced block, or NULL on error, sets *size to size of block
 			SerializingStateWalker byte_counter(nullptr, 0);
 			walk_state(&byte_counter);
 			std::size_t size = byte_counter.size_used;
 			*size_ = size;
 			if (!size) return nullptr;
-			char *buffer = static_cast<char*>(std::malloc(size));
+			char* buffer = static_cast<char*>(std::malloc(size));
 			SerializingStateWalker serializer(buffer, size);
 			if (serializer.size_used != size) {
 				std::free(buffer);
@@ -372,7 +372,7 @@ namespace PractRand {
 			walk_state(&printer);
 			return printer.get_string();
 		}
-		bool vRNG::deserialize( const char *buffer, size_t size ) {//returns number of bytes used, or zero on error
+		bool vRNG::deserialize( const char* buffer, size_t size ) {//returns number of bytes used, or zero on error
 			DeserializingStateWalker deserializer(buffer, size);
 			walk_state(&deserializer);
 			return deserializer.size_used == size;
@@ -387,7 +387,7 @@ namespace PractRand {
 			walk_state(&walker);
 			flush_buffers();
 		}
-		void vRNG::seed(vRNG *rng) {
+		void vRNG::seed(vRNG* rng) {
 			GenericSeedingStateWalker walker(rng);
 			walk_state(&walker);
 			flush_buffers();
@@ -468,8 +468,8 @@ namespace PractRand {
 		void vRNG::add_entropy16(Uint16) {}
 		void vRNG::add_entropy32(Uint32) {}
 		void vRNG::add_entropy64(Uint64) {}
-		void vRNG::add_entropy_N(const void *_data, std::size_t length) {
-			const auto *data = static_cast<const Uint8*>(_data);
+		void vRNG::add_entropy_N(const void* _data, std::size_t length) {
+			const auto* data = static_cast<const Uint8*>(_data);
 			for (unsigned long i = 0; i < length; i++) add_entropy8(data[i]);
 		}
 		bool vRNG::add_entropy_automatically(int milliseconds) {

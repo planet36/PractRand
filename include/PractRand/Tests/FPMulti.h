@@ -66,17 +66,17 @@ namespace PractRand::Tests {
 				//COUP_WORD coup_mask[COUP_MASK_SIZE];
 				//Uint64 last_coup;
 				//FixedSizeCount<Uint16, 1024> coup_count;
-				void reset(PractRand::RNGs::vRNG *known_good, unsigned long e);
+				void reset(PractRand::RNGs::vRNG* known_good, unsigned long e);
 			};
 			Platter platter[MAX_EXP + 1]{};
 			void process(Uint64 position, unsigned long exp, unsigned long sig);
 		public:
 			FPMulti();// (int stride_bits_L2_ = 6, int skip_platters_ = 6);
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			void deinit() override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		};
 }//PractRand

@@ -4,7 +4,7 @@
 #include <string>
 
 namespace PractRand {
-	extern const char *version_str;//like "0.91", for PractRand 0.91
+	extern const char* version_str;//like "0.91", for PractRand 0.91
 
 	bool initialize_PractRand(); //returns true normally
 	//will return false if it failed to find a good source of entropy
@@ -14,8 +14,8 @@ namespace PractRand {
 
 	void self_test_PractRand();
 	void print_err(const char* msg);
-	void issue_error(const char *msg = nullptr);//PractRand calls this any time there is an internal error
-	void hook_error_handler(void(*callback)(const char *));//this can be used to replace the default behavior of issue_error
+	void issue_error(const char* msg = nullptr);//PractRand calls this any time there is an internal error
+	void hook_error_handler(void(*callback)(const char*));//this can be used to replace the default behavior of issue_error
 
 	class StateWalkingObject;
 
@@ -35,13 +35,13 @@ namespace PractRand {
 			virtual ~vRNG();
 			virtual void seed(Uint64 seed);
 			virtual void seed_fast(Uint64 seed);
-			virtual void seed(vRNG *rng);
+			virtual void seed(vRNG* rng);
 			void autoseed();
-			long serialize( char *buffer, long buffer_size );//returns serialized size, or zero on failure
-			char *serialize( size_t *size );//returns malloced block, or NULL on error, sets *size to size of block
-			bool deserialize( const char *buffer, size_t size );//returns true on success, false on failure
+			long serialize( char* buffer, long buffer_size );//returns serialized size, or zero on failure
+			char* serialize( size_t* size );//returns malloced block, or NULL on error, sets *size to size of block
+			bool deserialize( const char* buffer, size_t size );//returns true on success, false on failure
 			std::string print_state();//returns RNG state as a comma-delimited sequence of numbers
-			virtual void walk_state(StateWalkingObject *) = 0;
+			virtual void walk_state(StateWalkingObject*) = 0;
 
 
 		//raw random bits
@@ -89,7 +89,7 @@ namespace PractRand {
 			virtual void add_entropy64(Uint64);
 			//note that "add_entropy_N(&byte_buffer[0], 13)" will typically NOT produce the same state transition
 			//  as "add_entropy_N(&byte_buffer[0], 7);add_entropy_N(&byte_buffer[0], 6);"
-			virtual void add_entropy_N(const void *, size_t length);
+			virtual void add_entropy_N(const void*, size_t length);
 
 			//add_entropy_automatically returns true if a good amount (>= 128 bits) of entropy was added
 			//the milliseconds parameter is the maximum amount of time it is allowed to block while waiting for entropy

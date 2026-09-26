@@ -105,7 +105,7 @@ double ref_p129_with_formatting[] = {
 	0.999995, 0.999998, 0.999999, -1,
 	0.9999995, 0.9999998, 0.9999999, -2
 };
-void print_ss(const SampleSet &ss, const std::string &name, Uint64 blocks) {
+void print_ss(const SampleSet& ss, const std::string& name, Uint64 blocks) {
 //	std::printf("{\"BCFN-%d/%d\",%7.0f,%5d, %d, {", tbits, 1<<stride_L2, double(Uint64(std::pow(2,length_L2) / 1024)), (int)ss.size(), (int)ss.num_duplicates());
 //	for (int i = 0; i < 117; i++) std::printf("%s%+7.3f", i ? "," : "", ss.get_result_by_percentile(ref_p[i]));
 //	std::printf("}, %+.4f, %+.4f, %.4f},\n", ss.get_result_by_percentile(0.5), ss.get_mean(), ss.get_stddev());
@@ -118,7 +118,7 @@ void print_ss(const SampleSet &ss, const std::string &name, Uint64 blocks) {
 }
 
 
-double fake_bcfn(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n) {
+double fake_bcfn(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n) {
 	PractRand::RNGs::LightWeight::sfc32 rng(known_good);
 	int size = 1 << tbits;
 	int mask = size - 1;
@@ -157,7 +157,7 @@ double fake_bcfn(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n) {
 	double rn = PractRand::Tests::math_chisquared_to_normal(rv, reduced_size-1);
 	return rn;
 }
-double fake_bcfn2(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n, double p) {
+double fake_bcfn2(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n, double p) {
 	if (p == 0.5) return fake_bcfn(known_good, tbits, n);
 	if (p <= 0 || p >= 1) issue_error();
 	PractRand::RNGs::LightWeight::sfc32 rng(known_good);
@@ -205,7 +205,7 @@ double fake_bcfn2(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n, double
 	double rn = PractRand::Tests::math_chisquared_to_normal(rv, reduced_size-1);
 	return rn;
 }
-SampleSet fake_bcfn_dist(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 n, Uint32 samples, double p) {
+SampleSet fake_bcfn_dist(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n, Uint32 samples, double p) {
 	SampleSet ss;
 	if (p == 0.5) for (Uint32 i = 0; i < samples; i++) ss._add(fake_bcfn(known_good, tbits, n));
 	else for (Uint32 i = 0; i < samples; i++) ss._add(fake_bcfn2(known_good, tbits, n, p));
@@ -251,7 +251,7 @@ void blah_bcfn() {
 		}
 	}
 }
-Uint64 generate_binomial_dist(PractRand::RNGs::vRNG *known_good, Uint64 sample_length) {
+Uint64 generate_binomial_dist(PractRand::RNGs::vRNG* known_good, Uint64 sample_length) {
 	//returns number of 0s in (sample_length) random bits
 	if (sample_length > 1ull << 12) {
 		double p = known_good->randf();
@@ -269,7 +269,7 @@ Uint64 generate_binomial_dist(PractRand::RNGs::vRNG *known_good, Uint64 sample_l
 	for (; len >= 1; len -= 1) rv += known_good->raw32() & 1;
 	return rv;
 }
-void fake_fpf_raw(PractRand::RNGs::vRNG *known_good, int tbits, Uint64 sample_length, int trials, SampleSet &ss_raw) {
+void fake_fpf_raw(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 sample_length, int trials, SampleSet& ss_raw) {
 	std::vector<Uint64> counts;
 	long size = 1 << tbits;
 	counts.resize(size);
@@ -367,12 +367,12 @@ struct CharPoly {
 
 	void zero() { std::memset(data, 0, WORDS * sizeof(Word)); }
 };
-CharPoly operator+(const CharPoly &a, const CharPoly &b) {
+CharPoly operator+(const CharPoly& a, const CharPoly& b) {
 	CharPoly rv;
 	for (int i = 0; i < CharPoly::WORDS; i++) rv.data[i] = a.data[i] + b.data[i];
 	return rv;
 }
-CharPoly mulx(const CharPoly &mod, const CharPoly &a) {
+CharPoly mulx(const CharPoly& mod, const CharPoly& a) {
 	CharPoly rv = a;
 	int j;
 	if (rv.data[CharPoly::WORDS - 1] >> (CharPoly::BITS - 1)) {
@@ -473,7 +473,7 @@ void find_test_distributions() {
 				for (std::map<Uint64,SampleSet>::iterator it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 					Uint64 length = it2->first;
 					//int length_L2 = it2->first;
-					SampleSet &ss = it2->second;
+					SampleSet& ss = it2->second;
 					ss._normalize();
 					//std::printf("//mean= %f; median= %f; stddev= %f;\n", ss.get_mean(), ss.get_result_by_percentile(0.50), ss.get_stddev());
 					std::printf("  {\"%s\",%9.0f, %d,%4d, {", name.c_str(), double(length), (int)ss.rs.size(), (int)ss.num_duplicates());
@@ -491,7 +491,7 @@ void find_test_distributions() {
 						0.91, 0.92, 0.93, 0.94, 0.95, 0.96,	0.97, 0.98, 0.99, -1,
 						0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999, 0.99995, 0.99998, 0.99999, -2
 					};*/
-					double *p = ref_p129_with_formatting;
+					double* p = ref_p129_with_formatting;
 					for (int i = 0; p[i] != -2; i++) {
 						if (p[i] == -1) continue;
 						if (i) std::printf(",");
@@ -565,7 +565,7 @@ void find_test_distributions() {
 	}
 }
 
-static void calibrate_set_uniformity(SampleSet *calib, int n, PractRand::RNGs::vRNG *known_good) {
+static void calibrate_set_uniformity(SampleSet* calib, int n, PractRand::RNGs::vRNG* known_good) {
 	for (int i = 0; i < 1ull<<20; i++) {
 		SampleSet tmp;
 		for (int j = 0; j < n; j++) tmp._add(known_good->randlf());
@@ -574,7 +574,7 @@ static void calibrate_set_uniformity(SampleSet *calib, int n, PractRand::RNGs::v
 	}
 	calib->_normalize();
 }
-static void simple_chisquare_test( PractRand::RNGs::vRNG *known_good ) {
+static void simple_chisquare_test( PractRand::RNGs::vRNG* known_good ) {
 	constexpr int SIZE = 1<<4;
 	Uint64 counts[SIZE];
 	double probs[SIZE];
@@ -640,7 +640,7 @@ void verify_test_distributions() {
 				std::string name = it->first;
 				for (std::map<int,SampleSet>::iterator it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 					int length_L2 = it2->first;
-					SampleSet &ss = it2->second;
+					SampleSet& ss = it2->second;
 					ss._normalize();
 					//if (ss.num_duplicates()) continue;
 					std::printf("\n\n name=\"%s\"; length_L2=%d;\n", name.c_str(), length_L2);
@@ -686,7 +686,7 @@ void print_data() {
 		std::string name = it->first;
 		for (std::map<int,Data >::iterator it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 			int length_L2 = it2->first;
-			const Data &d = it2->second;
+			const Data& d = it2->second;
 			std::printf("{ \"%s\", 1ull << (%d - 10), %.0f, {", name.c_str(), length_L2, (double)d.count );
 			for (int i = 0; i < 129; i++) {
 				if (ref_p129[i] >= 0.01 && ref_p129[i] <= 0.99) std::printf("%+7.3f", d.vec[i]);
@@ -739,7 +739,7 @@ double find_ziggurat_point(double old_x, double target_area) {
 	static float table_x[TABLE_SIZE-1];
 	static double tail_scale, tail_p, final_stripe_area;
 template<class RNG>
-double generate_gaussian( RNG &rng ) {
+double generate_gaussian( RNG& rng ) {
 	//
 	// floats(17+4):   3: 26, 6: 29, 8: 32
 	// doubles(17+4):         6: 30, 8: 32
@@ -990,7 +990,7 @@ double generate_gaussian( RNG &rng ) {
 	return rv;*/
 
 }
-double generate_gaussian_( PractRand::RNGs::vRNG *rng ) {return generate_gaussian(*rng);}
+double generate_gaussian_( PractRand::RNGs::vRNG* rng ) {return generate_gaussian(*rng);}
 void test_normal_distribution_a() {
 	PractRand::RNGs::LightWeight::sfc32 rng( PractRand::SEED_AUTO );
 	//PractRand::RNGs::Polymorphic::sfc32 rng( PractRand::SEED_AUTO );
@@ -1050,7 +1050,7 @@ void test_normal_distribution_a() {
 	}
 }
 
-Uint64 count_period(PractRand::RNGs::vRNG *rng) {
+Uint64 count_period(PractRand::RNGs::vRNG* rng) {
 	constexpr int BYTES = 32;//must be a power of 2 greater than or equal to 8
 	if (rng->get_native_output_size() == 8) {
 		typedef Uint8 Word;
@@ -1124,7 +1124,7 @@ void test_sfc16() {
 }
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 	PractRand::initialize_PractRand();
 	PractRand::self_test_PractRand();
 

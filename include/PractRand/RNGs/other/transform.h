@@ -11,60 +11,60 @@
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Transform64 : public vRNG64 {
 				public:
-					vRNG *base_rng;
+					vRNG* base_rng;
 					void seed(Uint64 seed) override;
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
-					void walk_state(StateWalkingObject *walker) override;
-					explicit Transform64(vRNG *rng) : base_rng(rng) {}
+					void walk_state(StateWalkingObject* walker) override;
+					explicit Transform64(vRNG* rng) : base_rng(rng) {}
 					~Transform64() override;
 				};
 				class Transform32 : public vRNG32 {
 				public:
-					vRNG *base_rng;
+					vRNG* base_rng;
 					void seed(Uint64 seed) override;
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
-					void walk_state(StateWalkingObject *walker) override;
-					explicit Transform32(vRNG *rng) : base_rng(rng) {}
+					void walk_state(StateWalkingObject* walker) override;
+					explicit Transform32(vRNG* rng) : base_rng(rng) {}
 					~Transform32() override;
 				};
 				class Transform16 : public vRNG16 {
 				public:
-					vRNG *base_rng;
+					vRNG* base_rng;
 					void seed(Uint64 seed) override;
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
-					void walk_state(StateWalkingObject *walker) override;
-					explicit Transform16(vRNG *rng) : base_rng(rng) {}
+					void walk_state(StateWalkingObject* walker) override;
+					explicit Transform16(vRNG* rng) : base_rng(rng) {}
 					~Transform16() override;
 				};
 				class Transform8 : public vRNG8 {
 				public:
-					vRNG *base_rng;
+					vRNG* base_rng;
 					void seed(Uint64 seed) override;
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
-					void walk_state(StateWalkingObject *walker) override;
-					explicit Transform8(vRNG *rng) : base_rng(rng) {}
+					void walk_state(StateWalkingObject* walker) override;
+					explicit Transform8(vRNG* rng) : base_rng(rng) {}
 					~Transform8() override;
 				};
 				class MultiplexTransformRNG : public vRNG {
 				public:
-					PractRand::Tests::TestBlock *buffer;
+					PractRand::Tests::TestBlock* buffer;
 					int index{999999};
 					virtual void refill();
-					std::vector<vRNG *> source_rngs;
+					std::vector<vRNG*> source_rngs;
 
 					Uint8 raw8() override;
 					Uint16 raw16() override;
 					Uint32 raw32() override;
 					Uint64 raw64() override;
 					void seed(Uint64 seedval) override;
-					void seed(vRNG *seeder) override;
+					void seed(vRNG* seeder) override;
 					[[nodiscard]] Uint64 get_flags() const override;
-					void walk_state(StateWalkingObject *walker) override;
-					explicit MultiplexTransformRNG(const std::vector<vRNG*> &sources);
+					void walk_state(StateWalkingObject* walker) override;
+					explicit MultiplexTransformRNG(const std::vector<vRNG*>& sources);
 					~MultiplexTransformRNG() override;
 					[[nodiscard]] int get_native_output_size() const override;
 				};
@@ -76,7 +76,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						Uint8 count;
 					};
 					//the transform table
-					const Entry *table;
+					const Entry* table;
 
 					//for buffering fractional bytes of output
 					Uint32 buf_data{};
@@ -86,25 +86,25 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					std::deque<Uint8> finished_bytes;
 
 					std::string name;
-					vRNG *base_rng;
+					vRNG* base_rng;
 					void seed(Uint64 seed) override;
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
 					[[nodiscard]] std::string get_name() const override;
-					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), name(std::move(name_)), base_rng(rng) {}
+					GeneralizedTableTransform(vRNG* rng, const Entry* table_, std::string name_) : table(table_), name(std::move(name_)), base_rng(rng) {}
 					~GeneralizedTableTransform() override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 					Uint8 raw8() override;
 				};
-				vRNG *apply_SelfShrinkTransform(vRNG *base_rng);
+				vRNG* apply_SelfShrinkTransform(vRNG* base_rng);
 				//vRNG *apply_SimpleShrinkTransform(vRNG *base_rng);
 
 				class ReinterpretAsUnknown : public Transform8 {
-					Uint8 *buffer;//don't feel like requiring a header for TestBlock
+					Uint8* buffer;//don't feel like requiring a header for TestBlock
 					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
-					explicit ReinterpretAsUnknown( vRNG *rng );
+					explicit ReinterpretAsUnknown( vRNG* rng );
 					~ReinterpretAsUnknown() override;
 					Uint8 raw8() override;
 					//to do: fix endianness issues
@@ -112,41 +112,41 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] int get_native_output_size() const override {return -1;}
 				};
 				class ReinterpretAs8 : public Transform8 {
-					Uint8 *buffer;//don't feel like requiring a header for TestBlock
+					Uint8* buffer;//don't feel like requiring a header for TestBlock
 					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
-					explicit ReinterpretAs8( vRNG *rng );
+					explicit ReinterpretAs8( vRNG* rng );
 					~ReinterpretAs8() override;
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class ReinterpretAs16 : public Transform16 {
-					Uint16 *buffer;
+					Uint16* buffer;
 					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
-					explicit ReinterpretAs16( vRNG *rng );
+					explicit ReinterpretAs16( vRNG* rng );
 					~ReinterpretAs16() override;
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class ReinterpretAs32 : public Transform32 {
-					Uint32 *buffer;
+					Uint32* buffer;
 					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
-					explicit ReinterpretAs32( vRNG *rng );
+					explicit ReinterpretAs32( vRNG* rng );
 					~ReinterpretAs32() override;
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class ReinterpretAs64 : public Transform64 {
-					Uint64 *buffer;
+					Uint64* buffer;
 					int index{8192 / OUTPUT_BITS};
 					void refill();
 				public:
-					explicit ReinterpretAs64( vRNG *rng );
+					explicit ReinterpretAs64( vRNG* rng );
 					~ReinterpretAs64() override;
 					Uint64 raw64() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -155,7 +155,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Xor : public MultiplexTransformRNG {
 					void refill() override;
 				public:
-					explicit Xor(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
+					explicit Xor(const std::vector<vRNG*>& sources) : MultiplexTransformRNG(sources) {}
 					[[nodiscard]] std::string get_name() const override;
 				};
 				/*class Interleave8 : public MultiplexTransformRNG {
@@ -187,11 +187,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using InWord = Uint16;
 					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
-					InWord *buffer;
+					InWord* buffer;
 					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
-					explicit Discard16to8(vRNG *base_rng_);
+					explicit Discard16to8(vRNG* base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -199,11 +199,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using InWord = Uint32;
 					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
-					InWord *buffer;
+					InWord* buffer;
 					int index{8192 / 32};
 					void refill();
 				public:
-					explicit Discard32to8(vRNG *base_rng_);
+					explicit Discard32to8(vRNG* base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -211,11 +211,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using InWord = Uint64;
 					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
-					InWord *buffer;
+					InWord* buffer;
 					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
-					explicit Discard64to8(vRNG *base_rng_);
+					explicit Discard64to8(vRNG* base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -223,11 +223,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using InWord = Uint32;
 					using OutWord = Uint16;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
-					InWord *buffer;
+					InWord* buffer;
 					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
-					explicit Discard32to16(vRNG *base_rng_);
+					explicit Discard32to16(vRNG* base_rng_);
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -235,11 +235,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using InWord = Uint64;
 					using OutWord = Uint16;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
-					InWord *buffer;
+					InWord* buffer;
 					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
-					explicit Discard64to16(vRNG *base_rng_);
+					explicit Discard64to16(vRNG* base_rng_);
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -247,11 +247,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using InWord = Uint64;
 					using OutWord = Uint32;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
-					InWord *buffer;
+					InWord* buffer;
 					int index{8192 / INPUT_BITS};
 					void refill();
 				public:
-					explicit Discard64to32(vRNG *base_rng_);
+					explicit Discard64to32(vRNG* base_rng_);
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -265,9 +265,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 raw64() override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
-					BaysDurhamShuffle64(vRNG64 *rng, int table_size_L2, int shift=0)
+					BaysDurhamShuffle64(vRNG64* rng, int table_size_L2, int shift=0)
 						: Transform64(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle32 final : public Transform32 {
@@ -279,9 +279,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 raw32() override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
-					BaysDurhamShuffle32(vRNG32 *rng, int table_size_L2, int shift=0)
+					BaysDurhamShuffle32(vRNG32* rng, int table_size_L2, int shift=0)
 						: Transform32(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle16 final : public Transform16 {
@@ -293,9 +293,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 raw16() override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
-					BaysDurhamShuffle16(vRNG16 *rng, int table_size_L2, int shift=0)
+					BaysDurhamShuffle16(vRNG16* rng, int table_size_L2, int shift=0)
 						: Transform16(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
 				class BaysDurhamShuffle8 final : public Transform8 {
@@ -307,10 +307,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 raw8() override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
-					BaysDurhamShuffle8(vRNG8 *rng, int table_size_L2, int shift=0)
+					BaysDurhamShuffle8(vRNG8* rng, int table_size_L2, int shift=0)
 						: Transform8(rng), index_mask((1<<table_size_L2)-1), index_shift(shift) {}
 				};
-				vRNG *apply_BaysDurhamShuffle(vRNG *base_rng, int table_size_L2=8, int shift=-1);
+				vRNG* apply_BaysDurhamShuffle(vRNG* base_rng, int table_size_L2=8, int shift=-1);
 }

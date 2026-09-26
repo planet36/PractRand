@@ -18,7 +18,7 @@ using namespace PractRand::Internals;
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(xsm32)
 void PractRand::RNGs::Polymorphic::xsm32::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::xsm32::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::xsm32::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::xsm32::seek_forward128(Uint64 how_far_low64, [[maybe_unused]] Uint64 how_far_high64) { implementation.seek_forward(how_far_low64); }
 void PractRand::RNGs::Polymorphic::xsm32::seek_backward128(Uint64 how_far_low64, [[maybe_unused]] Uint64 how_far_high64) {implementation.seek_backward(how_far_low64);}
 std::string PractRand::RNGs::Polymorphic::xsm32::get_name() const {return "xsm32";}
@@ -26,7 +26,7 @@ std::string PractRand::RNGs::Polymorphic::xsm32::get_name() const {return "xsm32
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(xsm64)
 void PractRand::RNGs::Polymorphic::xsm64::seed(Uint64 s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::xsm64::seed(Uint64 seed_low, Uint64 seed_high) { implementation.seed(seed_low, seed_high); }
-void PractRand::RNGs::Polymorphic::xsm64::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::xsm64::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::xsm64::seek_forward128(Uint64 how_far_low64, Uint64 how_far_high64) { implementation.seek_forward(how_far_low64, how_far_high64); }
 void PractRand::RNGs::Polymorphic::xsm64::seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) { implementation.seek_backward(how_far_low64, how_far_high64); }
 std::string PractRand::RNGs::Polymorphic::xsm64::get_name() const { return "xsm64"; }
@@ -79,7 +79,7 @@ void PractRand::RNGs::Raw::xsm32::seed(Uint64 s) {
 	lcg_low = lcg_adder_low;
 	step_forwards();
 }
-void PractRand::RNGs::Raw::xsm32::seed(vRNG *seeder_rng) {
+void PractRand::RNGs::Raw::xsm32::seed(vRNG* seeder_rng) {
 	//guaranteed that no two *distinct* seeded states are within 2**48 of each other on the same cycle ; 2**79 distinct seeded states are possible
 
 	lcg_adder_low = seeder_rng->raw32() | 1;
@@ -87,7 +87,7 @@ void PractRand::RNGs::Raw::xsm32::seed(vRNG *seeder_rng) {
 	lcg_high = lcg_adder_high + (seeder_rng->raw32() << 16);
 	lcg_low = lcg_adder_low;
 }
-void PractRand::RNGs::Raw::xsm32::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::xsm32::walk_state(StateWalkingObject* walker) {
 	walker->handle(lcg_low);
 	walker->handle(lcg_high);
 	walker->handle(lcg_adder_low);
@@ -147,7 +147,7 @@ void PractRand::RNGs::Raw::xsm64::seed(Uint64 seed_low, Uint64 seed_high) {
 	lcg_high = lcg_adder_high ^ ((seed_high >> 63) << 63);//and the highest bit of seed is used to determine which end of the cycle we start at
 	step_forwards();
 }
-void PractRand::RNGs::Raw::xsm64::seed(vRNG *seeder_rng) {
+void PractRand::RNGs::Raw::xsm64::seed(vRNG* seeder_rng) {
 	//guarantees that no two distinct seeded states are within 2**95 of each other on the same cycle ; 2**160 distinct seeded states are possible
 	Uint64 s1 = 0, s2 = 0, s3 = 0;
 	s1 = seeder_rng->raw64();
@@ -156,7 +156,7 @@ void PractRand::RNGs::Raw::xsm64::seed(vRNG *seeder_rng) {
 	seed(s1, s2);
 	lcg_high += s3 << 31;
 }
-void PractRand::RNGs::Raw::xsm64::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::xsm64::walk_state(StateWalkingObject* walker) {
 	walker->handle(lcg_low);
 	walker->handle(lcg_high);
 	walker->handle(lcg_adder_low);

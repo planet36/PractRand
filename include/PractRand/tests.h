@@ -41,14 +41,14 @@ namespace PractRand {
 			Uint16 as16[SIZE/2];
 			Uint32 as32[SIZE/4];
 			Uint64 as64[SIZE/8];
-			void fill(RNGs::vRNG *rng, unsigned long numblocks = 1);
+			void fill(RNGs::vRNG* rng, unsigned long numblocks = 1);
 		};
 		class ListOfTests;
 		class TestBaseclass {
 		protected:
 			Uint64 blocks_tested{};
 		public:
-			virtual void init(PractRand::RNGs::vRNG *known_good);
+			virtual void init(PractRand::RNGs::vRNG* known_good);
 			virtual void deinit() {}
 			virtual ~TestBaseclass() = default;
 			[[nodiscard]] virtual std::string get_name() const = 0;
@@ -63,10 +63,10 @@ namespace PractRand {
 			//       array.  Most tests don't care about this, but a few do.  The extra
 			//       blocks prepended are to appear at negative indices on the blocks[]
 			//       array, and are not counted in numblocks.
-			virtual void test_blocks(TestBlock *blocks, int numblocks) = 0;
+			virtual void test_blocks(TestBlock* blocks, int numblocks) = 0;
 
 
-			virtual void get_results ( std::vector<TestResult> &results ) = 0;
+			virtual void get_results ( std::vector<TestResult>& results ) = 0;
 
 			[[nodiscard]] virtual int get_blocks_to_repeat() const;//this is the number of blocks at negative indeces that test_blocks should be able to access
 			//containing duplicates of data from the end of the previous set of blocks passed to test_blocks

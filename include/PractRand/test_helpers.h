@@ -13,9 +13,9 @@ namespace PractRand::Tests {
 		//if aggressive is true, it will treat N as a hard limit on how low probabilities can be
 		//otherwise, it will treat it as a soft limit
 		//linear combines only adjacent entries; non-linear is not yet implemented
-		int simplify_prob_table ( unsigned long categories, double N, double *prob_table, Uint64 *counts, bool linear, bool aggressive );
-		double chi_squared_test ( unsigned long categories, const double *prob_table, const Uint64 *counts );
-		double rarity_test(unsigned long categories, const double *prob_table, const Uint64 *counts);
+		int simplify_prob_table ( unsigned long categories, double N, double* prob_table, Uint64* counts, bool linear, bool aggressive );
+		double chi_squared_test ( unsigned long categories, const double* prob_table, const Uint64* counts );
+		double rarity_test(unsigned long categories, const double* prob_table, const Uint64* counts);
 		class G_TEST {
 			long double total{}, sum{}, prob_sum{}, minimum_prob{}, partial_count{}, partial_prob{};
 			long categories{};
@@ -29,10 +29,10 @@ namespace PractRand::Tests {
 			[[nodiscard]] long get_DoF() const;
 			[[nodiscard]] long get_categories() const { return categories; }
 		};
-		double g_test(unsigned long categories, const double *prob_table, const Uint64 *counts);
-		double g_test_flat(unsigned long categories, const Uint64 *counts);
-		double g_test_flat_merge_normal(unsigned long categories, const Uint64 *counts, Uint64 total = Uint64(-1), double target_ratio = 32.0);//already converted to approximately normal distribution (mandatory since DoF is not returned)
-		double my_test(unsigned long categories, const double *prob_table, const Uint64 *counts);//if events are independent, this should converge to a normal distribution (mean 0 variance 1) ; intended for extremely unequal probability distributions like {0.5,0.25,0.125,0.0625,..}
+		double g_test(unsigned long categories, const double* prob_table, const Uint64* counts);
+		double g_test_flat(unsigned long categories, const Uint64* counts);
+		double g_test_flat_merge_normal(unsigned long categories, const Uint64* counts, Uint64 total = Uint64(-1), double target_ratio = 32.0);//already converted to approximately normal distribution (mandatory since DoF is not returned)
+		double my_test(unsigned long categories, const double* prob_table, const Uint64* counts);//if events are independent, this should converge to a normal distribution (mean 0 variance 1) ; intended for extremely unequal probability distributions like {0.5,0.25,0.125,0.0625,..}
 		double math_chisquared_to_pvalue ( double chisquared, double DoF );
 		double math_chisquared_to_normal ( double chisquared, double DoF );
 		double math_pvalue_to_chisquared ( double pvalue, double DoF );
@@ -47,11 +47,11 @@ namespace PractRand::Tests {
 		//long double gap_probs( int first, int last, long double baseprob = (255.0 / 256.0) );
 		//double raw_test_edge_distribution( unsigned long categories, const double *prob_table, const Uint64 *counts );
 		//double test_edge_distribution( unsigned long categories, const double *prob_table, const Uint64 *counts );
-		double test_uniformity( const SampleSet &sorted_data );
-		double test_table_uniformity( unsigned long categories, const double *prob_table, const Uint64 *counts );
+		double test_uniformity( const SampleSet& sorted_data );
+		double test_table_uniformity( unsigned long categories, const double* prob_table, const Uint64* counts );
 
 		double calculate_center_bit_combination_chance(int num_bits_L2);
-		void get_hamming_weight_chances(int num_bits, std::vector<double> &pdf, std::vector<double> &cdf);//vector size = 1+(num_bits/2))
+		void get_hamming_weight_chances(int num_bits, std::vector<double>& pdf, std::vector<double>& cdf);//vector size = 1+(num_bits/2))
 		// switches between a variety of mathods based upon the magnitude of num_bits
 
 		Uint8  reverse_bits8 (Uint8);
@@ -72,11 +72,11 @@ namespace PractRand::Tests {
 			void _normalize();
 			void _add(double result) {rs.push_back(result); sum += result; sum_sqr += result * result;}
 			SampleSet() = default;
-			void add(const SampleSet &other) {
+			void add(const SampleSet& other) {
 				for (double r : other.rs) _add(r);
 				_normalize();
 			}
-			void add(const double *new_results, int n) {
+			void add(const double* new_results, int n) {
 				long s = rs.size();
 				rs.resize(s + n);
 				for (int i = 0; i < n; i++) {
@@ -101,7 +101,7 @@ namespace PractRand::Tests {
 			[[nodiscard]] double get_result_by_percentile(double percentile) const;
 			[[nodiscard]] long get_num_elements_less_than ( double other_result ) const;
 			[[nodiscard]] long get_num_elements_greater_than ( double other_result ) const;
-			void get_num_elements_less_and_greater ( double other_result, int &num_less, int &num_greater ) const;
+			void get_num_elements_less_and_greater ( double other_result, int& num_less, int& num_greater ) const;
 		};
 
 		template<typename LowIntType, int size>
@@ -116,7 +116,7 @@ namespace PractRand::Tests {
 			}
 			FixedSizeCount() {reset_counts();}
 			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
-			const Uint64 &operator[] (int index) {
+			const Uint64& operator[] (int index) {
 				high[index] += low[index];
 				low[index] = 0;
 				return high[index];
@@ -127,12 +127,12 @@ namespace PractRand::Tests {
 					low[i] = 0;
 				}
 			}
-			const Uint64 *get_array() {flush(); return &high[0];}
+			const Uint64* get_array() {flush(); return &high[0];}
 		};
 		template<typename LowIntType>
 		class VariableSizeCount {
-			LowIntType *low;
-			Uint64 *high;
+			LowIntType* low;
+			Uint64* high;
 			int size{};
 		public:
 			int get_size() {return size;}
@@ -148,9 +148,9 @@ namespace PractRand::Tests {
 			}
 			VariableSizeCount() : low(nullptr), high(nullptr) {}
 			explicit VariableSizeCount(int size_) : low(nullptr), high(nullptr) {set_size(size_);}
-			VariableSizeCount(const VariableSizeCount &other) = delete;//copy constructor disallowed
+			VariableSizeCount(const VariableSizeCount& other) = delete;//copy constructor disallowed
 			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
-			const Uint64 &operator[] (int index) {
+			const Uint64& operator[] (int index) {
 				high[index] += low[index];
 				low[index] = 0;
 				return high[index];
@@ -161,11 +161,11 @@ namespace PractRand::Tests {
 					low[i] = 0;
 				}
 			}
-			const Uint64 *get_array() {flush(); return &high[0];}
-			void swap_array(VariableSizeCount<LowIntType> &other) {
+			const Uint64* get_array() {flush(); return &high[0];}
+			void swap_array(VariableSizeCount<LowIntType>& other) {
 				if (other.size != size) issue_error("VariableSizeCount::swap_array");
-				LowIntType *tmp_low = low;
-				Uint64 *tmp_high = high;
+				LowIntType* tmp_low = low;
+				Uint64* tmp_high = high;
 				low = other.low;
 				high = other.high;
 				other.low = tmp_low;
@@ -183,8 +183,8 @@ namespace PractRand::Tests {
 			static constexpr int WORD_BITS_MASK = WORD_BITS-1;
 			static constexpr int WORD_BITS_L2 = WORD_BITS==64?6:(WORD_BITS==32?5:(WORD_BITS==16?4:(WORD_BITS==8?3:-1)));
 			void init(int w_, int h_);
-			void raw_import(int offset, const Word *input, int length);
-			void import_partial_row(int x, int y, const Word *input, int bits, int bit_offset, bool zeroed=false);
+			void raw_import(int offset, const Word* input, int length);
+			void import_partial_row(int x, int y, const Word* input, int bits, int bit_offset, bool zeroed=false);
 			[[nodiscard]] bool read_position(int x, int y) const;
 			void xor_rows(int destination, int source);
 			void xor_rows_skip_start(int destination, int source, int skip);//skip is measured in words?
@@ -196,7 +196,7 @@ namespace PractRand::Tests {
 		struct RawTestCalibrationData_117 {
 			//for use on tests that produce (very) roughly a normal distribution
 			//should be based upon at least 512 samples
-			const char *name = nullptr;  //e.g. "Gap-16:A"
+			const char* name = nullptr;  //e.g. "Gap-16:A"
 			Uint64 blocks{};     //e.g. 32 for 32 KB
 			Uint64 num_samples{};//e.g. 65536 for that many results of known good RNGs used to construct raw_table
 			Uint64 num_duplicates{};
@@ -234,7 +234,7 @@ namespace PractRand::Tests {
 		struct RawTestCalibrationData_129 {// 117 wasn't quite enough, or rather in a few rare cases we can do better with a little more
 			//for use on tests that produce (very) roughly a normal distribution (typically chi-squared tests on overlapping samples)
 			//should be based upon at least 512 test results on known good RNGs, preferably a lot more
-			const char *name;  //e.g. "Gap-16:A"
+			const char* name;  //e.g. "Gap-16:A"
 			Uint64 blocks;     //e.g. 32 for 32 KB
 			Uint64 num_samples;//e.g. 65536 for that many results of known good RNGs used to construct raw_table
 			Uint64 num_duplicates;
@@ -246,7 +246,7 @@ namespace PractRand::Tests {
 
 			int limit;//0 if from 129, 6 if from 117, or should it reflect the raw number of samples?
 
-			static RawTestCalibrationData_129 *convert117to129(const RawTestCalibrationData_117 *old);
+			static RawTestCalibrationData_129* convert117to129(const RawTestCalibrationData_117* old);
 
 			static constexpr double ref_p[129] = {
 	0.0000001, 0.0000002, 0.0000005,

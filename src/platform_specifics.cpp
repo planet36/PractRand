@@ -36,7 +36,7 @@ Two functions are performed that may need to use platform-specific functionality
 
 using namespace PractRand;
 
-bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *entropy_pool, [[maybe_unused]] int milliseconds ) {
+bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* entropy_pool, [[maybe_unused]] int milliseconds ) {
 	//the intention is for "millisecond" to be an amount of time that this function is permitted to spend on obtaining entropy
 	//but currently nothing that spends time in a controlled fashion is implemented, so it's meaningless
 
@@ -50,7 +50,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *ent
 		int count = 0;
 		unsigned int tmp = 0;
 		for (int i = 0; i < N32 + 8; i++) {
-			count += (!rand_s( &tmp )) ? 1 : 0;
+			count += (!rand_s(&tmp )) ? 1 : 0;
 			entropy_pool->add_entropy32(tmp);
 			if (count == N32) {
 				entropy_pool->flush_buffers();
@@ -117,7 +117,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *ent
 		entropy_pool->add_entropy64(static_cast<Uint64>(std::time(nullptr)));
 		entropy_pool->add_entropy64(static_cast<Uint64>(std::clock()));
 		entropy_pool->add_entropy64(reinterpret_cast<Uint64>(entropy_pool));
-		auto *p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
+		auto* p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
 		entropy_pool->add_entropy64(reinterpret_cast<Uint64>(p));
 		//entropy_pool->add_entropy64(*p);//commented to avoid issues with memory debuggers
 		free(p);
@@ -250,10 +250,10 @@ Uint64 PractRand::Internals::issue_unique_identifier ( ) {
 #if 0
 #elif defined __GNUC__
 	static volatile Uint64 count = 0;
-	return __sync_fetch_and_add( &count, Uint64(1) );
+	return __sync_fetch_and_add(&count, Uint64(1) );
 #elif defined _WIN32
 	static volatile LONGLONG count = 0;
-	return InterlockedIncrement64( &count);
+	return InterlockedIncrement64(&count);
 #elif defined __APPLE__ && defined __MACH__
 	//OS X, /usr/include/libkern/OSAtomic.h, OSAtomicIncrement64
 	static volatile int64_t count = 0;

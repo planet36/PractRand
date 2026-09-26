@@ -7,19 +7,19 @@ namespace PractRand::Tests {
 		public:
 			std::vector<TestBaseclass*> tests;
 			ListOfTests ( ) = default;
-			explicit ListOfTests ( TestBaseclass **tests_ );
+			explicit ListOfTests ( TestBaseclass** tests_ );
 			explicit ListOfTests (
-				TestBaseclass *test1, TestBaseclass *test2=nullptr, TestBaseclass *test3=nullptr, TestBaseclass *test4=nullptr,
-				TestBaseclass *test5=nullptr, TestBaseclass *test6=nullptr, TestBaseclass *test7=nullptr, TestBaseclass *test8=nullptr,
-				TestBaseclass *test9=nullptr, TestBaseclass *test10=nullptr, TestBaseclass *test11=nullptr, TestBaseclass *test12=nullptr,
-				TestBaseclass *test13=nullptr, TestBaseclass *test14=nullptr, TestBaseclass *test15=nullptr, TestBaseclass *test16=nullptr
+				TestBaseclass* test1, TestBaseclass* test2=nullptr, TestBaseclass* test3=nullptr, TestBaseclass* test4=nullptr,
+				TestBaseclass* test5=nullptr, TestBaseclass* test6=nullptr, TestBaseclass* test7=nullptr, TestBaseclass* test8=nullptr,
+				TestBaseclass* test9=nullptr, TestBaseclass* test10=nullptr, TestBaseclass* test11=nullptr, TestBaseclass* test12=nullptr,
+				TestBaseclass* test13=nullptr, TestBaseclass* test14=nullptr, TestBaseclass* test15=nullptr, TestBaseclass* test16=nullptr
 			);
 		};
 
 		//batteries
 		namespace Batteries {
 			//simply calls the destructors on all tests in list of tests
-			void destruct_tests(const ListOfTests &tests);
+			void destruct_tests(const ListOfTests& tests);
 
 			//gets a battery of of tests
 			//
@@ -58,7 +58,7 @@ namespace PractRand::Tests {
 
 			//apply standard foldings to a test set:
 			ListOfTests apply_standard_foldings(int bits, ListOfTests(*base_tests)());
-			ListOfTests apply_standard_foldings(const RNGs::vRNG *rng, ListOfTests(*base_tests)());
+			ListOfTests apply_standard_foldings(const RNGs::vRNG* rng, ListOfTests(*base_tests)());
 			//note: there is specific behavior for 8 bit, 16 bit, 32 bit, and 64 bit cases ; any other value produces an alternate "unknown format" targetted folding
 
 			//apply extended foldings to a test set:

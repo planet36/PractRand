@@ -21,13 +21,13 @@ static inline unsigned long twist32( unsigned long m, unsigned long s0, unsigned
 	return m ^ gfsr_twist_table[s1&1] ^ (((s0&0x80000000UL)|(s1&0x7fffffffUL))>>1);
 }
 void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change
-	Uint32 *p = state;
+	Uint32* p = state;
 	long i = 0;
 	for( i = ARRAY_SIZE - OFFSET; i--; ++p )
 		*p = Uint32(twist32( p[OFFSET], p[0], p[1] ));
 	for( i = OFFSET; --i; ++p )
-		*p = Uint32(twist32( *(p - (ARRAY_SIZE-OFFSET)), p[0], p[1] ));
-	*p = Uint32(twist32( *(p - (ARRAY_SIZE-OFFSET)), p[0], state[0] ));
+		*p = Uint32(twist32(*(p - (ARRAY_SIZE-OFFSET)), p[0], p[1] ));
+	*p = Uint32(twist32(*(p - (ARRAY_SIZE-OFFSET)), p[0], state[0] ));
 
 	used = 0;
 }
@@ -76,11 +76,11 @@ void PractRand::RNGs::Raw::mt19937::seed(const Uint32 s[], int seed_length) {//L
 	}
 	state[0] = 0x80000000UL;
 }
-void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
 	//exception - in version 0.85 added check for invalid state
 	walker->handle(used);
-	for (auto & i : state) walker->handle(i);
+	for (auto& i : state) walker->handle(i);
 	if (used > ARRAY_SIZE) used = ARRAY_SIZE;
 	if (walker->is_clumsy()) {
 		unsigned long successive_zeroes = 0;

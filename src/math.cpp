@@ -18,7 +18,7 @@
 
 namespace PractRand {
 	namespace Internals {
-		static void add_128 ( const Uint32 *a, const Uint32 *b, Uint32 *result ) {
+		static void add_128 ( const Uint32* a, const Uint32* b, Uint32* result ) {
 			Uint64 tmp = 0;
 			for (int x = 0; x < 4; x++) {
 				tmp += a[x];
@@ -27,7 +27,7 @@ namespace PractRand {
 				tmp >>= 32;
 			}
 		}
-		static void multiply_128 ( const Uint32 *a, const Uint32 *b, Uint32 *result ) {
+		static void multiply_128 ( const Uint32* a, const Uint32* b, Uint32* result ) {
 			Uint32 buffer[4];
 			Uint64 current = 0, carry = 0, tmp = 0;
 			for (int x = 0; x < 4; x++) {
@@ -42,11 +42,11 @@ namespace PractRand {
 			}
 			for (int i = 0; i < 4; i++) result[i] = buffer[i];
 		}
-		static void convert128_64to32( Uint64 low, Uint64 high, Uint32 *destination ) {
+		static void convert128_64to32( Uint64 low, Uint64 high, Uint32* destination ) {
 			destination[0] = Uint32(low);  destination[1] = Uint32(low >> 32);
 			destination[2] = Uint32(high); destination[3] = Uint32(high >> 32);
 		}
-		void fast_forward_lcg128 ( Uint64 how_far_low, Uint64 how_far_high, Uint64 &value_low, Uint64 &value_high, Uint64 mul_low, Uint64 mul_high, Uint64 add_low, Uint64 add_high ) {
+		void fast_forward_lcg128 ( Uint64 how_far_low, Uint64 how_far_high, Uint64& value_low, Uint64& value_high, Uint64 mul_low, Uint64 mul_high, Uint64 add_low, Uint64 add_high ) {
 			Uint32 value[4], mul[4], add[4], tmp[4];
 			convert128_64to32(value_low, value_high, value);
 			convert128_64to32(mul_low, mul_high, mul);
@@ -197,7 +197,7 @@ namespace PractRand {
 		//if aggressive is true, it will treat N as a hard limit on how low probabilities can be
 		//otherwise, it will treat it as a soft limit
 		//linear combines only adjacent entries; non-linear is not yet implemented
-		int simplify_prob_table ( unsigned long categories, double N, double *prob_table, Uint64 *counts, bool linear, bool aggressive ) {
+		int simplify_prob_table ( unsigned long categories, double N, double* prob_table, Uint64* counts, bool linear, bool aggressive ) {
 			if (N < 2.0) N = 2.0;
 			double E = 1.0 / N;
 			int reduced_size = categories;
@@ -260,7 +260,7 @@ namespace PractRand {
 		}
 
 
-		double chi_squared_test ( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
+		double chi_squared_test ( unsigned long categories, const double* prob_table, const Uint64* counts ) {
 			unsigned long i = 0;
 			long double sum = 0, v = 0;
 
@@ -277,7 +277,7 @@ namespace PractRand {
 		//	double normal = (V-(categories-1))/sqrt((double)(categories-1));
 			return static_cast<double>(v);
 		}
-		double rarity_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
+		double rarity_test(unsigned long categories, const double* prob_table, const Uint64* counts) {
 			long double total = 0;
 			std::vector<double> logs; logs.resize(categories);
 			long double mean = 0.0;
@@ -320,7 +320,7 @@ namespace PractRand {
 
 			return sum / std::sqrt(total);
 		}
-		double my_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
+		double my_test(unsigned long categories, const double* prob_table, const Uint64* counts) {
 			double score_actual = 0;
 			double score_mean = 0;
 			//double score_mean_sqr = 0;
@@ -395,7 +395,7 @@ namespace PractRand {
 				categories += 1;
 			}
 		}
-		double g_test(unsigned long categories, const double *prob_table, const Uint64 *counts) {
+		double g_test(unsigned long categories, const double* prob_table, const Uint64* counts) {
 			long double total = 0;
 			long double sum = 0;
 			for (unsigned long i = 0; i < categories; i++) {
@@ -406,7 +406,7 @@ namespace PractRand {
 			sum -= total * std::log(double(total));
 			return static_cast<double>(sum) * 2.0;
 		}
-		double g_test_flat(unsigned long categories, const Uint64 *counts) {
+		double g_test_flat(unsigned long categories, const Uint64* counts) {
 			long double total = 0;
 			long double sum = 0;
 			for (unsigned long i = 0; i < categories; i++) {
@@ -417,7 +417,7 @@ namespace PractRand {
 			sum -= total * std::log(double(total) / double(categories));
 			return static_cast<double>(sum) * 2.0;
 		}
-		double g_test_flat_merge_normal(unsigned long categories, const Uint64 *counts, Uint64 total, double target_ratio) {
+		double g_test_flat_merge_normal(unsigned long categories, const Uint64* counts, Uint64 total, double target_ratio) {
 			if (categories < 2) return 0;
 			if (total == Uint64(-1)) {
 				total = 0;
@@ -664,7 +664,7 @@ namespace PractRand {
 				//double gamma = std::sqrt(3.141592653589793238) * scale;
 				//return (std::sqrt(3.141592653589793238) * math_erf(std::sqrt(x)) * scale + offset) / gamma;
 				double sum_offsets = 0;
-				for (double & ln_offset : ln_offsets)
+				for (double& ln_offset : ln_offsets)
 					sum_offsets += std::exp(ln_offset - ln_scale);
 				//return math_erf(std::sqrt(x)) + offset / (std::sqrt(3.141592653589793238) * scale);
 				return math_erf(std::sqrt(x)) - sum_offsets / std::sqrt(std::numbers::pi);
@@ -673,7 +673,7 @@ namespace PractRand {
 				//double gamma = scale;
 				//return ((1 - std::exp(-x)) * scale + offset) / gamma;
 				double sum_offsets = 0;
-				for (double & ln_offset : ln_offsets)
+				for (double& ln_offset : ln_offsets)
 					sum_offsets += std::exp(ln_offset - ln_scale);
 				//return (1 - std::exp(-x)) + offset / scale;
 				return (1 - std::exp(-x)) - sum_offsets;
@@ -861,7 +861,7 @@ namespace PractRand {
 			if (bits_L2 < 25) return chance_skipped[bits_L2];
 			else return chance_skipped[24] * std::pow(0.5, 0.5 * (bits_L2 - 24));
 		}
-		void get_hamming_weight_chances(int num_bits, std::vector<double> &pdf, std::vector<double> &cdf) {
+		void get_hamming_weight_chances(int num_bits, std::vector<double>& pdf, std::vector<double>& cdf) {
 			int n = num_bits/2;
 			pdf.resize(n+1);
 			cdf.resize(n+1);
@@ -970,7 +970,7 @@ namespace PractRand {
 			double raw = raw_test_edge_distribution(categories, prob_table, counts);
 			return raw;
 		}*/
-		double test_uniformity( const SampleSet &sorted_data ) {
+		double test_uniformity( const SampleSet& sorted_data ) {
 			long size = sorted_data.size();
 			if (!size) return 0;
 			double size_f = size;
@@ -1032,7 +1032,7 @@ namespace PractRand {
 
 			return rv;
 		}
-		double test_table_uniformity( unsigned long categories, [[maybe_unused]] const double *prob_table, const Uint64 *counts ) {
+		double test_table_uniformity( unsigned long categories, [[maybe_unused]] const double* prob_table, const Uint64* counts ) {
 			//long double prob_sum = 0;
 			long double total = 0;
 			for (unsigned long i = 0; i < categories; i++) total += counts[i];
@@ -1093,7 +1093,7 @@ namespace PractRand {
 			for (i = 0; i < s && rs[s-1-i] > other_result; i++) ;
 			return i;
 		}
-		void SampleSet::get_num_elements_less_and_greater ( double other_result, int &num_less, int &num_greater ) const {
+		void SampleSet::get_num_elements_less_and_greater ( double other_result, int& num_less, int& num_greater ) const {
 			//could use more optimization, but who cares?
 			num_less = get_num_elements_less_than(other_result);
 			num_greater = get_num_elements_greater_than(other_result);
@@ -1109,7 +1109,7 @@ namespace PractRand {
 			}
 		}
 		double SampleSet::_get_index ( double other_result ) const {
-			double &r = other_result;
+			double& r = other_result;
 			long s = rs.size();
 			if (!s) return 0;
 			int lower = 0, higher = 0;
@@ -1125,7 +1125,7 @@ namespace PractRand {
 			}
 		}
 		double SampleSet::get_percentile ( double other_result ) const {
-			double &r = other_result;
+			double& r = other_result;
 			long s = rs.size();
 			if (!s) return 0;
 			int lower = 0, higher = 0;
@@ -1163,15 +1163,15 @@ namespace PractRand {
 			data.resize(ww*h, 0);
 			//for (int i = 0; i < ww*h; i++) data[i] = 0;
 		}
-		void BitMatrix::raw_import(int offset, const Word *input, int length) {
+		void BitMatrix::raw_import(int offset, const Word* input, int length) {
 			for (int i = 0; i < length; i++) data[offset+i] = input[i];
 		}
-		void BitMatrix::import_partial_row(int x, int y, const Word *input, int bits, int bit_offset, bool zeroed) {
+		void BitMatrix::import_partial_row(int x, int y, const Word* input, int bits, int bit_offset, bool zeroed) {
 			//49 seconds
 			//added zeroed
 			//46 seconds
 			//added shifts
-			Word *dest = &data[y*ww+(x>>WORD_BITS_L2)];
+			Word* dest = &data[y*ww+(x>>WORD_BITS_L2)];
 			if constexpr (false) {
 			/*	//clear partial words at begining & end of region
 				int end = x + bits;

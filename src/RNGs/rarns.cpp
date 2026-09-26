@@ -67,7 +67,7 @@ void PractRand::RNGs::Raw::rarns16::seed(Uint16 s1, Uint16 s2, Uint16 s3) {
 	xs1 = s2; xs2 = s2; xs3 = s3;
 	if (!(s1 | s2 | s3)) xs1 = 1;
 }
-void PractRand::RNGs::Raw::rarns16::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::rarns16::walk_state(StateWalkingObject* walker) {
 	walker->handle(xs1);
 	walker->handle(xs2);
 	walker->handle(xs3);
@@ -101,7 +101,7 @@ void PractRand::RNGs::Raw::rarns32::seed(Uint32 s1, Uint32 s2, Uint32 s3) {
 	xs1 = s2; xs2 = s2; xs3 = s3;
 	if (!(s1 | s2 | s3)) xs1 = 1;
 }
-void PractRand::RNGs::Raw::rarns32::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::rarns32::walk_state(StateWalkingObject* walker) {
 	walker->handle(xs1);
 	walker->handle(xs2);
 	walker->handle(xs3);
@@ -134,7 +134,7 @@ void PractRand::RNGs::Raw::rarns64::seed(Uint64 s1, Uint64 s2) {
 	xs3 = 1;
 	for (int i = 0; i < 8; i++) raw64();
 }
-void PractRand::RNGs::Raw::rarns64::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::rarns64::walk_state(StateWalkingObject* walker) {
 	walker->handle(xs1);
 	walker->handle(xs2);
 	walker->handle(xs3);

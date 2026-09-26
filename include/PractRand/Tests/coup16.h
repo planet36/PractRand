@@ -9,9 +9,9 @@ namespace PractRand::Tests {
 			//to do: also measure sequential correlation, or do something like BCFN on whether or not each sample is >= the expected value
 		public:
 			Coup16() = default;
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void get_results(std::vector<TestResult>& results) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		};
 }//PractRand

@@ -91,17 +91,17 @@ void PractRand::RNGs::Raw::chacha::_set_position(Uint64 low, Uint64 high) {
 	position_overflow = Uint32(high);
 	_core();
 }
-void PractRand::RNGs::Raw::chacha::_get_position(Uint64 &low, Uint64 &high) const {
+void PractRand::RNGs::Raw::chacha::_get_position(Uint64& low, Uint64& high) const {
 	low = used + (Uint64(state[POS_INDEX0]) << 4) + (Uint64(state[POS_INDEX1]) << 36);
 	high = (state[POS_INDEX1] >> 28) + (Uint64(position_overflow) << 4);
 }
 #if !defined PRACTRAND_NO_SIMD && defined _MSC_VER && defined _M_IX86_FP && _M_IX86_FP == 2
 void PractRand::RNGs::Raw::chacha::_core() {
-	const Uint32 *constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
+	const Uint32* constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
 	for (int i = 0; i < 4; i++) outbuf[i] = constants[i];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-	__m128i *buf = (__m128i*)&outbuf[0];
-	__m128i *base = (__m128i*)&state[0];
+	__m128i* buf = (__m128i*)&outbuf[0];
+	__m128i* base = (__m128i*)&state[0];
 	buf[1] = base[0];
 	buf[2] = base[1];
 	buf[3] = base[2];
@@ -175,7 +175,7 @@ void PractRand::RNGs::Raw::chacha::_core() {
 }
 #else
 void PractRand::RNGs::Raw::chacha::_core() {
-	const Uint32 *constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
+	const Uint32* constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
 
 	for (int i = 0; i < 4; i++) outbuf[i] = constants[i];
 	for (int i = 4; i < 16; i++) outbuf[i] = state[i-4];
@@ -241,8 +241,8 @@ void PractRand::RNGs::Raw::chacha::seed_short(const Uint32 seed_and_iv[6], bool 
 	_core();
 	used = 0;
 }
-void PractRand::RNGs::Raw::chacha::walk_state(StateWalkingObject *walker) {
-	for (auto & i : state) walker->handle(i);
+void PractRand::RNGs::Raw::chacha::walk_state(StateWalkingObject* walker) {
+	for (auto& i : state) walker->handle(i);
 	walker->handle(used);
 	walker->handle(extend_cycle);
 	if (extend_cycle) walker->handle(position_overflow);
@@ -283,7 +283,7 @@ void PractRand::RNGs::Raw::chacha::set_rounds(int rounds_) {
 	rounds = rounds_;
 	//_core();
 }
-static void test_chacha ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_seed, Uint32 expected0, Uint32 index, Uint32 expected1) {
+static void test_chacha ( Uint32 rounds, const Uint32* seed_and_iv, bool short_seed, Uint32 expected0, Uint32 index, Uint32 expected1) {
 	PractRand::RNGs::Raw::chacha rng;
 	rng.set_rounds(rounds);
 	if (!short_seed) rng.seed(seed_and_iv, false);

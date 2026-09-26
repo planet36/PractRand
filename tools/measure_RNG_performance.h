@@ -3,7 +3,7 @@
 //template<typename RNG> double measure_RNG_performance();
 //returns mebibytes per second, of calls to raw64() on 64 bit RNGs or raw32 on other RNGs
 
-template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
+template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint16 buffy[1024];
@@ -12,7 +12,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
-		for (auto & i : buffy) i = rng->raw16();
+		for (auto& i : buffy) i = rng->raw16();
 		j++;
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
@@ -27,7 +27,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 
 	return rate;
 }
-template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
+template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint32 buffy[1024] = {0};
@@ -36,7 +36,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
-		for (auto & i : buffy) i = rng->raw32();
+		for (auto& i : buffy) i = rng->raw32();
 		j++;
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 
@@ -51,7 +51,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 
 	return rate;
 }
-template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
+template<typename RNG> double measure_RNG_performance_64(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint64 buffy[1024] = {0};
@@ -60,7 +60,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
-		for (auto & i : buffy) i = rng->raw64();
+		for (auto& i : buffy) i = rng->raw64();
 		j++;
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);
 

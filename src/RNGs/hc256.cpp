@@ -15,7 +15,7 @@ std::string PractRand::RNGs::Polymorphic::hc256::get_name() const {return "hc256
 void PractRand::RNGs::Polymorphic::hc256::flush_buffers() {implementation.flush_buffers();}
 void PractRand::RNGs::Polymorphic::hc256::seed(Uint64 s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::hc256::seed(Uint32 key_and_iv[16]) { implementation.seed(key_and_iv); }
-void PractRand::RNGs::Polymorphic::hc256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::hc256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 
 //raw:
 PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
@@ -59,7 +59,7 @@ PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 }
 
 void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
-	Uint32 *data = &outbuf[0];
+	Uint32* data = &outbuf[0];
 	unsigned long cc = counter & 0x3ff;
 	unsigned long end = (cc + OUTPUT_BUFFER_SIZE) & 0x3ff;
 
@@ -124,9 +124,9 @@ void PractRand::RNGs::Raw::hc256::seed(Uint64 s) {//LOCKED, do not change
 	for (int i = 2; i < 16; i++) seed_array[i] = 0;
 	seed(seed_array);
 }
-void PractRand::RNGs::Raw::hc256::seed(vRNG *seeder_rng) {//LOCKED, do not change
+void PractRand::RNGs::Raw::hc256::seed(vRNG* seeder_rng) {//LOCKED, do not change
 	Uint32 seed_array[16];
-	for (auto & i : seed_array) i = seeder_rng->raw32();
+	for (auto& i : seed_array) i = seeder_rng->raw32();
 	seed(seed_array);
 }
 void PractRand::RNGs::Raw::hc256::self_test() {
@@ -141,7 +141,7 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 	rng.seed(key_and_iv);
 	Uint32 checksums[16] = {0};
 	for (int x = 0; x < 1<<16; x++) {
-		for (auto & checksum : checksums) checksum ^= rng.raw32();
+		for (auto& checksum : checksums) checksum ^= rng.raw32();
 	}
 	if (checksums[0] != 0xc6b6fb99) issue_error("hc256::self_test() failed");
 	if (checksums[1] != 0xf2ae1440) issue_error("hc256::self_test() failed");
@@ -204,13 +204,13 @@ void PractRand::RNGs::Raw::hc256::seed(const Uint32 key_and_iv[16]) {//LOCKED, d
 	//initialize output buffer
 	used = OUTPUT_BUFFER_SIZE;
 }
-void PractRand::RNGs::Raw::hc256::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::hc256::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
-	for (auto & i : P) walker->handle(i);
-	for (auto & i : Q) walker->handle(i);
+	for (auto& i : P) walker->handle(i);
+	for (auto& i : Q) walker->handle(i);
 	walker->handle(counter);
 	walker->handle(used);
-	for (auto & i : outbuf) walker->handle(i);
+	for (auto& i : outbuf) walker->handle(i);
 
 	if (!(walker->get_properties() & StateWalkingObject::FLAG_READ_ONLY)) {
 		if (used > OUTPUT_BUFFER_SIZE) used = OUTPUT_BUFFER_SIZE;

@@ -72,7 +72,7 @@ void PractRand::RNGs::Raw::sfc16::seed(Uint16 s1, Uint16 s2, Uint16 s3) {
 	counter = 1;
 	for (int i = 0; i < 10; i++) raw16();
 }
-void PractRand::RNGs::Raw::sfc16::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::sfc16::walk_state(StateWalkingObject* walker) {
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
@@ -110,7 +110,7 @@ void PractRand::RNGs::Raw::sfc32::seed(Uint32 s1, Uint32 s2, Uint32 s3) {
 	counter = 1;
 	for (int i = 0; i < 15; i++) raw32();
 }
-void PractRand::RNGs::Raw::sfc32::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::sfc32::walk_state(StateWalkingObject* walker) {
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
@@ -157,7 +157,7 @@ void PractRand::RNGs::Raw::sfc64::seed(Uint64 s1, Uint64 s2, Uint64 s3) {
 	counter = 1;
 	for (int i = 0; i < 18; i++) raw64();
 }
-void PractRand::RNGs::Raw::sfc64::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::sfc64::walk_state(StateWalkingObject* walker) {
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);

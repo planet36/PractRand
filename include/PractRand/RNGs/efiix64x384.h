@@ -23,8 +23,8 @@ namespace PractRand::RNGs {
 				Uint64 raw64();
 				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
 				void seed(Uint64 s) {seed(s,s,s,s);}
-				void seed(vRNG *source_rng);
-				void walk_state(StateWalkingObject *walker);
+				void seed(vRNG* source_rng);
+				void walk_state(StateWalkingObject* walker);
 			};
 		}
 
@@ -33,7 +33,7 @@ namespace PractRand::RNGs {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(efiix64x384)
 				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
 				void seed(Uint64 s) override;
-				void seed(vRNG *source_rng) override;
+				void seed(vRNG* source_rng) override;
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(efiix64x384)

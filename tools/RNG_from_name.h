@@ -43,40 +43,40 @@ namespace Special_RNGs {
 		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin"; }
 		[[nodiscard]] int get_native_output_size() const override {return -1;}
-		void walk_state(PractRand::StateWalkingObject *) override {}
+		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin8 : public PractRand::RNGs::vRNG8 {
 		_stdin_reader<PractRand::Uint8> source;
 		PractRand::Uint8 raw8() override { return source.read(); }
 		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin8"; }
-		void walk_state(PractRand::StateWalkingObject *) override {}
+		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin16 : public PractRand::RNGs::vRNG16 {
 		_stdin_reader<PractRand::Uint16> source;
 		PractRand::Uint16 raw16() override { return source.read(); }
 		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin16"; }
-		void walk_state(PractRand::StateWalkingObject *) override {}
+		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin32 : public PractRand::RNGs::vRNG32 {
 		_stdin_reader<PractRand::Uint32> source;
 		PractRand::Uint32 raw32() override { return source.read(); }
 		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin32"; }
-		void walk_state(PractRand::StateWalkingObject *) override {}
+		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin64 : public PractRand::RNGs::vRNG64 {
 		_stdin_reader<PractRand::Uint64> source;
 		PractRand::Uint64 raw64() override { return source.read(); }
 		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin64"; }
-		void walk_state(PractRand::StateWalkingObject *) override {}
+		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 }
 
 namespace PractRand::RNG_Sets {
-			const char *recommended_rngs[] = {
+			const char* recommended_rngs[] = {
 				"hc256", "trivium",
 				"efiix64x384", "efiix32x384", "efiix16x384", "efiix8x384",
 				"isaac64x256", "isaac32x256",
@@ -89,7 +89,7 @@ namespace PractRand::RNG_Sets {
 				nullptr
 			};
 			const int num_recommended_rngs = sizeof(recommended_rngs) / sizeof(recommended_rngs[0]) - 1;
-			const char *nonrecommended_simple[] = {
+			const char* nonrecommended_simple[] = {
 				"xorshift32", "xorshift64", "xorshift32of128", "xoroshiro128plus",
 				"xorwow32of96", "xorwow32x6", "xsalta16x3", "xsaltb16x3", "xsaltc16x3",
 				"sapparot", "sap16of48", "sap32of96",
@@ -104,7 +104,7 @@ namespace PractRand::RNG_Sets {
 				nullptr
 			};
 			const int num_nonrecommended_simple = sizeof(nonrecommended_simple) / sizeof(nonrecommended_simple[0]) - 1;
-			const char *nonrecommended_nonlcg[] = {
+			const char* nonrecommended_nonlcg[] = {
 				"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16", "multish3x32", "multish4x16",
 				"mwrca16", "mwrca32", "mwrcc16", "mwrcc32", "mwrcca16", "mwrcca32",
 				"old_mwlac16", "mwlac_varA", "mwlac_varB", "mwlac_varC", "mwlac_varD", "mwlac_varE",
@@ -112,7 +112,7 @@ namespace PractRand::RNG_Sets {
 				nullptr
 			};
 			const int num_nonrecommended_nonlcg = sizeof(nonrecommended_nonlcg) / sizeof(nonrecommended_nonlcg[0]) - 1;
-			const char *nonrecommended_lcgish[] = {
+			const char* nonrecommended_lcgish[] = {
 				"lcg(16,32)", "lcg(16,40)", "lcg(16,48)", "lcg(16,56)", "lcg(16,64)", "lcg(16,72)", "lcg(16,80)", "lcg(16,96)", "lcg(16,112)",
 				"xlcg(16,32)", "xlcg(16,40)", "xlcg(16,48)", "xlcg(16,56)", "xlcg(16,64)", "xlcg(16,72)",
 				"clcg(16,64)", "clcg(16,68)", "clcg(16,72)", "clcg(16,76)", "clcg(16,80)", "clcg(16,84)",
@@ -122,7 +122,7 @@ namespace PractRand::RNG_Sets {
 				nullptr
 			};
 			const int num_nonrecommended_lcgish = sizeof(nonrecommended_lcgish) / sizeof(nonrecommended_lcgish[0]) - 1;
-			const char *nonrecommended_cbuf[] = {
+			const char* nonrecommended_cbuf[] = {
 				"mm32", "mm32_awc", "mm16of32", "mm16of32_awc", "mm4691",
 				"cbuf_accum", "cbuf_accum_big", "cbuf_2accum_small", "cbuf_2accum", "dual_cbuf_small", "dual_cbuf", "dual_cbufa_small", "dual_cbuf_accum",
 				"fibmul16of32", "fibmul32of64", "fibmulmix16", "ranrot32small", "ranrot32", "ranrot32big", "ranrot3tap32small", "ranrot3tap32", "ranrot3tap32big", "ranrot32hetsmall", "ranrot32het", "ranrot32hetbig",
@@ -130,7 +130,7 @@ namespace PractRand::RNG_Sets {
 				nullptr
 			};
 			const int num_nonrecommended_cbuf = sizeof(nonrecommended_cbuf) / sizeof(nonrecommended_cbuf[0]) - 1;
-			const char *nonrecommended_indirect[] = {
+			const char* nonrecommended_indirect[] = {
 				"ibaa8(1)", "ibaa8(2)", "ibaa8(3)", "ibaa16(1)", "ibaa16(2)", "ibaa16(3)", "ibaa32(1)", "ibaa32(2)", "ibaa32(3)",
 				"rc4_weakenedA", "rc4_weakenedB", "rc4_weakenedC", "rc4_weakenedD", "rc4",
 				"isaac16(2)", "isaac16(3)", "isaac16(4)", "isaac32(2)", "isaac32(3)", "isaac32(4)",
@@ -144,7 +144,7 @@ namespace PractRand::RNG_Sets {
 
 
 namespace RNG_Factories {
-	std::map<std::string, PractRand::RNGs::vRNG *(*)(std::vector<std::string> &params)> RNG_factory_index;
+	std::map<std::string, PractRand::RNGs::vRNG* (*)(std::vector<std::string>& params)> RNG_factory_index;
 /*	struct RNG_Description {
 		const char *name;
 		const char *full_name;
@@ -159,12 +159,12 @@ namespace RNG_Factories {
 		Uint64 flags;
 	};*/
 
-	bool parse_argument_list(const std::string &raw, std::string &name, std::vector<std::string> &parameters) {
+	bool parse_argument_list(const std::string& raw, std::string& name, std::vector<std::string>& parameters) {
 		// "BDS(BDS(chacha(8),4),8)" -> "BDS", "BDS(chacha(8),4)", "8"
 		// that is, function name, parameter 1, parameter 2, ...
 		parameters.clear();
-		const char *base = raw.c_str();
-		const char *tmp = strpbrk(base, "(,)");
+		const char* base = raw.c_str();
+		const char* tmp = strpbrk(base, "(,)");
 		if (!tmp) {
 			name = raw;
 			return true;
@@ -190,61 +190,61 @@ namespace RNG_Factories {
 		}
 		return checkpoint_pos == raw.size();
 	}
-	PractRand::RNGs::vRNG *create_rng(const std::string &raw, std::string *error_message = nullptr) {
+	PractRand::RNGs::vRNG* create_rng(const std::string& raw, std::string* error_message = nullptr) {
 		std::string rng_name;
 		std::vector<std::string> parameters;
 		if (!parse_argument_list(raw, rng_name, parameters)) return nullptr;
 		auto it = RNG_factory_index.find(rng_name);
 		if (it == RNG_factory_index.end()) return nullptr;
 		unsigned long os = parameters.size();
-		PractRand::RNGs::vRNG *rng = it->second(parameters);
+		PractRand::RNGs::vRNG* rng = it->second(parameters);
 		if (error_message && !rng && os < parameters.size()) *error_message = parameters[os];
 		return rng;
 	}
 
-	PractRand::RNGs::vRNG *rngset_lookup_recommended(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_recommended(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_recommended_rngs) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(recommended_rngs[index - 1]);
 	}
-	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_simple(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_simple(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_simple) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_simple[index - 1]);
 	}
-	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_nonlcg(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_nonlcg(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_nonlcg) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_nonlcg[index - 1]);
 	}
-	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_lcgish(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_lcgish(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_lcgish) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_lcgish[index - 1]);
 	}
-	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_cbuf(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_cbuf(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_cbuf) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_cbuf[index - 1]);
 	}
-	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_indirect(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_indirect(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_indirect) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_indirect[index - 1]);
 	}
-	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
@@ -265,16 +265,16 @@ namespace RNG_Factories {
 		return nullptr;
 	}
 	template<class RNG>
-	PractRand::RNGs::vRNG *_generic_recommended_RNG_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* _generic_recommended_RNG_factory(std::vector<std::string>& params) {
 		if (!params.empty()) return nullptr;
 		return new RNG(PractRand::SEED_NONE);
 	}
 	template<class RNG>
-	PractRand::RNGs::vRNG *_generic_notrecommended_RNG_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* _generic_notrecommended_RNG_factory(std::vector<std::string>& params) {
 		if (!params.empty()) return nullptr;
 		return new RNG();
 	}
-	PractRand::RNGs::vRNG *lcg_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* lcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to lcg - should be lcg(out_bits,total_bits)");return nullptr;}
 		int out_bits = atoi(params[0].c_str());
 		int total_bits = atoi(params[1].c_str());
@@ -296,7 +296,7 @@ namespace RNG_Factories {
 			else return new PractRand::RNGs::Polymorphic::NotRecommended::lcg32of128_varqual(total_bits - out_bits);
 		}
 	}
-	PractRand::RNGs::vRNG *xlcg_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* xlcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to xlcg - should be xlcg(out_bits,total_bits)");return nullptr;}
 		int out_bits = atoi(params[0].c_str());
 		int total_bits = atoi(params[1].c_str());
@@ -319,7 +319,7 @@ namespace RNG_Factories {
 		}
 		else { return nullptr; }
 	}
-	PractRand::RNGs::vRNG *clcg_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* clcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to clcg - should be clcg(out_bits,total_bits)");return nullptr;}
 		int out_bits = atoi(params[0].c_str());
 		int total_bits = atoi(params[1].c_str());
@@ -330,7 +330,7 @@ namespace RNG_Factories {
 		else if (out_bits == 32) return new PractRand::RNGs::Polymorphic::NotRecommended::clcg32of96_varqual(total_bits - out_bits - 32);
 		else return nullptr;
 	}
-	PractRand::RNGs::vRNG *cxlcg_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* cxlcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to clcg - should be clcg(out_bits,total_bits)");return nullptr;}
 		int out_bits = atoi(params[0].c_str());
 		int total_bits = atoi(params[1].c_str());
@@ -341,7 +341,7 @@ namespace RNG_Factories {
 		else if (out_bits == 32) return new PractRand::RNGs::Polymorphic::NotRecommended::cxlcg32of96_varqual(total_bits - out_bits - 32);
 		else return nullptr;
 	}
-	PractRand::RNGs::vRNG *bigbadlcg_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* bigbadlcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 3) { params.emplace_back("wrong number of parameters to bigbadlcg - should be bigbadlcg(out_bits,total_bits,shift)"); return nullptr; }
 		int out_bits = atoi(params[0].c_str());
 		int total_bits = atoi(params[1].c_str());
@@ -354,10 +354,10 @@ namespace RNG_Factories {
 		else if (out_bits == 64) return new PractRand::RNGs::Polymorphic::NotRecommended::bigbadlcg64X(total_bits - out_bits, shift);
 		else return nullptr;
 	}
-	PractRand::RNGs::vRNG *chacha_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* chacha_factory(std::vector<std::string>& params) {
 		if (params.size() > 1) {params.emplace_back("too many parameters for chacha");return nullptr;}
 		if (params.empty()) return new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
-		std::string &param = params[0];
+		std::string& param = params[0];
 		int value = 0;
 		for (char c : param) {
 			if (c < '0' || c > '9') {params.emplace_back("parameter must be an integer between 1 and 255, inclusive");return nullptr;}
@@ -365,14 +365,14 @@ namespace RNG_Factories {
 			if (value > 255) {params.emplace_back("number of rounds too high for chacha");return nullptr;}
 		}
 		if (value < 1) {params.emplace_back("number of rounds too low for chacha");return nullptr;}
-		auto *rng = new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
+		auto* rng = new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
 		rng->set_rounds(value);
 		return rng;
 	}
-	PractRand::RNGs::vRNG *salsa_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* salsa_factory(std::vector<std::string>& params) {
 		if (params.size() > 1) {params.emplace_back("too many parameters for salsa");return nullptr;}
 		if (params.empty()) return new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
-		std::string &param = params[0];
+		std::string& param = params[0];
 		int value = 0;
 		for (char c : param) {
 			if (c < '0' || c > '9') {params.emplace_back("parameter must be an integer between 1 and 255, inclusive");return nullptr;}
@@ -380,41 +380,41 @@ namespace RNG_Factories {
 			if (value > 255) {params.emplace_back("number of rounds too high for salsa");return nullptr;}
 		}
 		if (value < 1) {params.emplace_back("number of rounds too low for salsa");return nullptr;}
-		auto *rng = new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
+		auto* rng = new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
 		rng->set_rounds(value);
 		return rng;
 	}
-	PractRand::RNGs::vRNG *SelfShrink_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* SelfShrink_factory(std::vector<std::string>& params) {
 		//SShrink(BaseRNG)
 		if (params.size() != 1) return nullptr;
-		PractRand::RNGs::vRNG *rng = create_rng(params[0]);
+		PractRand::RNGs::vRNG* rng = create_rng(params[0]);
 		if (!rng) return nullptr;
 		return PractRand::RNGs::Polymorphic::NotRecommended::apply_SelfShrinkTransform(rng);
 	}
-	PractRand::RNGs::vRNG *BDS_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* BDS_factory(std::vector<std::string>& params) {
 		//BDS(BaseRNG,log2_of_table_size)
 		if (params.size() < 2 || params.size() > 3) return nullptr;
 		int L2 = std::atoi(params[1].c_str());
 		if (L2 < 1 || L2 > 16) return nullptr;
 		int shift = -1;
 		if (params.size() == 3) shift = std::atoi(params[2].c_str());
-		PractRand::RNGs::vRNG *rng = create_rng(params[0]);
+		PractRand::RNGs::vRNG* rng = create_rng(params[0]);
 		if (!rng) return nullptr;
 		return PractRand::RNGs::Polymorphic::NotRecommended::apply_BaysDurhamShuffle(rng, L2, shift);
 	}
 	template<class RNG>
-	PractRand::RNGs::vRNG *_generic_single_parameter_transform_RNG_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* _generic_single_parameter_transform_RNG_factory(std::vector<std::string>& params) {
 		if (params.size() != 1) return nullptr;
-		PractRand::RNGs::vRNG *rng = create_rng(params[0]);
+		PractRand::RNGs::vRNG* rng = create_rng(params[0]);
 		if (!rng) return nullptr;
 		return new RNG(rng);
 	}
 	template<class RNG>
-	PractRand::RNGs::vRNG *_generic_variable_parameter_transform_RNG_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* _generic_variable_parameter_transform_RNG_factory(std::vector<std::string>& params) {
 		if (params.empty()) return nullptr;
-		std::vector<PractRand::RNGs::vRNG *> source_rngs;
-		PractRand::RNGs::vRNG *rng = nullptr;
-		for (const auto & param : params) {
+		std::vector<PractRand::RNGs::vRNG*> source_rngs;
+		PractRand::RNGs::vRNG* rng = nullptr;
+		for (const auto& param : params) {
 			rng = create_rng(param);
 			if (!rng) return nullptr;
 			source_rngs.push_back(rng);
@@ -425,12 +425,12 @@ namespace RNG_Factories {
 		return nullptr;
 	}
 	template<class RNG>
-	PractRand::RNGs::vRNG *_generic_single_parameter_RNG_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* _generic_single_parameter_RNG_factory(std::vector<std::string>& params) {
 		if (params.size() != 1) return nullptr;
 		return new RNG(atoi(params[0].c_str()));
 	}
 	template<class RNG>
-	PractRand::RNGs::vRNG *_generic_two_parameter_RNG_factory(std::vector<std::string> &params) {
+	PractRand::RNGs::vRNG* _generic_two_parameter_RNG_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) return nullptr;
 		return new RNG(atoi(params[0].c_str()),atoi(params[1].c_str()));
 	}

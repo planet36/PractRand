@@ -7,12 +7,12 @@ namespace PractRand::Tests {
 			explicit BRank (
 				Uint32 rate_hl2_ // 2 * log2(time units per KB)
 			);
-			void init( PractRand::RNGs::vRNG *known_good ) override;
+			void init( PractRand::RNGs::vRNG* known_good ) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results ( std::vector<TestResult> &results ) override;
+			void get_results ( std::vector<TestResult>& results ) override;
 			void deinit() override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		protected:
 			Uint32 rate_hl2;
 			Uint64 rate;
@@ -23,7 +23,7 @@ namespace PractRand::Tests {
 			Uint64 saved_time{};
 
 			//partially complete matrix:
-			BitMatrix *in_progress{nullptr};
+			BitMatrix* in_progress{nullptr};
 			Uint32 blocks_in_progress{};
 			int size_index{};//which PerSize is active atm?
 

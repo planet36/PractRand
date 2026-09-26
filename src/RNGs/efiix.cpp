@@ -17,23 +17,23 @@ using namespace PractRand::Internals;
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(efiix8x48)
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix8x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::efiix8x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix8x48::get_name() const { return "efiix8x48"; }
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(efiix16x48)
 void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix16x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::efiix16x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix16x48::get_name() const { return "efiix16x48"; }
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(efiix32x48)
 void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix32x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::efiix32x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 //void PractRand::RNGs::Polymorphic::efiix32x48::seed(const Uint32 *seeds, int num_seeds, int quality) {implementation.seed(seeds, num_seeds, quality);}
 void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix32x48::get_name() const { return "efiix32x48"; }
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(efiix64x48)
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::efiix64x48::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::efiix64x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return "efiix64x48"; }
 
@@ -290,7 +290,7 @@ void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint
 		}
 	}
 }
-void PractRand::RNGs::Raw::efiix8x48::seed(PractRand::RNGs::vRNG *source_rng) {
+void PractRand::RNGs::Raw::efiix8x48::seed(PractRand::RNGs::vRNG* source_rng) {
 	a = source_rng->raw8();
 	b = source_rng->raw8();
 	c = source_rng->raw8();
@@ -299,14 +299,14 @@ void PractRand::RNGs::Raw::efiix8x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	// in order to make it extremely unlikely that any bad seeds exist
 	// as opposed to how it would be otherwise, in which finding a bad seed would be *extremely* difficult, but a few would likely exist
 	for (int x = 0; x < ITERATION_SIZE; x++) if (!(x & 3)) iteration_table[x] = source_rng->raw8(); else iteration_table[x] = iteration_table[x & ~3];
-	for (auto & x : indirection_table) x = source_rng->raw8();
+	for (auto& x : indirection_table) x = source_rng->raw8();
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw8();
 }
-void PractRand::RNGs::Raw::efiix8x48::walk_state(StateWalkingObject *walker) {
-	for (auto & w : iteration_table) walker->handle(w);
-	for (auto & w : indirection_table) walker->handle(w);
+void PractRand::RNGs::Raw::efiix8x48::walk_state(StateWalkingObject* walker) {
+	for (auto& w : iteration_table) walker->handle(w);
+	for (auto& w : indirection_table) walker->handle(w);
 	walker->handle(i);
 	walker->handle(a);
 	walker->handle(b);
@@ -321,7 +321,7 @@ Uint16 PractRand::RNGs::Raw::efiix16x48::raw16() {
 void PractRand::RNGs::Raw::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
 	EFIIX_SEED( 16 )
 }
-void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG *source_rng) {
+void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG* source_rng) {
 	a = source_rng->raw16();
 	b = source_rng->raw16();
 	c = source_rng->raw16();
@@ -330,14 +330,14 @@ void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	// in order to make it extremely unlikely that any bad seeds exist
 	// as opposed to how it would be otherwise, in which finding a bad seed would be *extremely* difficult, but a few would likely exist
 	for (int x = 0; x < ITERATION_SIZE; x++) if (!(x & 3)) iteration_table[x] = source_rng->raw16(); else iteration_table[x] = iteration_table[x & ~3];
-	for (auto & x : indirection_table) x = source_rng->raw16();
+	for (auto& x : indirection_table) x = source_rng->raw16();
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw16();
 }
-void PractRand::RNGs::Raw::efiix16x48::walk_state(StateWalkingObject *walker) {
-	for (auto & w : iteration_table) walker->handle(w);
-	for (auto & w : indirection_table) walker->handle(w);
+void PractRand::RNGs::Raw::efiix16x48::walk_state(StateWalkingObject* walker) {
+	for (auto& w : iteration_table) walker->handle(w);
+	for (auto& w : indirection_table) walker->handle(w);
 	walker->handle(i);
 	walker->handle(a);
 	walker->handle(b);
@@ -364,7 +364,7 @@ static void mix4x32(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
 void PractRand::RNGs::Raw::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
 	EFIIX_SEED(32)
 }
-void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG *source_rng) {
+void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG* source_rng) {
 	a = source_rng->raw32();
 	b = source_rng->raw32();
 	c = source_rng->raw32();
@@ -373,16 +373,16 @@ void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	// in order to make it extremely unlikely that any bad seeds exist
 	// as opposed to how it would be otherwise, in which finding a bad seed would be *extremely* difficult, but a few would likely exist
 	for (int x = 0; x < ITERATION_SIZE; x++) if (!(x & 3)) iteration_table[x] = source_rng->raw32(); else iteration_table[x] = iteration_table[x & ~3];
-	for (auto & x : indirection_table) x = source_rng->raw32();
+	for (auto& x : indirection_table) x = source_rng->raw32();
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw32();
 }
 //void PractRand::RNGs::Raw::efiix32x48::seed(const Word *seeds, int num_seeds, int seeding_quality) {
 //}
-void PractRand::RNGs::Raw::efiix32x48::walk_state(StateWalkingObject *walker) {
-	for (auto & w : iteration_table) walker->handle(w);
-	for (auto & w : indirection_table) walker->handle(w);
+void PractRand::RNGs::Raw::efiix32x48::walk_state(StateWalkingObject* walker) {
+	for (auto& w : iteration_table) walker->handle(w);
+	for (auto& w : indirection_table) walker->handle(w);
 	walker->handle(i);
 	walker->handle(a);
 	walker->handle(b);
@@ -397,7 +397,7 @@ Uint64 PractRand::RNGs::Raw::efiix64x48::raw64() {
 void PractRand::RNGs::Raw::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
 	EFIIX_SEED( 64 )
 }
-void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG *source_rng) {
+void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG* source_rng) {
 	a = source_rng->raw32();
 	b = source_rng->raw32();
 	c = source_rng->raw32();
@@ -406,14 +406,14 @@ void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG *source_rng) {
 	// in order to make it extremely unlikely that any bad seeds exist
 	// as opposed to how it would be otherwise, in which finding a bad seed would be *extremely* difficult, but a few would likely exist
 	for (int x = 0; x < ITERATION_SIZE; x++) if (!(x & 3)) iteration_table[x] = source_rng->raw32(); else iteration_table[x] = iteration_table[x & ~3];
-	for (auto & x : indirection_table) x = source_rng->raw32();
+	for (auto& x : indirection_table) x = source_rng->raw32();
 
 	//ought to be a secure seeding if source_rng->get_flags() includes FLAG::CRYPTOGRAPHIC_SECURITY, so...
 	for (int x = 0; x < ITERATION_SIZE; x++) raw64();
 }
-void PractRand::RNGs::Raw::efiix64x48::walk_state(StateWalkingObject *walker) {
-	for (auto & w : iteration_table) walker->handle(w);
-	for (auto & w : indirection_table) walker->handle(w);
+void PractRand::RNGs::Raw::efiix64x48::walk_state(StateWalkingObject* walker) {
+	for (auto& w : iteration_table) walker->handle(w);
+	for (auto& w : indirection_table) walker->handle(w);
 	walker->handle(i);
 	walker->handle(a);
 	walker->handle(b);

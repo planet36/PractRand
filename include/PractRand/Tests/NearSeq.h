@@ -51,20 +51,20 @@ namespace PractRand::Tests {
 			//FixedSizeCount<Uint16, 1 << RARES_SIZE_L2> count_rares;
 			//FixedSizeCount<Uint16, NUM_BUCKETS * EXTRA_WORDS * 16> count_region;
 			//void handle_rare(Uint8 one);
-			Uint8 *lookup_table{nullptr};//used by core_to_index
-			Uint8 *lookup_table2{};//used by is_core_good
-			int core_to_index(const Word *core) const;//returns -1 on invalid core
-			int is_core_good(const Word *core) const;
-			int get_core_distance(const Word *core, int bucket_index) const;
-			int get_extra_distance(const Word *core, int bucket_index) const;
+			Uint8* lookup_table{nullptr};//used by core_to_index
+			Uint8* lookup_table2{};//used by is_core_good
+			int core_to_index(const Word* core) const;//returns -1 on invalid core
+			int is_core_good(const Word* core) const;
+			int get_core_distance(const Word* core, int bucket_index) const;
+			int get_extra_distance(const Word* core, int bucket_index) const;
 		public:
 			NearSeq();
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			void deinit() override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		};
 		class NearSeq2 final : public TestBaseclass {
 		protected:
@@ -116,8 +116,8 @@ namespace PractRand::Tests {
 			Uint64 _total_cores{};
 			Uint64 _total_invalid_cores{};
 
-			Sint8 *lookup_table1{nullptr};//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
-			Uint8 *lookup_table2{nullptr};//hamming distance from idealized value for core block
+			Sint8* lookup_table1{nullptr};//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
+			Uint8* lookup_table2{nullptr};//hamming distance from idealized value for core block
 
 			[[nodiscard]] Sint8 lookup1(Word value) const {
 				if constexpr (BITS_PER_BLOCK < WORD_BITS) value &= (1UL << BITS_PER_BLOCK) - 1;
@@ -138,22 +138,22 @@ namespace PractRand::Tests {
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table2[std::popcount(value)];
 				else return lookup_table2[std::popcount(value)];
 			}
-			void analyze_block(Word block_value, long &bucket, int bucket_bit, long &hdist) const {
+			void analyze_block(Word block_value, long& bucket, int bucket_bit, long& hdist) const {
 				block_value &= (1UL << BITS_PER_BLOCK) - 1;
 				bucket |= (_lookup1(block_value) & 1) << bucket_bit;
 				hdist += _lookup2(block_value);
 			}
 			[[nodiscard]] static int get_hdist_bin(int hdist);
-			bool is_core_bad(const Word *core) const;
-			void core_analysis(const Word *core, int &index, int &ham) const;//only call on valid cores
-			static void count_bits_distribution(Word bits, Uint64 *counts, int num = WORD_BITS);
+			bool is_core_bad(const Word* core) const;
+			void core_analysis(const Word* core, int& index, int& ham) const;//only call on valid cores
+			static void count_bits_distribution(Word bits, Uint64* counts, int num = WORD_BITS);
 		public:
 			NearSeq2();
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			void deinit() override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		};
 }//PractRand

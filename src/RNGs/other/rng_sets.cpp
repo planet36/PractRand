@@ -12,7 +12,7 @@ using namespace PractRand;
 using namespace PractRand::Internals;
 
 namespace PractRand::Testing::RNG_Sets {
-			const char *recommended_rngs[] = {
+			const char* recommended_rngs[] = {
 				"hc256", "trivium",
 				"efiix64x384", "efiix32x384", "efiix16x384", "efiix8x384",
 				"isaac64x256", "isaac32x256",
@@ -23,7 +23,7 @@ namespace PractRand::Testing::RNG_Sets {
 				"mt19937",
 				nullptr
 			};
-			const char *nonrecommended_simple[] = {
+			const char* nonrecommended_simple[] = {
 				"xorshift32", "xorshift64", "xorshift32of128", "xoroshiro128plus",
 				"xorwow32of96", "xorwow32x6", "xsalta16", "xsaltb16", "xsaltc16",
 				"sapparot", "sap16of48", "sap32of96",
@@ -38,7 +38,7 @@ namespace PractRand::Testing::RNG_Sets {
 				"rarns16",
 				nullptr
 			};
-			const char *nonrecommended_nonLCG[] = {
+			const char* nonrecommended_nonLCG[] = {
 				//"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16",
 				nullptr
 			};

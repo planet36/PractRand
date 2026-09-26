@@ -21,7 +21,7 @@ namespace PractRand::Crypto {
 		public:
 			static constexpr int RESULT_LENGTH = 64;
 			void reset();
-			void handle_input(const Uint8 *input, unsigned long length);
+			void handle_input(const Uint8* input, unsigned long length);
 			void finish(Uint8 destination[RESULT_LENGTH]);
 			SHA2_512() {reset();}
 		};

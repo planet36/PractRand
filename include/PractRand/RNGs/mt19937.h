@@ -19,7 +19,7 @@ namespace PractRand::RNGs {
 			public:
 				void flush_buffers() {used = ARRAY_SIZE;}
 				Uint32 raw32();
-				void walk_state(StateWalkingObject *walker);
+				void walk_state(StateWalkingObject* walker);
 
 				//seeds < 2**32 use the standard MT19937 seeding algorithm
 				//seeds >= 2**32 use a nonstandard MT19937 seeding algorithm

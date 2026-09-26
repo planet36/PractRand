@@ -18,7 +18,7 @@ namespace PractRand::RNGs {
 				void seed(Uint64 s);
 				void seed_fast(Uint64 s);
 				void seed(Uint16 s1, Uint16 s2, Uint16 s3);
-				void walk_state(StateWalkingObject *walker);
+				void walk_state(StateWalkingObject* walker);
 			};
 		}
 

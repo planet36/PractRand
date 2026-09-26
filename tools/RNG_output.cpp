@@ -41,7 +41,7 @@ using namespace PractRand;
 #include "Candidate_RNGs.h"
 
 
-bool interpret_seed(const std::string &seedstr, Uint64 &seed) {
+bool interpret_seed(const std::string& seedstr, Uint64& seed) {
 	//would prefer strtol, but that is insufficiently portable when it has to handle 64 bit values
 	Uint64 value = 0;
 	Uint64 position = 0;
@@ -58,7 +58,7 @@ bool interpret_seed(const std::string &seedstr, Uint64 &seed) {
 	seed = value;
 	return true;
 }
-void print_usage(const char *program_name) {
+void print_usage(const char* program_name) {
 	std::cerr << "usage:\n\t" << program_name << " RNG_name bytes_to_output [64bit_hexadecimal_seed]\n";
 	std::cerr << "  example:\n\t" << program_name << " jsf32 16\n";
 	std::cerr << "  prints 16 bytes using the jsf32 RNG with a randomly chosen seed, with an \n";
@@ -80,7 +80,7 @@ void signal_handler(int param)
 
 #include "SeedingTester.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 #ifdef _WIN32
 	_setmode( _fileno(stdout), _O_BINARY); // needed to allow binary stdout on windows
 #endif
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
 	Seeder_MetaRNG::register_name();
 	EntropyPool_MetaRNG::register_name();
 	std::string errmsg;
-	RNGs::vRNG *rng = RNG_Factories::create_rng(argv[1], &errmsg);
+	RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
 
 	if (!rng) {
 		if (errmsg.empty()) { (void)std::fprintf(stderr, "RNG_output ERROR: unrecognized RNG name\n"); print_usage(argv[0]); }

@@ -7,10 +7,10 @@
 #define THREADFUNC_RETURN_TYPE unsigned long
 #else
 #define THREADFUNC_CALLING_CONVENTION
-#define THREADFUNC_RETURN_TYPE void *
+#define THREADFUNC_RETURN_TYPE void*
 #endif
 namespace Threading {
-	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *threadfunc)(void*), void *param );
+	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *threadfunc)(void*), void* param );
 	class Lock {
 		//implementation details hidden (by ugly methods)
 		//in order to avoid platform-specific include files here
@@ -42,7 +42,7 @@ namespace Threading {
 namespace Threading {
 	//compile time assert that Lock is big enough:
 	static_assert(sizeof(Lock) >= sizeof(CRITICAL_SECTION));
-	static void _issue_win32_error(int number, const char *msg) {
+	static void _issue_win32_error(int number, const char* msg) {
 		constexpr int BUFSIZE = 256;
 		TCHAR buf[BUFSIZE];
 		FormatMessage(
@@ -54,7 +54,7 @@ namespace Threading {
 		std::fprintf(stderr, "GetLastError() = %d: %s", number, buf);
 		issue_error(msg);
 	}
-	void create_thread( unsigned long (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
+	void create_thread( unsigned long (THREADFUNC_CALLING_CONVENTION *func)(void*), void* param ) {
 	//void create_thread( THREADFUNC_RETURN_TYPE (*func)(THREADFUNC_CALLING_CONVENTION *), void *param ) {
 		HANDLE h = CreateThread( nullptr, 32768, func, param, 0, nullptr);
 		//if (!h) issue_error("create_thread: CreateThread faild", )
@@ -84,7 +84,7 @@ namespace Threading {
 	}
 	void Lock::_assert_is_held() {
 #ifdef _DEBUG
-		CRITICAL_SECTION * cs = (CRITICAL_SECTION*)&impl_data;
+		CRITICAL_SECTION* cs = (CRITICAL_SECTION*)&impl_data;
 		if (DWORD(cs->OwningThread) != GetCurrentThreadId()) {
 			std::fprintf(stderr, "lock not held");
 			std::exit(1);
@@ -99,11 +99,11 @@ namespace Threading {
 namespace Threading {
 	//compile time assert that Lock is big enough:
 	static_assert(sizeof(Lock) >= sizeof(pthread_mutex_t));
-	static void _issue_pthread_error(int number, const char *msg) {
+	static void _issue_pthread_error(int number, const char* msg) {
 		(void)std::fprintf(stderr, "errno = %d: %s", number, std::strerror(number));
 		issue_error(msg);
 	}
-	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
+	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *func)(void*), void* param ) {
 		pthread_t thread = 0;
 		if (pthread_create(&thread, nullptr, func, param)) {
 			_issue_pthread_error(errno, "Threading::create_thread: pthread_create failed");
@@ -115,31 +115,31 @@ namespace Threading {
 	}
 	Lock::Lock() {
 		//InitializeCriticalSectionAndSpinCount((CRITICAL_SECTION*)&impl_data, 2000);
-		if (pthread_mutex_init( reinterpret_cast<pthread_mutex_t *>(&impl_data), nullptr )) {
+		if (pthread_mutex_init( reinterpret_cast<pthread_mutex_t*>(&impl_data), nullptr )) {
 			_issue_pthread_error(errno, "Lock constructor: pthread_mutex_init failed");
 		}
 	}
 	Lock::~Lock() {
 		//DeleteCriticalSection((CRITICAL_SECTION*)&impl_data);
-		if (pthread_mutex_destroy( reinterpret_cast<pthread_mutex_t *>(&impl_data) )) {
+		if (pthread_mutex_destroy( reinterpret_cast<pthread_mutex_t*>(&impl_data) )) {
 			_issue_pthread_error(errno, "Lock destructor: pthread_mutex_destroy failed");
 		}
 	}
 	void Lock::enter() {
 		//EnterCriticalSection((CRITICAL_SECTION*)&impl_data);
-		if (pthread_mutex_lock( reinterpret_cast<pthread_mutex_t *>(&impl_data) )) {
+		if (pthread_mutex_lock( reinterpret_cast<pthread_mutex_t*>(&impl_data) )) {
 			_issue_pthread_error(errno, "Lock::enter: pthread_mutex_lock failed");
 		}
 	}
 	void Lock::leave() {
 		//LeaveCriticalSection((CRITICAL_SECTION*)&impl_data);
-		if (pthread_mutex_unlock( reinterpret_cast<pthread_mutex_t *>(&impl_data) )) {
+		if (pthread_mutex_unlock( reinterpret_cast<pthread_mutex_t*>(&impl_data) )) {
 			_issue_pthread_error(errno, "Lock::leave: pthread_mutex_unlock failed");
 		}
 	}
 	bool Lock::try_enter() {
 		//return TryEnterCriticalSection((CRITICAL_SECTION*)&impl_data) ? true : false;
-		return pthread_mutex_trylock( reinterpret_cast<pthread_mutex_t *>(&impl_data) ) == 0;
+		return pthread_mutex_trylock( reinterpret_cast<pthread_mutex_t*>(&impl_data) ) == 0;
 	}
 	//how to implement this in pthreads?
 	/*void Lock::_assert_is_held() {

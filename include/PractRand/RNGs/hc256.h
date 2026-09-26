@@ -26,7 +26,7 @@ namespace PractRand::RNGs {
 					_do_batch();
 					return outbuf[used++];
 				}
-				void walk_state(StateWalkingObject *walker);
+				void walk_state(StateWalkingObject* walker);
 
 				//The standard seeding algorithm for HC-256 uses a sequence
 				//  of 16 numbers to seed the state.  The first 8 of those
@@ -35,7 +35,7 @@ namespace PractRand::RNGs {
 				//  32 bit value.  Seeding is very slow.
 				void seed(const Uint32 key_and_iv[16]);
 				void seed(Uint64 s);
-				void seed(vRNG *seeder_rng);
+				void seed(vRNG* seeder_rng);
 				static void self_test();
 			};
 		}
@@ -45,7 +45,7 @@ namespace PractRand::RNGs {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(hc256)
 				void seed(Uint64 s) override;
 				void seed(Uint32 key_and_iv[16]);
-				void seed(vRNG *seeder_rng) override;
+				void seed(vRNG* seeder_rng) override;
 				void flush_buffers() override;
 			};
 		}

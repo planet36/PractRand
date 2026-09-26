@@ -5,14 +5,14 @@
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
-	PractRand::RNGs::vRNG *base_rng;
+	PractRand::RNGs::vRNG* base_rng;
 	Uint64 current_seed{};
 
 	std::set<Uint64> unordered_history;
 	std::deque<Uint64> history;
 	unsigned int history_limit{1024};
 
-	explicit Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : known_good(PractRand::SEED_NONE), base_rng(base_rng_) {
+	explicit Seeder_MetaRNG(PractRand::RNGs::vRNG* base_rng_) : known_good(PractRand::SEED_NONE), base_rng(base_rng_) {
 		//current_seed = known_good.raw64();
 		//record_seed(current_seed);
 	}
@@ -63,10 +63,10 @@ public:
 		tmp << "SeedingTester(" << base_rng->get_name() << ")";
 		return tmp.str();
 	}
-	void walk_state(StateWalkingObject *) override {}
-	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
+	void walk_state(StateWalkingObject*) override {}
+	static PractRand::RNGs::vRNG* _factory(std::vector<std::string>& params) {
 		if (params.size() != 1) {params.emplace_back("wrong number of parameters - should be SeedingTester(rng)"); return nullptr; }
-		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
+		PractRand::RNGs::vRNG* rng = RNG_Factories::create_rng(params[0]);
 		if (!rng) return nullptr;
 		return new Seeder_MetaRNG(rng);
 	}
@@ -78,7 +78,7 @@ class EntropyPool_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	using Transform = PractRand::Uint64;
 	PractRand::RNGs::Polymorphic::hc256 known_good;
-	PractRand::RNGs::vRNG *base_entropy_pool;
+	PractRand::RNGs::vRNG* base_entropy_pool;
 	unsigned int min_length, max_length;
 	unsigned int history_length{16384};
 	std::vector<Uint8> current_seed;
@@ -91,7 +91,7 @@ public:
 	//std::deque<std::pair<std::map<Uint64,Uint64>::iterator,Transform> > history;//hashes first, then transform applied - newest at front
 	//Uint64 position;//starts at 0, incremented after every entropy string
 
-	EntropyPool_MetaRNG(PractRand::RNGs::vRNG *base_entropy_pool_, int min_length_, int max_length_) : known_good(PractRand::SEED_NONE), base_entropy_pool(base_entropy_pool_), min_length(min_length_), max_length(max_length_) {
+	EntropyPool_MetaRNG(PractRand::RNGs::vRNG* base_entropy_pool_, int min_length_, int max_length_) : known_good(PractRand::SEED_NONE), base_entropy_pool(base_entropy_pool_), min_length(min_length_), max_length(max_length_) {
 		//int len = (min_length + max_length) / 2;
 		current_seed.reserve(max_length);
 		//current_seed.resize(len);
@@ -112,7 +112,7 @@ public:
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
 	using vRNG::seed;
-	Transform pick_random_transform(const std::vector<Uint8> &message) {
+	Transform pick_random_transform(const std::vector<Uint8>& message) {
 		while (true) {
 			if (known_good.randf() < 0.96) {//toggle bit
 				return known_good.randi(message.size() * 8) + (Uint64(0) << 56);
@@ -130,7 +130,7 @@ public:
 			}
 		}
 	}
-	static void apply_transform(std::vector<Uint8> &message, Transform transform) {
+	static void apply_transform(std::vector<Uint8>& message, Transform transform) {
 		//toggle bit, add byte at end, add byte at begining, remove byte at end, remove byte at begining
 		//adds or removals must include the data added or removed in addition to the action
 		switch (transform >> 56) {
@@ -163,7 +163,7 @@ public:
 			std::exit(1);
 		}
 	}
-	static void apply_inverse_transform(std::vector<Uint8> &message, Transform transform) {
+	static void apply_inverse_transform(std::vector<Uint8>& message, Transform transform) {
 		switch (transform >> 56) {
 		case 0://reverse a toggle bit by doing the same thign
 			apply_transform(message, transform);
@@ -178,7 +178,7 @@ public:
 			break;
 		}
 	}
-	PractRand::Uint64 hash_message(const std::vector<Uint8> &message) const {
+	PractRand::Uint64 hash_message(const std::vector<Uint8>& message) const {
 		base_entropy_pool->reset_entropy();
 		base_entropy_pool->add_entropy_N(message.data(), message.size());
 		//base_entropy_pool->add_entropy64(0);
@@ -191,14 +191,14 @@ public:
 			history.pop_back();
 		}
 	}
-	static int hamming_distance(const Uint8 *message1, const Uint8 *message2, int n) {
+	static int hamming_distance(const Uint8* message1, const Uint8* message2, int n) {
 		Uint32 sum = 0;
 		for (int i = 0; i < n; i++) sum += std::popcount(static_cast<unsigned int>(message1[i] ^ message2[i]));
 		return sum;
 	}
-	bool check_conflict(const std::vector<Uint8> &message) {
+	bool check_conflict(const std::vector<Uint8>& message) {
 		std::vector<Uint8> rewound = current_seed;
-		for (auto & entry : history) {
+		for (auto& entry : history) {
 			//if (message.size() == rewound.size() && !std::memcmp(&message[0], &rewound[0], message.size())) {
 			if (message.size() == rewound.size() && !hamming_distance(message.data(), rewound.data(), message.size())) {
 				return true;
@@ -235,13 +235,13 @@ public:
 		tmp << "EntropyPoolingTester(" << base_entropy_pool->get_name() << "," << min_length << "to" << max_length << ")";
 		return tmp.str();
 	}
-	void walk_state(PractRand::StateWalkingObject *) override {}
-	static PractRand::RNGs::vRNG *_factory(std::vector<std::string> &params) {
+	void walk_state(PractRand::StateWalkingObject*) override {}
+	static PractRand::RNGs::vRNG* _factory(std::vector<std::string>& params) {
 		if (params.size() != 3) { params.emplace_back("wrong number of parameters - should be EntropyPoolingTester(rng,minlength,maxlength)"); return nullptr; }
 		int minlength = std::atoi(params[1].c_str());
 		int maxlength = std::atoi(params[1].c_str());
 		if (minlength < 1 || maxlength < 1 || minlength > maxlength || maxlength > 500) { params.emplace_back("EntropyPoolingTester parameters out of range - 0 < minlength <= maxlength < 500"); return nullptr; }
-		PractRand::RNGs::vRNG *rng = RNG_Factories::create_rng(params[0]);
+		PractRand::RNGs::vRNG* rng = RNG_Factories::create_rng(params[0]);
 		if (!rng) return nullptr;
 		return new EntropyPool_MetaRNG(rng, minlength, maxlength);
 	}

@@ -24,9 +24,9 @@ namespace PractRand::RNGs::Adaptors {
 					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
-					void seed     (Uint64 seed) {StateWalkingObject *walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
-					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
-					void autoseed ()            {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
+					void seed     (Uint64 seed) {StateWalkingObject* walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
+					void seed     (vRNG* seeder){StateWalkingObject* walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
+					void autoseed ()            {StateWalkingObject* walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
 				};
 				template<class base_rng> class ADAPT_SEEDING<base_rng,false> : public base_rng {
 				public:
@@ -34,8 +34,8 @@ namespace PractRand::RNGs::Adaptors {
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
 					using base_rng :: seed;
-					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
-					void autoseed ()            {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
+					void seed     (vRNG* seeder){StateWalkingObject* walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
+					void autoseed ()            {StateWalkingObject* walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
 				};
 
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 8> : public base_rng {
@@ -178,7 +178,7 @@ namespace PractRand::RNGs::Adaptors {
 				explicit RAW_TO_LIGHT_WEIGHT_RNG(SEED_AUTO_TYPE) {this->autoseed();}
 				explicit RAW_TO_LIGHT_WEIGHT_RNG(SEED_NONE_TYPE) {}
 				explicit RAW_TO_LIGHT_WEIGHT_RNG(Uint64 s) {this->seed(s);}
-				explicit RAW_TO_LIGHT_WEIGHT_RNG(vRNG *seeder) {this->seed(seeder);}
+				explicit RAW_TO_LIGHT_WEIGHT_RNG(vRNG* seeder) {this->seed(seeder);}
 			};
 			//to do:
 			//template<class base_rng> class RAW_TO_POLYMORPHIC_RNG;

@@ -7,11 +7,11 @@ namespace PractRand::Tests {
 				int bits_clipped_0_ = 1,
 				int bits_clipped_1_ = 0,
 				int bits_clipped_2_ = 0 );
-			void init( PractRand::RNGs::vRNG *known_good ) override;
+			void init( PractRand::RNGs::vRNG* known_good ) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results ( std::vector<TestResult> &results ) override;
+			void get_results ( std::vector<TestResult>& results ) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
 			static constexpr int ENABLE_REORDER = 1;
@@ -57,11 +57,11 @@ namespace PractRand::Tests {
 				int bits_clipped_1_ = 0,
 				int bits_clipped_2_ = 0
 				);
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		protected:
 			//configuration:
 			//precalcs:

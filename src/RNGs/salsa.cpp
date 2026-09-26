@@ -54,7 +54,7 @@ int PractRand::RNGs::Polymorphic::salsa::get_rounds() const {return implementati
 
 //raw:
 PractRand::RNGs::Raw::salsa::~salsa() {std::memset(this, 0, sizeof(*this));}
-static void salsa_mix_core(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
+static void salsa_mix_core(Uint32& a, Uint32& b, Uint32& c, Uint32& d) {
 	b ^= std::rotl(a + d, 7);
 	c ^= std::rotl(b + a, 9);
 	d ^= std::rotl(c + b, 13);
@@ -107,7 +107,7 @@ void PractRand::RNGs::Raw::salsa::_set_position(Uint64 low, Uint64 high) {
 	position_overflow = Uint32(high);
 	_core();
 }
-void PractRand::RNGs::Raw::salsa::_get_position(Uint64 &low, Uint64 &high) const {
+void PractRand::RNGs::Raw::salsa::_get_position(Uint64& low, Uint64& high) const {
 	low = used + (Uint64(state[POS_INDEX0]) << 4) + (Uint64(state[POS_INDEX1]) << 36);
 	high = (state[POS_INDEX1] >> 28) + (Uint64(position_overflow) << 4);
 }
@@ -130,7 +130,7 @@ const Uint32 salsa_long_seed_constants[4] = {
 	(Uint32(116) << 0) + (Uint32(101) << 8) + (Uint32( 32) << 16) + (Uint32(107) << 24),
 };
 void PractRand::RNGs::Raw::salsa::seed(const Uint32 seed_and_iv[10], bool extend_cycle_) {
-	const Uint32 *constants = salsa_long_seed_constants;
+	const Uint32* constants = salsa_long_seed_constants;
 	state[CONST_INDEX_0] = constants[0];
 	state[CONST_INDEX_1] = constants[1];
 	state[CONST_INDEX_2] = constants[2];
@@ -147,7 +147,7 @@ void PractRand::RNGs::Raw::salsa::seed(const Uint32 seed_and_iv[10], bool extend
 	used = 0;
 }
 void PractRand::RNGs::Raw::salsa::seed_short(const Uint32 seed_and_iv[6], bool extend_cycle_) {
-	const Uint32 *constants = salsa_short_seed_constants;
+	const Uint32* constants = salsa_short_seed_constants;
 	state[CONST_INDEX_0] = constants[0];
 	state[CONST_INDEX_1] = constants[1];
 	state[CONST_INDEX_2] = constants[2];
@@ -163,13 +163,13 @@ void PractRand::RNGs::Raw::salsa::seed_short(const Uint32 seed_and_iv[6], bool e
 	_core();
 	used = 0;
 }
-void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject *walker) {
-	for (auto & i : state) walker->handle(i);
+void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject* walker) {
+	for (auto& i : state) walker->handle(i);
 	walker->handle(used);
 	walker->handle(extend_cycle);
 	if (extend_cycle) walker->handle(position_overflow);
 	if (walker->is_seeder()) {
-		const Uint32 *constants = salsa_long_seed_constants;
+		const Uint32* constants = salsa_long_seed_constants;
 		state[CONST_INDEX_0] = constants[0];
 		state[CONST_INDEX_1] = constants[1];
 		state[CONST_INDEX_2] = constants[2];

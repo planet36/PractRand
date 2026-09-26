@@ -53,14 +53,14 @@ void PractRand::RNGs::Raw::arbee::seed(Uint64 s) {
 	i = 1;
 	mix();
 }
-void PractRand::RNGs::Raw::arbee::seed(vRNG *rng) {
+void PractRand::RNGs::Raw::arbee::seed(vRNG* rng) {
 	a = rng->raw64();
 	b = rng->raw64();
 	c = rng->raw64();
 	d = rng->raw64();
 	i = 13;
 }
-void PractRand::RNGs::Raw::arbee::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::arbee::walk_state(StateWalkingObject* walker) {
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
@@ -68,8 +68,8 @@ void PractRand::RNGs::Raw::arbee::walk_state(StateWalkingObject *walker) {
 	walker->handle(i);
 	if (walker->is_seeder()) i = 1;
 }
-void PractRand::RNGs::Raw::arbee::add_entropy_N(const void *_data, size_t length) {
-	const auto *data = static_cast<const Uint8*>(_data);
+void PractRand::RNGs::Raw::arbee::add_entropy_N(const void* _data, size_t length) {
+	const auto* data = static_cast<const Uint8*>(_data);
 #ifdef PRACTRAND_TARGET_IS_LITTLE_ENDIAN
 	//maybe add an ifdef to enable misaligned reads at compile time where appropriate?
 /*	if (!(7 & reinterpret_cast<Uint64>(data))) {
@@ -148,7 +148,7 @@ Uint32 PractRand::RNGs::Polymorphic::arbee::raw32() {
 Uint64 PractRand::RNGs::Polymorphic::arbee::raw64() {
 	return implementation.raw64();
 }
-void PractRand::RNGs::Polymorphic::arbee::add_entropy_N(const void *data, size_t length) {
+void PractRand::RNGs::Polymorphic::arbee::add_entropy_N(const void* data, size_t length) {
 	implementation.add_entropy_N(data, length);
 }
 void PractRand::RNGs::Polymorphic::arbee::add_entropy8 (Uint8  value) {
@@ -166,7 +166,7 @@ void PractRand::RNGs::Polymorphic::arbee::add_entropy64(Uint64 value) {
 void PractRand::RNGs::Polymorphic::arbee::seed(Uint64 s) {
 	implementation.seed(s);
 }
-void PractRand::RNGs::Polymorphic::arbee::seed(vRNG *rng) {
+void PractRand::RNGs::Polymorphic::arbee::seed(vRNG* rng) {
 	implementation.seed(rng);
 }
 void PractRand::RNGs::Polymorphic::arbee::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
@@ -175,7 +175,7 @@ void PractRand::RNGs::Polymorphic::arbee::seed(Uint64 s1, Uint64 s2, Uint64 s3, 
 void PractRand::RNGs::Polymorphic::arbee::reset_entropy() {
 	implementation.reset_entropy();
 }
-void PractRand::RNGs::Polymorphic::arbee::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Polymorphic::arbee::walk_state(StateWalkingObject* walker) {
 	implementation.walk_state(walker);
 }
 void PractRand::RNGs::Polymorphic::arbee::flush_buffers() {

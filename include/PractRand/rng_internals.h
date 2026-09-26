@@ -40,7 +40,7 @@
 		return r | (Uint64(raw32()) << 32);\
 	}\
 	Uint64 PractRand::RNGs::Polymorphic:: RNG ::get_flags() const {return implementation.FLAGS;}\
-	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
+	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(RNG) \
@@ -57,7 +57,7 @@
 		return r | (Uint64(implementation.raw16()) << 48);\
 	}\
 	Uint64 PractRand::RNGs::Polymorphic:: RNG ::get_flags() const {return implementation.FLAGS;}\
-	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
+	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(RNG) \
@@ -69,7 +69,7 @@
 		return (r << 32) | implementation.raw32();\
 	}\
 	Uint64 PractRand::RNGs::Polymorphic:: RNG ::get_flags() const {return implementation.FLAGS;}\
-	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
+	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(RNG) \
@@ -78,7 +78,7 @@
 	Uint32 PractRand::RNGs::Polymorphic:: RNG ::raw32() {return Uint32(implementation.raw64());}\
 	Uint64 PractRand::RNGs::Polymorphic:: RNG ::raw64() {return implementation.raw64();}\
 	Uint64 PractRand::RNGs::Polymorphic:: RNG ::get_flags() const {return implementation.FLAGS;}\
-	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject *walker) {\
+	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
 
@@ -94,13 +94,13 @@ namespace PractRand {
 		double generate_gaussian_fast(Uint64 raw64);//fast CDF-based hybrid method
 		//double generate_gaussian_high_quality(Uint64 raw192[3]);//slow PDF-based ziggurat method
 		//rand.cpp
-		void test_random_access(PractRand::RNGs::vRNG *rng, PractRand::RNGs::vRNG *known_good, Uint64 period_low64, Uint64 period_high64);
+		void test_random_access(PractRand::RNGs::vRNG* rng, PractRand::RNGs::vRNG* known_good, Uint64 period_low64, Uint64 period_high64);
 		//platform_specific.cpp
-		bool add_entropy_automatically( PractRand::RNGs::vRNG *entropy_pool, int milliseconds=0 );
+		bool add_entropy_automatically( PractRand::RNGs::vRNG* entropy_pool, int milliseconds=0 );
 		Uint64 issue_unique_identifier();
 		Uint64 high_resolution_time();
 		//math.cpp
-		void fast_forward_lcg128 ( Uint64 how_far_low, Uint64 how_far_high, Uint64 &value_low, Uint64 &value_high, Uint64 mul_low, Uint64 mul_high, Uint64 add_low, Uint64 add_high );
+		void fast_forward_lcg128 ( Uint64 how_far_low, Uint64 how_far_high, Uint64& value_low, Uint64& value_high, Uint64 mul_low, Uint64 mul_high, Uint64 add_low, Uint64 add_high );
 		Uint64 fast_forward_lcg64 ( Uint64 how_far, Uint64 val, Uint64 mul, Uint64 add );
 		Uint32 fast_forward_lcg32 ( Uint32 how_far, Uint32 val, Uint32 mul, Uint32 add );
 		Uint32 fast_forward_lcg32c ( Uint32 how_far, Uint32 val, Uint32 mul, Uint32 add, Uint32 mod );

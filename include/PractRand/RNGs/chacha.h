@@ -28,7 +28,7 @@ namespace PractRand::RNGs {
 				void _advance_1();
 				//void _reverse_1();
 				void _set_position(Uint64 low, Uint64 high);
-				void _get_position(Uint64 &low, Uint64 &high) const;
+				void _get_position(Uint64& low, Uint64& high) const;
 
 				void _core();
 				Uint32 _refill_and_raw32();
@@ -42,7 +42,7 @@ namespace PractRand::RNGs {
 				void seed(Uint64 s);
 				void seed( const Uint32 seed_and_iv[10], bool extend_cycle_ = false );
 				void seed_short( const Uint32 seed_and_iv[6], bool extend_cycle_ = false );
-				void walk_state(StateWalkingObject *walker);
+				void walk_state(StateWalkingObject* walker);
 				void seek_forward (Uint64 how_far_low, Uint64 how_far_high);
 				void seek_backward(Uint64 how_far_low, Uint64 how_far_high);
 

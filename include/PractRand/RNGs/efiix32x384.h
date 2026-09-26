@@ -23,8 +23,8 @@ namespace PractRand {
 				//void seed(const Word *seeds, int num_seeds, int seeding_quality=4);
 				void seed(Uint64 s) { seed(s, s, s, s); }
 				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
-				void seed(vRNG *source_rng);
-				void walk_state(StateWalkingObject *walker);
+				void seed(vRNG* source_rng);
+				void walk_state(StateWalkingObject* walker);
 			};
 		}
 
@@ -34,7 +34,7 @@ namespace PractRand {
 				//void seed(const Uint32 *seeds, int num_seeds, int seeding_quality=4) {implementation.seed(seeds, num_seeds, seeding_quality);}
 				void seed(Uint64 s);
 				void seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4);
-				void seed(vRNG *source_rng);
+				void seed(vRNG* source_rng);
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(efiix32x48)

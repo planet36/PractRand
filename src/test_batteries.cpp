@@ -32,8 +32,8 @@
 
 
 namespace PractRand::Tests::Batteries {
-			void destruct_tests(ListOfTests &tests) {
-				for (auto & test : tests.tests) {
+			void destruct_tests(ListOfTests& tests) {
+				for (auto& test : tests.tests) {
 					delete test;
 				}
 			}
@@ -111,10 +111,10 @@ namespace PractRand::Tests::Batteries {
 					default: return standard_foldings_generic(base_tests);
 				}
 			}
-			Tests::ListOfTests apply_standard_foldings( const RNGs::vRNG *rng, ListOfTests (*base_tests)() ) {
+			Tests::ListOfTests apply_standard_foldings( const RNGs::vRNG* rng, ListOfTests (*base_tests)() ) {
 				return apply_standard_foldings(rng->get_native_output_size(), base_tests);
 			}
-			Tests::ListOfTests get_standard_tests( const RNGs::vRNG *rng ) {
+			Tests::ListOfTests get_standard_tests( const RNGs::vRNG* rng ) {
 				return apply_standard_foldings(rng, get_core_tests);
 			}
 			ListOfTests apply_extended_foldings(ListOfTests (*base_tests)()) {
@@ -189,7 +189,7 @@ namespace PractRand::Tests::Batteries {
 					nullptr
 				);
 			}
-			ListOfTests get_expanded_standard_tests(const RNGs::vRNG *rng) {
+			ListOfTests get_expanded_standard_tests(const RNGs::vRNG* rng) {
 				return apply_standard_foldings(rng, get_expanded_core_tests);
 			}
 			ListOfTests get_expanded_folded_tests() {

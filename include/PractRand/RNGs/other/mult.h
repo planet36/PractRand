@@ -19,13 +19,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 state{}, add{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class lcg32_extended : public vRNG32 {
 					Uint32 state{}, add{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				//simple classic LCGs
 				class lcg32of64_varqual : public vRNG32 {
@@ -35,7 +35,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit lcg32of64_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class lcg16of64_varqual : public vRNG16 {
 					Uint64 state{};
@@ -44,7 +44,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit lcg16of64_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class lcg8of64_varqual : public vRNG8 {
 					Uint64 state{};
@@ -53,7 +53,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit lcg8of64_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class lcg32of128_varqual : public vRNG32 {
 					Uint64 low{}, high{};
@@ -62,7 +62,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit lcg32of128_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class lcg16of128_varqual : public vRNG16 {
 					Uint64 low{}, high{};
@@ -71,7 +71,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit lcg16of128_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class lcg8of128_varqual : public vRNG8 {
 					Uint64 low{}, high{};
@@ -80,7 +80,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit lcg8of128_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				//two LCGs combined
 				class clcg8of96_varqual : public vRNG8 {
@@ -91,7 +91,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit clcg8of96_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class clcg16of96_varqual : public vRNG16 {
 					Uint64 lcg1{};
@@ -101,7 +101,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit clcg16of96_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class clcg32of96_varqual : public vRNG32 {
 					Uint64 lcg1{};
@@ -111,7 +111,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit clcg32of96_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				//LCGs modified by suppressing the carries
 				class xlcg32of64_varqual : public vRNG32 {
@@ -121,7 +121,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit xlcg32of64_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class xlcg16of64_varqual : public vRNG16 {
 					Uint64 state{};
@@ -130,7 +130,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit xlcg16of64_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class xlcg8of64_varqual : public vRNG8 {
 					Uint64 state{};
@@ -139,7 +139,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit xlcg8of64_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class xlcg32of128_varqual : public vRNG32 {
 					Uint64 low{}, high{};
@@ -148,7 +148,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit xlcg32of128_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class xlcg16of128_varqual : public vRNG16 {
 					Uint64 low{}, high{};
@@ -157,7 +157,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit xlcg16of128_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class xlcg8of128_varqual : public vRNG8 {
 					Uint64 low{}, high{};
@@ -166,7 +166,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit xlcg8of128_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				//modified LCG combined with regular LCG
 				class cxlcg8of96_varqual : public vRNG8 {
@@ -177,7 +177,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit cxlcg8of96_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class cxlcg16of96_varqual : public vRNG16 {
 					Uint64 lcg1{};
@@ -187,7 +187,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit cxlcg16of96_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class cxlcg32of96_varqual : public vRNG32 {
 					Uint64 lcg1{};
@@ -197,7 +197,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit cxlcg32of96_varqual(int lcg1_discard_bits) : outshift(lcg1_discard_bits) {}
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				class pcg32 final : public vRNG32 {
@@ -208,7 +208,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class pcg32_norot final : public vRNG32 {
 					Uint64 state{0x853c49e6748fea9bULL}, inc{0xda3e39cb94b95bdbULL};
@@ -218,7 +218,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class cmrg32of192 : public vRNG32 {//I originally encountered this under the name lecuyer3by2b
 					//presumably by L'Ecuyer, I adjusted it slightly to output a full 32 bits (instead of ~31.9 bits)
@@ -228,7 +228,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					void seed(Uint64 s) override;
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class xsh_lcg_bad final : public vRNG32 {//name was xorwowPlus, I changed it because I wasn't sure it actually qualified as an xorwow
 					Uint64 lcg{}, x0{}, x1{}, x2{}, x3{};
@@ -236,7 +236,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					void seed(Uint64 s) override;// I also changed the seeding function, because the original permitted the bad all-zeroes state
 					using vRNG::seed;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 
@@ -246,39 +246,39 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 value{}, scale{}, counter{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class garthy32 : public vRNG32 {
 					Uint32 value{}, scale{}, counter{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				//both sides of the multiply are pseudo-random values in this RNG
 				class binarymult16 : public vRNG16 {
 					Uint16 a{}, b{}, c{}, d{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class binarymult32 : public vRNG32 {
 					Uint32 a{}, b{}, c{}, d{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				class mmr16 : public vRNG16 {
 					Uint16 a{}, b{}, c{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mmr32 : public vRNG32 {
 					Uint32 a{}, b{}, c{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				//uses multiplication, rightshifts, xors, that kind of stuff
@@ -286,7 +286,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 a{}, b{}, c{}, d{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				//these are similar to my mwlac algorithm, but lower quality
@@ -294,93 +294,93 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 a{}, b{};
 					Uint64 raw64() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class multish3x32 : public vRNG32 {
 					Uint32 a{}, b{}, c{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class multish4x16 : public vRNG16 {
 					Uint16 a{}, b{}, c{}, d{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				class mwrca16 : public vRNG16 {
 					Uint16 a{}, b{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwrca32 : public vRNG32 {
 					Uint32 a{}, b{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwrcc16 : public vRNG16 {
 					Uint16 a{}, b{}, counter{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwrcc32 : public vRNG32 {
 					Uint32 a{}, b{}, counter{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwrcca16 : public vRNG16 {
 					Uint16 a{}, b{}, counter{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwrcca32 : public vRNG32 {
 					Uint32 a{}, b{}, counter{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				//the 16 bit variant of the old version of my mwlac algorithm
 				class old_mwlac16 : public vRNG16 {
 					Uint16 a{}, b{}, c{}, d{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwlac_varA : public vRNG16 {
 					Uint16 a{}, b{}, c{};//, d;
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwlac_varB : public vRNG16 {
 					Uint16 a{}, b{}, c{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwlac_varC : public vRNG16 {
 					Uint16 a{}, b{}, c{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwlac_varD : public vRNG16 {
 					Uint16 a{}, b{}, c{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mwlac_varE : public vRNG16 {
 					Uint16 a{}, b{}, c{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 
@@ -389,7 +389,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class cxm64_varqual : public vRNG64 {
 					Uint64 low{}, high{};
@@ -398,7 +398,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					explicit cxm64_varqual(int num_mult_) : num_mult(num_mult_) {}
 					Uint64 raw64() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				class mo_Cmfr32 : public vRNG32 {
@@ -406,21 +406,21 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mo_Cmr32 : public vRNG32 {
 					Uint32 state{};
 				public:
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mo_Cmr32of64 : public vRNG32 {
 					Uint64 state{};
 				public:
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class murmlac32 : public vRNG32 {
 					Uint32 state1{}, state2{};
@@ -429,7 +429,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 raw32() override;
 					explicit murmlac32(int rounds_) : rounds(rounds_) {}
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 
 				//multiplication (by a counter), rotate
@@ -437,18 +437,18 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 a{}, b{}, count{};
 					Uint64 raw64() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mulcr32 : public vRNG32 {
 					Uint32 a{}, b{}, count{};
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 				class mulcr16 : public vRNG16 {
 					Uint32 a{}, b{}, count{};
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
-					void walk_state(StateWalkingObject *) override;
+					void walk_state(StateWalkingObject*) override;
 				};
 }

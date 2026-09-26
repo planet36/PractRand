@@ -4,11 +4,11 @@ namespace PractRand::Tests {
 		class DistFreq4 final : public TestBaseclass {
 		public:
 			explicit DistFreq4(int blocks_per_) : blocks_per(blocks_per_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
 			static constexpr int ALIGNMENT1 = 4; //the alignments must be powers of 2
@@ -26,11 +26,11 @@ namespace PractRand::Tests {
 		class TripleFreq final : public TestBaseclass {
 		public:
 			TripleFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
 			static constexpr int BASE_ALIGNMENT = 64;//don't change
@@ -56,11 +56,11 @@ namespace PractRand::Tests {
 		class TripleMirrorFreq final : public TestBaseclass {
 		public:
 			TripleMirrorFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 			[[nodiscard]] int get_blocks_to_repeat() const override;
 
 		protected:
@@ -81,11 +81,11 @@ namespace PractRand::Tests {
 		class TripleMirrorFreqN : public TestBaseclass {
 		public:
 			explicit TripleMirrorFreqN(int minimum_level_) : blocks_per_pass(1 << minimum_level_), minimum_level(minimum_level_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 			//virtual int get_blocks_to_repeat() const;
 
 		protected:
@@ -114,11 +114,11 @@ namespace PractRand::Tests {
 		class TripleMirrorCoup final : public TestBaseclass {
 		public:
 			TripleMirrorCoup(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 			[[nodiscard]] int get_blocks_to_repeat() const override;
 
 		protected:
@@ -146,11 +146,11 @@ namespace PractRand::Tests {
 		class QuadFreq : public TestBaseclass {//not yet implemented
 		public:
 			QuadFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
 			static constexpr int BASE_ALIGNMENT = 64;//don't change
@@ -178,11 +178,11 @@ namespace PractRand::Tests {
 		class LPerm16 final : public TestBaseclass {//not yet implemented
 		public:
 			explicit LPerm16(int word_bits_, int passes_at_once_ = 0, int blocks_per_pass_ = 1) : word_bits(word_bits_), blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
 			static constexpr int LPERM_BUCKETS = 1 << 15; // do not change

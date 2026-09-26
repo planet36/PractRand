@@ -11,13 +11,13 @@ namespace PractRand::Tests {
 			VariableSizeCount<Uint8> counts;
 		public:
 			explicit FPF(int stride_bits_L2_ = 3, int sig_bits_ = 8, int exp_bits_ = 4);
-			void init( PractRand::RNGs::vRNG *known_good ) override;
+			void init( PractRand::RNGs::vRNG* known_good ) override;
 			void deinit( ) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results ( std::vector<TestResult> &results ) override;
+			void get_results ( std::vector<TestResult>& results ) override;
 			//virtual double get_result();
 		//	virtual double result_to_pvalue ( Uint64 blocks, double r );
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 		};
 }//PractRand

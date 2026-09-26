@@ -3,21 +3,21 @@
 class TestManager {
 protected:
 	std::vector<PractRand::Tests::TestBlock> buffer;
-	PractRand::RNGs::vRNG *rng{nullptr};
-	PractRand::RNGs::vRNG *known_good;
-	PractRand::Tests::ListOfTests *tests;
+	PractRand::RNGs::vRNG* rng{nullptr};
+	PractRand::RNGs::vRNG* known_good;
+	PractRand::Tests::ListOfTests* tests;
 	unsigned int max_buffer_amount;
 	int prefix_blocks;
 	int main_blocks;
 	int blocks_to_repeat{};
 	Uint64 blocks_so_far;
 	bool freshly_created;
-	int prep_blocks(Uint64 &blocks);
+	int prep_blocks(Uint64& blocks);
 public:
-	[[nodiscard]] const PractRand::RNGs::vRNG *get_rng() const {return rng;}//RNG being tested
+	[[nodiscard]] const PractRand::RNGs::vRNG* get_rng() const {return rng;}//RNG being tested
 	[[nodiscard]] Uint64 get_blocks_so_far() const {return blocks_so_far;}//number of blocks tested
 
-	explicit TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));
+	explicit TestManager(PractRand::Tests::ListOfTests* tests_, PractRand::RNGs::vRNG* known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));
 	//rng_ = RNG to test
 	//tests_ = list of tests use on the RNG
 	//known_good_ = sometimes the tests or test manager need good random numbers for some reason
@@ -25,32 +25,32 @@ public:
 
 	virtual ~TestManager();//destructor (destroys the tests in the ListOfTests)
 
-	virtual void reset(PractRand::RNGs::vRNG *rng_ = nullptr);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
+	virtual void reset(PractRand::RNGs::vRNG* rng_ = nullptr);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 
 	virtual void test(Uint64 blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
 
-	virtual void get_results( std::vector<PractRand::TestResult> &result_vec ) final;//gets the results
+	virtual void get_results( std::vector<PractRand::TestResult>& result_vec ) final;//gets the results
 };
 
-TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_) : known_good(known_good_), tests(tests_) {
+TestManager::TestManager(PractRand::Tests::ListOfTests* tests_, PractRand::RNGs::vRNG* known_good_, int max_buffer_amount_) : known_good(known_good_), tests(tests_) {
 	if (!known_good) known_good = new PractRand::RNGs::Polymorphic::hc256(PractRand::SEED_AUTO);
 	blocks_so_far = 0;
 	max_buffer_amount = max_buffer_amount_;
 	prefix_blocks = 0;
 	main_blocks = 0;
-	for (auto & test : tests->tests) test->init(known_good);
+	for (auto& test : tests->tests) test->init(known_good);
 	freshly_created = true;
 }
 TestManager::~TestManager() {
-	for (auto & test : tests->tests) test->deinit();
-	for (auto & test : tests->tests) delete test;
+	for (auto& test : tests->tests) test->deinit();
+	for (auto& test : tests->tests) delete test;
 }
-void TestManager::reset(PractRand::RNGs::vRNG *rng_) {
-	if (!freshly_created) for (auto & test : tests->tests) test->deinit();
+void TestManager::reset(PractRand::RNGs::vRNG* rng_) {
+	if (!freshly_created) for (auto& test : tests->tests) test->deinit();
 	freshly_created = false;
-	for (auto & test : tests->tests) test->init(known_good);
+	for (auto& test : tests->tests) test->init(known_good);
 	blocks_to_repeat = 0;
-	for (auto & test : tests->tests) {
+	for (auto& test : tests->tests) {
 		int rb = test->get_blocks_to_repeat();
 		if (blocks_to_repeat < rb) blocks_to_repeat = rb;
 	}
@@ -60,7 +60,7 @@ void TestManager::reset(PractRand::RNGs::vRNG *rng_) {
 	prefix_blocks = 0;
 	blocks_so_far = 0;
 }
-int TestManager::prep_blocks(Uint64 &blocks) {
+int TestManager::prep_blocks(Uint64& blocks) {
 	Uint64 _delta_blocks = blocks;
 	if (_delta_blocks > max_buffer_amount) _delta_blocks = max_buffer_amount;
 	int delta_blocks = int(_delta_blocks);
@@ -85,12 +85,12 @@ int TestManager::prep_blocks(Uint64 &blocks) {
 void TestManager::test(Uint64 num_blocks) {
 	while (num_blocks) {
 		prep_blocks(num_blocks);
-		for (auto & test : tests->tests)
+		for (auto& test : tests->tests)
 			test->test_blocks(&buffer[prefix_blocks], main_blocks);
 	}
 }
-void TestManager::get_results( std::vector<PractRand::TestResult> &result_vec ) {
-	for (auto & test : tests->tests) {
+void TestManager::get_results( std::vector<PractRand::TestResult>& result_vec ) {
+	for (auto& test : tests->tests) {
 		test->get_results(result_vec);
 	}
 }

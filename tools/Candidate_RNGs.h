@@ -98,7 +98,7 @@ public:\
 	explicit polymorphic_ ## rng ## bits (Uint64 seed_value) {seed(seed_value);}\
 	ImplementationType implementation{};\
 	Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
-	void walk_state(StateWalkingObject *walker) override {implementation.walk_state(walker);}\
+	void walk_state(StateWalkingObject* walker) override {implementation.walk_state(walker);}\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
 #define SEEDED_POLYMORPHIC_CANDIDATE(rng, bits) \
@@ -114,7 +114,7 @@ public:\
 	void seed(Uint64 seed_value) override {implementation.seed(seed_value);}\
 	using vRNG::seed; \
 	Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
-	void walk_state(StateWalkingObject *walker) override {implementation.walk_state(walker);}\
+	void walk_state(StateWalkingObject* walker) override {implementation.walk_state(walker);}\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
 
@@ -154,7 +154,7 @@ public:
 		//refill();
 		return refill();
 	}
-	void walk_state(StateWalkingObject *walker) {
+	void walk_state(StateWalkingObject* walker) {
 		for (int i = 0; i < LAG1; i++) walker->handle(buffer[i]);
 		walker->handle(position);
 		walker->handle(counter1);
@@ -181,7 +181,7 @@ public:
 	Word table[256];
 	VeryFast() {
 		PractRand::RNGs::Polymorphic::hc256 good(PractRand::SEED_AUTO);
-		for (auto & i : table) i = Word(good.raw64());
+		for (auto& i : table) i = Word(good.raw64());
 	}
 	Word _raw_native() {
 		//Word old;
@@ -259,7 +259,7 @@ public:
 		b ^= old + ++c;
 		return a;*/
 	}
-	void walk_state(StateWalkingObject *walker) {
+	void walk_state(StateWalkingObject* walker) {
 		walker->handle(a);
 		walker->handle(b);
 		walker->handle(c);
@@ -483,7 +483,7 @@ public:
 		else if (OUTPUT_BITS == 8) {s ^= s >> 32;a = s; b = s >> 8; c = s >> 16; counter = s >> 24;}
 		for (int i = 0; i < SEEDING_ROUNDS; i++) _raw_native();
 	}
-	void walk_state(StateWalkingObject *walker) {
+	void walk_state(StateWalkingObject* walker) {
 		walker->handle(a);
 		walker->handle(b);
 		walker->handle(c);
@@ -629,7 +629,7 @@ public:
 		b += K + ((a < K) ? 1 : 0);
 		return (rv * K) + a;*/
 	}
-	void walk_state(StateWalkingObject *walker) {
+	void walk_state(StateWalkingObject* walker) {
 		//walker->handle(a); walker->handle(b);walker->handle(c); walker->handle(d); walker->handle(e);
 		//walker->handle(f); walker->handle(g); walker->handle(h);
 		walker->handle(state_0); walker->handle(state_1); walker->handle(state_2); walker->handle(state_3);
@@ -776,7 +776,7 @@ public:
 		s.feed_in_word(k1);
 		s.feed_in_word(k2);
 	}
-	void walk_state(PractRand::StateWalkingObject *walker) {
+	void walk_state(PractRand::StateWalkingObject* walker) {
 		walker->handle(k1); walker->handle(k2);
 		walker->handle(counter);
 	}
@@ -791,7 +791,7 @@ public:
 	explicit polymorphic_siphash(Uint64 seed_value) { seed(seed_value); }
 	ImplementationType implementation{};
 	Uint64 raw64() override { return implementation.raw64(); }
-	void walk_state(StateWalkingObject *walker) override { implementation.walk_state(walker); }
+	void walk_state(StateWalkingObject* walker) override { implementation.walk_state(walker); }
 	[[nodiscard]] std::string get_name() const override { return ImplementationType::get_name(); }
 };
 

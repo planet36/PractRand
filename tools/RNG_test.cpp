@@ -96,7 +96,7 @@ public:
 	}
 	//allow PractRand to be aware of your internal state
 	//uses include: default seeding mechanism (individual PRNGs can override), state serialization/deserialization, maybe eventually some avalanche testing tools
-	void walk_state(PractRand::StateWalkingObject *walker) override {
+	void walk_state(PractRand::StateWalkingObject* walker) override {
 		rng1.walk_state(walker);
 		rng2.walk_state(walker);
 		//walker->handle(s1);
@@ -125,7 +125,7 @@ public:
 	that line allows it to recognize "dummy" on the command line as corresponding to this class.
 */
 
-double print_result(const PractRand::TestResult &result, bool print_header = false) {
+double print_result(const PractRand::TestResult& result, bool print_header = false) {
 	if (print_header) std::printf("  Test Name                         Raw       Processed     Evaluation\n");
 	//                                     10        20        30        40        50        60        70        80
 	std::printf("  ");//2 characters
@@ -274,9 +274,9 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 
 #include "SeedingTester.h"
 
-const char *seed_str = nullptr;
+const char* seed_str = nullptr;
 
-void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
+void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
 	std::printf("rng=%s", tman->get_rng()->get_name().c_str());
 
 	std::printf(", seed=");
@@ -293,14 +293,14 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	std::printf("length= ");
 	Uint64 length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
 	double log2b = std::log(double(length)) / std::numbers::ln2;
-	const char *unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
+	const char* unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
 	int units = int(std::floor(log2b / 10)) - 1;
 	if (units < 0 || units > 5) {std::printf("internal error: length out of bounds?\n");std::exit(1);}
 	if (length & (length-1))
 		std::printf("%.3f %ss", length * std::pow(0.5,units*10.0+10), unitstr[units] );
 	else std::printf("%.0f %s%s", length * std::pow(0.5,units*10.0+10), unitstr[units], length != (Uint64(1024)<<(units*10)) ? "s" : "" );
 	if (length & (length-1)) std::printf(" (2^%.3f", log2b - (mode?3:0)); else std::printf(" (2^%.0f", log2b - (mode?3:0));
-	const char *mode_unit_names[3] = {"bytes", "seeds", "entropy strings"};
+	const char* mode_unit_names[3] = {"bytes", "seeds", "entropy strings"};
 	std::printf(" %s), time= ", mode_unit_names[mode]);
 	if (time < 99.95) std::printf("%.1f seconds\n", time);
 	else std::printf("%.0f seconds\n", time);
@@ -308,7 +308,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	std::vector<PractRand::TestResult> results;
 	tman->get_results(results);
 	double total_weight = 0, min_weight = 9999999;
-	for (const auto & result : results) {
+	for (const auto& result : results) {
 		double weight = result.get_weight();
 		total_weight += weight;
 		if (weight < min_weight) min_weight = weight;
@@ -346,7 +346,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 		std::exit(0);
 	}
 }
-double interpret_length(const std::string &lengthstr, bool normal_mode) {
+double interpret_length(const std::string& lengthstr, bool normal_mode) {
 	//(0-9)*[.(0-9)*][((K|M|G|T|P)[B])|(s|m|h|d)]
 	int mode_factor = normal_mode ? 1 : 8;
 	unsigned int pos = 0;
@@ -421,7 +421,7 @@ double interpret_length(const std::string &lengthstr, bool normal_mode) {
 	if (pos != lengthstr.size()) return 0;
 	return value * scale;
 }
-bool interpret_seed(const std::string &seedstr, Uint64 &seed) {
+bool interpret_seed(const std::string& seedstr, Uint64& seed) {
 	//would prefer strtol, but that is insufficiently portable when it has to handle 64 bit values
 	Uint64 value = 0;
 	unsigned int position = 0;
@@ -467,7 +467,7 @@ PractRand::Tests::ListOfTests testset_experimental() {
 struct UnfoldedTestSet {
 	int number;
 	PractRand::Tests::ListOfTests(*callback)();
-	const char *name;
+	const char* name;
 };
 UnfoldedTestSet test_sets[] = {
 	{ .number=0, .callback=PractRand::Tests::Batteries::get_core_tests, .name="core" },//default value must come first
@@ -483,7 +483,7 @@ int lookup_te_value(int te) {
 	}
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 	PractRand::initialize_PractRand();
 	PractRand::hook_error_handler(PractRand::print_err);
 	std::printf("RNG_test using PractRand version %s\n", PractRand::version_str);
@@ -657,7 +657,7 @@ int main(int argc, char **argv) {
 	Seeder_MetaRNG::register_name();
 	EntropyPool_MetaRNG::register_name();
 	std::string errmsg;
-	RNGs::vRNG *rng = RNG_Factories::create_rng(argv[1], &errmsg);
+	RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
 	if (!rng) {
 		if (errmsg.empty()) (void)std::fprintf(stderr, "unrecognized RNG name.  aborting.\n");
 		else (void)std::fprintf(stderr, "%s\n", errmsg.c_str());
@@ -808,7 +808,7 @@ int main(int argc, char **argv) {
 	}
 	known_good.seed(seed + 1);//the +1 is there just in case the RNG uses the same algorithm as the known good RNG
 
-	PractRand::RNGs::vRNG *testing_rng = nullptr;
+	PractRand::RNGs::vRNG* testing_rng = nullptr;
 	if (mode == 0) {
 		rng->seed(seed);
 		testing_rng = rng;
@@ -872,7 +872,7 @@ int main(int argc, char **argv) {
 		if (seed >> 32) std::printf("0x%lx%08lx", long(seed >> 32), long((seed << 32) >> 32));
 		else std::printf("0x%lx", long(seed));
 	}
-	const char *folding_names[3] = {"none", "standard", "extra"};
+	const char* folding_names[3] = {"none", "standard", "extra"};
 	std::printf("\ntest set = %s, folding = %s", test_sets[test_set_index].name, folding_names[folding]);
 	if (folding == 1) {
 		int native_bits = testing_rng->get_native_output_size();
@@ -892,11 +892,11 @@ int main(int argc, char **argv) {
 
 //	Tests::ListOfTests tests = Tests::Batteries::get_expanded_standard_tests(rng);
 #if defined MULTITHREADING_SUPPORTED
-	TestManager *tman = nullptr;
+	TestManager* tman = nullptr;
 	if (use_multithreading) tman = new MultithreadedTestManager(&tests, &known_good);
 	else tman = new TestManager(&tests, &known_good);
 #else
-	TestManager *tman = new TestManager(&tests, &known_good);
+	TestManager* tman = new TestManager(&tests, &known_good);
 #endif
 	tman->reset(testing_rng);
 

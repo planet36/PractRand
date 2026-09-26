@@ -12,13 +12,13 @@ using namespace PractRand;
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(isaac32x256)
 void PractRand::RNGs::Polymorphic::isaac32x256::seed(Uint64 s) { implementation.seed(s); }
-void PractRand::RNGs::Polymorphic::isaac32x256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::isaac32x256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac32x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac32x256::get_name() const {return "isaac32x256";}
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(isaac64x256)
 void PractRand::RNGs::Polymorphic::isaac64x256::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::isaac64x256::seed(vRNG *seeder_rng) { implementation.seed(seeder_rng); }
+void PractRand::RNGs::Polymorphic::isaac64x256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac64x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return "isaac64x256";}
 
@@ -26,7 +26,7 @@ std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return 
 PractRand::RNGs::Raw::isaac32x256::~isaac32x256() {std::memset(this, 0, sizeof(*this));}
 PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {std::memset(this, 0, sizeof(*this));}
 
-#define ind32(mm,x)  (*reinterpret_cast<Uint32 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((SIZE-1)<<2))))
+#define ind32(mm,x)  (*reinterpret_cast<Uint32*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((SIZE-1)<<2))))
 #define rngstep32(mix,a,b,mm,m,m2,r,x) \
 { \
   x = *m;  \
@@ -78,7 +78,7 @@ void PractRand::RNGs::Raw::isaac32x256::_seed(bool flag) {//LOCKED, do not chang
 	//but the visible seeding methods map to this
 	Uint32 tmp[8];
 	a = b = c = 0;
-	for (auto & i : tmp) i = 0x9e3779b9UL;  // the golden ratio
+	for (auto& i : tmp) i = 0x9e3779b9UL;  // the golden ratio
 
 	for (int i=0; i<4; ++i)          // scramble it
 	{
@@ -120,23 +120,23 @@ void PractRand::RNGs::Raw::isaac32x256::seed(Uint64 s) {//LOCKED, do not change
 	for (int i = 2; i < SIZE; i++) state[i] = 0;
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac32x256::seed(vRNG *seeder_rng) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac32x256::seed(vRNG* seeder_rng) {//LOCKED, do not change
 	for (int i = 0; i < SIZE; i += 2) {
 		state[i] = seeder_rng->raw32();
 		state[i + 1] = 0;
 	}
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac32x256::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::isaac32x256::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
 	//exception - changed in 0.85 to fix broken seeding
-	for (auto & i : state) walker->handle(i);
+	for (auto& i : state) walker->handle(i);
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
 	if (walker->is_seeder()) { used = SIZE; }
 	else {
-		for (auto & result : results) walker->handle(result);
+		for (auto& result : results) walker->handle(result);
 		walker->handle(used);
 		if (used > SIZE) used = SIZE;
 	}
@@ -155,7 +155,7 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 
 
 
-#define ind64(mm,x)  (*reinterpret_cast<Uint64 *>(reinterpret_cast<Uint8 *>(mm) + ((x) & ((SIZE-1)<<3))))
+#define ind64(mm,x)  (*reinterpret_cast<Uint64*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((SIZE-1)<<3))))
 #define rngstep64(mix,a,b,mm,m,m2,r,x) \
 { \
   x = *m;  \
@@ -207,7 +207,7 @@ void PractRand::RNGs::Raw::isaac64x256::_seed(bool flag) {//LOCKED, do not chang
 	//but the visible seeding methods map to this
 	Uint64 tmp[8];
 	a = b = c = 0;
-	for (auto & i : tmp) i = 0x9e3779b97f4a7c13ULL;  // the golden ratio
+	for (auto& i : tmp) i = 0x9e3779b97f4a7c13ULL;  // the golden ratio
 
 	for (int i=0; i<4; ++i)          // scramble it
 	{
@@ -248,23 +248,23 @@ void PractRand::RNGs::Raw::isaac64x256::seed(Uint64 s) {//LOCKED, do not change
 	for (int i = 1; i < SIZE; i++) state[i] = 0;
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac64x256::seed(vRNG *seeder_rng) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac64x256::seed(vRNG* seeder_rng) {//LOCKED, do not change
 	for (int i = 0; i < SIZE; i += 2) {
 		state[i] = seeder_rng->raw64();
 		state[i + 1] = 0;
 	}
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac64x256::walk_state(StateWalkingObject *walker) {
+void PractRand::RNGs::Raw::isaac64x256::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
 	//exception - changed in 0.85 to fix broken seeding
-	for (auto & i : state) walker->handle(i);
+	for (auto& i : state) walker->handle(i);
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
 	if (walker->is_seeder()) { used = SIZE; }
 	else {
-		for (auto & result : results) walker->handle(result);
+		for (auto& result : results) walker->handle(result);
 		walker->handle(used);
 		if (used > SIZE) used = SIZE;
 	}

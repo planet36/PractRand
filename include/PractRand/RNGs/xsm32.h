@@ -18,8 +18,8 @@ namespace PractRand::RNGs {
 			public:
 				Uint32 raw32();
 				void seed(Uint64 s); // no two seeds within 2**63 of each other on the same cycle
-				void seed(vRNG *seeder_rng); // no two seeds within 2**48 of each other on the same cycle (2**79 possible seeded states)
-				void walk_state(StateWalkingObject *walker);
+				void seed(vRNG* seeder_rng); // no two seeds within 2**48 of each other on the same cycle (2**79 possible seeded states)
+				void walk_state(StateWalkingObject* walker);
 				void seek_forward (Uint64 how_far);
 				void seek_backward(Uint64 how_far);
 				//static void self_test();
@@ -30,7 +30,7 @@ namespace PractRand::RNGs {
 			class xsm32 final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(xsm32)
 				void seed(Uint64 s) override; // no two seeds within 2**63 of each other on the same cycle
-				void seed(vRNG *seeder_rng) override; // no two seeds within 2**48 of each other on the same cycle (2**79 possible seeded states)
+				void seed(vRNG* seeder_rng) override; // no two seeds within 2**48 of each other on the same cycle (2**79 possible seeded states)
 				void seek_forward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
 				void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
 			};

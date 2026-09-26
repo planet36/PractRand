@@ -4,11 +4,11 @@ namespace PractRand::Tests {
 		class Pat5 final : public TestBaseclass {
 		public:
 			Pat5();
-			void init(PractRand::RNGs::vRNG *known_good) override;
+			void init(PractRand::RNGs::vRNG* known_good) override;
 			[[nodiscard]] std::string get_name() const override;
-			void get_results(std::vector<TestResult> &results) override;
+			void get_results(std::vector<TestResult>& results) override;
 
-			void test_blocks(TestBlock *data, int numblocks) override;
+			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
 			using Word = Uint32;

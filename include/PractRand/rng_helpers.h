@@ -6,19 +6,19 @@ namespace PractRand {
 	class StateWalkingObject {
 	public:
 		virtual ~StateWalkingObject() = default;
-		virtual void handle(bool  &) = 0;
+		virtual void handle(bool&) = 0;
 		/*virtual void handle(unsigned char &) = 0;
 		virtual void handle(unsigned short &) = 0;
 		virtual void handle(unsigned int &) = 0;
 		virtual void handle(unsigned long &) = 0;
 		virtual void handle(unsigned long long &) = 0;*/
-		virtual void handle(Uint8 &) = 0;
+		virtual void handle(Uint8&) = 0;
 		virtual void handle(Uint16&) = 0;
 		virtual void handle(Uint32&) = 0;
 		virtual void handle(Uint64&) = 0;
 
-		virtual void handle(float &) = 0;
-		virtual void handle(double &) = 0;
+		virtual void handle(float&) = 0;
+		virtual void handle(double&) = 0;
 
 		//purposes:
 		// 1. seeding
@@ -40,29 +40,29 @@ namespace PractRand {
 		void handle(signed int       &v) {handle((unsigned int)v);}
 		void handle(signed long      &v) {handle((unsigned long)v);}
 		void handle(signed long long &v) {handle((unsigned long long)v);}*/
-		void handle(Sint8 &v) {handle(reinterpret_cast<Uint8 &>(v));}
+		void handle(Sint8& v) {handle(reinterpret_cast<Uint8&>(v));}
 		void handle(Sint16&v) {handle(reinterpret_cast<Uint16&>(v));}
 		void handle(Sint32&v) {handle(reinterpret_cast<Uint32&>(v));}
 		void handle(Sint64&v) {handle(reinterpret_cast<Uint64&>(v));}
 
-		StateWalkingObject &operator<<(Uint8 &v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Uint16&v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Uint32&v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Uint64&v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Sint8 &v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Sint16&v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Sint32&v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(Sint64&v) {handle(v);return *this;}
-		StateWalkingObject &operator<<(float  &v){handle(v);return *this;}
-		StateWalkingObject &operator<<(double &v){handle(v);return *this;}
+		StateWalkingObject& operator<<(Uint8& v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Uint16&v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Uint32&v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Uint64&v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Sint8& v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Sint16&v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Sint32&v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(Sint64&v) {handle(v);return *this;}
+		StateWalkingObject& operator<<(float& v){handle(v);return *this;}
+		StateWalkingObject& operator<<(double& v){handle(v);return *this;}
 	};
 	namespace RNGs {
 		class vRNG;
 	}
 	Uint32 randi_fast_implementation(Uint32 random_value, Uint32 max);
-	StateWalkingObject *int_to_rng_seeder(Uint64);//must be deleted after use
-	StateWalkingObject *vrng_to_rng_seeder(RNGs::vRNG *);//must be deleted after use
-	StateWalkingObject *get_autoseeder(const void *);//must be deleted after use
+	StateWalkingObject* int_to_rng_seeder(Uint64);//must be deleted after use
+	StateWalkingObject* vrng_to_rng_seeder(RNGs::vRNG*);//must be deleted after use
+	StateWalkingObject* get_autoseeder(const void*);//must be deleted after use
 }
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_H(RNG) public:\
 		static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;\
@@ -70,7 +70,7 @@ namespace PractRand {
 		static constexpr int FLAGS = Raw:: RNG ::FLAGS;\
 		Raw:: RNG implementation{};\
 		explicit RNG (Uint64 s) {seed(s);}\
-		explicit RNG (vRNG *seeder) {seed(seeder);}\
+		explicit RNG (vRNG* seeder) {seed(seeder);}\
 		explicit RNG (SEED_AUTO_TYPE ) {autoseed();}\
 		explicit RNG (SEED_NONE_TYPE ) {}\
 		Uint8  raw8 () override;\
@@ -80,7 +80,7 @@ namespace PractRand {
 		using vRNG::seed;\
 		Uint64 get_flags() const override;\
 		std::string get_name() const override;\
-		void walk_state(StateWalkingObject *walker) override;
+		void walk_state(StateWalkingObject* walker) override;
 
 #if defined PRACTRAND_NO_LIGHT_WEIGHT_RNGS
 #define PRACTRAND_LIGHT_WEIGHT_RNG(RNG)
