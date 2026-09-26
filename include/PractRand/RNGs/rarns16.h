@@ -14,7 +14,7 @@ namespace PractRand::RNGs {
 			protected:
 			public:
 				Uint16 xs1, xs2, xs3;
-			public:
+
 				Uint16 raw16();
 				void seed(Uint64 s);
 				void seed(Uint16 s1, Uint16 s2, Uint16 s3);

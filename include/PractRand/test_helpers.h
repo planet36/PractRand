@@ -68,7 +68,7 @@ namespace PractRand::Tests {
 			double sum_sqr{};
 			void _count_duplicates();
 			[[nodiscard]] double _get_index ( double other_result ) const;//interpolates
-		public:
+
 			void _normalize();
 			void _add(double result) {rs.push_back(result); sum += result; sum_sqr += result * result;}
 			SampleSet() = default;

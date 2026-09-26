@@ -54,7 +54,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					virtual void refill();
 					std::vector<vRNG *> source_rngs;
-				public:
+
 					Uint8 raw8() override;
 					Uint16 raw16() override;
 					Uint32 raw32() override;
