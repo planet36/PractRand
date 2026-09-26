@@ -54,7 +54,7 @@ namespace PractRand::Tests {
 					return low < other.low;
 				}
 				i128 operator-(const i128 &other) const {
-					i128 rv;
+					i128 rv{};
 					rv.high = high - other.high;
 					rv.low = low - other.low;
 					rv.high -= other.low > low ? 1 : 0;

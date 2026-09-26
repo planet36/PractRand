@@ -495,7 +495,7 @@ namespace PractRand {
 		if (!AutoSeeder::initialized)
 			AutoSeeder::initialize();
 		union {
-			Uint64 as64[1];
+			Uint64 as64[1]{};
 			Uint32 as32[2];
 			Uint16 as16[4];
 			Uint8   as8[8];

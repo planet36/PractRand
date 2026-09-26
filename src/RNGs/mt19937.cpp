@@ -91,7 +91,7 @@ void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
 }
 void PractRand::RNGs::Raw::mt19937::self_test() {
 	const Uint64 expected = 0x7d9883055dc1141ull;
-	Raw::mt19937 rng; rng.seed(1371941);
+	Raw::mt19937 rng{}; rng.seed(1371941);
 	Uint64 checksum = 0;
 	for (int i = 0; i < 8192; i++) {
 		checksum ^= checksum << 24;

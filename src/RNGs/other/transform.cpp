@@ -224,7 +224,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				void Xor::refill() {
 					MultiplexTransformRNG::refill();
-					PractRand::Tests::TestBlock tmp;
+					PractRand::Tests::TestBlock tmp{};
 					buffer->fill(source_rngs[0]);
 					for (unsigned int sri = 1; sri < source_rngs.size(); sri++) {
 						tmp.fill(source_rngs[sri]);

@@ -763,7 +763,7 @@ public:
 		return tmp.str();
 	}
 	void seed64(Uint64 seed) {
-		SipHash hasher;
+		SipHash hasher{};
 		hasher.initstate();
 		hasher.feed_in_word(seed);
 		hasher.feed_in_word(seed >> 32);

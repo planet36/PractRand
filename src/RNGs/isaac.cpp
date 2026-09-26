@@ -142,7 +142,7 @@ void PractRand::RNGs::Raw::isaac32x256::walk_state(StateWalkingObject *walker) {
 	}
 }
 void PractRand::RNGs::Raw::isaac32x256::self_test() {
-	Raw::isaac32x256 rng;
+	Raw::isaac32x256 rng{};
 	rng.seed(0ul);
 	Uint64 checksum = 0;
 	for (int i = 0; i < 8192; i++) {
