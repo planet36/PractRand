@@ -34,6 +34,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 using namespace PractRand;
@@ -10870,7 +10871,7 @@ PractRand::Tests::Transforms::switching::switching(
 	std::vector<Uint64> lengths_)
 :
 	multiplex(name_, testlist),
-	lengths(lengths_)
+	lengths(std::move(lengths_))
 {
 	if (lengths.size() != testlist.tests.size()) issue_error();
 	blocks_already_per.resize(lengths.size());

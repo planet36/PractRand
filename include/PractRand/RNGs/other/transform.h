@@ -3,6 +3,7 @@
 #include "PractRand/rng_helpers.h"
 
 #include <deque>
+#include <utility>
 #include <vector>
 //RNGs in the "other" directory are not intended for real world use
 //only for research; as such they may get pretty sloppy in some areas
@@ -90,7 +91,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
 					[[nodiscard]] std::string get_name() const override;
-					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), name(name_), base_rng(rng) {}
+					GeneralizedTableTransform(vRNG *rng, const Entry *table_, std::string name_) : table(table_), name(std::move(name_)), base_rng(rng) {}
 					~GeneralizedTableTransform() override;
 					void walk_state(StateWalkingObject *) override;
 					Uint8 raw8() override;
