@@ -12,8 +12,7 @@ public:
 	std::deque<Uint64> history;
 	unsigned int history_limit{1024};
 
-	explicit Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : known_good(PractRand::SEED_NONE) {
-		base_rng = base_rng_;
+	explicit Seeder_MetaRNG(PractRand::RNGs::vRNG *base_rng_) : known_good(PractRand::SEED_NONE), base_rng(base_rng_) {
 		//current_seed = known_good.raw64();
 		//record_seed(current_seed);
 	}

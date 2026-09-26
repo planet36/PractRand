@@ -112,18 +112,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					if (!walker->is_read_only()) index = 999999;
 				}
-				MultiplexTransformRNG::MultiplexTransformRNG(const std::vector<vRNG*> &sources) {
-					buffer = new Tests::TestBlock;
-					index = 999999;
-					source_rngs = sources;
+				MultiplexTransformRNG::MultiplexTransformRNG(const std::vector<vRNG*> &sources) : buffer(new Tests::TestBlock), index(999999), source_rngs(sources) {
 				}
 				MultiplexTransformRNG::~MultiplexTransformRNG() { delete buffer; buffer = nullptr; }
 
 
-				ReinterpretAsUnknown::ReinterpretAsUnknown( vRNG *rng ) : Transform8(rng) {
+				ReinterpretAsUnknown::ReinterpretAsUnknown( vRNG *rng ) : Transform8(rng), index(8192 / OUTPUT_BITS) {
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as8[0];
-					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAsUnknown::~ReinterpretAsUnknown() {
 					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
@@ -140,10 +136,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string ReinterpretAsUnknown::get_name() const {return std::string("AsUnknown(") + base_rng->get_name() + ")";}
 
-				ReinterpretAs8::ReinterpretAs8( vRNG *rng ) : Transform8(rng) {
+				ReinterpretAs8::ReinterpretAs8( vRNG *rng ) : Transform8(rng), index(8192 / OUTPUT_BITS) {
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as8[0];
-					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs8::~ReinterpretAs8() {
 					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
@@ -160,10 +155,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string ReinterpretAs8::get_name() const {return std::string("As8(") + base_rng->get_name() + ")";}
 
-				ReinterpretAs16::ReinterpretAs16( vRNG *rng ) : Transform16(rng) {
+				ReinterpretAs16::ReinterpretAs16( vRNG *rng ) : Transform16(rng), index(8192 / OUTPUT_BITS) {
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as16[0];
-					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs16::~ReinterpretAs16() {
 					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
@@ -180,10 +174,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string ReinterpretAs16::get_name() const {return std::string("As16(") + base_rng->get_name() + ")";}
 
-				ReinterpretAs32::ReinterpretAs32( vRNG *rng ) : Transform32(rng) {
+				ReinterpretAs32::ReinterpretAs32( vRNG *rng ) : Transform32(rng), index(8192 / OUTPUT_BITS) {
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as32[0];
-					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs32::~ReinterpretAs32() {
 					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
@@ -200,10 +193,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string ReinterpretAs32::get_name() const {return std::string("As32(") + base_rng->get_name() + ")";}
 
-				ReinterpretAs64::ReinterpretAs64( vRNG *rng ) : Transform64(rng) {
+				ReinterpretAs64::ReinterpretAs64( vRNG *rng ) : Transform64(rng), index(8192 / OUTPUT_BITS) {
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as64[0];
-					index = 8192 / OUTPUT_BITS;
 				}
 				ReinterpretAs64::~ReinterpretAs64() {
 					auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer);
@@ -239,11 +231,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return rv;
 				}
 
-				Discard16to8::Discard16to8(vRNG *base_rng_) : Transform8(base_rng_) {
+				Discard16to8::Discard16to8(vRNG *base_rng_) : Transform8(base_rng_), index(8192 / INPUT_BITS) {
 					//if (base_rng_->get_native_output_size() != INPUT_BITS) std::cerr << "* warning: Discard16to8 using incorrect input size?\n";
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as16[0];
-					index = 8192 / INPUT_BITS;
 				}
 				void Discard16to8::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				std::string Discard16to8::get_name() const { return std::string("Discard16to8(") + base_rng->get_name() + ")"; }
@@ -251,11 +242,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
-				Discard32to8::Discard32to8(vRNG *base_rng_) : Transform8(base_rng_) {
+				Discard32to8::Discard32to8(vRNG *base_rng_) : Transform8(base_rng_), index(8192 / 32) {
 					//if (base_rng_->get_native_output_size() != INPUT_BITS) std::cerr << "* warning: Discard16to8 using incorrect input size?\n";
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as32[0];
-					index = 8192 / 32;
 				}
 				std::string Discard32to8::get_name() const { return std::string("Discard32to8(") + base_rng->get_name() + ")"; }
 				void Discard32to8::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
@@ -263,11 +253,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
-				Discard64to8::Discard64to8(vRNG *base_rng_) : Transform8(base_rng_) {
+				Discard64to8::Discard64to8(vRNG *base_rng_) : Transform8(base_rng_), index(8192 / INPUT_BITS) {
 					//if (base_rng_->get_native_output_size() != INPUT_BITS) std::cerr << "* warning: Discard16to8 using incorrect input size?\n";
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as64[0];
-					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to8::get_name() const { return std::string("Discard64to8(") + base_rng->get_name() + ")"; }
 				void Discard64to8::refill() {
@@ -277,11 +266,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
-				Discard32to16::Discard32to16(vRNG *base_rng_) : Transform16(base_rng_) {
+				Discard32to16::Discard32to16(vRNG *base_rng_) : Transform16(base_rng_), index(8192 / INPUT_BITS) {
 					//if (base_rng_->get_native_output_size() != INPUT_BITS) std::cerr << "* warning: Discard16to8 using incorrect input size?\n";
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as32[0];
-					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard32to16::get_name() const { return std::string("Discard32to16(") + base_rng->get_name() + ")"; }
 				void Discard32to16::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
@@ -289,11 +277,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
-				Discard64to16::Discard64to16(vRNG *base_rng_) : Transform16(base_rng_) {
+				Discard64to16::Discard64to16(vRNG *base_rng_) : Transform16(base_rng_), index(8192 / INPUT_BITS) {
 					//if (base_rng_->get_native_output_size() != INPUT_BITS) std::cerr << "* warning: Discard16to8 using incorrect input size?\n";
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as64[0];
-					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to16::get_name() const { return std::string("Discard64to16(") + base_rng->get_name() + ")"; }
 				void Discard64to16::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
@@ -301,11 +288,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
-				Discard64to32::Discard64to32(vRNG *base_rng_) : Transform32(base_rng_) {
+				Discard64to32::Discard64to32(vRNG *base_rng_) : Transform32(base_rng_), index(8192 / INPUT_BITS) {
 					//if (base_rng_->get_native_output_size() != INPUT_BITS) std::cerr << "* warning: Discard16to8 using incorrect input size?\n";
 					auto *block = new PractRand::Tests::TestBlock;
 					buffer = &block->as64[0];
-					index = 8192 / INPUT_BITS;
 				}
 				std::string Discard64to32::get_name() const { return std::string("Discard64to32(") + base_rng->get_name() + ")"; }
 				void Discard64to32::refill() { auto *block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }

@@ -366,8 +366,7 @@ class TestCalibrationData {
 		}
 	}
 public:
-	explicit TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_117 *raw_) {
-		raw = PractRand::Tests::RawTestCalibrationData_129::convert117to129(raw_);
+	explicit TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_117 *raw_) : raw(PractRand::Tests::RawTestCalibrationData_129::convert117to129(raw_)) {
 		init();
 	}
 	explicit TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_129 *raw_) : raw(raw_) {
@@ -1800,15 +1799,14 @@ PractRand::Tests::DistC6::DistC6 (
 	unitsL(unitsL_),
 	bits_clipped_0(bits_clipped_0_),
 	bits_clipped_1(bits_clipped_1_),
-	bits_clipped_2(bits_clipped_2_)
+	bits_clipped_2(bits_clipped_2_),
+	bits_per_sample(3 + unitsL - bits_clipped_0 - bits_clipped_1 - bits_clipped_2),
+	size(1 << (bits_per_sample * length)),
+	mask_pre(Uint32(-1))
 {
 //	mode = mode_;
 
-	bits_per_sample = 3 + unitsL - bits_clipped_0 - bits_clipped_1 - bits_clipped_2;
-	size = 1 << (bits_per_sample * length);
-
 	generate_reorder_codes();
-	mask_pre = Uint32(-1);
 	Uint32 tmp = (1 << bits_per_sample) - 1;
 	Uint32 index = _advance_index(0, reorder_bits(0));
 	for (int i = 0; i < length-1; i++) {
@@ -2563,10 +2561,7 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult> &results) {
 
 
 
-PractRand::Tests::BCFN::BCFN( int unitsL2_, int tbits_, bool unbalanced_ ) {
-	unitsL2 = unitsL2_;
-	tbits = tbits_;
-	unbalanced = unbalanced_;
+PractRand::Tests::BCFN::BCFN( int unitsL2_, int tbits_, bool unbalanced_ ) : tbits(tbits_), unitsL2(unitsL2_), unbalanced(unbalanced_) {
 }
 void PractRand::Tests::BCFN::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	for (int i = 0; i < LEVELS; i++) {
@@ -3258,10 +3253,7 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 
 
 
-PractRand::Tests::BCFN_FF::BCFN_FF( int unitsL2_, int tbits_, bool unbalanced_ ) {
-	unitsL2 = unitsL2_;
-	tbits = tbits_;
-	unbalanced = unbalanced_;
+PractRand::Tests::BCFN_FF::BCFN_FF( int unitsL2_, int tbits_, bool unbalanced_ ) : tbits(tbits_), unitsL2(unitsL2_), unbalanced(unbalanced_) {
 }
 void PractRand::Tests::BCFN_FF::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	int tsize = 1 << tbits;
@@ -5387,10 +5379,9 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128 *ba
 PractRand::Tests::BirthdayLamda1::~BirthdayLamda1() {
 	delete[] buffer;
 }
-PractRand::Tests::BirthdayLamda1::BirthdayLamda1(int buffer_size_L2_) : buffer_size_L2(buffer_size_L2_) {
+PractRand::Tests::BirthdayLamda1::BirthdayLamda1(int buffer_size_L2_) : buffer_size_L2(buffer_size_L2_), bits_to_use(buffer_size_L2 * 3 - 2) {
 	buffer = new i128[1 << buffer_size_L2];
 	//buffer.resize(1 << buffer_size_L2);
-	bits_to_use = buffer_size_L2 * 3 - 2;
 	//const double lambda = std::pow(2.0, buffer_size_L2 * 3 - BITS_TO_USE - 2);
 	//if (lambda != 1.0) issue_error("BirthdayLambda1 - bad configuration");
 	duplicates = expected_duplicates = 0;
@@ -6459,13 +6450,12 @@ void PractRand::Tests::BRank::test_blocks(TestBlock *data, int numblocks) {
 	}
 }
 
-PractRand::Tests::NearSeq::NearSeq() {
+PractRand::Tests::NearSeq::NearSeq() : lookup_table(nullptr) {
 	//if (false);
 	//else if (BITS_PER_BLOCK == 8) verify_NearSeq_byte_code8(NearSeq_byte_code8);
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
 	//else if (BITS_PER_BLOCK == 5) verify_NearSeq_byte_code5x2(NearSeq_byte_code5x2);
 	//else issue_error("NearSeq: what block size?");
-	lookup_table = nullptr;
 }
 void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 	if (SEQUENCE_BITS < CORE_SEQUENCE_BITS) issue_error("NearSeq - bad settings");
@@ -6756,14 +6746,12 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 	blocks_tested += numblocks;
 }
 
-PractRand::Tests::NearSeq2::NearSeq2() {
+PractRand::Tests::NearSeq2::NearSeq2() : lookup_table1(nullptr), lookup_table2(nullptr) {
 	//if (false);
 	//else if (BITS_PER_BLOCK == 8) verify_NearSeq_byte_code8(NearSeq_byte_code8);
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
 	//else if (BITS_PER_BLOCK == 5) verify_NearSeq_byte_code5x2(NearSeq_byte_code5x2);
 	//else issue_error("NearSeq: what block size?");
-	lookup_table1 = nullptr;
-	lookup_table2 = nullptr;
 
 	if constexpr (EXTRA_FULL_WORDS & 1) issue_error("NearSeq2 - odd number of extra words");
 	if constexpr (EXTRA_PARTIAL_WORD_BITS < 0 || EXTRA_PARTIAL_WORD_BITS >= WORD_BITS) issue_error("NearSeq2 - EXTRA_PARTIAL_WORD_BITS value outside of range");

@@ -104,8 +104,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(left);
 					if (left >= table_size) left = 0;
 				}
-				ibaa8::ibaa8(int table_size_L2_) : table_size_L2(table_size_L2_) {
-					table = new Uint8[2 << table_size_L2];
+				ibaa8::ibaa8(int table_size_L2_) : table_size_L2(table_size_L2_), table(new Uint8[2 << table_size_L2]) {
 				}
 				ibaa8::~ibaa8() {delete[] table;}
 
@@ -141,8 +140,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(left);
 					if (left >= table_size) left = 0;
 				}
-				ibaa16::ibaa16(int table_size_L2_) : table_size_L2(table_size_L2_) {
-					table = new Uint16[2 << table_size_L2];
+				ibaa16::ibaa16(int table_size_L2_) : table_size_L2(table_size_L2_), table(new Uint16[2 << table_size_L2]) {
 				}
 				ibaa16::~ibaa16() {delete[] table;}
 
@@ -178,8 +176,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(left);
 					if (left >= table_size) left = 0;
 				}
-				ibaa32::ibaa32(int table_size_L2_) : table_size_L2(table_size_L2_) {
-					table = new Uint32[2 << table_size_L2];
+				ibaa32::ibaa32(int table_size_L2_) : table_size_L2(table_size_L2_), table(new Uint32[2 << table_size_L2]) {
 				}
 				ibaa32::~ibaa32() {delete[] table;}
 
@@ -638,8 +635,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					delete[] table1;
 					delete[] table2;
 				}
-				genindE::genindE(int size_L2) {
-					table_size_L2 = size_L2;
+				genindE::genindE(int size_L2) : table_size_L2(size_L2) {
 					if (size_L2 < 1) issue_error("genindE - size too small");
 					if (size_L2 > 16) issue_error("genindE - size too large");
 					table1 = new Uint16[1ULL << (table_size_L2)];
@@ -678,8 +674,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					delete[] table1;
 					delete[] table2;
 				}
-				genindF::genindF(int size_L2) {
-					table_size_L2 = size_L2;
+				genindF::genindF(int size_L2) : table_size_L2(size_L2) {
 					if (size_L2 < 1) issue_error("genindF - size too small");
 					if (size_L2 > 16) issue_error("genindF - size too large");
 					table1 = new Uint16[1ULL << (table_size_L2)];

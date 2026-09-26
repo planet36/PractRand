@@ -120,8 +120,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(used);
 					if (used >= SIZE) used = 0;
 				}
-				lfsr_medium::lfsr_medium() {
-					used = 0;
+				lfsr_medium::lfsr_medium() : used(0) {
 					Uint8 vartaps = 1+2;//255 - 16;
 					for (Uint32 i = 0; i < 256; i++) {
 						Uint8 low = 0;

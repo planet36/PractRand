@@ -32,10 +32,7 @@ public:
 	virtual void get_results( std::vector<PractRand::TestResult> &result_vec ) final;//gets the results
 };
 
-TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_) {
-	rng = nullptr;
-	tests = tests_;
-	known_good = known_good_;
+TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_) : rng(nullptr), known_good(known_good_), tests(tests_) {
 	if (!known_good) known_good = new PractRand::RNGs::Polymorphic::hc256(PractRand::SEED_AUTO);
 	blocks_so_far = 0;
 	max_buffer_amount = max_buffer_amount_;
