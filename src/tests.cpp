@@ -425,14 +425,14 @@ public:
 			data[raw_data_array129[i].name][raw_data_array129[i].blocks] = new TestCalibrationData(&raw_data_array129[i]);
 		}
 	}
-	Uint64 get_minimum_length(std::string name) {
+	Uint64 get_minimum_length(const std::string& name) {
 		auto dit = data.find(name);
 		if (dit == data.end()) return 0;
 		std::map< Uint64, TestCalibrationData * > &ts = dit->second;
 		if (ts.empty()) return 0;
 		return ts.begin()->first;
 	}
-	TestCalibrationData *get_calibration_data(std::string name, Uint64 blocks) {
+	TestCalibrationData *get_calibration_data(const std::string& name, Uint64 blocks) {
 		auto dit = data.find(name);
 		if (dit == data.end()) return nullptr;
 		std::map< Uint64, TestCalibrationData * > &ts = dit->second;
