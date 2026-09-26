@@ -101,7 +101,7 @@ namespace PractRand {
 			bool sign = (tmp_exp & 1) ? true : false;
 			int exp = tmp_exp >> 1;
 			if (exp >= 0x4000) exp -= 0x8000;
-			v = (sign ? -1.0f : 1.0f) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
+			v = (sign ? -1.0F : 1.0F) * float(std::ldexp(static_cast<double>(tmp_sig), exp-32));
 		}
 		void handle(double &v) override {
 			Uint16 tmp_exp = pop16();
