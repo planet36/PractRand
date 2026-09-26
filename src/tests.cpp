@@ -5643,7 +5643,7 @@ void PractRand::Tests::BirthdaySystematic128::do_incomplete_buffer() {
 	if (bits_per_sample == 128) low_mask = high_mask;
 	else if (bits_per_sample > 64) low_mask = high_mask << (128 - bits_per_sample);
 	else if (bits_per_sample == 64) low_mask = 0;
-	else if (bits_per_sample < 64) {
+	else {//bits_per_sample < 64
 		low_mask = 0;
 		high_mask <<= (64 - bits_per_sample);
 	}
