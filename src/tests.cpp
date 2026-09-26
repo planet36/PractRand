@@ -1642,7 +1642,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	std::vector<double> probs; probs.resize(TSIZE);
 	//if (autofail) return 9876543210.;
 	if (autofail) {
-		results.push_back(TestResult(this->get_name() + ":!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.000001));
+		results.emplace_back(this->get_name() + ":!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.000001);
 		return;
 	}
 	//correct probs for startup region:
@@ -1687,7 +1687,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	}
 	count[TSIZE-1] += extreme_lags.size();
 	if (!total_counts) {
-		results.push_back(TestResult(get_name() + ":?", total_counts != 0, total_counts != 0, blocks_tested > 16 ? TestResult::TYPE_PASSFAIL : TestResult::TYPE_UNKNOWN, 0.0001));
+		results.emplace_back(get_name() + ":?", total_counts != 0, total_counts != 0, blocks_tested > 16 ? TestResult::TYPE_PASSFAIL : TestResult::TYPE_UNKNOWN, 0.0001);
 		return;
 	}
 
@@ -1719,8 +1719,8 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	double s2 = calib2->sample_to_suspicion(r2) * -1;
 	//double cp1 = TestResult::suspicion_to_pvalue(s1);
 	//double cp2 = TestResult::suspicion_to_pvalue(s2);
-	results.push_back(TestResult(get_name() + ":A", r1, s1, TestResult::TYPE_GOOD_S, 0.5));
-	results.push_back(TestResult(get_name() + ":B", r2, s2, TestResult::TYPE_GOOD_S, 0.5));
+	results.emplace_back(get_name() + ":A", r1, s1, TestResult::TYPE_GOOD_S, 0.5);
+	results.emplace_back(get_name() + ":B", r2, s2, TestResult::TYPE_GOOD_S, 0.5);
 }
 /*double PractRand::Tests::Gap16::result_to_pvalue ( Uint64 blocks, double r ) {
 	if (1) {//very crude aproximation:
@@ -2106,13 +2106,13 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult> &results) {
 	if (min_len && min_len <= blocks_tested) {
 		TestCalibrationData *calib = calibration_manager.get_calibration_data(base_name, blocks_tested);
 		double suspicion = calib->sample_to_suspicion(r) * -1;//negation to make the normal failure type occur at 0 instead of 1
-		results.push_back(TestResult(get_name(), r, suspicion, TestResult::TYPE_GOOD_S, weight));
+		results.emplace_back(get_name(), r, suspicion, TestResult::TYPE_GOOD_S, weight);
 	}
 	else if (blocks_tested > static_cast<decltype(blocks_tested)>(unitsL) * 1024 * 1024 * 16) {
-		results.push_back(TestResult(get_name(), r, 0, TestResult::TYPE_RAW_NORMAL, weight/5));
+		results.emplace_back(get_name(), r, 0, TestResult::TYPE_RAW_NORMAL, weight/5);
 	}
 	else {
-		results.push_back(TestResult(get_name(), r, 0, TestResult::TYPE_RAW, .01));
+		results.emplace_back(get_name(), r, 0, TestResult::TYPE_RAW, .01);
 	}
 /*	if (unitsL == 0 && length == 9 && bits_clipped_0 == 1 && bits_clipped_1 == 0 && bits_clipped_2 == 0) {
 		int L2 = int(floor(0.5 + std::log((double)blocks_tested) / std::log(2.0)));
@@ -2282,7 +2282,7 @@ void PractRand::Tests::DistC7::get_results(std::vector<TestResult> &results) {
 	if (results.size() != initial_results_size + 3) return;
 	double raw = -2 * (std::log(results[initial_results_size].get_pvalue()) + std::log(results[initial_results_size + 1].get_pvalue()));
 	double n = math_chisquared_to_normal(raw, 4);
-	results.push_back(TestResult(get_name() + ":indep", n, 1 - math_chisquared_to_pvalue(raw, 4), TestResult::TYPE_GOOD_P, 0.5));
+	results.emplace_back(get_name() + ":indep", n, 1 - math_chisquared_to_pvalue(raw, 4), TestResult::TYPE_GOOD_P, 0.5);
 	return;
 }
 
@@ -2702,18 +2702,18 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 			//overall_bins += (1 << effective_bits) - 1;
 			double rn = math_chisquared_to_normal(rv, (1<<effective_bits)-1);
 			double rs = calib->sample_to_suspicion(rn) * -1;
-			results.push_back(TestResult(name.str(), rn, rs, TestResult::TYPE_GOOD_S, w ) );
+			results.emplace_back(name.str(), rn, rs, TestResult::TYPE_GOOD_S, w );
 		}
 		else {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
 			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
 			double rn = math_chisquared_to_normal(rv, (1<<tbits)-1);
-			results.push_back(TestResult(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w ) );
+			results.emplace_back(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w );
 		}
 	}
 	if (overall_bins) {
 		double overall_norm = math_chisquared_to_normal(overall_raw*2, overall_bins);
-		results.push_back(TestResult(get_name() + ":all", overall_norm, overall_norm, TestResult::TYPE_RAW_NORMAL, 0.1 ) );
+		results.emplace_back(get_name() + ":all", overall_norm, overall_norm, TestResult::TYPE_RAW_NORMAL, 0.1 );
 	}
 }
 void PractRand::Tests::BCFN::handle_high_levels_balanced ( long level, long bits ) {
@@ -3417,18 +3417,18 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 			//overall_bins += (1 << effective_bits) - 1;
 			double rn = math_chisquared_to_normal(rv, (1 << effective_bits) - 1);
 			double rs = calib->sample_to_suspicion(rn) * -1;
-			results.push_back(TestResult(name.str(), rn, rs, TestResult::TYPE_GOOD_S, w));
+			results.emplace_back(name.str(), rn, rs, TestResult::TYPE_GOOD_S, w);
 		}
 		else {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
 			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
 			double rn = math_chisquared_to_normal(rv, (1 << tbits) - 1);
-			results.push_back(TestResult(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w));
+			results.emplace_back(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w);
 		}
 	}
 	if (overall_bins) {
 		double overall_norm = math_chisquared_to_normal(overall_raw * 2, overall_bins);
-		results.push_back(TestResult(get_name() + ":all", overall_norm, overall_norm, TestResult::TYPE_RAW_NORMAL, 0.1));
+		results.emplace_back(get_name() + ":all", overall_norm, overall_norm, TestResult::TYPE_RAW_NORMAL, 0.1);
 	}
 
 	for (int level = 0; level < LEVELS; level++) {
@@ -3483,7 +3483,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 				if (w > 0.375) w = 0.375;
 				if (!level) w += 0.125;
 				//results.push_back(TestResult(name.str(), n_, n_, TestResult::TYPE_RAW_NORMAL, w*0.1 ) );
-				results.push_back(TestResult(name.str(), n_, p2, TestResult::TYPE_BAD_P, w*0.05 ) );
+				results.emplace_back(name.str(), n_, p2, TestResult::TYPE_BAD_P, w*0.05 );
 				//results.push_back(TestResult(name.str(), n_, p, TestResult::TYPE_GOOD_P, w*0.1 ) );
 			}
 		}
@@ -3962,9 +3962,9 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 					double suspicioun = -calib->sample_to_suspicion(norm);
 					sum_s += suspicioun * suspicioun;//std::pow(2.0, std::abs(suspicioun));
 					num_s++;
-					results.push_back(TestResult(namestr.str() + ")", norm, suspicioun, TestResult::TYPE_GOOD_S, ebits * 0.00625 / sig_bits));
+					results.emplace_back(namestr.str() + ")", norm, suspicioun, TestResult::TYPE_GOOD_S, ebits * 0.00625 / sig_bits);
 				}
-				else results.push_back(TestResult(namestr.str() + ")", norm, norm,  TestResult::TYPE_RAW_NORMAL, ebits * 0.00625 / sig_bits));
+				else results.emplace_back(namestr.str() + ")", norm, norm,  TestResult::TYPE_RAW_NORMAL, ebits * 0.00625 / sig_bits);
 			}
 		}
 	}
@@ -3975,8 +3975,8 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		TestCalibrationData *calib = calibration_manager.get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
 		if (stride_bits_L2 < 2 || sig_bits != 14 || exp_bits < 4) calib = nullptr;
 		if (calib && samples >= 3000)
-			results.push_back( TestResult(get_name() + ":all", over_norm, -calib->sample_to_suspicion(over_norm),  TestResult::TYPE_GOOD_S, .25));
-		else results.push_back(TestResult(get_name() + ":all", over_norm, over_norm,  TestResult::TYPE_RAW_NORMAL, .25));
+			results.emplace_back(get_name() + ":all", over_norm, -calib->sample_to_suspicion(over_norm),  TestResult::TYPE_GOOD_S, .25);
+		else results.emplace_back(get_name() + ":all", over_norm, over_norm,  TestResult::TYPE_RAW_NORMAL, .25);
 	}
 	if constexpr (false) {//num_s >= 3) { - DISABLED because I don't trust the p-values near the extremas
 		/*long double calib_mean = 0;
@@ -3997,8 +3997,8 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		sum_s /= 9.308158403091918;
 		sum_s /= std::sqrt(double(num_s));
 		TestCalibrationData *calib = calibration_manager.get_calibration_data("FPF:all2", num_s);
-		if (calib) results.push_back(TestResult(get_name() + ":all2", sum_s, -calib->sample_to_suspicion(sum_s), TestResult::TYPE_GOOD_S, 0.1));
-		else results.push_back(TestResult(get_name() + ":all2", sum_s, sum_s, TestResult::TYPE_RAW_NORMAL, 0.1));
+		if (calib) results.emplace_back(get_name() + ":all2", sum_s, -calib->sample_to_suspicion(sum_s), TestResult::TYPE_GOOD_S, 0.1);
+		else results.emplace_back(get_name() + ":all2", sum_s, sum_s, TestResult::TYPE_RAW_NORMAL, 0.1);
 	}
 	//double actual_samples = 0;
 	//for (int e = 0; e <= max_exp; e++) actual_samples += inter_counts[e];
@@ -4011,8 +4011,8 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		std::ostringstream str; str << get_name() << ":cross";
 		TestCalibrationData *calib = calibration_manager.get_calibration_data( "FPF-14+6/16:cross", samples / 512.0 + 0.5 );
 		if (calib)
-			results.push_back(TestResult(str.str(), norm, -calib->sample_to_suspicion(norm),  samples >= 4000 ? TestResult::TYPE_GOOD_S : TestResult::TYPE_BAD_S, 0.25));
-		else results.push_back(TestResult(str.str(), norm, norm,  TestResult::TYPE_RAW_NORMAL, 0.25));
+			results.emplace_back(str.str(), norm, -calib->sample_to_suspicion(norm),  samples >= 4000 ? TestResult::TYPE_GOOD_S : TestResult::TYPE_BAD_S, 0.25);
+		else results.emplace_back(str.str(), norm, norm,  TestResult::TYPE_RAW_NORMAL, 0.25);
 	}
 }
 void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
@@ -4433,7 +4433,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 	}
 
 	if (autofail) {
-		results.push_back(TestResult(get_name() + ":G:!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.001));
+		results.emplace_back(get_name() + ":G:!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.001);
 		return;
 	}
 
@@ -4501,7 +4501,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 
 			std::ostringstream buf;
 			buf << get_name() << ":G" << GAP_SIG_BITS << ":e" << e;
-			results.push_back(TestResult(buf.str(), norm, math_normaldist_to_pvalue(norm), TestResult::TYPE_BAD_P, 0.02 * std::pow(0.65, e)));
+			results.emplace_back(buf.str(), norm, math_normaldist_to_pvalue(norm), TestResult::TYPE_BAD_P, 0.02 * std::pow(0.65, e));
 
 			/*
 				for Maurer's paper: (not that I'm actually following it that closely, but need these to be able to reference it quickly)
@@ -4521,7 +4521,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 		if (total_gap_hits > 5000) {
 			//double avg = total_gap_product_L2 / total_gap_hits;
 			double norm = total_gap_product_L2 / std::sqrt(total_gap_product_L2_adjusted_variance);
-			results.push_back(TestResult(get_name() + ":G:comb", norm, math_normaldist_to_pvalue(norm), TestResult::TYPE_BAD_P, 0.4));
+			results.emplace_back(get_name() + ":G:comb", norm, math_normaldist_to_pvalue(norm), TestResult::TYPE_BAD_P, 0.4);
 		}
 	}
 
@@ -4828,7 +4828,7 @@ void PractRand::Tests::Birthday32::get_results(std::vector<TestResult> &results)
 	int cat = simplify_prob_table(MAX_DUPLICATES, total / 40.0, probs, counts2, true, false);
 	double chisquared = g_test(cat, probs, counts2);
 	double norm = math_chisquared_to_normal(chisquared, cat - 1);
-	results.push_back(TestResult(get_name(), norm, norm, TestResult::TYPE_RAW_NORMAL, 0.125));
+	results.emplace_back(get_name(), norm, norm, TestResult::TYPE_RAW_NORMAL, 0.125);
 }
 void PractRand::Tests::Birthday32::flush_buffer() {
 	if (num_buffered != BUFFER_SIZE) issue_error("Birthday32::flush_buffer - buffer not full?");
@@ -5046,7 +5046,7 @@ void PractRand::Tests::Birthday64::get_results(std::vector<TestResult> &results)
 	int cat = simplify_prob_table(MAX_DUPLICATES, total / 40.0, probs, counts2, true, false);
 	double chisquared = g_test(cat, probs, counts2);
 	double norm = math_chisquared_to_normal(chisquared, cat - 1);
-	results.push_back(TestResult(get_name(), norm, norm, TestResult::TYPE_RAW_NORMAL, 0.125));
+	results.emplace_back(get_name(), norm, norm, TestResult::TYPE_RAW_NORMAL, 0.125);
 }
 void PractRand::Tests::Birthday64::flush_buffer() {
 	if (num_buffered != BUFFER_SIZE) issue_error("Birthday64::flush_buffer - buffer not full?");
@@ -5082,7 +5082,7 @@ void PractRand::Tests::Birthday64::flush_buffer() {
 			int first = i;
 			while (i < BUFFER_SIZE - 2 && buffer[i] == buffer[i + 1]) i++;
 			int run_len = i - first + 1;
-			repeated_values.push_back(std::pair<Uint64, Uint64>(buffer[i], run_len));
+			repeated_values.emplace_back(buffer[i], run_len);
 			duplicates += run_len - 1;
 		}
 	}
@@ -5441,7 +5441,7 @@ static double largest_spacing_cdf(Uint64 N, double value) {
 }
 void PractRand::Tests::BirthdayLamda1::get_results(std::vector<TestResult> &results) {
 	if (autofail) {
-		results.push_back(TestResult(get_name() + ":!", -1, 1, TestResult::TYPE_PASSFAIL, 0.125));
+		results.emplace_back(get_name() + ":!", -1, 1, TestResult::TYPE_PASSFAIL, 0.125);
 		return;
 	}
 	if (!expected_duplicates) return;
@@ -5455,7 +5455,7 @@ void PractRand::Tests::BirthdayLamda1::get_results(std::vector<TestResult> &resu
 			p += 0.5 * poisson_pmf(expected_duplicates, duplicates);
 			std::vector<double> probs; probs.resize(duplicates + 1);
 			for (int i = 0; i <= duplicates; i++) probs[i] = poisson_pmf(expected_duplicates, i);
-			results.push_back(TestResult(get_name(), norm, 1-p, TestResult::TYPE_BAD_P, 0.125));
+			results.emplace_back(get_name(), norm, 1-p, TestResult::TYPE_BAD_P, 0.125);
 		}
 		else {
 			double p = 0;
@@ -5463,11 +5463,11 @@ void PractRand::Tests::BirthdayLamda1::get_results(std::vector<TestResult> &resu
 			high += 8 * std::sqrt(expected_duplicates);
 			for (int i = high + 3; i > duplicates; i--) p += poisson_pmf(expected_duplicates, i);
 			p += 0.5 * poisson_pmf(expected_duplicates, duplicates);
-			results.push_back(TestResult(get_name(), norm, p, TestResult::TYPE_BAD_P, 0.125));
+			results.emplace_back(get_name(), norm, p, TestResult::TYPE_BAD_P, 0.125);
 		}
 	}
 	else {
-		results.push_back(TestResult(get_name(), norm, math_normaldist_to_pvalue(-norm), TestResult::TYPE_BAD_P, 0.125));
+		results.emplace_back(get_name(), norm, math_normaldist_to_pvalue(-norm), TestResult::TYPE_BAD_P, 0.125);
 		// would be better passed through calibration, but this will do for now
 	}
 }
@@ -5673,7 +5673,7 @@ void PractRand::Tests::BirthdaySystematic128::do_incomplete_buffer() {
 }
 void PractRand::Tests::BirthdaySystematic128::get_results(std::vector<TestResult> &results) {
 	if (autofail) {
-		results.push_back(TestResult(get_name() + ":!", 0, 1.0, TestResult::TYPE_PASSFAIL, 0.01));
+		results.emplace_back(get_name() + ":!", 0, 1.0, TestResult::TYPE_PASSFAIL, 0.01);
 		return;
 	}
 	double total_expected_duplicates = BirthdayLamda1::expected_duplicates;
@@ -5700,7 +5700,7 @@ void PractRand::Tests::BirthdaySystematic128::get_results(std::vector<TestResult
 			double p = 0;
 			for (int i = 0; i < total_actual_duplicates; i++) p += poisson_pmf(total_expected_duplicates, i);
 			p += 0.5 * poisson_pmf(total_expected_duplicates, total_actual_duplicates);
-			results.push_back(TestResult(buf.str() + "1", norm, 1 - p, TestResult::TYPE_BAD_P, 0.125));
+			results.emplace_back(buf.str() + "1", norm, 1 - p, TestResult::TYPE_BAD_P, 0.125);
 		}
 		else {
 			double p = 0;
@@ -5709,17 +5709,17 @@ void PractRand::Tests::BirthdaySystematic128::get_results(std::vector<TestResult
 
 			for (int i = high + 3; i > total_actual_duplicates; i--) p += poisson_pmf(total_expected_duplicates, i);
 			p += 0.5 * poisson_pmf(total_expected_duplicates, total_actual_duplicates);
-			results.push_back(TestResult(buf.str() + "1", norm, p, TestResult::TYPE_BAD_P, 0.125));
+			results.emplace_back(buf.str() + "1", norm, p, TestResult::TYPE_BAD_P, 0.125);
 		}
 	}
 	else {
-		results.push_back(TestResult(buf.str() + "1", norm, math_normaldist_to_pvalue(-norm), TestResult::TYPE_BAD_P, 0.125));
+		results.emplace_back(buf.str() + "1", norm, math_normaldist_to_pvalue(-norm), TestResult::TYPE_BAD_P, 0.125);
 		// would be better passed through calibration, but this will do for now
 	}
 
 	buf << "2";
 	double norm2 = score / std::sqrt(double(total_expected_duplicates));
-	results.push_back(TestResult(buf.str(), norm2, math_normaldist_to_pvalue(-norm2), TestResult::TYPE_BAD_P, 0.125));
+	results.emplace_back(buf.str(), norm2, math_normaldist_to_pvalue(-norm2), TestResult::TYPE_BAD_P, 0.125);
 }
 double PractRand::Tests::BirthdaySystematic128::evaluate_score(double lambda, Uint64 num_duplicates) {
 	long SIZE = lambda * 2 + std::sqrt(lambda) * 5 + 5;
@@ -5880,7 +5880,7 @@ void PractRand::Tests::BirthdayAlt::get_results(std::vector<TestResult> &results
 
 	double score = score_sum_log / std::sqrt(double(count)) / dev;
 
-	results.push_back(TestResult(get_name(), score, score, TestResult::TYPE_RAW_NORMAL, 0.125));
+	results.emplace_back(get_name(), score, score, TestResult::TYPE_RAW_NORMAL, 0.125);
 }
 void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	long buffer_size = 1 << buffer_size_L2;
@@ -6120,13 +6120,13 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 		if (INCLUDE_NON_MATCHES) counts2[TOTAL_SIZE] = total_opportunities - total_matches;
 		if (total_opportunities > 300) {
 			double rarity = Tests::rarity_test(TOTAL_SIZE + INCLUDE_NON_MATCHES, &probs2[0], &counts2[0]);
-			std::ostringstream ss; ss << get_name() << "(*,r)"; results.push_back(TestResult(ss.str(), rarity, 0, TestResult::TYPE_RAW_NORMAL, 0.125));
+			std::ostringstream ss; ss << get_name() << "(*,r)"; results.emplace_back(ss.str(), rarity, 0, TestResult::TYPE_RAW_NORMAL, 0.125);
 		}
 		if (total_opportunities > 3000) {
 			int n = Tests::simplify_prob_table(TOTAL_SIZE + INCLUDE_NON_MATCHES, (INCLUDE_NON_MATCHES ? total_opportunities : total_matches) / 40.0, &probs2[0], &counts2[0], false, false);
 			double raw = Tests::g_test(n, &probs2[0], &counts2[0]);
 			double norm = Tests::math_chisquared_to_normal(raw, n - 1);
-			std::ostringstream ss; ss << get_name() << "(*,g)"; results.push_back(TestResult(ss.str(), norm, 0, TestResult::TYPE_RAW_NORMAL, 0.125));
+			std::ostringstream ss; ss << get_name() << "(*,g)"; results.emplace_back(ss.str(), norm, 0, TestResult::TYPE_RAW_NORMAL, 0.125);
 		}
 	}
 	for (int pi = 0; pi < TOTAL_PATTERNS; pi++) {
@@ -6136,13 +6136,13 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 		std::copy(&_counts[pi * BASE_SIZE], &_counts[pi * BASE_SIZE + BASE_SIZE], &local_counts[0]);
 		if constexpr (true) {
 			double rarity = Tests::rarity_test(BASE_SIZE, &local_probs[0], &local_counts[0]);
-			std::ostringstream ss; ss << get_name() << "(" << pi << ",r)"; results.push_back(TestResult(ss.str(), rarity, 0, TestResult::TYPE_RAW_NORMAL, 0.001 / TOTAL_PATTERNS));
+			std::ostringstream ss; ss << get_name() << "(" << pi << ",r)"; results.emplace_back(ss.str(), rarity, 0, TestResult::TYPE_RAW_NORMAL, 0.001 / TOTAL_PATTERNS);
 		}
 		if (patterns[pi].total_count > 300) {
 			int n = Tests::simplify_prob_table(BASE_SIZE, patterns[pi].total_count / 40.0, &local_probs[0], &local_counts[0], false, false);
 			double raw = Tests::g_test(n, &local_probs[0], &local_counts[0]);
 			double norm = Tests::math_chisquared_to_normal(raw, n - 1);
-			std::ostringstream ss; ss << get_name() << "(" << pi << ",g)"; results.push_back(TestResult(ss.str(), norm, 0, TestResult::TYPE_RAW_NORMAL, 0.001 / TOTAL_PATTERNS));
+			std::ostringstream ss; ss << get_name() << "(" << pi << ",g)"; results.emplace_back(ss.str(), norm, 0, TestResult::TYPE_RAW_NORMAL, 0.001 / TOTAL_PATTERNS);
 		}
 	}
 
@@ -6192,7 +6192,7 @@ std::string PractRand::Tests::CoupGap::get_name( ) const {
 }
 void PractRand::Tests::CoupGap::get_results(std::vector<TestResult> &results) {
 	if (autofail) {
-		results.push_back(TestResult(this->get_name() + ":!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.0000001));
+		results.emplace_back(this->get_name() + ":!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.0000001);
 		return;
 	}
 
@@ -6207,7 +6207,7 @@ void PractRand::Tests::CoupGap::get_results(std::vector<TestResult> &results) {
 		raw = (raw - 3 * 65536) / (256 * 32);
 		TestCalibrationData *calib = calibration_manager.get_calibration_data("CoupGap:SxO", blocks_tested);
 		double suspicion = calib->sample_to_suspicion(raw) * -1;//negation to make the normal failure type occur at 0 instead of 1
-		results.push_back(TestResult(get_name() + ":SxO", raw, suspicion, TestResult::TYPE_GOOD_S, 0.25));
+		results.emplace_back(get_name() + ":SxO", raw, suspicion, TestResult::TYPE_GOOD_S, 0.25);
 	}
 }
 void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
@@ -6336,7 +6336,7 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 		}*/
 		name << "(" << s.total << ")";
 		if (s.outliers_overflow) {
-			results.push_back(TestResult(name.str() + ":!", s.outliers_overflow + PerSize::MAX_OUTLIERS, 1, TestResult::TYPE_PASSFAIL, 0.125 / ps.size()));
+			results.emplace_back(name.str() + ":!", s.outliers_overflow + PerSize::MAX_OUTLIERS, 1, TestResult::TYPE_PASSFAIL, 0.125 / ps.size());
 			continue;
 		}
 		double score = 0;
@@ -6353,14 +6353,14 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 		if (s.total >= 3) {
 			TestCalibrationData *calib = calibration_manager.get_calibration_data("BRank", s.total);
 			if (s.total >= 3 && (score > 0 || s.total >= 32)) {
-				results.push_back(TestResult(name.str(), score, -calib->sample_to_suspicion(score), TestResult::TYPE_BAD_S, 0.125 / ps.size()));
+				results.emplace_back(name.str(), score, -calib->sample_to_suspicion(score), TestResult::TYPE_BAD_S, 0.125 / ps.size());
 			}
 			else {
-				results.push_back(TestResult(name.str(), score, -calib->sample_to_suspicion_no_extrapolation(score), TestResult::TYPE_BAD_S, 0.125 / ps.size()));
+				results.emplace_back(name.str(), score, -calib->sample_to_suspicion_no_extrapolation(score), TestResult::TYPE_BAD_S, 0.125 / ps.size());
 			}
 		}
 		else {
-			results.push_back(TestResult(name.str(), score, -score, TestResult::TYPE_BAD_S, 0.25 / ps.size()));//...aren't the units wrong on this?
+			results.emplace_back(name.str(), score, -score, TestResult::TYPE_BAD_S, 0.25 / ps.size());//...aren't the units wrong on this?
 
 			/*double l2p;
 			if (worst < 11) l2p = std::log(_base_probs[worst]) / std::log(2.0);
@@ -6549,7 +6549,7 @@ void PractRand::Tests::NearSeq::get_results(std::vector<TestResult> &results) {
 		double value = ((Sint64(run_sum << 1) - Sint64(total_bits)) * 0.5) / std::sqrt(variance);
 		std::ostringstream os;
 		os << get_name() << ":[" << run_low << "-" << run_high << "](" << run_count << ")";
-		results.push_back(TestResult(os.str(), value, math_normaldist_to_suspicion(-value), total_bits > 4000 ? TestResult::TYPE_GOOD_S : TestResult::TYPE_BAD_S, 0.1));
+		results.emplace_back(os.str(), value, math_normaldist_to_suspicion(-value), total_bits > 4000 ? TestResult::TYPE_GOOD_S : TestResult::TYPE_BAD_S, 0.1);
 
 		total_so_far += run_count;
 		if (total_so_far == total_count) return;
@@ -7107,10 +7107,10 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		raw2 = math_chisquared_to_normal(raw2, 1);
 		std::ostringstream os;
 		os << get_name() << ":cv";
-		results.push_back(TestResult(os.str(),
+		results.emplace_back(os.str(),
 			math_chisquared_to_normal(cores_valid.get_result(), cores_valid.get_DoF()),
 			1-math_chisquared_to_pvalue(cores_valid.get_result(), cores_valid.get_DoF()),
-			TestResult::TYPE_GOOD_P, 0.01)
+			TestResult::TYPE_GOOD_P, 0.01
 		);
 	}
 
@@ -7123,10 +7123,10 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		bucket_distribution.finalize();
 		std::ostringstream os;
 		os << get_name() << ":bd";
-		results.push_back(TestResult(os.str(),
+		results.emplace_back(os.str(),
 			math_chisquared_to_normal(bucket_distribution.get_result(), bucket_distribution.get_DoF()),
 			math_chisquared_to_pvalue(bucket_distribution.get_result(), bucket_distribution.get_DoF()),
-			TestResult::TYPE_GOOD_P, 0.03)
+			TestResult::TYPE_GOOD_P, 0.03
 		);
 	}
 
@@ -7142,10 +7142,10 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		core_nearness.finalize();
 		std::ostringstream os;
 		os << get_name() << ":cn1";
-		results.push_back(TestResult(os.str(),
+		results.emplace_back(os.str(),
 			math_chisquared_to_normal(core_nearness.get_result(), core_nearness.get_DoF()),
 			1 - math_chisquared_to_pvalue(core_nearness.get_result(), core_nearness.get_DoF()),
-			TestResult::TYPE_GOOD_P, 0.1)
+			TestResult::TYPE_GOOD_P, 0.1
 			);
 	}
 
@@ -7162,10 +7162,10 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		core_nearness.finalize();
 		std::ostringstream os;
 		os << get_name() << ":cn2";
-		results.push_back(TestResult(os.str(),
+		results.emplace_back(os.str(),
 			math_chisquared_to_normal(core_nearness.get_result(), core_nearness.get_DoF()),
 			1 - math_chisquared_to_pvalue(core_nearness.get_result(), core_nearness.get_DoF()),
-			TestResult::TYPE_GOOD_P, 0.1)
+			TestResult::TYPE_GOOD_P, 0.1
 			);
 	}
 
@@ -7439,7 +7439,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult> &results
 		double n = math_chisquared_to_normal(cs, cat - 1);
 		std::ostringstream buf;
 		buf << "mod3_simple(" << x << ")";
-		results.push_back(TestResult(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, 0.2));
+		results.emplace_back(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, 0.2);
 	}
 	/*double cs = g_test(cat, &probs[0], &packed_counts[0]);
 	double n = math_chisquared_to_normal(cs, cat - 1);
@@ -7634,9 +7634,9 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 		if (level > 2) priority *= std::pow(0.7, level - 2.0);
 		if (calib) {
 			double sus = calib->sample_to_suspicion(n);
-			results.push_back(TestResult(buf.str(), n, -sus, TestResult::TYPE_GOOD_S, priority));
+			results.emplace_back(buf.str(), n, -sus, TestResult::TYPE_GOOD_S, priority);
 		}
-		else results.push_back(TestResult(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, priority));
+		else results.emplace_back(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, priority);
 	}
 }
 unsigned long PractRand::Tests::mod3n::update_index(unsigned long index, Uint8 remainder) {
@@ -7829,7 +7829,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 	for (int i = 0; i < 65536; i++) {
 		if (i > 40000 && i < 43000) continue;
 		if (count[i]) {
-			results.push_back(TestResult(get_name() + ":!", 1, 1, TestResult::TYPE_PASSFAIL, 0.0000001));
+			results.emplace_back(get_name() + ":!", 1, 1, TestResult::TYPE_PASSFAIL, 0.0000001);
 			return;
 		}
 	}
@@ -7849,7 +7849,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 	//results.push_back(TestResult(get_name() + ":A", weighted_error, weighted_error, TestResult::TYPE_RAW_NORMAL, 0.01));
 	if (total > 1) {
 		double norm = my_test(3000, &probs[0], &counts[40000]);
-		results.push_back(TestResult(get_name() + ":A", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(get_name() + ":A", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 	if (total > 100) {
 		Uint64 counts2[3000];
@@ -7857,7 +7857,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 		int cat = simplify_prob_table(3000, total * 1.0, &probs[0], &counts2[0], true, false);
 		double chisqr = g_test(cat, &probs[0], &counts2[0]);
 		double norm = math_chisquared_to_normal(chisqr, cat - 1);
-		results.push_back(TestResult(get_name() + ":B", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(get_name() + ":B", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 
 
@@ -7909,7 +7909,7 @@ void PractRand::Tests::DistFreq4::get_results(std::vector<TestResult> &results) 
 	const Uint64 *counts_ = counts.get_array();
 	double chisqr = g_test_flat(1 << TOTAL_INDEX_BITS, counts_);
 	double norm = math_chisquared_to_normal(chisqr, DoF);
-	results.push_back(TestResult(get_name() + ":all", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(get_name() + ":all", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01);
 	Uint64 counts2[TSIZE];
 	double highest1 = -9999999;
 	int highest_pos1 = 0;
@@ -7943,12 +7943,12 @@ void PractRand::Tests::DistFreq4::get_results(std::vector<TestResult> &results) 
 	if constexpr (true) {
 		std::ostringstream buf;
 		buf << get_name() << ":h1(" << std::hex << highest_pos1 << ")";
-		results.push_back(TestResult(buf.str(), highest1, highest1, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(buf.str(), highest1, highest1, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 	if constexpr (true) {
 		std::ostringstream buf;
 		buf << get_name() << ":h2(" << std::hex << highest_pos2 << ")";
-		results.push_back(TestResult(buf.str(), highest2, highest2, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(buf.str(), highest2, highest2, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 }
 void PractRand::Tests::DistFreq4::test_blocks(TestBlock *data, int numblocks) {
@@ -8088,12 +8088,12 @@ void PractRand::Tests::TripleFreq::get_results(std::vector<TestResult> &results)
 	if (worst_sector_index != -1) {
 		std::ostringstream buf;
 		buf << get_name() << ":sec(" << std::hex << worst_sector_index << ")";
-		results.push_back(TestResult(buf.str(), worst_sector_n, worst_sector_n, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(buf.str(), worst_sector_n, worst_sector_n, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 	if (worst_pattern_index != -1) {
 		std::ostringstream buf;
 		buf << get_name() << ":pat(" << std::hex << worst_pattern_index << ")";
-		results.push_back(TestResult(buf.str(), worst_pattern_n, worst_pattern_n, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(buf.str(), worst_pattern_n, worst_pattern_n, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 	if (regions_tested >= NUMBER_OF_REGIONS * 64) {
 		//subtest 3
@@ -8102,7 +8102,7 @@ void PractRand::Tests::TripleFreq::get_results(std::vector<TestResult> &results)
 		double n = math_chisquared_to_normal(chisquared, TOTAL_SIZE - NUMBER_OF_REGIONS);
 		std::ostringstream buf;
 		buf << get_name() << ":all";
-		results.push_back(TestResult(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 }
 static Uint64 read_64_misaligned(const Uint64 *source, int bit_pos) {
@@ -8199,16 +8199,16 @@ void PractRand::Tests::TripleMirrorFreq::get_results(std::vector<TestResult> &re
 	overall_n2 = (std::sqrt(overall_n2 / (1 << POSITIONS_L2)) - 1.46) * std::pow(2.0, 0.5 * POSITIONS_L2);
 	std::ostringstream buf;
 	buf << get_name() << ":w(" << worst_position << ")";
-	results.push_back(TestResult(buf.str(), worst_n, worst_n, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(buf.str(), worst_n, worst_n, TestResult::TYPE_RAW_NORMAL, 0.01);
 	if (E < 80) return;
 	// none of these are working, and I don't know why
 	double overall_n1 = math_chisquared_to_normal(overall_cs1, (cat - 1) << POSITIONS_L2);
 	buf.str("");
 	buf << get_name() << ":all1";
-	results.push_back(TestResult(buf.str(), overall_n1, overall_n1, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(buf.str(), overall_n1, overall_n1, TestResult::TYPE_RAW_NORMAL, 0.01);
 	buf.str("");
 	buf << get_name() << ":all2";
-	results.push_back(TestResult(buf.str(), overall_n2, overall_n2, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(buf.str(), overall_n2, overall_n2, TestResult::TYPE_RAW_NORMAL, 0.01);
 }
 int PractRand::Tests::TripleMirrorFreq::get_blocks_to_repeat() const {
 	constexpr int POSITIONS = 1 << POSITIONS_L2;
@@ -8286,7 +8286,7 @@ void PractRand::Tests::TripleMirrorFreqN::get_results(std::vector<TestResult> &r
 		level_name = buf.str();
 		buf.str("");
 		buf << level_name << ":wl";
-		results.push_back(TestResult(buf.str(), all_n, all_n, TestResult::TYPE_RAW_NORMAL, 0.01));
+		results.emplace_back(buf.str(), all_n, all_n, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 /*	Sint64 passes = ((blocks_tested - repeat_blocks) / blocks_per_pass) * passes_at_once;
 	double E = passes * std::pow(0.5, SIZE1 + SIZE2 + SIZE3);
@@ -8424,16 +8424,16 @@ void PractRand::Tests::TripleMirrorCoup::get_results(std::vector<TestResult> &re
 	overall_n2 = (std::sqrt(overall_n2 / (1 << POSITIONS_L2)) - 1.46) * std::pow(2.0, 0.5 * POSITIONS_L2);
 	std::ostringstream buf;
 	buf << get_name() << ":w(" << worst_position << ")";
-	results.push_back(TestResult(buf.str(), worst_n, worst_n, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(buf.str(), worst_n, worst_n, TestResult::TYPE_RAW_NORMAL, 0.01);
 	if (E < 80) return;
 	// none of these are working, and I don't know why
 	double overall_n1 = math_chisquared_to_normal(overall_cs1, (cat - 1) << POSITIONS_L2);
 	buf.str("");
 	buf << get_name() << ":all1";
-	results.push_back(TestResult(buf.str(), overall_n1, overall_n1, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(buf.str(), overall_n1, overall_n1, TestResult::TYPE_RAW_NORMAL, 0.01);
 	buf.str("");
 	buf << get_name() << ":all2";
-	results.push_back(TestResult(buf.str(), overall_n2, overall_n2, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(buf.str(), overall_n2, overall_n2, TestResult::TYPE_RAW_NORMAL, 0.01);
 }
 int PractRand::Tests::TripleMirrorCoup::get_blocks_to_repeat() const {
 	constexpr int POSITIONS = 1 << POSITIONS_L2;
@@ -10743,7 +10743,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 	//double chisqr = g_test_flat(LPERM_BUCKETS, counts_);
 	double n = math_chisquared_to_normal(chisqr, LPERM_BUCKETS - 1);
 	//double n = g_test_flat_merge_normal(LPERM_BUCKETS, counts_);
-	results.push_back(TestResult(get_name(), n, n, TestResult::TYPE_RAW_NORMAL, 0.01));
+	results.emplace_back(get_name(), n, n, TestResult::TYPE_RAW_NORMAL, 0.01);
 }
 void PractRand::Tests::LPerm16::test_blocks(TestBlock *data, int numblocks) {
 	blocks_tested += numblocks;
