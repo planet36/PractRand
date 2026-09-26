@@ -10812,7 +10812,7 @@ void PractRand::Tests::Transforms::multiplex::test_blocks(TestBlock *data, int n
 		test->test_blocks(data, numblocks);
 	blocks_already += numblocks;
 }
-static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(const std::string name) {
+static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(const std::string& name) {
 	std::pair<unsigned int,std::pair<int,int> > fail(0, std::pair<int,int>(0,0));
 	int first = 0, last = 0;
 	char termination = 0;
