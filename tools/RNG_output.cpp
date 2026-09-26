@@ -126,10 +126,10 @@ int main(int argc, char **argv) {
 	}
 
 	void(*prev_handler)(int) = nullptr;
-	prev_handler = signal(SIGINT, signal_handler);  if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGINT has failed." << std::endl; }
-	prev_handler = signal(SIGTERM, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGTERM has failed." << std::endl; }
+	prev_handler = signal(SIGINT, signal_handler);  if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGINT has failed.\n"; }
+	prev_handler = signal(SIGTERM, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGTERM has failed.\n"; }
 #ifdef __linux__
-	prev_handler = signal(SIGPIPE, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGPIPE has failed." << std::endl; }
+	prev_handler = signal(SIGPIPE, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGPIPE has failed.\n"; }
 #endif
 
 	constexpr int BUFFER_SIZE = 8;
@@ -151,7 +151,7 @@ int main(int argc, char **argv) {
 		//std::cerr << "WARNING: Received signal " << signaled << ". Closing the application." << std::endl; // this was generating spurious error messages on linux
 	}
 	if (n && _n) {
-		std::cerr << "RNG_output ERROR: " << Uint64(_n) << " bytes were requested, but only " << (Uint64(_n) - n) << " bytes were written." << std::endl;
+		std::cerr << "RNG_output ERROR: " << Uint64(_n) << " bytes were requested, but only " << (Uint64(_n) - n) << " bytes were written.\n";
 	}
 	return 0;
 }
