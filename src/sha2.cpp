@@ -1,5 +1,6 @@
 #include "PractRand/endian.h"
 #include "PractRand/sha2.h"
+
 #include <bit>
 #include <cstdint>
 #include <cstring>

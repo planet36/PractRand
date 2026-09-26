@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PractRand/rng_basics.h"
+
 #include <cmath>
 #include <vector>
 

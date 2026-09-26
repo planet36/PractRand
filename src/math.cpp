@@ -2,6 +2,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_internals.h"
 #include "PractRand/test_helpers.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>

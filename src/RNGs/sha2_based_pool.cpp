@@ -3,6 +3,7 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 #include "PractRand/sha2.h"
+
 #include <cstdint>
 #include <cstring>
 #include <string>
