@@ -1,5 +1,9 @@
 #pragma once
 
+#include "PractRand/rng_basics.h"
+
+#include <vector>
+
 namespace PractRand::Tests {
 		class TestBaseclass;
 

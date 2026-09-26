@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PractRand/tests.h"
+
 namespace PractRand::Tests {
 		class FPMulti final : public TestBaseclass {
 			/*

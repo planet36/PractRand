@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PractRand/tests.h"
+
 #include <bit>
 
 namespace PractRand::Tests {

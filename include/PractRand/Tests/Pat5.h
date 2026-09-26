@@ -1,5 +1,8 @@
 #pragma once
 
+#include "PractRand/test_helpers.h"
+#include "PractRand/tests.h"
+
 namespace PractRand::Tests {
 		class Pat5 final : public TestBaseclass {
 		public:

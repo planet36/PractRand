@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PractRand/config.h"
+
 //#include <vector>
 
 #define PRACTRAND_RANDF_IMPLEMENTATION(RNG)  {return  ((RNG).raw32() & ((PractRand::Uint32(1) << 24)-1)) *  float(1.0/16777216.0);}

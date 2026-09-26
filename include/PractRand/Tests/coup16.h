@@ -1,5 +1,8 @@
 #pragma once
 
+#include "PractRand/test_helpers.h"
+#include "PractRand/tests.h"
+
 namespace PractRand::Tests {
 		class Coup16 final : public TestBaseclass {
 		protected:

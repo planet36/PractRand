@@ -1,5 +1,8 @@
 #pragma once
 
+#include "PractRand/test_helpers.h"
+#include "PractRand/tests.h"
+
 namespace PractRand::Tests {
 		class CoupGap final : public TestBaseclass {
 			//static constexpr int MAX_OLDEST_AGE = 256 * 16;

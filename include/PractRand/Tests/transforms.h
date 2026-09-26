@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PractRand/test_batteries.h"
+#include "PractRand/tests.h"
 
 namespace PractRand::Tests::Transforms {
 			class multiplex : public TestBaseclass {

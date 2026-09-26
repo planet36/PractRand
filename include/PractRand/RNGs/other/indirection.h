@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PractRand/rng_helpers.h"
+
 /*
 RNGs in the mediocre directory are not intended for real world use
 only for research; as such they may get pretty sloppy in some areas
