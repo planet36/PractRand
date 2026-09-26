@@ -25,7 +25,7 @@ public:
 
 	virtual ~TestManager();//destructor (destroys the tests in the ListOfTests)
 
-	virtual void reset(PractRand::RNGs::vRNG* rng_ = nullptr);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
+	virtual void reset(PractRand::RNGs::vRNG* rng_);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 
 	virtual void test(Uint64 blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
 

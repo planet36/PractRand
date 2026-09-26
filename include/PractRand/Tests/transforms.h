@@ -59,7 +59,7 @@ namespace PractRand::Tests::Transforms {
 				void test_blocks(TestBlock* data, int numblocks) override = 0;
 				//virtual double get_result() {flush(true);return Transforms::multiplex::get_result();}
 				void get_results ( std::vector<TestResult>& results ) override {flush(true); Transforms::multiplex::get_results(results);}
-				virtual void flush(bool aggressive = true) final;
+				virtual void flush(bool aggressive) final;
 			};
 			class shrink : public Transform_Baseclass {
 			protected:

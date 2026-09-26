@@ -561,7 +561,7 @@ void find_test_distributions() {
 			tests.tests[i]->get_results(results);
 			for (int j = 0; j < results.size(); j++) data[results[j].name]._add(results[j].value);
 		}*/
-		tman.reset();
+		tman.reset(nullptr);
 	}
 }
 
@@ -668,7 +668,7 @@ void verify_test_distributions() {
 				for (int j = 0; j < results.size(); j++) data[results[j].name][length_L2]._add(results[j].get_pvalue());
 			}
 		}
-		tman.reset();
+		tman.reset(nullptr);
 	}
 }
 

@@ -100,7 +100,7 @@ public:
 		}
 		wait_on_threads();
 	}
-	void reset(PractRand::RNGs::vRNG* rng_ = nullptr) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
+	void reset(PractRand::RNGs::vRNG* rng_) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 		if (!freshly_created) for (auto& test : tests->tests) test->deinit();
 		freshly_created = false;
 		for (auto& test : tests->tests) test->init(known_good);

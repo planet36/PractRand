@@ -239,7 +239,7 @@ namespace PractRand {
 			PractRand::RNGs::Polymorphic::trivium seeder;
 			explicit CryptoAutoSeedingStateWalker(void* ptr1) : seeder(PractRand::SEED_NONE) {
 				PractRand::RNGs::Polymorphic::sha2_based_pool entropy_pool;
-				if (!entropy_pool.add_entropy_automatically())
+				if (!entropy_pool.add_entropy_automatically(0))
 					issue_error("PractRand: failed to obtain entropy for cryptographic quality autoseeding");
 				Uint64 extra[5];
 				get_autoseed_fixed_entropy(extra, ptr1);

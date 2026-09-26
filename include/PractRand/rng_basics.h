@@ -93,7 +93,7 @@ namespace PractRand {
 
 			//add_entropy_automatically returns true if a good amount (>= 128 bits) of entropy was added
 			//the milliseconds parameter is the maximum amount of time it is allowed to block while waiting for entropy
-			virtual bool add_entropy_automatically(int milliseconds = 0);
+			virtual bool add_entropy_automatically(int milliseconds);
 
 			virtual void flush_buffers();// some entropy pooling PRNGs have internal buffers that need to be flushed before inputs can effect outputs - this flushes both input and output buffers
 
