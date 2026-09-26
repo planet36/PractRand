@@ -5327,7 +5327,7 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128* ba
 		}
 		// it's now deltas of sorted values
 		histogram_in_place_sort128(base, length - 1 - spills.size(), length_L2 - SAFETY_MARGIN, freq_counts);
-		std::sort(spills.begin(), spills.end());
+		std::ranges::sort(spills);
 		for (unsigned int i = 0; i < spills.size(); i++) base[length - 1 - spills.size() + i] = spills[i];
 		//for (int i = 0; i < length - 2; i++) {if (base[i + 1] < base[i]) issue_error("BirthdayHelpers::_sorted_deltas_of_sorted_values - sort2 failed");}//debugging only, remove
 		// it's now sorted deltas of sorted values
@@ -5356,7 +5356,7 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128* ba
 		}
 		// it's now deltas of sorted values
 		histogram_in_place_sort128(base, length - 1 - spills.size(), length_L2 - SAFETY_MARGIN, freq_counts);
-		std::sort(spills.begin(), spills.end());
+		std::ranges::sort(spills);
 		for (unsigned int i = 0; i < spills.size(); i++) base[length - 1 - spills.size() + i] = spills[i];
 		for (unsigned int i = 0; i < length - 2; i++) {
 			if (base[i + 1] < base[i]) issue_error("BirthdayHelpers::_sorted_deltas_of_sorted_values - sort2 failed");//debugging only, remove
@@ -5490,7 +5490,7 @@ Uint64 PractRand::Tests::BirthdayLamda1::flush_buffer() {
 	}
 	// it's now deltas of sorted values
 	BirthdayHelpers::histogram_in_place_sort128(buffer, buffer_size - 1 - spills.size(), buffer_size_L2 - SAFETY_MARGIN, sort_helper_counts);
-	std::sort(spills.begin(), spills.end());
+	std::ranges::sort(spills);
 	for (unsigned int i = 0; i < spills.size(); i++) buffer[buffer_size - 1 - spills.size() + i] = spills[i];
 	//for (int i = 0; i < length - 2; i++) {if (base[i + 1] < base[i]) issue_error("BirthdayHelpers::_sorted_deltas_of_sorted_values - sort2 failed");}//debugging only, remove
 	// it's now sorted deltas of sorted values

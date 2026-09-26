@@ -1,5 +1,7 @@
 #pragma once
 
+#include <compare>
+
 namespace PractRand::Tests {
 		class Birthday32 final : public TestBaseclass {
 			static constexpr int BUFFER_SIZE_L2 = 12; // must be at least 8
@@ -48,10 +50,16 @@ namespace PractRand::Tests {
 				bool operator==(const i128& other) const {
 					return high == other.high && low == other.low;
 				}
+#if 0
 				bool operator<(const i128& other) const {
 					if (high < other.high) return true;
 					if (high > other.high) return false;
 					return low < other.low;
+				}
+#endif
+				std::strong_ordering operator<=>(const i128& other) const {
+					if (high != other.high) return high <=> other.high;
+					return low <=> other.low;
 				}
 				i128 operator-(const i128& other) const {
 					i128 rv{};

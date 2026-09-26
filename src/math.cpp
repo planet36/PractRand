@@ -1063,7 +1063,7 @@ namespace PractRand {
 
 
 		void SampleSet::_normalize() {
-			std::sort(rs.begin(), rs.end());
+			std::ranges::sort(rs);
 		//	std::sort<double*>(&rs[0], &rs[rs.size()]);
 			_count_duplicates();
 		}
