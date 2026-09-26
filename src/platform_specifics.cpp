@@ -11,11 +11,6 @@
 #include <ctime>
 #include <string>
 
-#if defined __APPLE__ && defined __MACH__
-#include <libkern/OSAtomic.h>
-#include <cstdint>
-#endif
-
 
 
 /*
@@ -96,10 +91,6 @@ Uint64 PractRand::Internals::issue_unique_identifier ( ) {
 #elif defined __GNUC__
 	static volatile Uint64 count = 0;
 	return __sync_fetch_and_add(&count, Uint64(1) );
-#elif defined __APPLE__ && defined __MACH__
-	//OS X, /usr/include/libkern/OSAtomic.h, OSAtomicIncrement64
-	static volatile int64_t count = 0;
-	return OSAtomicIncrement64(&count);
 #else
 	//ugly, but without more knowledge of the target system or more dependencies there's not much more that can be done
 	return (Uint64)std::malloc(1);
