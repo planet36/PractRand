@@ -1,14 +1,9 @@
 
 #ifdef _WIN32
+//must come before any include, or <stdlib.h> will not declare rand_s
 #define _CRT_RAND_S
-#include <windows.h>
-#elif defined __APPLE__ && defined __MACH__
-#include <libkern/OSAtomic.h>
-#include <cstdint>
 #endif
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
+
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
@@ -20,6 +15,16 @@
 #include <cstring>
 #include <ctime>
 #include <string>
+
+#ifdef _WIN32
+#include <windows.h>
+#elif defined __APPLE__ && defined __MACH__
+#include <libkern/OSAtomic.h>
+#include <cstdint>
+#endif
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 
 
 
