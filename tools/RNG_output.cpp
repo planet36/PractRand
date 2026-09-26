@@ -1,3 +1,4 @@
+#include <charconv>
 #include <cmath>
 #include <csignal>     /* signal, sig_atomic_t */
 #include <cstdio>
@@ -10,6 +11,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <system_error>
 #include <vector>
 
 #ifdef _WIN32 // needed to allow binary stdout on windows
@@ -42,21 +44,11 @@ using namespace PractRand;
 
 
 bool interpret_seed(const std::string& seedstr, Uint64& seed) {
-	//would prefer strtol, but that is insufficiently portable when it has to handle 64 bit values
-	Uint64 value = 0;
-	Uint64 position = 0;
-	if (seedstr.length() >= 3 && seedstr[0] == '0' && seedstr[1] == 'x') position = 2;
-	while (position < seedstr.length()) {
-		int c = seedstr[position++];
-		if (value >> 60) return false;//too long
-		value *= 16;
-		if (c >= '0' && c <= '9') value += (c-'0');
-		else if (c >= 'a' && c <= 'f') value += (c-'a')+10;
-		else if (c >= 'A' && c <= 'F') value += (c-'A')+10;
-		else return false;//invalid character
-	}
-	seed = value;
-	return true;
+	const char* first = seedstr.data();
+	const char* last = first + seedstr.size();
+	if (seedstr.starts_with("0x")) first += 2;
+	auto [ptr, ec] = std::from_chars(first, last, seed, 16);
+	return ec == std::errc() && ptr == last;
 }
 void print_usage(const char* program_name) {
 	std::cerr << "usage:\n\t" << program_name << " RNG_name bytes_to_output [64bit_hexadecimal_seed]\n";
