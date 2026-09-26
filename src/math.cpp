@@ -471,7 +471,7 @@ namespace PractRand {
 			//only an aproximation, but a decent one
 			if (!a) return 1;
 			//static double halfL2Pi = std::log(3.14159265358979 * 2) / 2;
-			static double halfLPi = std::log(3.14159265358979) / 2;
+			static double halfLPi = std::log(std::numbers::pi) / 2;
 			double L = std::log(a);
 			double r = a * (L - 1) + std::log(a * (1 + 4 * a * (1 + 2 * a))) / 6 + halfLPi;
 			//	double r = a * (L - 1) + L/2 + halfL2Pi;
@@ -571,7 +571,7 @@ namespace PractRand {
 				f = f * e;
 				if (e == 1) break;
 			}
-			return x / f / std::sqrt(3.14159265358979);
+			return x / f / std::sqrt(std::numbers::pi);
 			// */
 
 			//a closed form approximation, from "Closed-form approximations to the Error and Complementary Error Functions and their applications in atmospheric science"
@@ -705,7 +705,7 @@ namespace PractRand {
 				}
 				return static_cast<double>(sum);
 			}
-			if (a == 0.5) return sqrt(3.14159265358979) * (1 - math_erf(sqrt(x)));
+			if (a == 0.5) return sqrt(std::numbers::pi) * (1 - math_erf(sqrt(x)));
 		//	if (a == 0.0 && x>0) return -math_exponent_integral(-x)
 			if (a > 1) return (a-1) * math_upper_incomplete_gamma( a-1, x ) + pow(x, a-1) * ::exp(-x);
 			issue_error();return -1;
@@ -770,7 +770,7 @@ namespace PractRand {
 			return (upper_p + lower_p) / 2;
 		}
 		double math_normaldist_pdf( double normal ) {
-			static double scale = 1 / sqrt(3.14159265358979 * 2);
+			static double scale = 1 / sqrt(std::numbers::pi * 2);
 			return scale * exp(normal*normal * -0.5);
 		}
 		double math_pvalue_to_normaldist( double pvalue ) {
