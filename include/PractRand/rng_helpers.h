@@ -62,6 +62,11 @@ namespace PractRand {
 	Uint32 randi_fast_implementation(Uint32 random_value, Uint32 max);
 	StateWalkingObject* int_to_rng_seeder(Uint64);//must be deleted after use
 	StateWalkingObject* vrng_to_rng_seeder(RNGs::vRNG*);//must be deleted after use
+	//An autoseeding constructor passes its own unseeded object, which GCC's LTO then flags with
+	//-Wmaybe-uninitialized.  The pointer is never read, and access(none) tells GCC so.
+#if __has_cpp_attribute(gnu::access)
+	[[gnu::access(none, 1)]]
+#endif
 	StateWalkingObject* get_autoseeder(const void*);//must be deleted after use
 }
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_H(RNG) public:\
