@@ -10896,8 +10896,8 @@ PractRand::Tests::Transforms::switching::switching(
 {
 	if (lengths.size() != testlist.tests.size()) issue_error();
 	blocks_already_per.resize(lengths.size());
-	for (unsigned long & i : blocks_already_per)
-		i = 0;
+	for (Uint64 & blocks : blocks_already_per)
+		blocks = 0;
 	total_length = 0;
 	for (unsigned long i = 0; i < blocks_already_per.size(); i++) total_length += lengths[i];
 }
@@ -10915,8 +10915,8 @@ PractRand::Tests::Transforms::switching::switching(
 	total_length = length * blocks_already_per.size();
 }
 void PractRand::Tests::Transforms::switching::init( RNGs::vRNG *known_good ) {
-	for (unsigned long & i : blocks_already_per)
-		i = 0;
+	for (Uint64 & blocks : blocks_already_per)
+		blocks = 0;
 	phase = 0;
 	which = 0;
 	multiplex::init(known_good);
