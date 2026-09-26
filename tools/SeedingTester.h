@@ -220,7 +220,7 @@ public:
 				std::multiset<Uint64>::iterator it;
 				if (sitr.first == unordered_history.end()) it = unordered_history.insert(hash);
 				else it = unordered_history.insert(--sitr.first, hash);
-				history.push_front(std::pair<std::multiset<Uint64>::iterator, Transform>(it, t));
+				history.emplace_front(it, t);
 				check_history_length();
 				return;
 			}
