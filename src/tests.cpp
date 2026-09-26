@@ -6450,13 +6450,12 @@ void PractRand::Tests::BRank::test_blocks(TestBlock* data, int numblocks) {
 	}
 }
 
-PractRand::Tests::NearSeq::NearSeq() {
+PractRand::Tests::NearSeq::NearSeq() = default;
 	//if (false);
 	//else if (BITS_PER_BLOCK == 8) verify_NearSeq_byte_code8(NearSeq_byte_code8);
 	//else if (BITS_PER_BLOCK == 4) verify_NearSeq_byte_code4x2(NearSeq_byte_code4x2);
 	//else if (BITS_PER_BLOCK == 5) verify_NearSeq_byte_code5x2(NearSeq_byte_code5x2);
 	//else issue_error("NearSeq: what block size?");
-}
 void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG* known_good) {
 	if (SEQUENCE_BITS < CORE_SEQUENCE_BITS) issue_error("NearSeq - bad settings");
 	static constexpr Word lookup[2] = { (1 << BITS_PER_BLOCK) - 1, 0x0 };//backwards, as we're inverting values here for maximum hamming distance
