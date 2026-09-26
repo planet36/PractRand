@@ -131,8 +131,8 @@ namespace PractRand::Tests {
 		};
 		template<typename LowIntType>
 		class VariableSizeCount {
-			LowIntType* low;
-			Uint64* high;
+			std::vector<LowIntType> low;
+			std::vector<Uint64> high;
 			int size{};
 		public:
 			int get_size() {return size;}
@@ -143,18 +143,16 @@ namespace PractRand::Tests {
 			void set_size(int size_) {
 				size = size_;
 				if (!size) {
-					std::free(low);
-					std::free(high);
-					low = nullptr;
-					high = nullptr;
+					low = std::vector<LowIntType>();
+					high = std::vector<Uint64>();
 					return;
 				}
-				low = static_cast<LowIntType*>(std::realloc(low, sizeof(LowIntType) * size));
-				high = static_cast<Uint64*>(std::realloc(high, sizeof(Uint64) * size));
+				low.resize(size);
+				high.resize(size);
 				reset_counts();
 			}
-			VariableSizeCount() : low(nullptr), high(nullptr) {}
-			explicit VariableSizeCount(int size_) : low(nullptr), high(nullptr) {set_size(size_);}
+			VariableSizeCount() = default;
+			explicit VariableSizeCount(int size_) {set_size(size_);}
 			VariableSizeCount(const VariableSizeCount& other) = delete;//copy constructor disallowed
 			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
 			const Uint64& operator[] (int index) {
@@ -168,15 +166,11 @@ namespace PractRand::Tests {
 					low[i] = 0;
 				}
 			}
-			const Uint64* get_array() {flush(); return &high[0];}
+			const Uint64* get_array() {flush(); return high.data();}
 			void swap_array(VariableSizeCount<LowIntType>& other) {
 				if (other.size != size) issue_error("VariableSizeCount::swap_array");
-				LowIntType* tmp_low = low;
-				Uint64* tmp_high = high;
-				low = other.low;
-				high = other.high;
-				other.low = tmp_low;
-				other.high = tmp_high;
+				low.swap(other.low);
+				high.swap(other.high);
 			}
 			void force_count(int index, Uint64 value) { low[index] = 0; high[index] = value; }
 		};
