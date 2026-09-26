@@ -359,9 +359,9 @@ namespace RNG_Factories {
 		if (params.size() == 0) return new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
 		std::string &param = params[0];
 		int value = 0;
-		for (unsigned long i = 0; i < param.size(); i++) {
-			if (param[i] < '0' || param[i] > '9') {params.emplace_back("parameter must be an integer between 1 and 255, inclusive");return nullptr;}
-			value = value * 10 + (param[i] - '0');
+		for (char i : param) {
+			if (i < '0' || i > '9') {params.emplace_back("parameter must be an integer between 1 and 255, inclusive");return nullptr;}
+			value = value * 10 + (i - '0');
 			if (value > 255) {params.emplace_back("number of rounds too high for chacha");return nullptr;}
 		}
 		if (value < 1) {params.emplace_back("number of rounds too low for chacha");return nullptr;}
@@ -374,9 +374,9 @@ namespace RNG_Factories {
 		if (params.size() == 0) return new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
 		std::string &param = params[0];
 		int value = 0;
-		for (unsigned long i = 0; i < param.size(); i++) {
-			if (param[i] < '0' || param[i] > '9') {params.emplace_back("parameter must be an integer between 1 and 255, inclusive");return nullptr;}
-			value = value * 10 + (param[i] - '0');
+		for (char i : param) {
+			if (i < '0' || i > '9') {params.emplace_back("parameter must be an integer between 1 and 255, inclusive");return nullptr;}
+			value = value * 10 + (i - '0');
 			if (value > 255) {params.emplace_back("number of rounds too high for salsa");return nullptr;}
 		}
 		if (value < 1) {params.emplace_back("number of rounds too low for salsa");return nullptr;}
@@ -414,8 +414,8 @@ namespace RNG_Factories {
 		if (params.size() < 1) return nullptr;
 		std::vector<PractRand::RNGs::vRNG *> source_rngs;
 		PractRand::RNGs::vRNG *rng = nullptr;
-		for (unsigned int i = 0; i < params.size(); i++) {
-			rng = create_rng(params[i]);
+		for (const auto & param : params) {
+			rng = create_rng(param);
 			if (!rng) return nullptr;
 			source_rngs.push_back(rng);
 		}

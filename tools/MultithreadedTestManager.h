@@ -86,7 +86,7 @@ public:
 public:
 	MultithreadedTestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_, int max_buffer_amount_ = 1 << (27-10)) : TestManager(tests_, known_good_, max_buffer_amount_) {
 		//buffer1.resize(max_buffer_amount + Tests::TestBaseclass::REPEATED_BLOCKS);
-		for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
+		for (auto & test : tests->tests) test->init(known_good);
 	}
 	void test(Uint64 num_blocks) override {
 		while (num_blocks) {
@@ -94,19 +94,19 @@ public:
 			num_blocks -= main_blocks;
 			wait_on_threads();
 			alt_buffer.swap(buffer);
-			for (unsigned int i = 0; i < tests->tests.size(); i++) {
-				threads.push_back( new TestThread( tests->tests[i], &alt_buffer[prefix_blocks], main_blocks ) );
+			for (auto & test : tests->tests) {
+				threads.push_back( new TestThread( test, &alt_buffer[prefix_blocks], main_blocks ) );
 			}
 		}
 		wait_on_threads();
 	}
 	void reset(PractRand::RNGs::vRNG *rng_ = nullptr) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
-		if (!freshly_created) for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->deinit();
+		if (!freshly_created) for (auto & test : tests->tests) test->deinit();
 		freshly_created = false;
-		for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
+		for (auto & test : tests->tests) test->init(known_good);
 		blocks_to_repeat = 0;
-		for (unsigned int i = 0; i < tests->tests.size(); i++) {
-			int rb = tests->tests[i]->get_blocks_to_repeat();
+		for (auto & test : tests->tests) {
+			int rb = test->get_blocks_to_repeat();
 			if (blocks_to_repeat < rb) blocks_to_repeat = rb;
 		}
 		buffer.resize(max_buffer_amount + blocks_to_repeat);

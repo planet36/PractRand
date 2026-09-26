@@ -33,8 +33,8 @@
 
 namespace PractRand::Tests::Batteries {
 			void destruct_tests(ListOfTests &tests) {
-				for (unsigned i = 0; i < tests.tests.size(); i++) {
-					delete tests.tests[i];
+				for (auto & test : tests.tests) {
+					delete test;
 				}
 			}
 			ListOfTests get_core_tests() {

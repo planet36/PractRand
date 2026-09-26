@@ -2587,8 +2587,8 @@ void PractRand::Tests::BCFN::init([[maybe_unused]] PractRand::RNGs::vRNG *known_
 	blocks_tested = 0;
 }
 void PractRand::Tests::BCFN::deinit() {
-	for (int i = 0; i < LEVELS; i++) {
-		counts[i].reset_counts();
+	for (auto & count : counts) {
+		count.reset_counts();
 	}
 }
 std::string PractRand::Tests::BCFN::get_name() const {
@@ -2691,7 +2691,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 		}
 		else {
 			double p = 1.0 / probs.size();
-			for (unsigned int i = 0; i < probs.size(); i++) probs[i] = p;
+			for (double & prob : probs) prob = p;
 		}
 
 		if (calib) {
@@ -3283,8 +3283,8 @@ void PractRand::Tests::BCFN_FF::init([[maybe_unused]] PractRand::RNGs::vRNG *kno
 	blocks_tested = 0;
 }
 void PractRand::Tests::BCFN_FF::deinit() {
-	for (int i = 0; i < LEVELS; i++) {
-		counts[i].reset_counts();
+	for (auto & count : counts) {
+		count.reset_counts();
 	}
 }
 std::string PractRand::Tests::BCFN_FF::get_name() const {
@@ -3406,7 +3406,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		}
 		else {
 			double p = 1.0 / probs.size();
-			for (unsigned int i = 0; i < probs.size(); i++) probs[i] = p;
+			for (double & prob : probs) prob = p;
 		}
 
 		if (calib) {
@@ -6288,7 +6288,7 @@ void PractRand::Tests::BRank::deinit( ) {
 	in_progress = nullptr;
 }
 void PractRand::Tests::BRank::init([[maybe_unused]] RNGs::vRNG *known_good ) {
-	for (unsigned int i = 0; i < ps.size(); i++) ps[i].reset();
+	for (auto & p : ps) p.reset();
 	saved_time = 0;
 	delete in_progress;
 	in_progress = nullptr;
@@ -6318,9 +6318,8 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 		for (auto & i : base_score) i /= deviation;
 	}
 
-	for (unsigned int si = 0; si < ps.size(); si++) {
-		PerSize &s = ps[si];
-		if (!s.total) continue;
+	for (auto & s : ps) {
+			if (!s.total) continue;
 		unsigned int worst = 1;
 		for (unsigned int i = 0; i < PerSize::NUM_COUNTS; i++) {
 			if (s.counts[i] && i > worst) worst = i;
@@ -7550,12 +7549,12 @@ void PractRand::Tests::mod3n::init(PractRand::RNGs::vRNG *known_good) {
 	TestBaseclass::init(known_good);
 	if (P2 / 2 >= K) issue_error("mod3n - bad internal configuration1");
 	if (K != std::pow(3.0, EXP)) issue_error("mod3n - bad internal configuration2");
-	for (int i = 0; i < LEVELS; i++) {
-		levels[i].index = 0;
-		levels[i].odd = false;
-		levels[i].remainder = 0;
-		levels[i].warmup = EXP - 1;
-		levels[i].counts.reset_counts();
+	for (auto & level : levels) {
+		level.index = 0;
+		level.odd = false;
+		level.remainder = 0;
+		level.warmup = EXP - 1;
+		level.counts.reset_counts();
 	}
 	blocks_tested = 0;
 	block_phase = 0;
@@ -7710,9 +7709,9 @@ void PractRand::Tests::mod3n::test_blocks(TestBlock *data, int numblocks) {
 				block_phase = 0;
 				block_scale++;
 				if (block_fraction) {//we can skip the barrier between on regions if there's never an real off regions
-					for (int i = 0; i < LEVELS; i++) {
-						levels[i].odd = false;
-						levels[i].warmup = EXP - 1;
+					for (auto & level : levels) {
+						level.odd = false;
+						level.warmup = EXP - 1;
 					}
 				}
 			}
@@ -10812,25 +10811,25 @@ bool PractRand::Tests::Transforms::multiplex::recommend_subtest_tree_descent() c
 	return true;
 }
 void PractRand::Tests::Transforms::multiplex::deinit() {
-	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
-		(*it)->deinit();
+	for (auto & test : subtests.tests)
+		test->deinit();
 }
 void PractRand::Tests::Transforms::multiplex::init( RNGs::vRNG *known_good ) {
 	blocks_already = 0;
-	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
-		(*it)->init(known_good);
+	for (auto & test : subtests.tests)
+		test->init(known_good);
 }
 PractRand::Tests::Transforms::multiplex::~multiplex ( ) {
-	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
-		delete (*it);
+	for (auto & test : subtests.tests)
+		delete test;
 	subtests.tests.clear();
 }
 std::string PractRand::Tests::Transforms::multiplex::get_name() const {
 	return name.c_str();
 }
 void PractRand::Tests::Transforms::multiplex::test_blocks(TestBlock *data, int numblocks) {
-	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
-		(*it)->test_blocks(data, numblocks);
+	for (auto & test : subtests.tests)
+		test->test_blocks(data, numblocks);
 	blocks_already += numblocks;
 }
 static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(const std::string name) {
@@ -10856,8 +10855,8 @@ static std::string combine_transform_names(const std::string &prefix, const std:
 }
 void PractRand::Tests::Transforms::multiplex::get_results(std::vector<TestResult> &results) {
 	size_t old_size = results.size();
-	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++) {
-		(*it)->get_results(results);
+	for (auto & test : subtests.tests) {
+		test->get_results(results);
 	}
 	for (size_t i = old_size; i < results.size(); i++) {
 		results[i].name = combine_transform_names(get_name(), results[i].name);
@@ -10866,8 +10865,8 @@ void PractRand::Tests::Transforms::multiplex::get_results(std::vector<TestResult
 }
 int PractRand::Tests::Transforms::multiplex::get_blocks_to_repeat() const {
 	int rv = 0;
-	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++) {
-		int x = (*it)->get_blocks_to_repeat();
+	for (auto test : subtests.tests) {
+		int x = test->get_blocks_to_repeat();
 		if (rv < x) rv = x;
 	}
 	return rv;
@@ -10897,8 +10896,8 @@ PractRand::Tests::Transforms::switching::switching(
 {
 	if (lengths.size() != testlist.tests.size()) issue_error();
 	blocks_already_per.resize(lengths.size());
-	for (unsigned long i = 0; i < blocks_already_per.size(); i++)
-		blocks_already_per[i] = 0;
+	for (unsigned long & i : blocks_already_per)
+		i = 0;
 	total_length = 0;
 	for (unsigned long i = 0; i < blocks_already_per.size(); i++) total_length += lengths[i];
 }
@@ -10916,8 +10915,8 @@ PractRand::Tests::Transforms::switching::switching(
 	total_length = length * blocks_already_per.size();
 }
 void PractRand::Tests::Transforms::switching::init( RNGs::vRNG *known_good ) {
-	for (unsigned long i = 0; i < blocks_already_per.size(); i++)
-		blocks_already_per[i] = 0;
+	for (unsigned long & i : blocks_already_per)
+		i = 0;
 	phase = 0;
 	which = 0;
 	multiplex::init(known_good);

@@ -41,20 +41,20 @@ TestManager::TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs:
 	max_buffer_amount = max_buffer_amount_;
 	prefix_blocks = 0;
 	main_blocks = 0;
-	for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
+	for (auto & test : tests->tests) test->init(known_good);
 	freshly_created = true;
 }
 TestManager::~TestManager() {
-	for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->deinit();
-	for (unsigned int i = 0; i < tests->tests.size(); i++) delete tests->tests[i];
+	for (auto & test : tests->tests) test->deinit();
+	for (auto & test : tests->tests) delete test;
 }
 void TestManager::reset(PractRand::RNGs::vRNG *rng_) {
-	if (!freshly_created) for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->deinit();
+	if (!freshly_created) for (auto & test : tests->tests) test->deinit();
 	freshly_created = false;
-	for (unsigned int i = 0; i < tests->tests.size(); i++) tests->tests[i]->init(known_good);
+	for (auto & test : tests->tests) test->init(known_good);
 	blocks_to_repeat = 0;
-	for (unsigned int i = 0; i < tests->tests.size(); i++) {
-		int rb = tests->tests[i]->get_blocks_to_repeat();
+	for (auto & test : tests->tests) {
+		int rb = test->get_blocks_to_repeat();
 		if (blocks_to_repeat < rb) blocks_to_repeat = rb;
 	}
 	buffer.resize(max_buffer_amount + blocks_to_repeat);
@@ -88,12 +88,12 @@ int TestManager::prep_blocks(Uint64 &blocks) {
 void TestManager::test(Uint64 num_blocks) {
 	while (num_blocks) {
 		prep_blocks(num_blocks);
-		for (unsigned int i = 0; i < tests->tests.size(); i++)
-			tests->tests[i]->test_blocks(&buffer[prefix_blocks], main_blocks);
+		for (auto & test : tests->tests)
+			test->test_blocks(&buffer[prefix_blocks], main_blocks);
 	}
 }
 void TestManager::get_results( std::vector<PractRand::TestResult> &result_vec ) {
-	for (unsigned int i = 0; i < tests->tests.size(); i++) {
-		tests->tests[i]->get_results(result_vec);
+	for (auto & test : tests->tests) {
+		test->get_results(result_vec);
 	}
 }

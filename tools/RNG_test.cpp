@@ -304,8 +304,8 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	std::vector<PractRand::TestResult> results;
 	tman->get_results(results);
 	double total_weight = 0, min_weight = 9999999;
-	for (unsigned int i = 0; i < results.size(); i++) {
-		double weight = results[i].get_weight();
+	for (const auto & result : results) {
+		double weight = result.get_weight();
 		total_weight += weight;
 		if (weight < min_weight) min_weight = weight;
 	}
