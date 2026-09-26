@@ -1,18 +1,30 @@
 #pragma once
 
+#include "PractRand/RNGs/hc256.h"
+#include "PractRand/rng_basics.h"
+#include "RNG_from_name.h"
 #include "parse_number.h"
 
 #include <bit>
+#include <cstdlib>
+#include <cstring>
+#include <deque>
+#include <map>
 #include <print>
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG* base_rng;
-	Uint64 current_seed{};
+	PractRand::Uint64 current_seed{};
 
-	std::set<Uint64> unordered_history;
-	std::deque<Uint64> history;
+	std::set<PractRand::Uint64> unordered_history;
+	std::deque<PractRand::Uint64> history;
 	unsigned int history_limit{1024};
 
 	explicit Seeder_MetaRNG(PractRand::RNGs::vRNG* base_rng_) : known_good(PractRand::SEED_NONE), base_rng(base_rng_) {
@@ -31,7 +43,7 @@ public:
 		record_seed(current_seed);
 	}
 	using vRNG::seed;
-	bool record_seed(Uint64 new_seed) {
+	bool record_seed(PractRand::Uint64 new_seed) {
 		if (!unordered_history.insert(new_seed).second) return false;
 		current_seed = new_seed;
 		history.push_back(current_seed);
@@ -42,10 +54,10 @@ public:
 		return true;
 	}
 	void evolve_seed() {
-		Uint64 bits_tried = 0;
+		PractRand::Uint64 bits_tried = 0;
 		while (true) {
-			Uint64 bit = 1ULL << known_good.randi(64);
-			Uint64 new_seed = current_seed ^ bit;
+			PractRand::Uint64 bit = 1ULL << known_good.randi(64);
+			PractRand::Uint64 new_seed = current_seed ^ bit;
 			bits_tried |= bit;
 			if (record_seed(new_seed)) return;
 			if (0 == ~bits_tried) {
@@ -55,9 +67,9 @@ public:
 			}
 		}
 	}
-	Uint64 raw64() override {
+	PractRand::Uint64 raw64() override {
 		base_rng->seed(current_seed);
-		Uint64 rv = base_rng->raw64();
+		PractRand::Uint64 rv = base_rng->raw64();
 		evolve_seed();
 		return rv;
 	}
@@ -66,7 +78,7 @@ public:
 		tmp << "SeedingTester(" << base_rng->get_name() << ")";
 		return tmp.str();
 	}
-	void walk_state(StateWalkingObject*) override {}
+	void walk_state(PractRand::StateWalkingObject*) override {}
 	static PractRand::RNGs::vRNG* _factory(std::vector<std::string>& params) {
 		if (params.size() != 1) {params.emplace_back("wrong number of parameters - should be SeedingTester(rng)"); return nullptr; }
 		PractRand::RNGs::vRNG* rng = RNG_Factories::create_rng(params[0]);
@@ -84,10 +96,10 @@ public:
 	PractRand::RNGs::vRNG* base_entropy_pool;
 	unsigned int min_length, max_length;
 	unsigned int history_length{16384};
-	std::vector<Uint8> current_seed;
+	std::vector<PractRand::Uint8> current_seed;
 	Transform last_transform{};
-	std::multiset<Uint64> unordered_history;//hashes only
-	std::deque<std::pair<std::multiset<Uint64>::iterator, Transform> > history;//hashes first, then transform applied - newest at front
+	std::multiset<PractRand::Uint64> unordered_history;//hashes only
+	std::deque<std::pair<std::multiset<PractRand::Uint64>::iterator, Transform> > history;//hashes first, then transform applied - newest at front
 
 	//what it should be: (but the current version is good enough)
 	//std::map<Uint64,Uint64> unordered_history;// hashes -> positions;
@@ -115,25 +127,25 @@ public:
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
 	using vRNG::seed;
-	Transform pick_random_transform(const std::vector<Uint8>& message) {
+	Transform pick_random_transform(const std::vector<PractRand::Uint8>& message) {
 		while (true) {
 			if (known_good.randf() < 0.96) {//toggle bit
-				return known_good.randi(message.size() * 8) + (Uint64(0) << 56);
+				return known_good.randi(message.size() * 8) + (PractRand::Uint64(0) << 56);
 			}
 			if (known_good.randf() < 0.50) {//insertion
 				if (message.size() >= max_length) continue;
 				//low 8 bits = value to insert ; next 28 bits = position to insert at ; top 8 bits = action type
-				Uint64 position = known_good.randi(message.size() + 1);
-				return known_good.raw8() + (position << 8) + (Uint64(1) << 56);
+				PractRand::Uint64 position = known_good.randi(message.size() + 1);
+				return known_good.raw8() + (position << 8) + (PractRand::Uint64(1) << 56);
 			}
 			else {//deletion
 				if (message.size() <= min_length) continue;
-				Uint64 position = known_good.randi(message.size());
-				return message[position] + (position << 8) + (Uint64(2) << 56);
+				PractRand::Uint64 position = known_good.randi(message.size());
+				return message[position] + (position << 8) + (PractRand::Uint64(2) << 56);
 			}
 		}
 	}
-	static void apply_transform(std::vector<Uint8>& message, Transform transform) {
+	static void apply_transform(std::vector<PractRand::Uint8>& message, Transform transform) {
 		//toggle bit, add byte at end, add byte at begining, remove byte at end, remove byte at begining
 		//adds or removals must include the data added or removed in addition to the action
 		switch (transform >> 56) {
@@ -166,22 +178,22 @@ public:
 			std::exit(1);
 		}
 	}
-	static void apply_inverse_transform(std::vector<Uint8>& message, Transform transform) {
+	static void apply_inverse_transform(std::vector<PractRand::Uint8>& message, Transform transform) {
 		switch (transform >> 56) {
 		case 0://reverse a toggle bit by doing the same thign
 			apply_transform(message, transform);
 			break;
 		case 1://reverse an insertion with a deletion
-			apply_transform(message, transform + (Uint64(1) << 56));
+			apply_transform(message, transform + (PractRand::Uint64(1) << 56));
 			break;
 		case 2://reverse a deletion with an insertion
-			apply_transform(message, transform - (Uint64(1) << 56));
+			apply_transform(message, transform - (PractRand::Uint64(1) << 56));
 			break;
 		default:
 			break;
 		}
 	}
-	[[nodiscard]] PractRand::Uint64 hash_message(const std::vector<Uint8>& message) const {
+	[[nodiscard]] PractRand::Uint64 hash_message(const std::vector<PractRand::Uint8>& message) const {
 		base_entropy_pool->reset_entropy();
 		base_entropy_pool->add_entropy_N(message.data(), message.size());
 		//base_entropy_pool->add_entropy64(0);
@@ -194,13 +206,13 @@ public:
 			history.pop_back();
 		}
 	}
-	static int hamming_distance(const Uint8* message1, const Uint8* message2, int n) {
-		Uint32 sum = 0;
+	static int hamming_distance(const PractRand::Uint8* message1, const PractRand::Uint8* message2, int n) {
+		PractRand::Uint32 sum = 0;
 		for (int i = 0; i < n; i++) sum += std::popcount(static_cast<unsigned int>(message1[i] ^ message2[i]));
 		return sum;
 	}
-	bool check_conflict(const std::vector<Uint8>& message) {
-		std::vector<Uint8> rewound = current_seed;
+	bool check_conflict(const std::vector<PractRand::Uint8>& message) {
+		std::vector<PractRand::Uint8> rewound = current_seed;
 		for (auto& entry : history) {
 			//if (message.size() == rewound.size() && !std::memcmp(&message[0], &rewound[0], message.size())) {
 			if (message.size() == rewound.size() && !hamming_distance(message.data(), rewound.data(), message.size())) {
@@ -213,13 +225,13 @@ public:
 	void evolve_seed() {
 		while (true) {
 			Transform t = pick_random_transform(current_seed);
-			std::vector<Uint8> new_seed = current_seed;
+			std::vector<PractRand::Uint8> new_seed = current_seed;
 			apply_transform(new_seed, t);
-			Uint64 hash = hash_message(new_seed);
-			std::pair<std::multiset<Uint64>::iterator, std::multiset<Uint64>::iterator> sitr = unordered_history.equal_range(hash);
+			PractRand::Uint64 hash = hash_message(new_seed);
+			std::pair<std::multiset<PractRand::Uint64>::iterator, std::multiset<PractRand::Uint64>::iterator> sitr = unordered_history.equal_range(hash);
 			if (sitr.first == sitr.second || !check_conflict(new_seed)) {//no conflicts
 				current_seed.swap(new_seed);
-				std::multiset<Uint64>::iterator it;
+				std::multiset<PractRand::Uint64>::iterator it;
 				if (sitr.first == unordered_history.end()) it = unordered_history.insert(hash);
 				else it = unordered_history.insert(--sitr.first, hash);
 				history.emplace_front(it, t);

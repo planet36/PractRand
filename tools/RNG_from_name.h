@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PractRand/RNGs/all.h"
 #include "PractRand/RNGs/other/fibonacci.h"
 #include "PractRand/RNGs/other/indirection.h"
 #include "PractRand/RNGs/other/mult.h"

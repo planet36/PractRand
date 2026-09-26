@@ -1,5 +1,8 @@
 #pragma once
 
+#include "PractRand/rng_basics.h"
+
+#include <ctime>
 #include <print>
 
 //template<typename RNG> double measure_RNG_performance();
@@ -8,7 +11,7 @@
 template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
-	Uint16 buffy[1024];
+	PractRand::Uint16 buffy[1024];
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
@@ -23,7 +26,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	Uint16 a = 0;
+	PractRand::Uint16 a = 0;
 	for (const auto i : buffy) a |= i;
 	if (a == 0) std::print("unlikely!");
 
@@ -32,7 +35,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
-	Uint32 buffy[1024] = {0};
+	PractRand::Uint32 buffy[1024] = {0};
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
@@ -47,7 +50,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	Uint32 a = 0;
+	PractRand::Uint32 a = 0;
 	for (const auto i : buffy) a |= i;
 	if (a == 0) std::print("unlikely!");
 
@@ -56,7 +59,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 template<typename RNG> double measure_RNG_performance_64(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
-	Uint64 buffy[1024] = {0};
+	PractRand::Uint64 buffy[1024] = {0};
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
@@ -71,7 +74,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG* rng) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	Uint64 a = 0;
+	PractRand::Uint64 a = 0;
 	for (const auto i : buffy) a |= i;
 	if (a == 0) std::print("unlikely!");
 
