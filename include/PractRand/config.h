@@ -5,7 +5,7 @@
 /*
 Things to configure in this file:
 1.  Endianness (usually CPU dependent)
-2.  Thread-local-storage aka TLS (usually compiler dependent)
+2.  Thread-local-storage aka TLS
 3.  Integer types (compiler and CPU dependent)
 */
 
@@ -30,22 +30,13 @@ it may report an endianness error.
 
 /*
 2.  Thread-local-storage aka TLS
-	On Microsoft compilers define this as __declspec(thread).  On gcc it
-should be __thread instead.  Borland and Intel C++ can use either.
+	This is the standard C++ thread_local keyword.
 	See http://en.wikipedia.org/wiki/Thread-local_storage for more
 information.
-	If your compiler does not support TLS or supports TLS by an interface
-that is not compatible with PractRand then you can leave this one
-undefined.  PractRand autoseeding will not work as well in multithreaded
-programs, but it will still work.
+	If this one is left undefined then PractRand autoseeding will not work
+as well in multithreaded programs, but it will still work.
 */
-#if defined _MSC_VER
-#define PRACTRAND_THREAD_LOCAL_STORAGE __declspec(thread)
-#elif __GNUC__
-#define PRACTRAND_THREAD_LOCAL_STORAGE __thread
-#else
-
-#endif
+#define PRACTRAND_THREAD_LOCAL_STORAGE thread_local
 
 
 
