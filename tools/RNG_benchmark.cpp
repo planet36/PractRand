@@ -1,15 +1,3 @@
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-//#include <list>
-//#include <map>
-#include <print>
-#include <sstream>
-#include <string>
-//#include <vector>
-
-
 //master header, includes everything in PractRand for both
 //  practical usage and research...
 //  EXCEPT it does not include specific algorithms
@@ -30,9 +18,21 @@
 //#include "PractRand/RNGs/rarns32.h"
 //#include "PractRand/RNGs/rarns64.h"
 
-using namespace PractRand;
 #include "Candidate_RNGs.h"
 #include "measure_RNG_performance.h"
+
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+//#include <list>
+//#include <map>
+#include <print>
+#include <sstream>
+#include <string>
+//#include <vector>
+
+using namespace PractRand;
 
 
 template<typename RNG>
