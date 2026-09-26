@@ -146,8 +146,8 @@ namespace PractRand::Tests {
 				high = static_cast<Uint64*>(std::realloc(high, sizeof(Uint64) * size));
 				reset_counts();
 			}
-			VariableSizeCount() : low(nullptr), high(nullptr), size(0) {}
-			VariableSizeCount(int size_) : low(nullptr), high(nullptr), size(0) {set_size(size_);}
+			VariableSizeCount() : low(nullptr), high(nullptr) {}
+			VariableSizeCount(int size_) : low(nullptr), high(nullptr) {set_size(size_);}
 			VariableSizeCount(const VariableSizeCount &other) = delete;//copy constructor disallowed
 			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
 			const Uint64 &operator[] (int index) {

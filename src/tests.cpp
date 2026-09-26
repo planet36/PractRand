@@ -10886,9 +10886,7 @@ PractRand::Tests::Transforms::switching::switching(
 	std::vector<Uint64> lengths_)
 :
 	multiplex(name_, testlist),
-	lengths(lengths_),
-	phase(0),
-	which(0)
+	lengths(lengths_)
 {
 	if (lengths.size() != testlist.tests.size()) issue_error();
 	blocks_already_per.resize(lengths.size());
