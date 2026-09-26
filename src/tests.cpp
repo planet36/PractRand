@@ -7015,7 +7015,7 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 	index = core_bucket;
 	ham = h;
 }
-int PractRand::Tests::NearSeq2::get_hdist_bin(int hdist) const {
+int PractRand::Tests::NearSeq2::get_hdist_bin(int hdist) {
 	// some parameterizations have a wide variety of possible total core hamming weights
 	// to keep the size of Bucket::extra_counts under control, I index them by a function of the hamming weight with more limited range
 	return hdist * HDIST_BINS / (MAX_TOTAL_HDIST + 1);

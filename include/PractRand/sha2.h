@@ -15,7 +15,7 @@ namespace PractRand::Crypto {
 			unsigned long leftover_input_bytes{};
 			void process_block();
 			void process_final_block();
-			Word endianness_word(Word);
+			static Word endianness_word(Word);
 			void endianness_input();
 			void endianness_state();
 		public:

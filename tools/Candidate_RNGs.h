@@ -756,7 +756,7 @@ public:
 		}
 		return hasher.get_result();
 	}
-	[[nodiscard]] std::string get_name() const {
+	[[nodiscard]] static std::string get_name() {
 		std::ostringstream tmp;
 		//tmp << "SipHash";
 		tmp << "SipHash" << (8 * sizeof(Word)) << "-" << ROUNDS_PER_INPUT << "-" << EXTRA_ROUNDS << "-" << ROUNDS_PER_OUTPUT;
@@ -792,7 +792,7 @@ public:
 	ImplementationType implementation{};
 	Uint64 raw64() override { return implementation.raw64(); }
 	void walk_state(StateWalkingObject *walker) override { implementation.walk_state(walker); }
-	[[nodiscard]] std::string get_name() const override { return implementation.get_name(); }
+	[[nodiscard]] std::string get_name() const override { return ImplementationType::get_name(); }
 };
 
 

@@ -143,10 +143,10 @@ namespace PractRand::Tests {
 				bucket |= (_lookup1(block_value) & 1) << bucket_bit;
 				hdist += _lookup2(block_value);
 			}
-			[[nodiscard]] int get_hdist_bin(int hdist) const;
+			[[nodiscard]] static int get_hdist_bin(int hdist);
 			bool is_core_bad(const Word *core) const;
 			void core_analysis(const Word *core, int &index, int &ham) const;//only call on valid cores
-			void count_bits_distribution(Word bits, Uint64 *counts, int num = WORD_BITS);
+			static void count_bits_distribution(Word bits, Uint64 *counts, int num = WORD_BITS);
 		public:
 			NearSeq2();
 			void init(PractRand::RNGs::vRNG *known_good) override;

@@ -131,7 +131,7 @@ public:
 			}
 		}
 	}
-	void apply_transform(std::vector<Uint8> &message, Transform transform) {
+	static void apply_transform(std::vector<Uint8> &message, Transform transform) {
 		//toggle bit, add byte at end, add byte at begining, remove byte at end, remove byte at begining
 		//adds or removals must include the data added or removed in addition to the action
 		switch (transform >> 56) {
@@ -164,7 +164,7 @@ public:
 			std::exit(1);
 		}
 	}
-	void apply_inverse_transform(std::vector<Uint8> &message, Transform transform) {
+	static void apply_inverse_transform(std::vector<Uint8> &message, Transform transform) {
 		switch (transform >> 56) {
 		case 0://reverse a toggle bit by doing the same thign
 			apply_transform(message, transform);
@@ -192,7 +192,7 @@ public:
 			history.pop_back();
 		}
 	}
-	int hamming_distance(const Uint8 *message1, const Uint8 *message2, int n) {
+	static int hamming_distance(const Uint8 *message1, const Uint8 *message2, int n) {
 		Uint32 sum = 0;
 		for (int i = 0; i < n; i++) sum += std::popcount(static_cast<unsigned int>(message1[i] ^ message2[i]));
 		return sum;
