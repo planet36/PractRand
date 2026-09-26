@@ -502,11 +502,7 @@ namespace PractRand {
 			Uint8   as8[8];
 		};
 		as64[0] = 0x0123456789ABCDEFULL;
-#if defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN
 		if (as8[7] != 0x01) {
-#elif defined PRACTRAND_TARGET_IS_BIG_ENDIAN
-		if (as8[0] != 0x01) {
-#endif
 			issue_error("PractRand - endianness configured incorrectly");
 		}
 #endif

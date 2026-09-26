@@ -1,10 +1,10 @@
 #pragma once
 
 #include "config.h"
+
 #include <bit>
 
-static_assert(std::endian::native == std::endian::little || std::endian::native == std::endian::big,
-	"PractRand requires a little-endian or big-endian target");
+static_assert(std::endian::native == std::endian::little, "PractRand requires a little-endian target");
 
 namespace PractRand {
 #if 0
@@ -20,35 +20,6 @@ namespace PractRand {
 	}
 #endif
 #if 0
-	static inline Uint16 little_endian_conversion16 ( Uint16 v ) {
-		if constexpr (std::endian::native == std::endian::little) return v;
-		else return std::byteswap(v);
-	}
-	static inline Uint32 little_endian_conversion32 ( Uint32 v ) {
-		if constexpr (std::endian::native == std::endian::little) return v;
-		else return std::byteswap(v);
-	}
-#endif
-	static inline Uint64 little_endian_conversion64 ( Uint64 v ) {
-		if constexpr (std::endian::native == std::endian::little) return v;
-		else return std::byteswap(v);
-	}
-#if 0
-	static inline Uint16 big_endian_conversion16 ( Uint16 v ) {
-		if constexpr (std::endian::native == std::endian::big) return v;
-		else return std::byteswap(v);
-	}
-	static inline Uint32 big_endian_conversion32 ( Uint32 v ) {
-		if constexpr (std::endian::native == std::endian::big) return v;
-		else return std::byteswap(v);
-	}
-	static inline Uint64 big_endian_conversion64 ( Uint64 v ) {
-		if constexpr (std::endian::native == std::endian::big) return v;
-		else return std::byteswap(v);
-	}
-#endif
-#if 0
-#if defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN
 	union split_int_16 {
 		Uint16 whole;
 		struct blah {
@@ -70,28 +41,5 @@ namespace PractRand {
 			split_int_32 high32;
 		} split;
 	};
-#elif defined PRACTRAND_TARGET_IS_BIG_ENDIAN
-	union split_int_16 {
-		Uint16 whole;
-		struct blah {
-			Uint8 high8;
-			Uint8 low8;
-		} split;
-	};
-	union split_int_32 {
-		Uint32 whole;
-		struct blah {
-			split_int_16 high16;
-			split_int_16 low16;
-		} split;
-	};
-	union split_int_64 {
-		Uint64 whole;
-		struct blah {
-			split_int_32 high32;
-			split_int_32 low32;
-		} split;
-	};
-#endif
 #endif
 }

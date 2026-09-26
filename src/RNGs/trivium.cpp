@@ -74,7 +74,7 @@ void PractRand::RNGs::Raw::trivium::seed(const Uint8* seed_and_iv, int length) {
 	for (int i = 0; i < 6; i++) s.as8[i] = 0;
 	for (int i = 0; i < elen; i++) s.as8[i+6] = seed_and_iv[i];
 	for (int i = elen; i < 10; i++) s.as8[i+6] = 0;
-	for (int i = 0; i < 2; i++) this->a[i] = little_endian_conversion64(s.as64[1-i]);
+	for (int i = 0; i < 2; i++) this->a[i] = s.as64[1-i];
 
 	length -= 10;
 	seed_and_iv += 10;
@@ -82,7 +82,7 @@ void PractRand::RNGs::Raw::trivium::seed(const Uint8* seed_and_iv, int length) {
 	SeedVec iv{};
 	for (int i = 0; i < 16-length; i++) iv.as8[i] = 0;
 	for (int i = 16-length; i < 16; i++) iv.as8[i] = seed_and_iv[i-(16-length)];
-	for (int i = 0; i < 2; i++) this->b[i] = little_endian_conversion64(iv.as64[1-i]);
+	for (int i = 0; i < 2; i++) this->b[i] = iv.as64[1-i];
 
 	c[0] = 0;
 	c[1] = Uint64(7) << (128-111);
