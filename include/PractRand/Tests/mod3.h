@@ -23,7 +23,7 @@ namespace PractRand::Tests {
 			static constexpr int P2 = 1 << BITS;
 			FixedSizeCount<Uint8, P2> counts;
 			unsigned long index;
-			void update_index(Word byte);
+			void update_index(Word value);
 		};
 		class mod3n : public TestBaseclass {
 		public:

@@ -25,9 +25,9 @@ namespace PractRand::Tests {
 			static constexpr int SORT_HELPER_BITS = 10;
 			Uint64 buffer[1 << BUFFER_SIZE_L2]{};
 			Uint64 counts[MAX_DUPLICATES]{};
-			static void _histogram_in_place_sort64(Uint64 *base, long length, long bits_already, Uint32 freq_counts[1 << SORT_HELPER_BITS]);
+			static void _histogram_in_place_sort64(Uint64 *buffer, long length, long bits_already, Uint32 region_counts[1 << SORT_HELPER_BITS]);
 			static void _histogram_in_place_sort64(Uint64 *base, long length);
-			static void _histogram_sort64(Uint64 *base, long length, long bits_already, Uint32 freq_counts[1 << SORT_HELPER_BITS]);
+			static void _histogram_sort64(Uint64 *buffer, long length, long bits_already, Uint32 region_counts[1 << SORT_HELPER_BITS]);
 			static void _histogram_sort64(Uint64 *base, long length);
 			int num_buffered{};
 			void flush_buffer();
@@ -64,14 +64,14 @@ namespace PractRand::Tests {
 
 			// this is the fastest in-place sort I've tried so far
 			// in-place is important if I want to sort something huge without assuming I can allocate a comparable amount of memory to help with the sorting
-			void histogram_in_place_sort128(i128 *base, Uint64 length, long bits_already, Uint64 freq_counts[1 << SORT_HELPER_BITS]);
+			void histogram_in_place_sort128(i128 *buffer, Uint64 length, long bits_already, Uint64 region_counts[1 << SORT_HELPER_BITS]);
 			void histogram_in_place_sort128(i128 *base, Uint64 length, long bits_already = 0);
 
 			// ..but sometimes I'm sorting smaller buffers, with pre-allocated regions to sort into..., so maybe another interface for that would help
-			void histogram_sort_and_copy(i128 *base, i128 *dest, Uint64 length, long bits_already, Uint64 freq_counts[1 << SORT_HELPER_BITS]);
-			void histogram_sort_and_copy(i128 *base, i128 *dest, Uint64 length, long bits_already = 0);
+			void histogram_sort_and_copy(i128 *buffer, i128 *dest, Uint64 length, long bits_already, Uint64 region_counts[1 << SORT_HELPER_BITS]);
+			void histogram_sort_and_copy(i128 *buffer, i128 *dest, Uint64 length, long bits_already = 0);
 			//possibly faster algorithm for the same interface?
-			void radix_sort_and_copy(i128 *base, i128 *dest, Uint64 length, long bits_already = 0);
+			void radix_sort_and_copy(i128 *buffer, i128 *dest, Uint64 length, long bits_already = 0);
 
 			void _sorted_deltas_of_sorted_values(i128 *base, long length_L2, Uint64 freq_counts[1 << SORT_HELPER_BITS]);
 			void _sorted_deltas_of_sorted_values(i128 *base, long length_L2);
@@ -165,7 +165,7 @@ namespace PractRand::Tests {
 			double score_sum_log2{};
 			double score_sum_log_sqr{};
 			Uint64 count{};
-			static void _lookup_constants(int buffer_size_L2, long double *offset, long double *deviation, long double *samples);
+			static void _lookup_constants(int table_size_L2, long double *offset, long double *deviation, long double *sample_size);
 		public:
 			BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
 			~BirthdayAlt() override;

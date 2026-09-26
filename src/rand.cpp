@@ -377,13 +377,13 @@ namespace PractRand {
 			walk_state(&deserializer);
 			return deserializer.size_used == size;
 		}
-		void vRNG::seed(Uint64 i) {
-			GenericIntegerSeedingStateWalker walker(i);
+		void vRNG::seed(Uint64 seed) {
+			GenericIntegerSeedingStateWalker walker(seed);
 			walk_state(&walker);
 			flush_buffers();
 		}
-		void vRNG::seed_fast(Uint64 i) {
-			GenericIntegerSeedingStateWalker walker(i);
+		void vRNG::seed_fast(Uint64 seed) {
+			GenericIntegerSeedingStateWalker walker(seed);
 			walk_state(&walker);
 			flush_buffers();
 		}

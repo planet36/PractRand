@@ -970,8 +970,8 @@ namespace PractRand {
 			double raw = raw_test_edge_distribution(categories, prob_table, counts);
 			return raw;
 		}*/
-		double test_uniformity( const SampleSet &ss ) {
-			long size = ss.size();
+		double test_uniformity( const SampleSet &sorted_data ) {
+			long size = sorted_data.size();
 			if (!size) return 0;
 			double size_f = size;
 			double size_a = size + 1.0;
@@ -982,7 +982,7 @@ namespace PractRand {
 			double longest = 0;
 			const double epsilon = std::pow(0.5, 50);
 			for (int j = 0; j <= size; j++) {
-				double current = j < size ? ss.get_result_by_index(j) : 1.0;
+				double current = j < size ? sorted_data.get_result_by_index(j) : 1.0;
 				long double delta = current - prior;
 				delta += epsilon;
 				double L = std::log(delta);

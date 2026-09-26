@@ -36,7 +36,7 @@ Two functions are performed that may need to use platform-specific functionality
 
 using namespace PractRand;
 
-bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng, [[maybe_unused]] int milliseconds ) {
+bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *entropy_pool, [[maybe_unused]] int milliseconds ) {
 	//the intention is for "millisecond" to be an amount of time that this function is permitted to spend on obtaining entropy
 	//but currently nothing that spends time in a controlled fashion is implemented, so it's meaningless
 
@@ -51,9 +51,9 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		unsigned int tmp = 0;
 		for (int i = 0; i < N32 + 8; i++) {
 			count += (!rand_s( &tmp )) ? 1 : 0;
-			rng->add_entropy32(tmp);
+			entropy_pool->add_entropy32(tmp);
 			if (count == N32) {
-				rng->flush_buffers();
+				entropy_pool->flush_buffers();
 				return true;
 			}
 		}
@@ -68,9 +68,9 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 			if (get_random_bytes) {
 				Uint64 buf[N64];
 				if(get_random_bytes(buf,N64*sizeof(buf[0]))) {
-					for (int i = 0; i < N64; i++) rng->add_entropy64(buf[i]);
+					for (int i = 0; i < N64; i++) entropy_pool->add_entropy64(buf[i]);
 					FreeLibrary(hLib);
-					rng->flush_buffers();
+					entropy_pool->flush_buffers();
 					std::memset(buf, 0, sizeof(buf));
 					return true;
 				}
@@ -86,9 +86,9 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		Uint64 buf[N64];
 		if ((f = std::fopen("/dev/urandom", "rb"))) {
 			if (std::fread(buf,N64*sizeof(buf[0]),1,f) == 1) {
-				for (const auto i : buf) rng->add_entropy64(i);
+				for (const auto i : buf) entropy_pool->add_entropy64(i);
 				(void)std::fclose(f);
-				rng->flush_buffers();
+				entropy_pool->flush_buffers();
 				std::memset(buf, 0, sizeof(buf));
 				return true;
 			}
@@ -103,8 +103,8 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 			//skip this if a good source was already found, because this can block
 			Uint64 buf[N64];
 			if(std::fread(buf,N64*sizeof(buf[0]),1,f)) {
-				for (int i = 0; i < N64; i++) rng->add_entropy64(buf[i]);
-				rng->flush_buffers();
+				for (int i = 0; i < N64; i++) entropy_pool->add_entropy64(buf[i]);
+				entropy_pool->flush_buffers();
 				std::memset(buf, 0, sizeof(buf));
 				return true;
 			}
@@ -114,12 +114,12 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 #if 1
 	{//libc
 		//not much entropy, but we take what we can get
-		rng->add_entropy64(static_cast<Uint64>(std::time(nullptr)));
-		rng->add_entropy64(static_cast<Uint64>(std::clock()));
-		rng->add_entropy64(reinterpret_cast<Uint64>(rng));
+		entropy_pool->add_entropy64(static_cast<Uint64>(std::time(nullptr)));
+		entropy_pool->add_entropy64(static_cast<Uint64>(std::clock()));
+		entropy_pool->add_entropy64(reinterpret_cast<Uint64>(entropy_pool));
 		auto *p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
-		rng->add_entropy64(reinterpret_cast<Uint64>(p));
-		//rng->add_entropy64(*p);//commented to avoid issues with memory debuggers
+		entropy_pool->add_entropy64(reinterpret_cast<Uint64>(p));
+		//entropy_pool->add_entropy64(*p);//commented to avoid issues with memory debuggers
 		free(p);
 	}
 #endif
@@ -127,24 +127,24 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 	{//win32 (intended to work on win2k and later)
 		::LARGE_INTEGER qt;
 		QueryPerformanceCounter(&qt);
-		rng->add_entropy64(qt.QuadPart);
-		rng->add_entropy32(::GetCurrentProcessId());
-		rng->add_entropy64((Uint64)::GetCurrentProcess());
-		rng->add_entropy32(::GetCurrentThreadId());
-		//rng->add_entropy32(::GetCurrentProcessorNumber());//may require Vista?
+		entropy_pool->add_entropy64(qt.QuadPart);
+		entropy_pool->add_entropy32(::GetCurrentProcessId());
+		entropy_pool->add_entropy64((Uint64)::GetCurrentProcess());
+		entropy_pool->add_entropy32(::GetCurrentThreadId());
+		//entropy_pool->add_entropy32(::GetCurrentProcessorNumber());//may require Vista?
 		SYSTEMTIME st;
 		::GetSystemTime(&st);
-		rng->add_entropy_N(&st, sizeof(st));
+		entropy_pool->add_entropy_N(&st, sizeof(st));
 		MEMORYSTATUS mem;
 		GlobalMemoryStatus(&mem);
-		rng->add_entropy_N(&mem, sizeof(mem));
+		entropy_pool->add_entropy_N(&mem, sizeof(mem));
 		DWORD t = GetCurrentTime();
-		rng->add_entropy32(t);
+		entropy_pool->add_entropy32(t);
 	}
 #endif
 #if defined _MSC_VER && ((defined _M_IX86 && _M_IX86 >= 500) || defined _M_X64 || defined _M_AMD64)
 	{
-		rng->add_entropy64(__rdtsc());
+		entropy_pool->add_entropy64(__rdtsc());
 	}
 #endif
 #if (defined _WIN32) && 0 //DISABLED
@@ -190,18 +190,18 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 			}
 			if (r == ERROR_FILE_NOT_FOUND && (d == REG_CREATED_NEW_KEY || (tries > 0)) ) {
 				//printf("resetting seed (either invalid or failed to read multiple times)\n");
-				rng->flush_buffers();
-				for (int i = 0; i < TARGET_SIZE; i++) buffer[i] = rng->raw8();
+				entropy_pool->flush_buffers();
+				for (int i = 0; i < TARGET_SIZE; i++) buffer[i] = entropy_pool->raw8();
 				r = RegSetValueExA(key, "seed", 0, REG_BINARY, buffer, TARGET_SIZE);
 			}
 			if (r != ERROR_SUCCESS) continue;
 			//std::printf("using seed (%02x%02x)\n", buffer[1], buffer[0]);
-			rng->add_entropy_N(buffer, size);
+			entropy_pool->add_entropy_N(buffer, size);
 			if (size > TARGET_SIZE) size = TARGET_SIZE;
-			rng->flush_buffers();
+			entropy_pool->flush_buffers();
 			//std::printf("buffers flushed\n");
-			for (unsigned int i = 0; i < size; i++) buffer[i] ^= rng->raw8();
-			for (unsigned int i = size; i < TARGET_SIZE; i++) buffer[i] = rng->raw8();
+			for (unsigned int i = 0; i < size; i++) buffer[i] ^= entropy_pool->raw8();
+			for (unsigned int i = size; i < TARGET_SIZE; i++) buffer[i] = entropy_pool->raw8();
 			//std::printf("attempting to set new seed (%02x%02x)\n", buffer[1], buffer[0]);
 			r = RegSetValueExA(key, "seed", 0, REG_BINARY, buffer, TARGET_SIZE);
 			if (r != ERROR_SUCCESS) continue;
@@ -221,28 +221,28 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 		QueryPerformanceCounter(&qt);
 		DWORD start_time = GetTickCount();
 		DWORD t = start_time;
-		rng->add_entropy32(t);
+		entropy_pool->add_entropy32(t);
 		long count=0;
 		while (t < start_time + milliseconds) {
 			if (QueryPerformanceCounter(&qt2)) {
 				if (qt2.QuadPart != qt.QuadPart) {
-					rng->add_entropy32(qt2.LowPart);
+					entropy_pool->add_entropy32(qt2.LowPart);
 					qt.QuadPart = qt2.QuadPart;
 				}
 			}
 			count++;
 			DWORD t2 = GetTickCount();
 			if (t != t2) {
-				rng->add_entropy32(t2 + count);
+				entropy_pool->add_entropy32(t2 + count);
 				t = t2;
 			}
 		}
-		rng->add_entropy16(Uint16(count));
+		entropy_pool->add_entropy16(Uint16(count));
 		milliseconds = 0;
 	}
 #endif
 
-	rng->flush_buffers();
+	entropy_pool->flush_buffers();
 	return false;
 }
 

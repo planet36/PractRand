@@ -98,10 +98,10 @@ namespace PractRand::Tests {
 			[[nodiscard]] double get_stddev() const {if (rs.empty()) return 0; double avg = get_mean(), avg_sqr = sum_sqr / rs.size(); return std::sqrt(avg_sqr - avg * avg);}
 			[[nodiscard]] double get_percentile ( double other_result ) const;//0 to 1
 			[[nodiscard]] double get_result_by_index(int i) const {return rs[i];}
-			[[nodiscard]] double get_result_by_percentile(double d) const;
+			[[nodiscard]] double get_result_by_percentile(double percentile) const;
 			[[nodiscard]] long get_num_elements_less_than ( double other_result ) const;
 			[[nodiscard]] long get_num_elements_greater_than ( double other_result ) const;
-			void get_num_elements_less_and_greater ( double other_result, int &num_lower, int &num_higher ) const;
+			void get_num_elements_less_and_greater ( double other_result, int &num_less, int &num_greater ) const;
 		};
 
 		template<typename LowIntType, int size>

@@ -5109,24 +5109,24 @@ void PractRand::Tests::Birthday64::test_blocks(TestBlock *data, int numblocks) {
 	}
 }
 
-void PractRand::Tests::BirthdayHelpers::histogram_sort_and_copy(i128 *buffer, i128 *dest, Uint64 length, long bits_already, Uint64 regions[1 << SORT_HELPER_BITS]) {
+void PractRand::Tests::BirthdayHelpers::histogram_sort_and_copy(i128 *buffer, i128 *dest, Uint64 length, long bits_already, Uint64 region_counts[1 << SORT_HELPER_BITS]) {
 	long shift = 64 - SORT_HELPER_BITS - bits_already;
 	for (long i = 1; i < (1 << SORT_HELPER_BITS); i++) {
-		regions[i] += regions[i - 1];
+		region_counts[i] += region_counts[i - 1];
 	}
 	for (Uint64 i = 0; i < length; i++) {
 		long bin = (buffer[i].high >> shift) & ((1 << bits_already) - 1);
-		dest[regions[bin]++] = buffer[i];
+		dest[region_counts[bin]++] = buffer[i];
 	}
 
 	for (long i = (1 << SORT_HELPER_BITS) - 1; i > 0; i--) {
-		regions[i] = regions[i - 1];
+		region_counts[i] = region_counts[i - 1];
 	}
-	regions[0] = 0;
+	region_counts[0] = 0;
 	bits_already += SORT_HELPER_BITS;
 	for (long i = 0; i < (1 << SORT_HELPER_BITS); i++) {
-		Uint64 sublength = regions[i + 1] - regions[i];
-		histogram_in_place_sort128(dest + regions[i], sublength, bits_already);
+		Uint64 sublength = region_counts[i + 1] - region_counts[i];
+		histogram_in_place_sort128(dest + region_counts[i], sublength, bits_already);
 	}
 	for (Uint64 i = 0; i < length; i++) buffer[i] = dest[i];
 }

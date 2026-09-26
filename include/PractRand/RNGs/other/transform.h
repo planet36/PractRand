@@ -190,7 +190,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard16to8(vRNG *rng);
+					Discard16to8(vRNG *base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -202,7 +202,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard32to8(vRNG *rng);
+					Discard32to8(vRNG *base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -214,7 +214,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard64to8(vRNG *rng);
+					Discard64to8(vRNG *base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -226,7 +226,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard32to16(vRNG *rng);
+					Discard32to16(vRNG *base_rng_);
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -238,7 +238,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard64to16(vRNG *rng);
+					Discard64to16(vRNG *base_rng_);
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -250,7 +250,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard64to32(vRNG *rng);
+					Discard64to32(vRNG *base_rng_);
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
