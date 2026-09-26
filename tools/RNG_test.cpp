@@ -8,6 +8,7 @@
 #include <list>
 #include <map>
 #include <numbers>
+#include <print>
 #include <set>
 #include <sstream>
 #include <string>
@@ -128,23 +129,23 @@ public:
 */
 
 double print_result(const PractRand::TestResult& result, bool print_header = false) {
-	if (print_header) std::printf("  Test Name                         Raw       Processed     Evaluation\n");
+	if (print_header) std::println("  Test Name                         Raw       Processed     Evaluation");
 	//                                     10        20        30        40        50        60        70        80
-	std::printf("  ");//2 characters
+	std::print("  ");//2 characters
 	//NAME
 	if constexpr (true) {// 34 characters
-		std::printf("%s", result.name.c_str());
+		std::print("{}", result.name);
 		int len = result.name.length();
-		for (int i = len; i < 34; i++) std::printf(" ");
+		for (int i = len; i < 34; i++) std::print(" ");
 	}
 
 	//RAW TEST RESULT
 	if constexpr (true) {// 10 characters?
 		double raw = result.get_raw();
-		if (raw > 99999.0) std::printf("R>+99999  ");
-		else if (raw < -99999.0) std::printf("R<-99999  ");
-		else if (std::abs(raw) < 999.95) std::printf("R=%+6.1f  ", raw);
-		else std::printf("R=%+6.0f  ", raw);
+		if (raw > 99999.0) std::print("R>+99999  ");
+		else if (raw < -99999.0) std::print("R<-99999  ");
+		else if (std::abs(raw) < 999.95) std::print("R={:+6.1f}  ", raw);
+		else std::print("R={:+6.0f}  ", raw);
 		//if (std::abs(raw) < 99999.5) std::printf(" ");
 		//if (std::abs(raw) < 999999.5) std::printf(" ");
 		//if (std::abs(raw) < 9999999.5) std::printf(" ");
@@ -155,32 +156,32 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 		bool printed = false;
 		double susp = result.get_suspicion();
 		if (result.type == PractRand::TestResult::TYPE_PASSFAIL) {
-			std::printf("  %s    ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
+			std::print("  {}    ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
 		}
 		else if (result.type == PractRand::TestResult::TYPE_RAW) {
-			std::printf("            ");
+			std::print("            ");
 		}
 		else if (result.type == PractRand::TestResult::TYPE_BAD_P || result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) {
-			std::printf("S=~%+6.1f   ", susp);
+			std::print("S=~{:+6.1f}   ", susp);
 			printed = true;
 		}
 		else {
-			std::printf("S =%+6.1f   ", susp);
+			std::print("S ={:+6.1f}   ", susp);
 			printed = true;
 		}
 		if (printed) {
-			if (std::abs(susp) < 9999.95) std::printf(" ");
-			if (std::abs(susp) < 999.95) std::printf(" ");
+			if (std::abs(susp) < 9999.95) std::print(" ");
+			if (std::abs(susp) < 999.95) std::print(" ");
 		}
 	}
 
 	//RESULT AS A p-value
 	if constexpr (true) {// 14 characters?
 		if (result.type == PractRand::TestResult::TYPE_PASSFAIL) {
-			std::printf("  %s      ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
+			std::print("  {}      ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
 		}
 		else if (result.type == PractRand::TestResult::TYPE_RAW) {
-			std::printf("              ");
+			std::print("              ");
 		}
 		else if (result.type == PractRand::TestResult::TYPE_BAD_P || result.type == PractRand::TestResult::TYPE_GOOD_P || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) {
 			double p = result.get_pvalue();
@@ -192,40 +193,40 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 				double dec = ns / (std::numbers::ln10 / std::numbers::ln2);
 				double dig = std::ceil(dec);
 				double sig = std::floor(std::pow(0.1, dec - dig));
-				if (dig > 999) { std::printf(" %d        ", (s > 0) ? 1 : 0); }
+				if (dig > 999) { std::print(" {}        ", (s > 0) ? 1 : 0); }
 				else {
-					if (s > 0) std::printf("1-%1.0fe-%.0f  ", sig, dig);
-					else       std::printf("  %1.0fe-%.0f  ", sig, dig);
-					if (dig < 100) std::printf(" ");
-					if (dig < 10) std::printf(" ");
+					if (s > 0) std::print("1-{:1.0f}e-{:.0f}  ", sig, dig);
+					else       std::print("  {:1.0f}e-{:.0f}  ", sig, dig);
+					if (dig < 100) std::print(" ");
+					if (dig < 10) std::print(" ");
 				}
 			}
-			else if (result.type == PractRand::TestResult::TYPE_GOOD_P) { std::printf("%5.3f     ", p); }
-			else if (a >= 0.4) {                          std::printf("%4.2f      ", p); }
-			else {                                        std::printf("%3.1f       ", p); }
+			else if (result.type == PractRand::TestResult::TYPE_GOOD_P) { std::print("{:5.3f}     ", p); }
+			else if (a >= 0.4) {                          std::print("{:4.2f}      ", p); }
+			else {                                        std::print("{:3.1f}       ", p); }
 		}
 		else if (result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_GOOD_S) {
 			double s = result.get_suspicion();
 			double p = result.get_pvalue();
 			std::printf((result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) ? "p~=" : "p =");
-			if (p >= 0.01 && p <= 0.99) { std::printf(" %.3f     ", p); }
+			if (p >= 0.01 && p <= 0.99) { std::print(" {:.3f}     ", p); }
 			else {
 				double ns = std::abs(s) + 1;
 				double dec = ns / (std::numbers::ln10 / std::numbers::ln2);
 				double dig = std::ceil(dec);
 				double sig = std::pow(0.1, dec - dig);
 				sig = std::floor(sig * 10) * 0.1;
-				if (dig > 9999) { std::printf(" %d         ", (s > 0) ? 1 : 0); }
+				if (dig > 9999) { std::print(" {}         ", (s > 0) ? 1 : 0); }
 				else if (dig > 999) {
 					sig = std::floor(sig);
-					if (s > 0) std::printf("1-%1.0fe-%.0f  ", sig, dig);
-					else       std::printf("  %1.0fe-%.0f  ", sig, dig);
+					if (s > 0) std::print("1-{:1.0f}e-{:.0f}  ", sig, dig);
+					else       std::print("  {:1.0f}e-{:.0f}  ", sig, dig);
 				}
 				else {
-					if (s > 0) std::printf("1-%3.1fe-%.0f ", sig, dig);
-					else       std::printf("  %3.1fe-%.0f ", sig, dig);
-					if (dig < 100) std::printf(" ");
-					if (dig < 10) std::printf(" ");
+					if (s > 0) std::print("1-{:3.1f}e-{:.0f} ", sig, dig);
+					else       std::print("  {:3.1f}e-{:.0f} ", sig, dig);
+					if (dig < 100) std::print(" ");
+					if (dig < 10) std::print(" ");
 				}
 			}
 		}
@@ -253,24 +254,24 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 			the most extreme failures get a sequence of exclamation marks to distinguish them
 		*/
 		if constexpr (false) ;
-		else if (rs >999) std::printf("  FAIL !!!!!!!!  ");
-		else if (rs >325) std::printf("  FAIL !!!!!!!   ");
-		else if (rs >165) std::printf("  FAIL !!!!!!    ");
-		else if (rs > 85) std::printf("  FAIL !!!!!     ");
-		else if (rs > 45) std::printf("  FAIL !!!!      ");
-		else if (rs > 25) std::printf("  FAIL !!!       ");
-		else if (rs > 17) std::printf("  FAIL !!        ");
-		else if (rs > 12) std::printf("  FAIL !         ");
-		else if (rs >8.5) std::printf("  FAIL           ");
-		else if (rs >6.0) std::printf(" VERY SUSPICIOUS ");
-		else if (rs >4.0) std::printf("very suspicious  ");
-		else if (rs >3.0) std::printf("suspicious       ");
-		else if (rs >2.0) std::printf("mildly suspicious");
-		else if (rs >1.0) std::printf("unusual          ");
-		else if (rs >0.0) std::printf("normalish       ");
-		else              std::printf("normal           ");
+		else if (rs >999) std::print("  FAIL !!!!!!!!  ");
+		else if (rs >325) std::print("  FAIL !!!!!!!   ");
+		else if (rs >165) std::print("  FAIL !!!!!!    ");
+		else if (rs > 85) std::print("  FAIL !!!!!     ");
+		else if (rs > 45) std::print("  FAIL !!!!      ");
+		else if (rs > 25) std::print("  FAIL !!!       ");
+		else if (rs > 17) std::print("  FAIL !!        ");
+		else if (rs > 12) std::print("  FAIL !         ");
+		else if (rs >8.5) std::print("  FAIL           ");
+		else if (rs >6.0) std::print(" VERY SUSPICIOUS ");
+		else if (rs >4.0) std::print("very suspicious  ");
+		else if (rs >3.0) std::print("suspicious       ");
+		else if (rs >2.0) std::print("mildly suspicious");
+		else if (rs >1.0) std::print("unusual          ");
+		else if (rs >0.0) std::print("normalish       ");
+		else              std::print("normal           ");
 	}
-	std::printf("\n");
+	std::println("");
 	return rs;
 }
 
@@ -279,33 +280,33 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 const char* seed_str = nullptr;
 
 void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
-	std::printf("rng=%s", tman->get_rng()->get_name().c_str());
+	std::print("rng={}", tman->get_rng()->get_name());
 
-	std::printf(", seed=");
+	std::print(", seed=");
 	if (tman->get_rng()->get_flags() & PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED) {
-		if (seed_str) std::printf("%s", seed_str);
-		else std::printf("unknown");
+		if (seed_str) std::print("{}", seed_str);
+		else std::print("unknown");
 	}
 	else {
-		if (seed >> 32) std::printf("0x%lx%08lx", long(seed >> 32), long(seed & 0xFFffFFff));
-		else std::printf("0x%lx", long(seed));
+		if (seed >> 32) std::print("0x{:x}{:08x}", long(seed >> 32), long(seed & 0xFFffFFff));
+		else std::print("0x{:x}", long(seed));
 	}
-	std::printf("\n");
+	std::println("");
 
-	std::printf("length= ");
+	std::print("length= ");
 	Uint64 length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
 	double log2b = std::log(double(length)) / std::numbers::ln2;
 	const char* unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
 	int units = int(std::floor(log2b / 10)) - 1;
-	if (units < 0 || units > 5) {std::printf("internal error: length out of bounds?\n");std::exit(1);}
+	if (units < 0 || units > 5) {std::println("internal error: length out of bounds?");std::exit(1);}
 	if (length & (length-1))
-		std::printf("%.3f %ss", length * std::pow(0.5,units*10.0+10), unitstr[units] );
-	else std::printf("%.0f %s%s", length * std::pow(0.5,units*10.0+10), unitstr[units], length != (Uint64(1024)<<(units*10)) ? "s" : "" );
-	if (length & (length-1)) std::printf(" (2^%.3f", log2b - (mode?3:0)); else std::printf(" (2^%.0f", log2b - (mode?3:0));
+		std::print("{:.3f} {}s", length * std::pow(0.5,units*10.0+10), unitstr[units] );
+	else std::print("{:.0f} {}{}", length * std::pow(0.5,units*10.0+10), unitstr[units], length != (Uint64(1024)<<(units*10)) ? "s" : "" );
+	if (length & (length-1)) std::print(" (2^{:.3f}", log2b - (mode?3:0)); else std::print(" (2^{:.0f}", log2b - (mode?3:0));
 	const char* mode_unit_names[3] = {"bytes", "seeds", "entropy strings"};
-	std::printf(" %s), time= ", mode_unit_names[mode]);
-	if (time < 99.95) std::printf("%.1f seconds\n", time);
-	else std::printf("%.0f seconds\n", time);
+	std::print(" {}), time= ", mode_unit_names[mode]);
+	if (time < 99.95) std::println("{:.1f} seconds", time);
+	else std::println("{:.0f} seconds", time);
 
 	std::vector<PractRand::TestResult> results;
 	tman->get_results(results);
@@ -316,7 +317,7 @@ void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool
 		if (weight < min_weight) min_weight = weight;
 	}
 	if (min_weight <= 0) {
-		std::printf("error: result weight too small\n");
+		std::println("error: result weight too small");
 		std::exit(1);
 	}
 	std::vector<int> marked;
@@ -339,10 +340,10 @@ void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool
 	if (marked.size() == results.size())
 		;
 	else if (marked.empty())
-		std::printf("  no anomalies in %d test result(s)\n", int(results.size()));
+		std::println("  no anomalies in {} test result(s)", int(results.size()));
 	else
-		std::printf("  ...and %d test result(s) without anomalies\n", int(results.size() - marked.size()));
-	std::printf("\n");
+		std::println("  ...and {} test result(s) without anomalies", int(results.size() - marked.size()));
+	std::println("");
 	(void)std::fflush(stdout);
 	if (end_on_failure && biggest_decimal_suspicion > 8.5) {
 		std::exit(0);
@@ -478,165 +479,165 @@ int lookup_te_value(int te) {
 int main(int argc, char** argv) {
 	PractRand::initialize_PractRand();
 	PractRand::hook_error_handler(PractRand::print_err);
-	std::printf("RNG_test using PractRand version %s\n", PractRand::version_str);
+	std::println("RNG_test using PractRand version {}", PractRand::version_str);
 #ifdef _WIN32 // needed to allow binary stdin on windows
 	_setmode( _fileno(stdin), _O_BINARY);
 #endif
 	if (argc <= 1) {
-		std::printf("usage: %s RNG_name [options]  --  runs tests on RNG_name\n", argv[0]);
-		std::printf("or: %s -help  --  displays more instructions\n", argv[0]);
-		std::printf("or: %s -version  --  displays version information\n", argv[0]);
-		std::printf("RNG_name can be the name of any PractRand recommended RNG (example: sfc16) or\n");
-		std::printf("non-recommended RNG (example: mm32) or transformed RNG (exmple: SShrink(sfc16).\n");
+		std::println("usage: {} RNG_name [options]  --  runs tests on RNG_name", argv[0]);
+		std::println("or: {} -help  --  displays more instructions", argv[0]);
+		std::println("or: {} -version  --  displays version information", argv[0]);
+		std::println("RNG_name can be the name of any PractRand recommended RNG (example: sfc16) or");
+		std::println("non-recommended RNG (example: mm32) or transformed RNG (exmple: SShrink(sfc16).");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		std::printf("Alternatively, use stdin as an RNG name to read raw binay data piped in from an\n");
-		std::printf("external RNG.\n");
-		std::printf("options available include -a, -e, -p, -tf, -te, -ttnormal, -ttseed64, -ttep,\n");
-		std::printf("-tlmin, -tlmax, -tlshow, -multithreaded, -singlethreaded, and -seed.\n");
-		std::printf("For more information run: %s -help\n\n", argv[0]);
+		std::println("Alternatively, use stdin as an RNG name to read raw binay data piped in from an");
+		std::println("external RNG.");
+		std::println("options available include -a, -e, -p, -tf, -te, -ttnormal, -ttseed64, -ttep,");
+		std::println("-tlmin, -tlmax, -tlshow, -multithreaded, -singlethreaded, and -seed.");
+		std::println("For more information run: {} -help\n", argv[0]);
 		std::exit(0);
 	}
 	if (!strcmp(argv[1], "-version") || !strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
-		std::printf("RNG_test version %s\n", PractRand::version_str);
+		std::println("RNG_test version {}", PractRand::version_str);
 		// arbitrarily declaring the version number of RNG_test to match the version number of PractRand
-		std::printf("A command line tool for testing RNGs with the PractRand library.\n");
+		std::println("A command line tool for testing RNGs with the PractRand library.");
 		std::exit(0);
 	}
 	if (!strcmp(argv[1], "-help") || !strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
-		std::printf("syntax: %s RNG_name [options]\n", argv[0]);
-		std::printf("or: %s -help (to see this message)\n", argv[0]);
-		std::printf("or: %s -version (to see version number)\n", argv[0]);
-		std::printf("A command line tool for testing RNGs with the PractRand library.\n");
-		std::printf("RNG names:\n");
-		std::printf("  To use an external RNG, use stdin as an RNG name and pipe in the random\n");
-		std::printf("  numbers.  stdin8, stdin16, stdin32, and stdin64 also work, each interpretting\n");
-		std::printf("  the input in slightly different ways.  Use stdin if you're uncertain how many\n");
+		std::println("syntax: {} RNG_name [options]", argv[0]);
+		std::println("or: {} -help (to see this message)", argv[0]);
+		std::println("or: {} -version (to see version number)", argv[0]);
+		std::println("A command line tool for testing RNGs with the PractRand library.");
+		std::println("RNG names:");
+		std::println("  To use an external RNG, use stdin as an RNG name and pipe in the random");
+		std::println("  numbers.  stdin8, stdin16, stdin32, and stdin64 also work, each interpretting");
+		std::println("  the input in slightly different ways.  Use stdin if you're uncertain how many");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		std::printf("  bits the RNG produces at a time, or if it's not one of those options.\n");
-		std::printf("  The lowest quality recommended RNGs are sfc16 and mt19937.\n");
-		std::printf("  The entropy pooling RNGs available are arbee and sha2_basd_pool.\n");
-		std::printf("  Small recommended RNGs include sfc16, sfc32, sfc64, jsf32, jsf64, .\n");
-		std::printf("threshold options:\n");
-		std::printf(" At most one threshold option should be specified.\n");
+		std::println("  bits the RNG produces at a time, or if it's not one of those options.");
+		std::println("  The lowest quality recommended RNGs are sfc16 and mt19937.");
+		std::println("  The entropy pooling RNGs available are arbee and sha2_basd_pool.");
+		std::println("  Small recommended RNGs include sfc16, sfc32, sfc64, jsf32, jsf64, .");
+		std::println("threshold options:");
+		std::println(" At most one threshold option should be specified.");
 		//std::printf(" The default threshold setting is '-e 0.1', an alternative is '-p 0.001'\n");
-		std::printf(" The default threshold setting is '-e 0.1', alternatives are '-p 0.001' or '-a'\n");
-		std::printf("  -a             no threshold - display all test results.\n");
-		std::printf("  -e EXPECTED    sets intelligent p-value thesholds to display an expected\n");
-		std::printf("                 number of test results equal to EXPECTED.  If EXPECTED is zero\n");
-		std::printf("                 or less then intelligent p-value thresholds will be disabled\n");
-		std::printf("                 EXPECTED is a float with default value 0.1\n");
-		std::printf("  -p THRESHOLD   sets simple p-value thresholds to display any test results\n");
-		std::printf("                 within THRESHOLD of an extrema.  If THRESHOLD is zero or less\n");
-		std::printf("                 then simple p-value thresholds will be disabled\n");
-		std::printf("                 THRESHOLD is a float with recommended value 0.001\n");
-		std::printf("test set options:\n");
-		std::printf(" The default test set options are '-tf 1' and '-te 0'\n");
-		std::printf("  -tf FOLDING    FOLDING may be 0, 1, or 2.  0 means that the base tests are\n");
-		std::printf("                 run on only the raw test data.  1 means that the base tests\n");
-		std::printf("                 are run on the raw test data and also on a simple transform\n");
-		std::printf("                 that emphasizes the lowest bits.  2 means that the base tests\n");
-		std::printf("                 are run on a wider variety of transforms of the test data.\n");
-		std::printf("  -te EXPANDED   EXPANDED may be 0 or 1.  0 means that the base tests used are\n");
-		std::printf("                 the normal ones for PractRand, optimized for sensitivity per\n");
-		std::printf("                 time.  1 means that the expanded test set is used, optimized\n");
-		std::printf("                 for sensitivity per bit.\n");
-		std::printf("                 ... and now additional value(s) are supported.  Setting this\n");
-		std::printf("                 to 10 will use an systematically expanding Birthday Spacings\n");
-		std::printf("                 Test in place of a normal test set.  This test is separate\n");
-		std::printf("                 because it uses too much memory to run concurrently with other\n");
-		std::printf("                 tests\n");
-		std::printf("test target options:\n");
-		std::printf(" At most one test target option should be specified.\n");
-		std::printf(" The default test target option is '-ttnormal'\n");
-		std::printf("  -ttnormal      Test target: normal - the testing is done on the RNGs output.\n");
-		std::printf("  -ttseed64      Test target: RNG seeding from 64 bit integers.  First, the RNG\n");
-		std::printf("                 is seeded with a randomly chosen 64 bit integer.  Then 8 bytes\n");
-		std::printf("                 of output are taken from the RNG and given to the tests.  Then\n");
-		std::printf("                 another seed is chosen at a low hamming distance from the\n");
-		std::printf("                 prior seed and another 8 bytes of RNG output are given to the\n");
-		std::printf("                 tests.\n");
-		std::printf("                 This is repeated indefinitely, with care taken to minimize\n");
-		std::printf("                 the amount of duplicate seeds used.\n");
+		std::println(" The default threshold setting is '-e 0.1', alternatives are '-p 0.001' or '-a'");
+		std::println("  -a             no threshold - display all test results.");
+		std::println("  -e EXPECTED    sets intelligent p-value thesholds to display an expected");
+		std::println("                 number of test results equal to EXPECTED.  If EXPECTED is zero");
+		std::println("                 or less then intelligent p-value thresholds will be disabled");
+		std::println("                 EXPECTED is a float with default value 0.1");
+		std::println("  -p THRESHOLD   sets simple p-value thresholds to display any test results");
+		std::println("                 within THRESHOLD of an extrema.  If THRESHOLD is zero or less");
+		std::println("                 then simple p-value thresholds will be disabled");
+		std::println("                 THRESHOLD is a float with recommended value 0.001");
+		std::println("test set options:");
+		std::println(" The default test set options are '-tf 1' and '-te 0'");
+		std::println("  -tf FOLDING    FOLDING may be 0, 1, or 2.  0 means that the base tests are");
+		std::println("                 run on only the raw test data.  1 means that the base tests");
+		std::println("                 are run on the raw test data and also on a simple transform");
+		std::println("                 that emphasizes the lowest bits.  2 means that the base tests");
+		std::println("                 are run on a wider variety of transforms of the test data.");
+		std::println("  -te EXPANDED   EXPANDED may be 0 or 1.  0 means that the base tests used are");
+		std::println("                 the normal ones for PractRand, optimized for sensitivity per");
+		std::println("                 time.  1 means that the expanded test set is used, optimized");
+		std::println("                 for sensitivity per bit.");
+		std::println("                 ... and now additional value(s) are supported.  Setting this");
+		std::println("                 to 10 will use an systematically expanding Birthday Spacings");
+		std::println("                 Test in place of a normal test set.  This test is separate");
+		std::println("                 because it uses too much memory to run concurrently with other");
+		std::println("                 tests");
+		std::println("test target options:");
+		std::println(" At most one test target option should be specified.");
+		std::println(" The default test target option is '-ttnormal'");
+		std::println("  -ttnormal      Test target: normal - the testing is done on the RNGs output.");
+		std::println("  -ttseed64      Test target: RNG seeding from 64 bit integers.  First, the RNG");
+		std::println("                 is seeded with a randomly chosen 64 bit integer.  Then 8 bytes");
+		std::println("                 of output are taken from the RNG and given to the tests.  Then");
+		std::println("                 another seed is chosen at a low hamming distance from the");
+		std::println("                 prior seed and another 8 bytes of RNG output are given to the");
+		std::println("                 tests.");
+		std::println("                 This is repeated indefinitely, with care taken to minimize");
+		std::println("                 the amount of duplicate seeds used.");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		std::printf("  -ttep          Test target: Entropy pooling.  This should only be done on\n");
-		std::printf("                 RNGs that support entropy pooling.  It is similar to\n");
-		std::printf("                 -ttseed64, but the entropy accumulation methods are used\n");
-		std::printf("                 instead of simple seeding, and the amount of entropy used is\n");
-		std::printf("                 much larger.\n");
-		std::printf("  -walk_sequence  Some test-target modes will search seeds sequentially,\n");
-		std::printf("                  each subsequent seed 1 higher than the previous.\n");
-		std::printf("  -walk_greycode  Some test-target modes will search seeds in a simple\n");
-		std::printf("                  greycoded sequence, each subsequent seed at Hamming\n");
-		std::printf("                  distance 1 from the prior in a strict order.\n");
-		std::printf("  -walk_random    Some test-target modes will search seeds in a random walk,\n");
-		std::printf("                  each subsequent seed chosen at random from unused values\n");
-		std::printf("                  at Hamming distance 1 from the prior value.\n");
-		std::printf("  -walk_random_l  Some test-target modes will search seeds in a random walk,\n");
-		std::printf("                  each subsequent seed chosen at random from unused values\n");
-		std::printf("                  at Hamming distance 1 from the prior value, but lower bits\n");
-		std::printf("                  will be changed much more often than higher bits.\n");
-		std::printf("  -walk_random_h  Some test-target modes will search seeds in a random walk,\n");
-		std::printf("                  each subsequent seed chosen at random from unused values\n");
-		std::printf("                  at Hamming distance 1 from the prior value, but higher bits\n");
-		std::printf("                  will be changed much more often than lower bits.\n");
-		std::printf("test length options:\n");
-		std::printf("  -tlmin LENGTH  sets the minimum test length to LENGTH.  The tests will run on\n");
-		std::printf("                 that much data before it starts printing regular results.  A\n");
-		std::printf("                 large minimum will prevent it from displaying results on any\n");
-		std::printf("                 test lengths other than the maximum length (set by tlmax) and\n");
-		std::printf("                 lengths that were explicitly requested (by tlshow).\n");
-		std::printf("                 See notes on lengths for details on how to express the length\n");
-		std::printf("                 you want.\n");
-		std::printf("                 The default minimum is 1.5 seconds (-tlmin 1.5s).\n");
-		std::printf("  -tlmax LENGTH  sets the maximum test length to LENGTH.  The tests will stop\n");
-		std::printf("                 after that much data.  See notes on lengths for details on how\n");
-		std::printf("                 to express the length you want.\n");
-		std::printf("                 The default maximum is 32 tebibytes (-tlmax 32TB).\n");
-		std::printf("  -tlshow LENGTH sets an additional point at which to display interim results.\n");
-		std::printf("                 You can set multiple such points if desired.\n");
-		std::printf("                 These are in addition to the normal interim results points,\n");
-		std::printf("                 which are at every amount of data that is a power of 2 after\n");
-		std::printf("                 the minimum and before the maximum.\n");
-		std::printf("                 See the notes on lengths for details on how to express the\n");
-		std::printf("                 lengths you want.\n");
-		std::printf("  -tlfail        Halts testing after interim results are displayed if those\n");
-		std::printf("                 results include any failures. (default)\n");
-		std::printf("  -tlmaxonly     The opposite of -tlfail\n");
-		std::printf("other options:\n");
-		std::printf("  -multithreaded  enables multithreaded testing.  Typically up to 5 cores can\n");
-		std::printf("                  be used at once.\n");
-		std::printf("  -singlethreaded disables multithreaded testing.  (default)\n");
-		std::printf("  -seed SEED      specifies a 64 bit integer to seed the tested RNG with.  If\n");
-		std::printf("                  no seed is specified then a seed will be chosen randomly.\n");
-		std::printf("                  The value should be expressed in hexadecimal.  An '0x' prefix\n");
-		std::printf("                  on the seed is acceptable but not necessary.\n");
-		std::printf("notes on lengths:\n");
+		std::println("  -ttep          Test target: Entropy pooling.  This should only be done on");
+		std::println("                 RNGs that support entropy pooling.  It is similar to");
+		std::println("                 -ttseed64, but the entropy accumulation methods are used");
+		std::println("                 instead of simple seeding, and the amount of entropy used is");
+		std::println("                 much larger.");
+		std::println("  -walk_sequence  Some test-target modes will search seeds sequentially,");
+		std::println("                  each subsequent seed 1 higher than the previous.");
+		std::println("  -walk_greycode  Some test-target modes will search seeds in a simple");
+		std::println("                  greycoded sequence, each subsequent seed at Hamming");
+		std::println("                  distance 1 from the prior in a strict order.");
+		std::println("  -walk_random    Some test-target modes will search seeds in a random walk,");
+		std::println("                  each subsequent seed chosen at random from unused values");
+		std::println("                  at Hamming distance 1 from the prior value.");
+		std::println("  -walk_random_l  Some test-target modes will search seeds in a random walk,");
+		std::println("                  each subsequent seed chosen at random from unused values");
+		std::println("                  at Hamming distance 1 from the prior value, but lower bits");
+		std::println("                  will be changed much more often than higher bits.");
+		std::println("  -walk_random_h  Some test-target modes will search seeds in a random walk,");
+		std::println("                  each subsequent seed chosen at random from unused values");
+		std::println("                  at Hamming distance 1 from the prior value, but higher bits");
+		std::println("                  will be changed much more often than lower bits.");
+		std::println("test length options:");
+		std::println("  -tlmin LENGTH  sets the minimum test length to LENGTH.  The tests will run on");
+		std::println("                 that much data before it starts printing regular results.  A");
+		std::println("                 large minimum will prevent it from displaying results on any");
+		std::println("                 test lengths other than the maximum length (set by tlmax) and");
+		std::println("                 lengths that were explicitly requested (by tlshow).");
+		std::println("                 See notes on lengths for details on how to express the length");
+		std::println("                 you want.");
+		std::println("                 The default minimum is 1.5 seconds (-tlmin 1.5s).");
+		std::println("  -tlmax LENGTH  sets the maximum test length to LENGTH.  The tests will stop");
+		std::println("                 after that much data.  See notes on lengths for details on how");
+		std::println("                 to express the length you want.");
+		std::println("                 The default maximum is 32 tebibytes (-tlmax 32TB).");
+		std::println("  -tlshow LENGTH sets an additional point at which to display interim results.");
+		std::println("                 You can set multiple such points if desired.");
+		std::println("                 These are in addition to the normal interim results points,");
+		std::println("                 which are at every amount of data that is a power of 2 after");
+		std::println("                 the minimum and before the maximum.");
+		std::println("                 See the notes on lengths for details on how to express the");
+		std::println("                 lengths you want.");
+		std::println("  -tlfail        Halts testing after interim results are displayed if those");
+		std::println("                 results include any failures. (default)");
+		std::println("  -tlmaxonly     The opposite of -tlfail");
+		std::println("other options:");
+		std::println("  -multithreaded  enables multithreaded testing.  Typically up to 5 cores can");
+		std::println("                  be used at once.");
+		std::println("  -singlethreaded disables multithreaded testing.  (default)");
+		std::println("  -seed SEED      specifies a 64 bit integer to seed the tested RNG with.  If");
+		std::println("                  no seed is specified then a seed will be chosen randomly.");
+		std::println("                  The value should be expressed in hexadecimal.  An '0x' prefix");
+		std::println("                  on the seed is acceptable but not necessary.");
+		std::println("notes on lengths:");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		std::printf("  Each of the test length options requires a field named LENGTH.  These fields\n");
-		std::printf("  can accept either an amount of time or an amount of data.  In either case,\n");
-		std::printf("  several types of units are supported.\n");
-		std::printf("  A time should be expressed as a number postfixed with either s, m, h, or d,\n");
-		std::printf("  to express a number of seconds, minutes, hours, or days.\n");
-		std::printf("  example: -tlmin 1.4s (sets the minimum test length to 1.4 seconds)\n");
-		std::printf("  An amount of data can be expressed as a number with no postfix, in which case\n");
-		std::printf("  the number will be treated as the log-based-2 of the amount of bytes to test\n");
-		std::printf("  (in normal target mode) or the log-baed-2 of the number of seeds or strings\n");
-		std::printf("  to test in alternate test target modes.\n");
-		std::printf("  example: -tlmin 23 (sets the minimum test length to 8 mebibytes or 8\n");
-		std::printf("    million seeds, depending upon test target mode)\n");
-		std::printf("  Alternatively, an amount of data can be expressed as a number followed by\n");
-		std::printf("  KB, MB, GB, TB, or PB for kibibytes, mebibytes, gibibytes, tebibytes, or pebibytes.\n");
-		std::printf("  example: -tlmin 14KB (sets the minimum test length to 14 kibibytes\n");
-		std::printf("  If the B is omitted on KB, MB, GB, TB, or PB then it treats the metric\n");
-		std::printf("  prefixes as refering to numbers of bytes in normal test target mode, or\n");
-		std::printf("  numbers of seeds in seeding test target mode, or numbers of strings in\n");
-		std::printf("  entropy pooling test target mode.\n");
-		std::printf("  example: -tlmin 40M (sets the minimum test length to ~40 mebibytes or ~40\n");
-		std::printf("    million seeds, depending upon test target mode)\n");
-		std::printf("  A minor detail: I use binary prefixes (in which K means 1024 when\n");
-		std::printf("  dealing with quantities of binary information) not metric prefixes (in\n");
-		std::printf("  which K means 1000 no matter what is being dealt with, unless an 'i' follows\n");
-		std::printf("  the 'K').\n");
+		std::println("  Each of the test length options requires a field named LENGTH.  These fields");
+		std::println("  can accept either an amount of time or an amount of data.  In either case,");
+		std::println("  several types of units are supported.");
+		std::println("  A time should be expressed as a number postfixed with either s, m, h, or d,");
+		std::println("  to express a number of seconds, minutes, hours, or days.");
+		std::println("  example: -tlmin 1.4s (sets the minimum test length to 1.4 seconds)");
+		std::println("  An amount of data can be expressed as a number with no postfix, in which case");
+		std::println("  the number will be treated as the log-based-2 of the amount of bytes to test");
+		std::println("  (in normal target mode) or the log-baed-2 of the number of seeds or strings");
+		std::println("  to test in alternate test target modes.");
+		std::println("  example: -tlmin 23 (sets the minimum test length to 8 mebibytes or 8");
+		std::println("    million seeds, depending upon test target mode)");
+		std::println("  Alternatively, an amount of data can be expressed as a number followed by");
+		std::println("  KB, MB, GB, TB, or PB for kibibytes, mebibytes, gibibytes, tebibytes, or pebibytes.");
+		std::println("  example: -tlmin 14KB (sets the minimum test length to 14 kibibytes");
+		std::println("  If the B is omitted on KB, MB, GB, TB, or PB then it treats the metric");
+		std::println("  prefixes as refering to numbers of bytes in normal test target mode, or");
+		std::println("  numbers of seeds in seeding test target mode, or numbers of strings in");
+		std::println("  entropy pooling test target mode.");
+		std::println("  example: -tlmin 40M (sets the minimum test length to ~40 mebibytes or ~40");
+		std::println("    million seeds, depending upon test target mode)");
+		std::println("  A minor detail: I use binary prefixes (in which K means 1024 when");
+		std::println("  dealing with quantities of binary information) not metric prefixes (in");
+		std::println("  which K means 1000 no matter what is being dealt with, unless an 'i' follows");
+		std::println("  the 'K').");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
 		std::exit(0);
 	}
@@ -675,37 +676,37 @@ int main(int argc, char** argv) {
 			threshold = 1;
 		}
 		else if (!std::strcmp(argv[i], "-e")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			smart_thresholds = true;
 			if (!parse_number(argv[++i], threshold) || threshold < 0.000001 || threshold > 1000) {
-				std::printf("invalid smart threshold: -e %s (must be between 0.000001 and 1000)\n", argv[i]);
+				std::println("invalid smart threshold: -e {} (must be between 0.000001 and 1000)", argv[i]);
 				std::exit(0);
 			}
 		}
 		else if (!std::strcmp(argv[i], "-p")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			smart_thresholds = false;
 			if (!parse_number(argv[++i], threshold) || threshold < 0.0000000001 || threshold > 1.0) {
-				std::printf("invalid p-value threshold: -p %s (must be between 0.0000000001 and 1)\n", argv[i]);
+				std::println("invalid p-value threshold: -p {} (must be between 0.0000000001 and 1)", argv[i]);
 				std::exit(0);
 			}
 		}
 		//-tf FOLDING
 		//-te EXPANDED
 		else if (!std::strcmp(argv[i], "-tf")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			if (!parse_number(argv[++i], folding) || folding < 0 || folding > 2) {
-				std::printf("invalid folding test set value: -tf %s\n", argv[i]);
+				std::println("invalid folding test set value: -tf {}", argv[i]);
 				std::exit(0);
 			}
 		}
 		else if (!std::strcmp(argv[i], "-te")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			int expanded = 0;
 			if (parse_number(argv[++i], expanded)) test_set_index = lookup_te_value(expanded);//0 maps to 0, but other values may not map to themselves
 			else test_set_index = -1;
 			if (test_set_index == -1) {
-				std::printf("invalid expanded test set value: -te %s\n", argv[i]);
+				std::println("invalid expanded test set value: -te {}", argv[i]);
 				std::exit(0);
 			}
 		}
@@ -733,11 +734,11 @@ int main(int argc, char** argv) {
 		else if (!std::strcmp(argv[i], "-singlethreaded")) { use_multithreading = false; }
 		else if (!std::strcmp(argv[i], "-skip_selftest")) { do_self_test = false; }
 		else if (!std::strcmp(argv[i], "-seed")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			seed_str = argv[++i];
 		}
 		else {
-			std::printf("unrecognized parameter: %s\naborting\n", argv[i]);
+			std::println("unrecognized parameter: {}\naborting", argv[i]);
 			std::exit(0);
 		}
 	}
@@ -759,21 +760,21 @@ int main(int argc, char** argv) {
 		int params_left = argc - i - 1;
 		if constexpr (false) { ; }
 		else if (!std::strcmp(argv[i], "-tlmin")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			double length = interpret_length(argv[++i], !mode);
-			if (!length) {std::printf("invalid test length: %s\n", argv[i]);std::exit(0);}
+			if (!length) {std::println("invalid test length: {}", argv[i]);std::exit(0);}
 			show_min = length;
 		}
 		else if (!std::strcmp(argv[i], "-tlmax")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			double length = interpret_length(argv[++i], !mode);
-			if (!length) {std::printf("invalid test length: %s\n", argv[i]);std::exit(0);}
+			if (!length) {std::println("invalid test length: {}", argv[i]);std::exit(0);}
 			show_max = length;
 		}
 		else if (!std::strcmp(argv[i], "-tlshow")) {
-			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
+			if (params_left < 1) {std::println("command line option {} must be followed by a value", argv[i]); std::exit(0);}
 			double length = interpret_length(argv[++i], !mode);
-			if (!length) {std::printf("invalid test length: %s\n", argv[i]);std::exit(0);}
+			if (!length) {std::println("invalid test length: {}", argv[i]);std::exit(0);}
 			if (length < 0) show_times[-length] = TL_SHOW;
 			else show_datas[Uint64(length) / Tests::TestBlock::SIZE] = TL_SHOW;
 		}
@@ -791,7 +792,7 @@ int main(int argc, char** argv) {
 	Uint64 seed = known_good.raw32();//64 bit space, as that's what the interface accepts, but 32 bit random value so that by default it's not too onerous to record/compare/whatever the value by hand
 	if (seed_str && !(rng->get_flags() & PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED)) {
 		if (!interpret_seed(seed_str, seed)) {
-			std::printf("\"%s\" is not a valid 64 bit hexadecimal seed\n", seed_str);
+			std::println("\"{}\" is not a valid 64 bit hexadecimal seed", seed_str);
 			std::exit(0);
 		}
 	}
@@ -810,8 +811,8 @@ int main(int argc, char** argv) {
 	}
 	else if (mode == 2) {
 		if (!(rng->get_flags() & PractRand::RNGs::FLAG::SUPPORTS_ENTROPY_ACCUMULATION)) {
-			std::printf("Entropy pooling is not supported by this RNG, so mode --ttep is invalid.\n");
-			std::printf("aborting\n");
+			std::println("Entropy pooling is not supported by this RNG, so mode --ttep is invalid.");
+			std::println("aborting");
 			std::exit(0);
 		}
 		rng->reset_entropy();
@@ -819,7 +820,7 @@ int main(int argc, char** argv) {
 		rng->reset_entropy();
 		Uint64 b = rng->raw64();
 		if (a != b) {
-			std::printf("entropy pooling RNG \"%s\" failed basic check 1.\naborting\n", rng->get_name().c_str());
+			std::println("entropy pooling RNG \"{}\" failed basic check 1.\naborting", rng->get_name());
 			std::exit(0);
 		}
 		Uint64 s64 = known_good.raw64();
@@ -835,11 +836,11 @@ int main(int argc, char** argv) {
 		Uint64 e1 = rng->raw64();
 		Uint64 e2 = rng->raw64();
 		if (c1 != d) {
-			std::printf("entropy pooling RNG \"%s\" failed basic check 2.\naborting\n", rng->get_name().c_str());
+			std::println("entropy pooling RNG \"{}\" failed basic check 2.\naborting", rng->get_name());
 			std::exit(0);
 		}
 		if (c1 == e1 && c2 == e2) {
-			std::printf("entropy pooling RNG \"%s\" probably failed basic check 3.\naborting\n", rng->get_name().c_str());
+			std::println("entropy pooling RNG \"{}\" probably failed basic check 3.\naborting", rng->get_name());
 			std::exit(0);
 		}
 		rng->seed(seed);
@@ -848,36 +849,36 @@ int main(int argc, char** argv) {
 		testing_rng->seed(seed);
 	}
 	else {
-		std::printf("invalid mode, aborting\n");
+		std::println("invalid mode, aborting");
 		std::exit(1);
 	}
 
-	std::printf("RNG = %s, seed = ", testing_rng->get_name().c_str());
+	std::print("RNG = {}, seed = ", testing_rng->get_name());
 	if (testing_rng->get_flags() & PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED) {
-		if (seed_str) std::printf("%s", seed_str);
-		else std::printf("unknown");
+		if (seed_str) std::print("{}", seed_str);
+		else std::print("unknown");
 	}
 	else {
-		if (seed >> 32) std::printf("0x%lx%08lx", long(seed >> 32), long((seed << 32) >> 32));
-		else std::printf("0x%lx", long(seed));
+		if (seed >> 32) std::print("0x{:x}{:08x}", long(seed >> 32), long((seed << 32) >> 32));
+		else std::print("0x{:x}", long(seed));
 	}
 	const char* folding_names[3] = {"none", "standard", "extra"};
-	std::printf("\ntest set = %s, folding = %s", test_sets[test_set_index].name, folding_names[folding]);
+	std::print("\ntest set = {}, folding = {}", test_sets[test_set_index].name, folding_names[folding]);
 	if (folding == 1) {
 		int native_bits = testing_rng->get_native_output_size();
-		if (native_bits > 0) std::printf(" (%d bit)", native_bits);
-		else std::printf("(unknown format)");
+		if (native_bits > 0) std::print(" ({} bit)", native_bits);
+		else std::print("(unknown format)");
 	}
 
-	std::printf("\n\n");
+	std::println("\n");
 
 	Tests::ListOfTests tests( static_cast<Tests::TestBaseclass*>(nullptr));
-	if (test_set_index == -1) { std::printf("internal error\n"); std::exit(1); }
+	if (test_set_index == -1) { std::println("internal error"); std::exit(1); }
 	if constexpr (false) { ; }
 	else if (folding == 0) { tests = test_sets[test_set_index].callback(); }
 	else if (folding == 1) { tests = Tests::Batteries::apply_standard_foldings(testing_rng, test_sets[test_set_index].callback); }
 	else if (folding == 2) { tests = Tests::Batteries::apply_extended_foldings(test_sets[test_set_index].callback); }
-	else { std::printf("internal error\n"); std::exit(1); }
+	else { std::println("internal error"); std::exit(1); }
 
 //	Tests::ListOfTests tests = Tests::Batteries::get_expanded_standard_tests(rng);
 #if defined MULTITHREADING_SUPPORTED
@@ -918,7 +919,7 @@ int main(int argc, char** argv) {
 				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
 				return 0;
 			}
-			else {std::printf("internal error: unrecognized test length code, aborting\n");std::exit(1);}
+			else {std::println("internal error: unrecognized test length code, aborting");std::exit(1);}
 			show_datas.erase(show_datas.begin());
 		}
 		while (!show_times.empty()) {
@@ -935,7 +936,7 @@ int main(int argc, char** argv) {
 				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
 				return 0;
 			}
-			else {std::printf("internal error: unrecognized test length code, aborting\n");std::exit(1);}
+			else {std::println("internal error: unrecognized test length code, aborting");std::exit(1);}
 		}
 
 		if (blocks_tested == next_power_of_2) {
