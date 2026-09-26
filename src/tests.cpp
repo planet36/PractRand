@@ -10773,9 +10773,9 @@ void PractRand::Tests::LPerm16::test_blocks(TestBlock *data, int numblocks) {
 
 
 
-PractRand::Tests::Transforms::multiplex::multiplex(const char *name_, const ListOfTests &testlist)
+PractRand::Tests::Transforms::multiplex::multiplex(const char *name_, ListOfTests testlist)
 :
-	subtests(testlist)
+	subtests(std::move(testlist))
 {
 //	for (unsigned int i = 0; i < testlist.tests.size(); i++) subtests.push_back(testlist.tests[i]);
 	if (name_) { name = name_; }

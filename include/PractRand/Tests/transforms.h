@@ -9,7 +9,7 @@ namespace PractRand::Tests::Transforms {
 				std::string name;
 				Uint64 blocks_already{};//# of blocks outputed to subtests
 			public:
-				multiplex ( const char *name_, const ListOfTests &testlist );
+				multiplex ( const char *name_, ListOfTests testlist );
 				void init( RNGs::vRNG *known_good ) override;
 
 				//virtual double get_result();

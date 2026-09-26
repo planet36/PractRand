@@ -2,6 +2,7 @@
 
 #include "PractRand/config.h"
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace PractRand {
@@ -23,7 +24,7 @@ namespace PractRand {
 		//  TYPE_PASSFAIL      0 means pass, 1 means fail
 		//  TYPE_UNKNOWN       unusuable result, visible but no clear meaning
 
-		TestResult(const std::string &name_, double raw_, double processed_, int type_, double weight_) : name(name_), raw(raw_), processed(processed_), type(type_), weight(weight_) {}
+		TestResult(std::string name_, double raw_, double processed_, int type_, double weight_) : name(std::move(name_)), raw(raw_), processed(processed_), type(type_), weight(weight_) {}
 		[[nodiscard]] double get_raw() const {return raw;}
 		[[nodiscard]] double get_pvalue() const;
 		[[nodiscard]] double get_suspicion() const;
