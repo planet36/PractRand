@@ -5690,7 +5690,7 @@ void PractRand::Tests::BirthdaySystematic128::get_results(std::vector<TestResult
 	}
 	if (!total_expected_duplicates) return;
 
-	double norm = (total_actual_duplicates - total_expected_duplicates) / std::sqrt(double(total_expected_duplicates));
+	double norm = (total_actual_duplicates - total_expected_duplicates) / std::sqrt(total_expected_duplicates);
 	std::ostringstream buf;
 	buf << get_name();
 	if (BirthdayLamda1::expected_duplicates) buf << ":all";
@@ -5718,7 +5718,7 @@ void PractRand::Tests::BirthdaySystematic128::get_results(std::vector<TestResult
 	}
 
 	buf << "2";
-	double norm2 = score / std::sqrt(double(total_expected_duplicates));
+	double norm2 = score / std::sqrt(total_expected_duplicates);
 	results.emplace_back(buf.str(), norm2, math_normaldist_to_pvalue(-norm2), TestResult::TYPE_BAD_P, 0.125);
 }
 double PractRand::Tests::BirthdaySystematic128::evaluate_score(double lambda, Uint64 num_duplicates) {
