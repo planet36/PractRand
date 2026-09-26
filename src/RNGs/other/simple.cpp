@@ -191,8 +191,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint64 xoroshiro128plus::raw64() {
 					Uint64 result = state0 + state1;
 					Uint64 tmp = state0 ^ state1;
-					state0 = ((state0 << 55) | (state0 >> (64 - 55))) ^ tmp ^ (tmp << 14);
-					state1 = ((tmp << 36) | (tmp >> (64 - 36)));
+					state0 = std::rotl(state0, 55) ^ tmp ^ (tmp << 14);
+					state1 = std::rotl(tmp, 36);
 					return result;
 				}
 				std::string xoroshiro128plus::get_name() const { return "xoroshiro128plus"; }
@@ -213,8 +213,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 								s1 ^= state1;
 							}
 							Uint64 tmp = state0 ^ state1;
-							state0 = ((state0 << 55) | (state0 >> (64 - 55))) ^ tmp ^ (tmp << 14);
-							state1 = ((tmp << 36) | (tmp >> (64 - 36)));
+							state0 = std::rotl(state0, 55) ^ tmp ^ (tmp << 14);
+							state1 = std::rotl(tmp, 36);
 						}
 					}
 					state0 = s0;
@@ -312,8 +312,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					constexpr int SHIFT1 = 15;
 					constexpr int SHIFT2 = 27;
 					Uint32 e = a[d % SIZE];
-					a[d % SIZE] = ((b << SHIFT1) | (b >> (32 - SHIFT1)));
-					b = c + ((d << SHIFT2) | (d >> (32 - SHIFT2)));
+					a[d % SIZE] = std::rotl(b, SHIFT1);
+					b = c + std::rotl(d, SHIFT2);
 					c = d + a[i++ % SIZE];
 					d = e + c;
 					return b;
@@ -404,7 +404,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 tmp = a ^ counter++;
 					a = b + (b << 2);
 					constexpr int BARREL_SHIFT = 5;
-					b = ((b << BARREL_SHIFT) | (b >> (16 - BARREL_SHIFT))) + tmp;
+					b = std::rotl(b, BARREL_SHIFT) + tmp;
 					return a;
 				}
 				std::string sfc_v1_16::get_name() const { return "sfc_v1_16"; }
@@ -417,7 +417,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 tmp = a ^ counter++;
 					a = b + (b << 5);
 					constexpr int BARREL_SHIFT = 12;
-					b = ((b << BARREL_SHIFT) | (b >> (32 - BARREL_SHIFT))) + tmp;
+					b = std::rotl(b, BARREL_SHIFT) + tmp;
 					return a;
 				}
 				std::string sfc_v1_32::get_name() const { return "sfc_v1_32"; }
@@ -430,7 +430,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 tmp = a ^ b;
 					a = b + (b << 2);
 					constexpr int BARREL_SHIFT = 5;
-					b = ((b << BARREL_SHIFT) | (b >> (16 - BARREL_SHIFT))) + tmp + counter++;
+					b = std::rotl(b, BARREL_SHIFT) + tmp + counter++;
 					return tmp;
 				}
 				std::string sfc_v2_16::get_name() const { return "sfc_v2_16"; }
@@ -443,7 +443,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 tmp = a ^ b;
 					a = b + (b << 5);
 					constexpr int BARREL_SHIFT = 12;
-					b = ((b << BARREL_SHIFT) | (b >> (32 - BARREL_SHIFT))) + tmp + counter++;
+					b = std::rotl(b, BARREL_SHIFT) + tmp + counter++;
 					return tmp;
 				}
 				std::string sfc_v2_32::get_name() const { return "sfc_v2_32"; }
@@ -456,7 +456,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 tmp = a + b + counter++;
 					a = b ^ (b >> 2);
 					constexpr int BARREL_SHIFT = 5;
-					b = ((b << BARREL_SHIFT) | (b >> (16 - BARREL_SHIFT))) + tmp;
+					b = std::rotl(b, BARREL_SHIFT) + tmp;
 					return tmp;
 				}
 				std::string sfc_v3_16::get_name() const { return "sfc_v3_16"; }
@@ -469,7 +469,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 tmp = a + b + counter++;
 					a = b ^ (b >> 5);
 					constexpr int BARREL_SHIFT = 12;
-					b = ((b << BARREL_SHIFT) | (b >> (32 - BARREL_SHIFT))) + tmp;
+					b = std::rotl(b, BARREL_SHIFT) + tmp;
 					return tmp;
 				}
 				std::string sfc_v3_32::get_name() const { return "sfc_v3_32"; }
@@ -560,7 +560,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				Uint32 simpleA::raw32() {
 					constexpr int BARREL_SHIFT1 = 19;
-					Uint32 tmp = b ^ ((a << BARREL_SHIFT1) | (a >> (32 - BARREL_SHIFT1)));
+					Uint32 tmp = b ^ std::rotl(a, BARREL_SHIFT1);
 					a = ~b + c;
 					b = c;
 					c += tmp;
@@ -575,10 +575,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 simpleB::raw16() {
 					constexpr int BARREL_SHIFT1 = 3;
 					constexpr int BARREL_SHIFT2 = 5;
-					Uint16 tmp = ((a << BARREL_SHIFT1) | (a >> (16 - BARREL_SHIFT1))) ^ ~b;
+					Uint16 tmp = std::rotl(a, BARREL_SHIFT1) ^ ~b;
 					a = b + c;
 					b = c;
-					c = tmp + ((c << BARREL_SHIFT2) | (c >> (16 - BARREL_SHIFT2)));
+					c = tmp + std::rotl(c, BARREL_SHIFT2);
 					return tmp;
 				}
 				std::string simpleB::get_name() const { return "simpleB"; }
@@ -590,8 +590,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint16 simpleC::raw16() {
 					constexpr int BARREL_SHIFT1 = 3;
 					constexpr int BARREL_SHIFT2 = 5;
-					Uint16 tmp = ((a << BARREL_SHIFT1) | (a >> (16 - BARREL_SHIFT1))) ^ ~b;
-					a = b + ((c << BARREL_SHIFT2) | (c >> (16 - BARREL_SHIFT2)));
+					Uint16 tmp = std::rotl(a, BARREL_SHIFT1) ^ ~b;
+					a = b + std::rotl(c, BARREL_SHIFT2);
 					b = c ^ (c >> 2);
 					c += tmp;
 					return tmp;
@@ -605,7 +605,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 simpleD::raw32() {
 					constexpr int BARREL_SHIFT1 = 19;
 					Uint32 old = a;
-					Uint32 tmp = b ^ ((a << BARREL_SHIFT1) | (a >> (32 - BARREL_SHIFT1)));
+					Uint32 tmp = b ^ std::rotl(a, BARREL_SHIFT1);
 					a = b + c;
 					b = c ^ old;
 					c = old + tmp;

@@ -5,6 +5,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <string>
 
 using namespace PractRand;
@@ -38,7 +39,7 @@ Uint16 PractRand::RNGs::Raw::sfc16::raw16() {
 	Uint16 tmp = a + b + counter++;//49 / 8:30+ / 7:35 / 6:27 / 5:17
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
-	c = ((c << BARREL_SHIFT) | (c >> (16 - BARREL_SHIFT))) + tmp;
+	c = std::rotl(c, BARREL_SHIFT) + tmp;
 	return tmp;
 }
 void PractRand::RNGs::Raw::sfc16::seed(Uint64 s) {
@@ -86,7 +87,7 @@ Uint32 PractRand::RNGs::Raw::sfc32::raw32() {
 	Uint32 tmp = a + b + counter++;
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
-	c = ((c << BARREL_SHIFT) | (c >> (32-BARREL_SHIFT))) + tmp;
+	c = std::rotl(c, BARREL_SHIFT) + tmp;
 	return tmp;
 }
 void PractRand::RNGs::Raw::sfc32::seed(Uint64 s) {
@@ -124,7 +125,7 @@ Uint64 PractRand::RNGs::Raw::sfc64::raw64() {
 	Uint64 tmp = a + b + counter++;
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
-	c = ((c << BARREL_SHIFT) | (c >> (64-BARREL_SHIFT))) + tmp;
+	c = std::rotl(c, BARREL_SHIFT) + tmp;
 	return tmp;
 }
 void PractRand::RNGs::Raw::sfc64::seed(Uint64 s) {
