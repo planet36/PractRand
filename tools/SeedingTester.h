@@ -199,7 +199,7 @@ public:
 	}
 	bool check_conflict(const std::vector<Uint8> &message) {
 		std::vector<Uint8> rewound = current_seed;
-		for (std::deque<std::pair<std::multiset<Uint64>::iterator, Transform> >::iterator it = history.begin(); it != history.end(); it++) {
+		for (auto it = history.begin(); it != history.end(); it++) {
 			//if (message.size() == rewound.size() && !std::memcmp(&message[0], &rewound[0], message.size())) {
 			if (message.size() == rewound.size() && !hamming_distance(&message[0], &rewound[0], message.size())) {
 				return true;

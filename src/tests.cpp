@@ -427,21 +427,21 @@ public:
 		}
 	}
 	Uint64 get_minimum_length(std::string name) {
-		std::map<std::string, std::map< Uint64, TestCalibrationData * > >::iterator dit = data.find(name);
+		auto dit = data.find(name);
 		if (dit == data.end()) return 0;
 		std::map< Uint64, TestCalibrationData * > &ts = dit->second;
 		if (ts.empty()) return 0;
 		return ts.begin()->first;
 	}
 	TestCalibrationData *get_calibration_data(std::string name, Uint64 blocks) {
-		std::map<std::string, std::map< Uint64, TestCalibrationData * > >::iterator dit = data.find(name);
+		auto dit = data.find(name);
 		if (dit == data.end()) return nullptr;
 		std::map< Uint64, TestCalibrationData * > &ts = dit->second;
 		if (ts.empty()) return nullptr;
-		std::map< Uint64, TestCalibrationData * >::iterator current = ts.lower_bound(blocks);
+		auto current = ts.lower_bound(blocks);
 		if (current == ts.end()) return (--current)->second;
 		if (current == ts.begin() || current->first == blocks) return current->second;
-		std::map< Uint64, TestCalibrationData * >::iterator upper = current--;
+		auto upper = current--;
 		double logblocks = std::log(static_cast<double>(blocks));
 		if (std::abs(std::log(static_cast<double>(upper->first)) - logblocks) < std::abs(std::log(static_cast<double>(current->first)) - logblocks)) return upper->second;
 		else return current->second;
@@ -10812,16 +10812,16 @@ bool PractRand::Tests::Transforms::multiplex::recommend_subtest_tree_descent() c
 	return true;
 }
 void PractRand::Tests::Transforms::multiplex::deinit() {
-	for (std::vector<Tests::TestBaseclass*>::iterator it = subtests.tests.begin(); it != subtests.tests.end(); it++)
+	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
 		(*it)->deinit();
 }
 void PractRand::Tests::Transforms::multiplex::init( RNGs::vRNG *known_good ) {
 	blocks_already = 0;
-	for (std::vector<Tests::TestBaseclass*>::iterator it = subtests.tests.begin(); it != subtests.tests.end(); it++)
+	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
 		(*it)->init(known_good);
 }
 PractRand::Tests::Transforms::multiplex::~multiplex ( ) {
-	for (std::vector<Tests::TestBaseclass*>::iterator it = subtests.tests.begin(); it != subtests.tests.end(); it++)
+	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
 		delete (*it);
 	subtests.tests.clear();
 }
@@ -10829,7 +10829,7 @@ std::string PractRand::Tests::Transforms::multiplex::get_name() const {
 	return name.c_str();
 }
 void PractRand::Tests::Transforms::multiplex::test_blocks(TestBlock *data, int numblocks) {
-	for (std::vector<Tests::TestBaseclass*>::iterator it = subtests.tests.begin(); it != subtests.tests.end(); it++)
+	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++)
 		(*it)->test_blocks(data, numblocks);
 	blocks_already += numblocks;
 }
@@ -10856,7 +10856,7 @@ static std::string combine_transform_names(const std::string &prefix, const std:
 }
 void PractRand::Tests::Transforms::multiplex::get_results(std::vector<TestResult> &results) {
 	size_t old_size = results.size();
-	for (std::vector<Tests::TestBaseclass*>::iterator it = subtests.tests.begin(); it != subtests.tests.end(); it++) {
+	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++) {
 		(*it)->get_results(results);
 	}
 	for (size_t i = old_size; i < results.size(); i++) {
@@ -10866,7 +10866,7 @@ void PractRand::Tests::Transforms::multiplex::get_results(std::vector<TestResult
 }
 int PractRand::Tests::Transforms::multiplex::get_blocks_to_repeat() const {
 	int rv = 0;
-	for (std::vector<Tests::TestBaseclass*>::const_iterator it = subtests.tests.begin(); it != subtests.tests.end(); it++) {
+	for (auto it = subtests.tests.begin(); it != subtests.tests.end(); it++) {
 		int x = (*it)->get_blocks_to_repeat();
 		if (rv < x) rv = x;
 	}

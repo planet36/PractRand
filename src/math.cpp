@@ -217,7 +217,7 @@ namespace PractRand {
 					reduced_size -= 1;
 				}
 				int i = 0;
-				for (std::multimap<double,Uint64>::iterator it = indexed.begin(); it != indexed.end(); it++,i++) {
+				for (auto it = indexed.begin(); it != indexed.end(); it++,i++) {
 					prob_table[i] = it->first;
 					counts[i] = it->second;
 				}
@@ -665,7 +665,7 @@ namespace PractRand {
 				//double gamma = std::sqrt(3.141592653589793238) * scale;
 				//return (std::sqrt(3.141592653589793238) * math_erf(std::sqrt(x)) * scale + offset) / gamma;
 				double sum_offsets = 0;
-				for (std::vector<double>::iterator it = ln_offsets.begin(); it != ln_offsets.end(); it++)
+				for (auto it = ln_offsets.begin(); it != ln_offsets.end(); it++)
 					sum_offsets += std::exp(*it - ln_scale);
 				//return math_erf(std::sqrt(x)) + offset / (std::sqrt(3.141592653589793238) * scale);
 				return math_erf(std::sqrt(x)) - sum_offsets / std::sqrt(std::numbers::pi);
@@ -674,7 +674,7 @@ namespace PractRand {
 				//double gamma = scale;
 				//return ((1 - std::exp(-x)) * scale + offset) / gamma;
 				double sum_offsets = 0;
-				for (std::vector<double>::iterator it = ln_offsets.begin(); it != ln_offsets.end(); it++)
+				for (auto it = ln_offsets.begin(); it != ln_offsets.end(); it++)
 					sum_offsets += std::exp(*it - ln_scale);
 				//return (1 - std::exp(-x)) + offset / scale;
 				return (1 - std::exp(-x)) - sum_offsets;

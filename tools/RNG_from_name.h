@@ -194,7 +194,7 @@ namespace RNG_Factories {
 		std::string rng_name;
 		std::vector<std::string> parameters;
 		if (!parse_argument_list(raw, rng_name, parameters)) return nullptr;
-		std::map<std::string, PractRand::RNGs::vRNG *(*)(std::vector<std::string> &params)>::iterator it = RNG_factory_index.find(rng_name);
+		auto it = RNG_factory_index.find(rng_name);
 		if (it == RNG_factory_index.end()) return nullptr;
 		unsigned long os = parameters.size();
 		PractRand::RNGs::vRNG *rng = it->second(parameters);

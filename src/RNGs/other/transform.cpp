@@ -66,14 +66,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void MultiplexTransformRNG::seed(Uint64 seedval) {
 					index = 999999;
-					for (std::vector<vRNG*>::iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
+					for (auto it = source_rngs.begin(); it != source_rngs.end(); it++) {
 						vRNG *vrng = *it;
 						vrng->seed(seedval);
 					}
 				}
 				void MultiplexTransformRNG::seed(vRNG *seeder) {
 					index = 999999;
-					for (std::vector<vRNG*>::iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
+					for (auto it = source_rngs.begin(); it != source_rngs.end(); it++) {
 						vRNG *vrng = *it;
 						vrng->seed(seeder);
 					}
@@ -87,7 +87,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				int MultiplexTransformRNG::get_native_output_size() const {
 					int lowest = 9999, highest = -1;
-					for (std::vector<vRNG*>::const_iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
+					for (auto it = source_rngs.begin(); it != source_rngs.end(); it++) {
 						int ls = (*it)->get_native_output_size();
 						if (ls < lowest) lowest = ls;
 						if (ls > highest) highest = ls;
@@ -98,7 +98,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint64 MultiplexTransformRNG::get_flags() const {
 					auto anded_bits = Uint64(-1);
 					auto ored_bits = Uint64(0);
-					for (std::vector<vRNG*>::const_iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
+					for (auto it = source_rngs.begin(); it != source_rngs.end(); it++) {
 						Uint64 lf = (*it)->get_flags();
 						anded_bits &= lf;
 						ored_bits |= lf;
@@ -109,7 +109,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						(ored_bits & (CRYPTOGRAPHIC_SECURITY | USES_MULTIPLICATION | USES_COMPLEX_INSTRUCTIONS | USES_VARIABLE_SHIFTS | USES_INDIRECTION | USES_CYCLIC_BUFFER | USES_FLOW_CONTROL | USES_BIT_SCANS | USES_OTHER_WORD_SIZES | OUTPUT_IS_HASHED));
 				}
 				void MultiplexTransformRNG::walk_state(StateWalkingObject *walker) {
-					for (std::vector<vRNG*>::const_iterator it = source_rngs.begin(); it != source_rngs.end(); it++) {
+					for (auto it = source_rngs.cbegin(); it != source_rngs.cend(); it++) {
 						(*it)->walk_state(walker);
 					}
 					if (!walker->is_read_only()) index = 999999;
