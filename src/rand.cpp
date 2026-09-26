@@ -22,7 +22,7 @@ namespace PractRand {
 	const char* version_str = "0.95" "-planet36";
 	SEED_AUTO_TYPE SEED_AUTO;
 	SEED_NONE_TYPE SEED_NONE;
-	void print_err(const char* msg) { std::println(stderr, "{}", msg); }
+	void print_err(const char* msg) { std::println(stderr, "{}", msg ? msg : "PractRand: internal error"); }
 	void (*error_callback)(const char*) = nullptr;
 	void issue_error ( const char* msg) {
 		if (error_callback) { error_callback(msg); }
