@@ -17,8 +17,8 @@ namespace PractRand::Tests {
 			Uint32 rate_hl2;
 			Uint64 rate;
 
-			virtual void pick_next_size();
-			virtual void finish_matrix();
+			void pick_next_size();
+			void finish_matrix();
 
 			Uint64 saved_time;
 
