@@ -8,6 +8,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <print>
 #include <set>
 #include <sstream>
 #include <string>
@@ -99,7 +100,7 @@ int main(int argc, char** argv) {
 	Uint64 n = 0;
 	if (_n <= 0 || _n >= 18446744073709551616.0) {
 		if (!strcmp(argv[2], "name")) {
-			std::printf("%s\n", rng->get_name().c_str());
+			std::println("{}", rng->get_name());
 			exit(0);
 		}
 		else if (!strcmp(argv[2], "inf")) {
