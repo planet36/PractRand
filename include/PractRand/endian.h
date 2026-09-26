@@ -1,13 +1,10 @@
 #pragma once
 
 #include "config.h"
+#include <bit>
 
-#if defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN && defined PRACTRAND_TARGET_IS_BIG_ENDIAN
-	#error "PractRand has conflicting endianness settings, see PractRand/config.h"
-#endif
-#if (!defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN) && (!defined PRACTRAND_TARGET_IS_BIG_ENDIAN)
-	#error "PractRand has no endianness setting, see PractRand/config.h"
-#endif
+static_assert(std::endian::native == std::endian::little || std::endian::native == std::endian::big,
+	"PractRand requires a little-endian or big-endian target");
 
 namespace PractRand {
 	static inline Uint16 invert_endianness16(Uint16 v) {return (v >> 8) | (v << 8);}
@@ -20,13 +17,32 @@ namespace PractRand {
 		v = ((v & 0xFFFF0000FFFF0000ULL) >> 16) | ((v & 0x0000ffff0000ffffULL) << 16);
 		return (v >> 32) | (v << 32);
 	}
+	static inline Uint16 little_endian_conversion16 ( Uint16 v ) {
+		if constexpr (std::endian::native == std::endian::little) return v;
+		else return invert_endianness16(v);
+	}
+	static inline Uint32 little_endian_conversion32 ( Uint32 v ) {
+		if constexpr (std::endian::native == std::endian::little) return v;
+		else return invert_endianness32(v);
+	}
+	static inline Uint64 little_endian_conversion64 ( Uint64 v ) {
+		if constexpr (std::endian::native == std::endian::little) return v;
+		else return invert_endianness64(v);
+	}
+	static inline Uint16 big_endian_conversion16 ( Uint16 v ) {
+		if constexpr (std::endian::native == std::endian::big) return v;
+		else return invert_endianness16(v);
+	}
+	static inline Uint32 big_endian_conversion32 ( Uint32 v ) {
+		if constexpr (std::endian::native == std::endian::big) return v;
+		else return invert_endianness32(v);
+	}
+	static inline Uint64 big_endian_conversion64 ( Uint64 v ) {
+		if constexpr (std::endian::native == std::endian::big) return v;
+		else return invert_endianness64(v);
+	}
+#if 0
 #if defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN
-	static inline Uint16 little_endian_conversion16 ( Uint16 v ) {return v;}
-	static inline Uint32 little_endian_conversion32 ( Uint32 v ) {return v;}
-	static inline Uint64 little_endian_conversion64 ( Uint64 v ) {return v;}
-	static inline Uint16 big_endian_conversion16 ( Uint16 v ) {return invert_endianness16(v);}
-	static inline Uint32 big_endian_conversion32 ( Uint32 v ) {return invert_endianness32(v);}
-	static inline Uint64 big_endian_conversion64 ( Uint64 v ) {return invert_endianness64(v);}
 	union split_int_16 {
 		Uint16 whole;
 		struct blah {
@@ -49,12 +65,6 @@ namespace PractRand {
 		} split;
 	};
 #elif defined PRACTRAND_TARGET_IS_BIG_ENDIAN
-	static inline Uint16 big_endian_conversion16 ( Uint16 v ) {return v;}
-	static inline Uint32 big_endian_conversion32 ( Uint32 v ) {return v;}
-	static inline Uint64 big_endian_conversion64 ( Uint64 v ) {return v;}
-	static inline Uint16 little_endian_conversion16 ( Uint16 v ) {return invert_endianness16(v);}
-	static inline Uint32 little_endian_conversion32 ( Uint32 v ) {return invert_endianness32(v);}
-	static inline Uint64 little_endian_conversion64 ( Uint64 v ) {return invert_endianness64(v);}
 	union split_int_16 {
 		Uint16 whole;
 		struct blah {
@@ -76,5 +86,6 @@ namespace PractRand {
 			split_int_32 low32;
 		} split;
 	};
+#endif
 #endif
 }

@@ -493,6 +493,7 @@ namespace PractRand {
 	bool initialize_PractRand() {
 		if (!AutoSeeder::initialized)
 			AutoSeeder::initialize();
+#if 0
 		union {
 			Uint64 as64[1]{};
 			Uint32 as32[2];
@@ -507,6 +508,7 @@ namespace PractRand {
 #endif
 			issue_error("PractRand - endianness configured incorrectly");
 		}
+#endif
 		return AutoSeeder::enough_entropy_found;
 	}
 }

@@ -4,32 +4,12 @@
 
 /*
 Things to configure in this file:
-1.  Endianness (usually CPU dependent)
-2.  Integer types (compiler and CPU dependent)
-3.  SIMD (compiler and CPU dependent, only used by ChaCha)
+1.  Integer types (compiler and CPU dependent)
+2.  SIMD (compiler and CPU dependent, only used by ChaCha)
 */
 
 /*
-1.  Endianness:
-	The choices are little-endian and big-endian.  x86 CPUs are little-endian,
-as are ARM, ALPHA, and IA64/Itanium.  MIPs CPUs are big-endian, as are Sparcs,
-PA-RISC, 68k, and almost all PPC and Power.
-	See http://en.wikipedia.org/wiki/Endianness for more information.
-	PractRand does not care about endianness for floating point values, only
-for integer values, so if your CPU and FPU are at odds, go with the CPU.
-	Exactly one of the two endiannesses must be defined or PractRand will not
-compile.  If the wrong one is defined then PractRand will mostly still work,
-though some kinds of things (particularly serialization) may not work
-precisely as intended, and if the PractRands self-test function is called then
-it may report an endianness error.
-*/
-#define PRACTRAND_TARGET_IS_LITTLE_ENDIAN 1
-//#define PRACTRAND_TARGET_IS_BIG_ENDIAN 1
-
-
-
-/*
-2.  Integer type sizes - reconfigure if needed
+1.  Integer type sizes - reconfigure if needed
 	If you know C/C++ programing this one should be self-explanatory.  The
 default configuration should work for most 32 bit and 64 bit platforms.
 If you are on a 16 bit or 8 bit platform then you will have to
@@ -64,7 +44,7 @@ namespace PractRand {
 }
 
 /*
-3. SIMD stuff can greatly speed up the ChaCha RNG
+2. SIMD stuff can greatly speed up the ChaCha RNG
 (not used by much yet, only ChaCha so far and only on MSVC)
 
 SIMD strongly NOT recommended at this time, as I haven't come up with a

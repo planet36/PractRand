@@ -1,6 +1,7 @@
 #include "PractRand/config.h"
 #include "PractRand/endian.h"
 #include "PractRand/sha2.h"
+#include <bit>
 #include <cstring>
 
 namespace PractRand::Crypto {
@@ -11,11 +12,7 @@ namespace PractRand::Crypto {
 			static constexpr int INPUT_WORDS = 16;
 			static constexpr int OUTPUT_WORDS = 8;
 			static constexpr int INPUT_SIZE = INPUT_WORDS * sizeof(Word);
-#ifdef PRACTRAND_TARGET_IS_LITTLE_ENDIAN
-			static constexpr int REVERSE_ENDIANNESS = 1;
-#else
-			static constexpr int REVERSE_ENDIANNESS = 0;
-#endif
+			static constexpr bool REVERSE_ENDIANNESS = std::endian::native == std::endian::little;
 			static constexpr int WORD_BITS = 8 * sizeof(Word);
 			static constexpr Uint64 round_constants[ROUNDS] = {
 			0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL, 0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL, 0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL,

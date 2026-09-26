@@ -70,7 +70,7 @@ void PractRand::RNGs::Raw::arbee::walk_state(StateWalkingObject* walker) {
 }
 void PractRand::RNGs::Raw::arbee::add_entropy_N(const void* _data, size_t length) {
 	const auto* data = static_cast<const Uint8*>(_data);
-#ifdef PRACTRAND_TARGET_IS_LITTLE_ENDIAN
+#if 0 // little-endian only
 	//maybe add an ifdef to enable misaligned reads at compile time where appropriate?
 /*	if (!(7 & reinterpret_cast<Uint64>(data))) {
 	//if (!(((unsigned long)data) & 7)) {
