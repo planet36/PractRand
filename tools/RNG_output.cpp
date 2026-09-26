@@ -1,3 +1,27 @@
+//master header, includes everything in PractRand for both
+//  practical usage and research...
+//  EXCEPT it does not include specific algorithms
+//  also it does not include PractRand/RNG_adaptors.h as that includes lots of templated stuff
+#include "PractRand_full.h"
+//the full version is needed because non-recommended RNGs are supported
+
+//specific RNG algorithms, to produce (pseudo-)random numbers
+#include "PractRand/RNGs/all.h"
+
+#include "PractRand/RNGs/other/fibonacci.h"
+#include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/simple.h"
+#include "PractRand/RNGs/other/special.h"
+#include "PractRand/RNGs/other/transform.h"
+
+//not actually part of the library headers, just some inline code for an abstract factory for PractRand RNG name -> in
+#include "RNG_from_name.h"
+#include "parse_number.h"
+
+#include "Candidate_RNGs.h"
+#include "SeedingTester.h"
+
 #include <charconv>
 #include <cmath>
 #include <csignal>     /* signal, sig_atomic_t */
@@ -20,29 +44,7 @@
 #include <io.h>
 #endif
 
-//master header, includes everything in PractRand for both
-//  practical usage and research...
-//  EXCEPT it does not include specific algorithms
-//  also it does not include PractRand/RNG_adaptors.h as that includes lots of templated stuff
-#include "PractRand_full.h"
-//the full version is needed because non-recommended RNGs are supported
-
-//specific RNG algorithms, to produce (pseudo-)random numbers
-#include "PractRand/RNGs/all.h"
-
-#include "PractRand/RNGs/other/fibonacci.h"
-#include "PractRand/RNGs/other/indirection.h"
-#include "PractRand/RNGs/other/mult.h"
-#include "PractRand/RNGs/other/simple.h"
-#include "PractRand/RNGs/other/special.h"
-#include "PractRand/RNGs/other/transform.h"
-
-//not actually part of the library headers, just some inline code for an abstract factory for PractRand RNG name -> in
-#include "RNG_from_name.h"
-#include "parse_number.h"
-
 using namespace PractRand;
-#include "Candidate_RNGs.h"
 
 
 bool interpret_seed(const std::string& seedstr, Uint64& seed) {
@@ -71,8 +73,6 @@ void signal_handler(int param)
 {
 	signaled = param;
 }
-
-#include "SeedingTester.h"
 
 int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 #ifdef _WIN32
