@@ -90,7 +90,7 @@ For #3, sfc_alternative looks better than the current sfc.
 #define POLYMORPHIC_CANDIDATE(rng, bits) \
 class polymorphic_ ## rng ## bits final : public PractRand::RNGs::vRNG ## bits {\
 public:\
-	typedef raw_ ## rng ## bits ImplementationType;\
+	using ImplementationType = raw_ ## rng ## bits;\
 	static constexpr int OUTPUT_BITS = ImplementationType ::OUTPUT_BITS;\
 	static constexpr int FLAGS = ImplementationType ::FLAGS;\
 	polymorphic_ ## rng ## bits (PractRand::SEED_NONE_TYPE) {}\
@@ -104,7 +104,7 @@ public:\
 #define SEEDED_POLYMORPHIC_CANDIDATE(rng, bits) \
 class polymorphic_ ## rng ## bits final : public PractRand::RNGs::vRNG ## bits {\
 public:\
-	typedef raw_ ## rng ## bits ImplementationType;\
+	using ImplementationType = raw_ ## rng ## bits;\
 	static constexpr int OUTPUT_BITS = ImplementationType ::OUTPUT_BITS;\
 	static constexpr int FLAGS = ImplementationType ::FLAGS;\
 	ImplementationType implementation{}; \
