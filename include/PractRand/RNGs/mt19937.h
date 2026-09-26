@@ -24,7 +24,7 @@ namespace PractRand::RNGs {
 				//seeds < 2**32 use the standard MT19937 seeding algorithm
 				//seeds >= 2**32 use a nonstandard MT19937 seeding algorithm
 				void seed(Uint64 s);
-				void seed(Uint32 s[], int seed_length);//alternate seeding algorithm added to MT in 2002
+				void seed(const Uint32 s[], int seed_length);//alternate seeding algorithm added to MT in 2002
 
 				Uint32 untempered_raw32() {
 					if ( used >= ARRAY_SIZE ) {

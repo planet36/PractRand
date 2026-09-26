@@ -183,8 +183,8 @@ namespace PractRand::Tests {
 			static constexpr int WORD_BITS_MASK = WORD_BITS-1;
 			static constexpr int WORD_BITS_L2 = WORD_BITS==64?6:(WORD_BITS==32?5:(WORD_BITS==16?4:(WORD_BITS==8?3:-1)));
 			void init(int w_, int h_);
-			void raw_import(int offset, Word *input, int length);
-			void import_partial_row(int x, int y, Word *input, int bits, int bit_offset, bool zeroed=false);
+			void raw_import(int offset, const Word *input, int length);
+			void import_partial_row(int x, int y, const Word *input, int bits, int bit_offset, bool zeroed=false);
 			[[nodiscard]] bool read_position(int x, int y) const;
 			void xor_rows(int destination, int source);
 			void xor_rows_skip_start(int destination, int source, int skip);//skip is measured in words?

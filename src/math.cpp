@@ -1163,10 +1163,10 @@ namespace PractRand {
 			data.resize(ww*h, 0);
 			//for (int i = 0; i < ww*h; i++) data[i] = 0;
 		}
-		void BitMatrix::raw_import(int offset, Word *input, int length) {
+		void BitMatrix::raw_import(int offset, const Word *input, int length) {
 			for (int i = 0; i < length; i++) data[offset+i] = input[i];
 		}
-		void BitMatrix::import_partial_row(int x, int y, Word *input, int bits, int bit_offset, bool zeroed) {
+		void BitMatrix::import_partial_row(int x, int y, const Word *input, int bits, int bit_offset, bool zeroed) {
 			//49 seconds
 			//added zeroed
 			//46 seconds

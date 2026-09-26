@@ -29,7 +29,7 @@ namespace PractRand::RNGs {
 					return results[used++];
 				}
 				void seed(Uint64 s);
-				void seed(Uint64 s[256]);
+				void seed(const Uint64 s[256]);
 				void seed(vRNG *seeder_rng);
 				void walk_state(StateWalkingObject *walker);
 				//static void self_test();

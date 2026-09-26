@@ -33,7 +33,7 @@ namespace PractRand::RNGs {
 				//  numbers are called the key and the last 8 are called the
 				//  initialization vector.  Each number in the sequence is a
 				//  32 bit value.  Seeding is very slow.
-				void seed(Uint32 key_and_iv[16]);
+				void seed(const Uint32 key_and_iv[16]);
 				void seed(Uint64 s);
 				void seed(vRNG *seeder_rng);
 				static void self_test();

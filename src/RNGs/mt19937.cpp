@@ -55,7 +55,7 @@ void PractRand::RNGs::Raw::mt19937::seed(Uint64 s) {
 		seed(seed_array, 2);
 	}
 }
-void PractRand::RNGs::Raw::mt19937::seed(Uint32 s[], int seed_length) {//LOCKED, do not change
+void PractRand::RNGs::Raw::mt19937::seed(const Uint32 s[], int seed_length) {//LOCKED, do not change
 	int i = 0, j = 0, k = 0;
 	seed(19650218UL);
 	i=1; j=0;

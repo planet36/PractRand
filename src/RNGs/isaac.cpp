@@ -107,7 +107,7 @@ void PractRand::RNGs::Raw::isaac32x256::_seed(bool flag) {//LOCKED, do not chang
 
 	used = SIZE;
 }
-void PractRand::RNGs::Raw::isaac32x256::seed(Uint32 s[256]) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac32x256::seed(const Uint32 s[256]) {//LOCKED, do not change
 	for (int i = 0; i < 256; i++) state[i] = s[i];
 	_seed(true);
 }
@@ -236,7 +236,7 @@ void PractRand::RNGs::Raw::isaac64x256::_seed(bool flag) {//LOCKED, do not chang
 
 	used = SIZE;
 }
-void PractRand::RNGs::Raw::isaac64x256::seed(Uint64 s[256]) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac64x256::seed(const Uint64 s[256]) {//LOCKED, do not change
 	for (int i = 0; i < 256; i++) state[i] = s[i];
 	_seed(true);
 }
