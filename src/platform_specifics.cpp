@@ -14,6 +14,7 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 
+#include <atomic>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -247,7 +248,9 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 }
 
 Uint64 PractRand::Internals::issue_unique_identifier ( ) {
-#if 0
+#if 1
+	static std::atomic<Uint64> count = 0;
+	return count++;
 #elif defined __GNUC__
 	static volatile Uint64 count = 0;
 	return __sync_fetch_and_add(&count, Uint64(1) );
