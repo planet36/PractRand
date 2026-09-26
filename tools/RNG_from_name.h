@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+#include "parse_number.h"
+
 namespace Special_RNGs {
 	template<typename Word>
 	class _stdin_reader {
@@ -205,49 +207,56 @@ namespace RNG_Factories {
 
 	PractRand::RNGs::vRNG* rngset_lookup_recommended(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_recommended_rngs) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(recommended_rngs[index - 1]);
 	}
 	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_simple(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_simple) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_simple[index - 1]);
 	}
 	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_nonlcg(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_nonlcg) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_nonlcg[index - 1]);
 	}
 	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_lcgish(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_lcgish) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_lcgish[index - 1]);
 	}
 	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_cbuf(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_cbuf) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_cbuf[index - 1]);
 	}
 	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended_indirect(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_indirect) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_indirect[index - 1]);
 	}
 	PractRand::RNGs::vRNG* rngset_lookup_nonrecommended(std::vector<std::string>& params) {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
-		int index = atoi(params.front().c_str());
+		int index = 0;
+		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
 		using namespace PractRand::RNG_Sets;
 		if (index < 1) {// || index > num_nonrecommended_simple + num_nonrecommended_nonlcg + num_nonrecommended_lcgish + num_nonrecommended_cbuf + num_nonrecommended_indirect) {
 			params.emplace_back("rngset lookup index out of range");
@@ -277,8 +286,9 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG* lcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to lcg - should be lcg(out_bits,total_bits)");return nullptr;}
-		int out_bits = atoi(params[0].c_str());
-		int total_bits = atoi(params[1].c_str());
+		int out_bits = 0;
+		int total_bits = 0;
+		if (!parse_number(params[0], out_bits) || !parse_number(params[1], total_bits)) {params.emplace_back("lcg parameters must be integers");return nullptr;}
 		if (out_bits!=8 && out_bits != 16 && out_bits != 32) {params.emplace_back("lcg out_bits must be 8, 16, or 32 bits");return nullptr;}
 		if (total_bits < out_bits || total_bits > 128) {params.emplace_back("lcg total_bits invalid: must be out_bits <= total_bits <= 128");return nullptr;}
 		if (out_bits == 8) {
@@ -299,8 +309,9 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG* xlcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to xlcg - should be xlcg(out_bits,total_bits)");return nullptr;}
-		int out_bits = atoi(params[0].c_str());
-		int total_bits = atoi(params[1].c_str());
+		int out_bits = 0;
+		int total_bits = 0;
+		if (!parse_number(params[0], out_bits) || !parse_number(params[1], total_bits)) {params.emplace_back("xlcg parameters must be integers");return nullptr;}
 		if (out_bits!=8 && out_bits != 16 && out_bits != 32) {params.emplace_back("xlcg out_bits must be 8, 16, or 32 bits");return nullptr;}
 		if (total_bits < out_bits || total_bits > 128) {params.emplace_back("xlcg total_bits invalid: must be out_bits <= total_bits <= 64");return nullptr;}
 		if (out_bits == 8) {
@@ -322,8 +333,9 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG* clcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to clcg - should be clcg(out_bits,total_bits)");return nullptr;}
-		int out_bits = atoi(params[0].c_str());
-		int total_bits = atoi(params[1].c_str());
+		int out_bits = 0;
+		int total_bits = 0;
+		if (!parse_number(params[0], out_bits) || !parse_number(params[1], total_bits)) {params.emplace_back("clcg parameters must be integers");return nullptr;}
 		if (out_bits!=8 && out_bits != 16 && out_bits != 32) {params.emplace_back("clcg out_bits must be 8, 16, or 32 bits");return nullptr;}
 		if (total_bits < out_bits || total_bits > 96) {params.emplace_back("clcg total_bits invalid: must be out_bits+32 <= total_bits <= 96");return nullptr;}
 		if (out_bits == 8) return new PractRand::RNGs::Polymorphic::NotRecommended::clcg8of96_varqual(total_bits - out_bits - 32);
@@ -333,8 +345,9 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG* cxlcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to clcg - should be clcg(out_bits,total_bits)");return nullptr;}
-		int out_bits = atoi(params[0].c_str());
-		int total_bits = atoi(params[1].c_str());
+		int out_bits = 0;
+		int total_bits = 0;
+		if (!parse_number(params[0], out_bits) || !parse_number(params[1], total_bits)) {params.emplace_back("cxlcg parameters must be integers");return nullptr;}
 		if (out_bits!=8 && out_bits != 16 && out_bits != 32) {params.emplace_back("cxlcg out_bits must be 8, 16, or 32 bits");return nullptr;}
 		if (total_bits < out_bits || total_bits > 96) {params.emplace_back("cxlcg total_bits invalid: must be out_bits+32 <= total_bits <= 96");return nullptr;}
 		if (out_bits == 8) return new PractRand::RNGs::Polymorphic::NotRecommended::cxlcg8of96_varqual(total_bits - out_bits - 32);
@@ -344,9 +357,10 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG* bigbadlcg_factory(std::vector<std::string>& params) {
 		if (params.size() != 3) { params.emplace_back("wrong number of parameters to bigbadlcg - should be bigbadlcg(out_bits,total_bits,shift)"); return nullptr; }
-		int out_bits = atoi(params[0].c_str());
-		int total_bits = atoi(params[1].c_str());
-		int shift = atoi(params[2].c_str());
+		int out_bits = 0;
+		int total_bits = 0;
+		int shift = 0;
+		if (!parse_number(params[0], out_bits) || !parse_number(params[1], total_bits) || !parse_number(params[2], shift)) { params.emplace_back("bigbadlcg parameters must be integers"); return nullptr; }
 		if (out_bits != 8 && out_bits != 16 && out_bits != 32 && out_bits != 64) { params.emplace_back("cxlcg out_bits must be 8, 16, 32, or 64 bits"); return nullptr; }
 		if (total_bits < out_bits || total_bits > 1024) { params.emplace_back("bigbadlcg total_bits invalid: must be out_bits <= total_bits <= 1024"); return nullptr; }
 		if (out_bits == 8) return new PractRand::RNGs::Polymorphic::NotRecommended::bigbadlcg8X(total_bits - out_bits, shift);
@@ -395,10 +409,10 @@ namespace RNG_Factories {
 	PractRand::RNGs::vRNG* BDS_factory(std::vector<std::string>& params) {
 		//BDS(BaseRNG,log2_of_table_size)
 		if (params.size() < 2 || params.size() > 3) return nullptr;
-		int L2 = std::atoi(params[1].c_str());
-		if (L2 < 1 || L2 > 16) return nullptr;
+		int L2 = 0;
+		if (!parse_number(params[1], L2) || L2 < 1 || L2 > 16) return nullptr;
 		int shift = -1;
-		if (params.size() == 3) shift = std::atoi(params[2].c_str());
+		if (params.size() == 3 && !parse_number(params[2], shift)) return nullptr;
 		PractRand::RNGs::vRNG* rng = create_rng(params[0]);
 		if (!rng) return nullptr;
 		return PractRand::RNGs::Polymorphic::NotRecommended::apply_BaysDurhamShuffle(rng, L2, shift);
@@ -428,12 +442,17 @@ namespace RNG_Factories {
 	template<class RNG>
 	PractRand::RNGs::vRNG* _generic_single_parameter_RNG_factory(std::vector<std::string>& params) {
 		if (params.size() != 1) return nullptr;
-		return new RNG(atoi(params[0].c_str()));
+		int param = 0;
+		if (!parse_number(params[0], param)) return nullptr;
+		return new RNG(param);
 	}
 	template<class RNG>
 	PractRand::RNGs::vRNG* _generic_two_parameter_RNG_factory(std::vector<std::string>& params) {
 		if (params.size() != 2) return nullptr;
-		return new RNG(atoi(params[0].c_str()),atoi(params[1].c_str()));
+		int param0 = 0;
+		int param1 = 0;
+		if (!parse_number(params[0], param0) || !parse_number(params[1], param1)) return nullptr;
+		return new RNG(param0,param1);
 	}
 	void register_recommended_RNGs() {
 #define REGISTER_RNG_0(RNG) RNG_Factories::RNG_factory_index[ #RNG ] = _generic_recommended_RNG_factory<PractRand::RNGs::Polymorphic:: RNG>;

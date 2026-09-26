@@ -2,6 +2,8 @@
 
 #include <bit>
 
+#include "parse_number.h"
+
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
@@ -238,8 +240,9 @@ public:
 	void walk_state(PractRand::StateWalkingObject*) override {}
 	static PractRand::RNGs::vRNG* _factory(std::vector<std::string>& params) {
 		if (params.size() != 3) { params.emplace_back("wrong number of parameters - should be EntropyPoolingTester(rng,minlength,maxlength)"); return nullptr; }
-		int minlength = std::atoi(params[1].c_str());
-		int maxlength = std::atoi(params[2].c_str());
+		int minlength = 0;
+		int maxlength = 0;
+		if (!parse_number(params[1], minlength) || !parse_number(params[2], maxlength)) { params.emplace_back("EntropyPoolingTester parameters must be integers"); return nullptr; }
 		if (minlength < 1 || maxlength < 1 || minlength > maxlength || maxlength > 500) { params.emplace_back("EntropyPoolingTester parameters out of range - 0 < minlength <= maxlength < 500"); return nullptr; }
 		PractRand::RNGs::vRNG* rng = RNG_Factories::create_rng(params[0]);
 		if (!rng) return nullptr;

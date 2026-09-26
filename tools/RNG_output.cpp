@@ -38,6 +38,7 @@
 
 //not actually part of the library headers, just some inline code for an abstract factory for PractRand RNG name -> in
 #include "RNG_from_name.h"
+#include "parse_number.h"
 
 using namespace PractRand;
 #include "Candidate_RNGs.h"
@@ -93,7 +94,8 @@ int main(int argc, char** argv) {
 		else { (void)std::fprintf(stderr, "RNG_output ERROR: RNG_Factories returned error message:\n%s\n", errmsg.c_str()); exit(1); }
 	}
 
-	double _n = atof(argv[2]);//should be atol, but on 32 bit systems that's too limited
+	double _n = 0;//stays 0 if argv[2] is not a number, such as "name"
+	parse_number(argv[2], _n);
 	Uint64 n = 0;
 	if (_n <= 0 || _n >= 18446744073709551616.0) {
 		if (!strcmp(argv[2], "name")) {

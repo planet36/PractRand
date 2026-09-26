@@ -47,6 +47,7 @@ PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
 //helpers for the test programs, to deal with RNG names, test usage, etc
 #include "RNG_from_name.h"
+#include "parse_number.h"
 
 #include "TestManager.h"
 #ifdef MULTITHREADING_SUPPORTED
@@ -676,8 +677,7 @@ int main(int argc, char** argv) {
 		else if (!std::strcmp(argv[i], "-e")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
 			smart_thresholds = true;
-			threshold = std::atof(argv[++i]);
-			if (threshold < 0.000001 || threshold > 1000) {
+			if (!parse_number(argv[++i], threshold) || threshold < 0.000001 || threshold > 1000) {
 				std::printf("invalid smart threshold: -e %s (must be between 0.000001 and 1000)\n", argv[i]);
 				std::exit(0);
 			}
@@ -685,8 +685,7 @@ int main(int argc, char** argv) {
 		else if (!std::strcmp(argv[i], "-p")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
 			smart_thresholds = false;
-			threshold = std::atof(argv[++i]);
-			if (threshold < 0.0000000001 || threshold > 1.0) {
+			if (!parse_number(argv[++i], threshold) || threshold < 0.0000000001 || threshold > 1.0) {
 				std::printf("invalid p-value threshold: -p %s (must be between 0.0000000001 and 1)\n", argv[i]);
 				std::exit(0);
 			}
@@ -695,16 +694,16 @@ int main(int argc, char** argv) {
 		//-te EXPANDED
 		else if (!std::strcmp(argv[i], "-tf")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
-			folding = std::atoi(argv[++i]);
-			if (folding < 0 || folding > 2) {
+			if (!parse_number(argv[++i], folding) || folding < 0 || folding > 2) {
 				std::printf("invalid folding test set value: -tf %s\n", argv[i]);
 				std::exit(0);
 			}
 		}
 		else if (!std::strcmp(argv[i], "-te")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
-			int expanded = std::atoi(argv[++i]);
-			test_set_index = lookup_te_value(expanded);//0 maps to 0, but other values may not map to themselves
+			int expanded = 0;
+			if (parse_number(argv[++i], expanded)) test_set_index = lookup_te_value(expanded);//0 maps to 0, but other values may not map to themselves
+			else test_set_index = -1;
 			if (test_set_index == -1) {
 				std::printf("invalid expanded test set value: -te %s\n", argv[i]);
 				std::exit(0);
