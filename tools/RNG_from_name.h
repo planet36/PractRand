@@ -203,49 +203,49 @@ namespace RNG_Factories {
 	}
 
 	PractRand::RNGs::vRNG *rngset_lookup_recommended(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_recommended_rngs) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(recommended_rngs[index - 1]);
 	}
 	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_simple(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_simple) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_simple[index - 1]);
 	}
 	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_nonlcg(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_nonlcg) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_nonlcg[index - 1]);
 	}
 	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_lcgish(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_lcgish) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_lcgish[index - 1]);
 	}
 	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_cbuf(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_cbuf) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_cbuf[index - 1]);
 	}
 	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended_indirect(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1 || index > num_nonrecommended_indirect) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_indirect[index - 1]);
 	}
 	PractRand::RNGs::vRNG *rngset_lookup_nonrecommended(std::vector<std::string> &params) {
-		if (params.size() < 1) { params.emplace_back("rngset lookup requires index"); return nullptr; }
+		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = atoi(params.front().c_str());
 		using namespace PractRand::RNG_Sets;
 		if (index < 1) {// || index > num_nonrecommended_simple + num_nonrecommended_nonlcg + num_nonrecommended_lcgish + num_nonrecommended_cbuf + num_nonrecommended_indirect) {
@@ -266,12 +266,12 @@ namespace RNG_Factories {
 	}
 	template<class RNG>
 	PractRand::RNGs::vRNG *_generic_recommended_RNG_factory(std::vector<std::string> &params) {
-		if (params.size() != 0) return nullptr;
+		if (!params.empty()) return nullptr;
 		return new RNG(PractRand::SEED_NONE);
 	}
 	template<class RNG>
 	PractRand::RNGs::vRNG *_generic_notrecommended_RNG_factory(std::vector<std::string> &params) {
-		if (params.size() != 0) return nullptr;
+		if (!params.empty()) return nullptr;
 		return new RNG();
 	}
 	PractRand::RNGs::vRNG *lcg_factory(std::vector<std::string> &params) {
@@ -356,7 +356,7 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG *chacha_factory(std::vector<std::string> &params) {
 		if (params.size() > 1) {params.emplace_back("too many parameters for chacha");return nullptr;}
-		if (params.size() == 0) return new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
+		if (params.empty()) return new PractRand::RNGs::Polymorphic::chacha(PractRand::SEED_NONE);
 		std::string &param = params[0];
 		int value = 0;
 		for (char c : param) {
@@ -371,7 +371,7 @@ namespace RNG_Factories {
 	}
 	PractRand::RNGs::vRNG *salsa_factory(std::vector<std::string> &params) {
 		if (params.size() > 1) {params.emplace_back("too many parameters for salsa");return nullptr;}
-		if (params.size() == 0) return new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
+		if (params.empty()) return new PractRand::RNGs::Polymorphic::salsa(PractRand::SEED_NONE);
 		std::string &param = params[0];
 		int value = 0;
 		for (char c : param) {
@@ -411,7 +411,7 @@ namespace RNG_Factories {
 	}
 	template<class RNG>
 	PractRand::RNGs::vRNG *_generic_variable_parameter_transform_RNG_factory(std::vector<std::string> &params) {
-		if (params.size() < 1) return nullptr;
+		if (params.empty()) return nullptr;
 		std::vector<PractRand::RNGs::vRNG *> source_rngs;
 		PractRand::RNGs::vRNG *rng = nullptr;
 		for (const auto & param : params) {

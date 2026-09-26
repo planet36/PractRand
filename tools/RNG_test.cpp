@@ -336,7 +336,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	}
 	if (marked.size() == results.size())
 		;
-	else if (marked.size() == 0)
+	else if (marked.empty())
 		std::printf("  no anomalies in %d test result(s)\n", int(results.size()));
 	else
 		std::printf("  ...and %d test result(s) without anomalies\n", int(results.size() - marked.size()));

@@ -1101,7 +1101,7 @@ namespace PractRand {
 		}
 		void SampleSet::_count_duplicates() {
 			duplicates = 0;
-			if (!rs.size()) return;
+			if (rs.empty()) return;
 			double o = rs[0];
 			for (unsigned int i = 1; i < rs.size(); i++) {
 				double n = rs[i];
