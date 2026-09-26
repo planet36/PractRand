@@ -1695,17 +1695,17 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	int reduced_size = simplify_prob_table(
 		TSIZE,
 		(blocks_tested * TestBlock::SIZE/2.) / 40.,
-		&probs[0], &count[0], true, true
+		probs.data(), count.data(), true, true
 	);
-	r1 = g_test(reduced_size, &probs[0], &count[0]);
+	r1 = g_test(reduced_size, probs.data(), count.data());
 //	double p1 = math_chisquared_to_pvalue(r1, reduced_size-1);
 	r1 = math_chisquared_to_normal(r1, reduced_size-1);
 	reduced_size = simplify_prob_table(
 		reduced_size,
 		sqrt(blocks_tested * TestBlock::SIZE/2.),
-		&probs[0], &count[0], true, true
+		probs.data(), count.data(), true, true
 	);
-	r2 = g_test(reduced_size, &probs[0], &count[0]);
+	r2 = g_test(reduced_size, probs.data(), count.data());
 //	double p2 = math_chisquared_to_pvalue(r2, reduced_size-1);
 	r2 = math_chisquared_to_normal(r2, reduced_size-1);
 	//double r;
@@ -2096,8 +2096,8 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult> &results) {
 	}
 	int reduced_size = simplify_prob_table(size,
 		blocks_tested * (TestBlock::SIZE >> unitsL) / 25.0,
-		&probs[0], &tmp_counts[0], true, true);
-	double r = g_test(reduced_size, &probs[0], &tmp_counts[0]);
+		probs.data(), tmp_counts.data(), true, true);
+	double r = g_test(reduced_size, probs.data(), tmp_counts.data());
 	r = math_chisquared_to_normal(r, reduced_size - 1);
 	double weight = std::pow(2.0, 1.0 - unitsL/2.0);
 	if (unitsL != 0) weight *= 0.75;
@@ -2696,8 +2696,8 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 
 		if (calib) {
 			name << unitsL2 << "+" << level << "," << tbits << "-" << (tbits - effective_bits) << (unbalanced?",T":",F") << ")";
-			truncate_table_bits(&tempcount[0], &probs[0], tbits, effective_bits);
-			double rv = g_test(1 << effective_bits, &probs[0], &tempcount[0]);
+			truncate_table_bits(tempcount.data(), probs.data(), tbits, effective_bits);
+			double rv = g_test(1 << effective_bits, probs.data(), tempcount.data());
 			//for (int i = 0; i < 1<<effective_bits; i++) if (tempcount[i]) overall_raw += tempcount[i] * std::log(tempcount[i] / (probs[i] * samples));
 			//overall_bins += (1 << effective_bits) - 1;
 			double rn = math_chisquared_to_normal(rv, (1<<effective_bits)-1);
@@ -2706,7 +2706,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 		}
 		else {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
-			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
+			double rv = g_test(1 << tbits, probs.data(), tempcount.data());
 			double rn = math_chisquared_to_normal(rv, (1<<tbits)-1);
 			results.emplace_back(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w );
 		}
@@ -3411,8 +3411,8 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 
 		if (calib) {
 			name << unitsL2 << "+" << level << "," << tbits << "-" << (tbits - effective_bits) << (unbalanced ? ",T" : ",F") << ")";
-			truncate_table_bits(&tempcount[0], &probs[0], tbits, effective_bits);
-			double rv = g_test(1 << effective_bits, &probs[0], &tempcount[0]);
+			truncate_table_bits(tempcount.data(), probs.data(), tbits, effective_bits);
+			double rv = g_test(1 << effective_bits, probs.data(), tempcount.data());
 			//for (int i = 0; i < 1<<effective_bits; i++) if (tempcount[i]) overall_raw += tempcount[i] * std::log(tempcount[i] / (probs[i] * samples));
 			//overall_bins += (1 << effective_bits) - 1;
 			double rn = math_chisquared_to_normal(rv, (1 << effective_bits) - 1);
@@ -3421,7 +3421,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		}
 		else {
 			name << unitsL2 << "+" << level << "," << tbits << ")";
-			double rv = g_test(1 << tbits, &probs[0], &tempcount[0]);
+			double rv = g_test(1 << tbits, probs.data(), tempcount.data());
 			double rn = math_chisquared_to_normal(rv, (1 << tbits) - 1);
 			results.emplace_back(name.str(), rn, std::abs(rn) > 25 + (samples > 12345 ? 0 : 5), TestResult::TYPE_PASSFAIL, w);
 		}
@@ -3941,14 +3941,14 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 			//if (ebits < 1 && e < 4) ebits += 2;
 			if (ebits >= 1) {
 				for (unsigned int x = 0; x <= max_sig; x++) intra_probs[x] = intra_p;
-				if (ebits < sig_bits) truncate_table_bits(&intra_counts[0], &intra_probs[0], sig_bits, ebits);
+				if (ebits < sig_bits) truncate_table_bits(intra_counts.data(), intra_probs.data(), sig_bits, ebits);
 				else ebits = sig_bits;
 				int bins = 1<<ebits;
 				double truncated_expected = expected * std::pow(.5, double(ebits));
 				for (int x = 0; x < bins; x++) if (intra_counts[x]) if (intra_counts[x]) over_raw += intra_counts[x] * std::log(intra_counts[x] / truncated_expected);
 				over_bins += bins;
 				if (ebits < 3) continue; // too few distinct values show up in calibration data
-				double raw = g_test(bins, &intra_probs[0], &intra_counts[0]);
+				double raw = g_test(bins, intra_probs.data(), intra_counts.data());
 				double norm = math_chisquared_to_normal(raw, bins-1);
 				//double p = math_normaldist_to_pvalue(norm);
 				std::ostringstream namestr;
@@ -4004,8 +4004,8 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 	//for (int e = 0; e <= max_exp; e++) actual_samples += inter_counts[e];
 	if (samples >= 1000) {
 		for (unsigned int e = 0; e <= max_exp; e++) inter_probs[e] = std::pow(0.5, e+1.0+(e==max_exp?-1:0));
-		int bins = simplify_prob_table(max_exp+1, samples/40.0, &inter_probs[0], &inter_counts[0], true, true);
-		double raw = g_test(bins, &inter_probs[0], &inter_counts[0]);
+		int bins = simplify_prob_table(max_exp+1, samples/40.0, inter_probs.data(), inter_counts.data(), true, true);
+		double raw = g_test(bins, inter_probs.data(), inter_counts.data());
 		double norm = math_chisquared_to_normal(raw, bins-1) / std::numbers::sqrt2;
 		//double p = math_normaldist_to_pvalue(norm);
 		std::ostringstream str; str << get_name() << ":cross";
@@ -4975,7 +4975,7 @@ void PractRand::Tests::Birthday64::_histogram_in_place_sort64(Uint64 *base, long
 void PractRand::Tests::Birthday64::_histogram_sort64(Uint64 *buffer, long length, long bits_already, Uint32 region_counts[1 << SORT_HELPER_BITS]) {
 	if (length <= 1) return;
 	std::vector<Uint64> copied_buffer; copied_buffer.resize(length);
-	std::memcpy(&copied_buffer[0], &buffer[0], sizeof(buffer[0]) * length);
+	std::memcpy(copied_buffer.data(), &buffer[0], sizeof(buffer[0]) * length);
 	Uint32 region_bases[(1 << SORT_HELPER_BITS) + 1];
 	long shift = 64 - SORT_HELPER_BITS - bits_already;
 	region_bases[0] = 0;
@@ -6109,7 +6109,7 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 		constexpr int INCLUDE_NON_MATCHES = 0;// 0 or 1
 		std::vector<Uint64> counts2; counts2.resize(TOTAL_SIZE + INCLUDE_NON_MATCHES);
 		std::vector<double> probs2; probs2.resize(TOTAL_SIZE + INCLUDE_NON_MATCHES);
-		std::copy(&_counts[0], &_counts[TOTAL_SIZE], &counts2[0]);
+		std::copy(&_counts[0], &_counts[TOTAL_SIZE], counts2.data());
 		double any_match_prob = std::pow(0.5, INCLUDE_NON_MATCHES ? ZERO_FILTER_BITS : 0);
 		double specific_match_prob = any_match_prob * std::pow(0.5, PATTERN_INDEX_BITS);
 		if (INCLUDE_NON_MATCHES) probs2[TOTAL_SIZE] = 1 - any_match_prob;
@@ -6119,12 +6119,12 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 		if (total_matches < 100) return;
 		if (INCLUDE_NON_MATCHES) counts2[TOTAL_SIZE] = total_opportunities - total_matches;
 		if (total_opportunities > 300) {
-			double rarity = Tests::rarity_test(TOTAL_SIZE + INCLUDE_NON_MATCHES, &probs2[0], &counts2[0]);
+			double rarity = Tests::rarity_test(TOTAL_SIZE + INCLUDE_NON_MATCHES, probs2.data(), counts2.data());
 			std::ostringstream ss; ss << get_name() << "(*,r)"; results.emplace_back(ss.str(), rarity, 0, TestResult::TYPE_RAW_NORMAL, 0.125);
 		}
 		if (total_opportunities > 3000) {
-			int n = Tests::simplify_prob_table(TOTAL_SIZE + INCLUDE_NON_MATCHES, (INCLUDE_NON_MATCHES ? total_opportunities : total_matches) / 40.0, &probs2[0], &counts2[0], false, false);
-			double raw = Tests::g_test(n, &probs2[0], &counts2[0]);
+			int n = Tests::simplify_prob_table(TOTAL_SIZE + INCLUDE_NON_MATCHES, (INCLUDE_NON_MATCHES ? total_opportunities : total_matches) / 40.0, probs2.data(), counts2.data(), false, false);
+			double raw = Tests::g_test(n, probs2.data(), counts2.data());
 			double norm = Tests::math_chisquared_to_normal(raw, n - 1);
 			std::ostringstream ss; ss << get_name() << "(*,g)"; results.emplace_back(ss.str(), norm, 0, TestResult::TYPE_RAW_NORMAL, 0.125);
 		}
@@ -6133,14 +6133,14 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult> &results) {
 		if (patterns[pi].total_count < 30) continue;
 		std::vector<double> local_probs = base_probs;
 		std::vector<Uint64> local_counts; local_counts.resize(BASE_SIZE);
-		std::copy(&_counts[pi * BASE_SIZE], &_counts[pi * BASE_SIZE + BASE_SIZE], &local_counts[0]);
+		std::copy(&_counts[pi * BASE_SIZE], &_counts[pi * BASE_SIZE + BASE_SIZE], local_counts.data());
 		if constexpr (true) {
-			double rarity = Tests::rarity_test(BASE_SIZE, &local_probs[0], &local_counts[0]);
+			double rarity = Tests::rarity_test(BASE_SIZE, local_probs.data(), local_counts.data());
 			std::ostringstream ss; ss << get_name() << "(" << pi << ",r)"; results.emplace_back(ss.str(), rarity, 0, TestResult::TYPE_RAW_NORMAL, 0.001 / TOTAL_PATTERNS);
 		}
 		if (patterns[pi].total_count > 300) {
-			int n = Tests::simplify_prob_table(BASE_SIZE, patterns[pi].total_count / 40.0, &local_probs[0], &local_counts[0], false, false);
-			double raw = Tests::g_test(n, &local_probs[0], &local_counts[0]);
+			int n = Tests::simplify_prob_table(BASE_SIZE, patterns[pi].total_count / 40.0, local_probs.data(), local_counts.data(), false, false);
+			double raw = Tests::g_test(n, local_probs.data(), local_counts.data());
 			double norm = Tests::math_chisquared_to_normal(raw, n - 1);
 			std::ostringstream ss; ss << get_name() << "(" << pi << ",g)"; results.emplace_back(ss.str(), norm, 0, TestResult::TYPE_RAW_NORMAL, 0.001 / TOTAL_PATTERNS);
 		}
@@ -6202,7 +6202,7 @@ void PractRand::Tests::CoupGap::get_results(std::vector<TestResult> &results) {
 		probs.resize(65536);
 		for (int i = 0; i < 65536; i++) probs[i] = 1 / 65536.0;
 		const Uint64 *counts_ = count_syms_by_oldest_sym.get_array();
-		const double *probs_ = &probs[0];
+		const double *probs_ = probs.data();
 		double raw = g_test(65536, probs_, counts_);
 		raw = (raw - 3 * 65536) / (256 * 32);
 		TestCalibrationData *calib = calibration_manager.get_calibration_data("CoupGap:SxO", blocks_tested);
@@ -7376,7 +7376,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult> &results
 	if (blocks_tested < 1) return;
 	const Uint64 *unpacked_counts = counts.get_array();
 	std::vector<Uint64> packed_counts; packed_counts.resize(K);
-	std::memcpy(&packed_counts[0], unpacked_counts, sizeof(Uint64)* K);
+	std::memcpy(packed_counts.data(), unpacked_counts, sizeof(Uint64)* K);
 	for (int i = K; i < P2; i++) {
 		packed_counts[i - K] += counts[i];
 	}
@@ -7434,7 +7434,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult> &results
 				packed_counts[i] = 0;
 			}
 		}
-		double cs = g_test(cat, &probs[0], &packed_counts[0]);
+		double cs = g_test(cat, probs.data(), packed_counts.data());
 		double n = math_chisquared_to_normal(cs, cat - 1);
 		std::ostringstream buf;
 		buf << "mod3_simple(" << x << ")";
@@ -7584,7 +7584,7 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 		PerLevel &pl = levels[level];
 		const Uint64 *_counts = pl.counts.get_array();
 		std::vector<Uint64> counts; counts.resize(effective_K);
-		std::memcpy(&counts[0], _counts, sizeof(Uint64)* effective_K);
+		std::memcpy(counts.data(), _counts, sizeof(Uint64)* effective_K);
 		if (effective_K != K || !PACKED_INDEX) {
 			int reduced = 0;
 			for (int i = effective_K; i < (PACKED_INDEX ? K : P2); i++, reduced++) {
@@ -7617,9 +7617,9 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 				}
 				probs[i] = std::pow(base1, effective_EXP - num_zeroes - 0.0) * std::pow(base2, num_zeroes - 0.0);
 			}
-			cs = g_test(effective_K, &probs[0], &counts[0]);
+			cs = g_test(effective_K, probs.data(), counts.data());
 		}
-		else { cs = g_test_flat(effective_K, &counts[0]); }
+		else { cs = g_test_flat(effective_K, counts.data()); }
 		double n = math_chisquared_to_normal(cs, effective_K - 1);
 		std::ostringstream buf;
 		buf << "mod3_simple(" << (effective_EXP < 11 ? effective_EXP : 11) << ")";
@@ -7847,14 +7847,14 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult> &results) {
 	}
 	//results.push_back(TestResult(get_name() + ":A", weighted_error, weighted_error, TestResult::TYPE_RAW_NORMAL, 0.01));
 	if (total > 1) {
-		double norm = my_test(3000, &probs[0], &counts[40000]);
+		double norm = my_test(3000, probs.data(), &counts[40000]);
 		results.emplace_back(get_name() + ":A", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
 	if (total > 100) {
 		Uint64 counts2[3000];
 		for (int i = 0; i < 3000; i++) counts2[i] = counts[i+40000];
-		int cat = simplify_prob_table(3000, total * 1.0, &probs[0], &counts2[0], true, false);
-		double chisqr = g_test(cat, &probs[0], &counts2[0]);
+		int cat = simplify_prob_table(3000, total * 1.0, probs.data(), &counts2[0], true, false);
+		double chisqr = g_test(cat, probs.data(), &counts2[0]);
 		double norm = math_chisquared_to_normal(chisqr, cat - 1);
 		results.emplace_back(get_name() + ":B", norm, norm, TestResult::TYPE_RAW_NORMAL, 0.01);
 	}
@@ -8041,7 +8041,7 @@ void PractRand::Tests::TripleFreq::get_results(std::vector<TestResult> &results)
 	if (!regions_tested) return;
 	std::vector<Uint64> counts2;//re-ordered for better testability
 	counts2.resize(TOTAL_SIZE);
-	Uint64 *counts2_ = &counts2[0];
+	Uint64 *counts2_ = counts2.data();
 	int num_regions = regions_tested;
 	if (num_regions > NUMBER_OF_REGIONS) num_regions = NUMBER_OF_REGIONS;
 	int max = num_regions * REGION_SIZE;
@@ -10738,7 +10738,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 	}
 
 	const Uint64 *counts_ = lperm_counts.get_array();
-	double chisqr = g_test(LPERM_BUCKETS, &lperm16_chances[0], counts_);
+	double chisqr = g_test(LPERM_BUCKETS, lperm16_chances.data(), counts_);
 	//double chisqr = g_test_flat(LPERM_BUCKETS, counts_);
 	double n = math_chisquared_to_normal(chisqr, LPERM_BUCKETS - 1);
 	//double n = g_test_flat_merge_normal(LPERM_BUCKETS, counts_);
@@ -10960,7 +10960,7 @@ void PractRand::Tests::Transforms::Transform_Baseclass::flush(bool aggressive) {
 	if (!blocks_to_move) return;
 	int how_far = buffered.size() - blocks_to_move;
 	if (!how_far) return;
-	std::memmove(&buffered[0], &buffered[how_far], blocks_to_move * TestBlock::SIZE);
+	std::memmove(buffered.data(), &buffered[how_far], blocks_to_move * TestBlock::SIZE);
 	buffered.resize(blocks_to_move);
 }
 

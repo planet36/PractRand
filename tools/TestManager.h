@@ -78,7 +78,7 @@ int TestManager::prep_blocks(Uint64 &blocks) {
 		repeat_region_size = prefix_blocks + main_blocks;
 	}
 	if (repeat_region_start != 0)
-		std::memmove(&buffer[0], &buffer[repeat_region_start], repeat_region_size * PractRand::Tests::TestBlock::SIZE);
+		std::memmove(buffer.data(), &buffer[repeat_region_start], repeat_region_size * PractRand::Tests::TestBlock::SIZE);
 	prefix_blocks = repeat_region_size;
 	main_blocks = delta_blocks;
 	buffer[prefix_blocks].fill(rng, main_blocks);

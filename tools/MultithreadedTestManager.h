@@ -73,7 +73,7 @@ public:
 			new_prefix_blocks = prefix_blocks + main_blocks;
 		if (new_prefix_blocks) {
 			std::memcpy(
-				&buffer[0],
+				buffer.data(),
 				&alt_buffer[prefix_blocks + main_blocks - new_prefix_blocks],
 				PractRand::Tests::TestBlock::SIZE * new_prefix_blocks
 			);

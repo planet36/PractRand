@@ -181,7 +181,7 @@ public:
 	}
 	PractRand::Uint64 hash_message(const std::vector<Uint8> &message) {
 		base_entropy_pool->reset_entropy();
-		base_entropy_pool->add_entropy_N(&message[0], message.size());
+		base_entropy_pool->add_entropy_N(message.data(), message.size());
 		//base_entropy_pool->add_entropy64(0);
 		base_entropy_pool->flush_buffers();
 		return base_entropy_pool->raw64();
@@ -201,7 +201,7 @@ public:
 		std::vector<Uint8> rewound = current_seed;
 		for (auto & entry : history) {
 			//if (message.size() == rewound.size() && !std::memcmp(&message[0], &rewound[0], message.size())) {
-			if (message.size() == rewound.size() && !hamming_distance(&message[0], &rewound[0], message.size())) {
+			if (message.size() == rewound.size() && !hamming_distance(message.data(), rewound.data(), message.size())) {
 				return true;
 			}
 			apply_inverse_transform(rewound, entry.second);
