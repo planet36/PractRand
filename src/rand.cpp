@@ -123,7 +123,7 @@ namespace PractRand {
 	public:
 		PrintingStateWalker() = default;
 		void handle(bool& v) override { pre(); outbuf << v; }
-		void handle(Uint8& v) override { pre(); outbuf << v; }
+		void handle(Uint8& v) override { pre(); outbuf << static_cast<unsigned int>(v); }
 		void handle(Uint16& v) override { pre(); outbuf << v; }
 		void handle(Uint32& v) override { pre(); outbuf << v; }
 		void handle(Uint64& v) override { pre(); outbuf << v; }
