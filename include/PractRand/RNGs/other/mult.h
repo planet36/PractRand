@@ -353,7 +353,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject *) override;
 				};
 				class mwlac_varA : public vRNG16 {
-					Uint16 a, b, c, d;
+					Uint16 a, b, c;//, d;
 					Uint16 raw16() override;
 					std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;

@@ -19,7 +19,7 @@ namespace PractRand::Tests {
 			int symbols_ready;
 
 			Uint32 autofail;
-			Uint64 blocks;
+//			Uint64 blocks;
 		public:
 			CoupGap() = default;
 
