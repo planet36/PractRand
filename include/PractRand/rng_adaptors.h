@@ -147,7 +147,7 @@ namespace PractRand::RNGs::Adaptors {
 			}//namespace Internal
 
 			template<class base_rng> class _NORMALIZE_SEEDING {
-			public: using t = typename
+			public: using t =
 				Internal::ADAPT_SEEDING<
 					base_rng, (base_rng::FLAGS & RNGs::FLAG::NEEDS_GENERIC_SEEDING) ? true : false
 				>;
@@ -156,7 +156,7 @@ namespace PractRand::RNGs::Adaptors {
 			template<class base_rng> class NORMALIZE_SEEDING : public _NORMALIZE_SEEDING<base_rng>::t {};
 
 			template<class base_rng> class _NORMALIZE_OUTPUT {
-				public:using t = typename Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t;
+				public:using t = Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t;
 			};
 			template<class base_rng> class NORMALIZE_OUTPUT : public _NORMALIZE_OUTPUT<base_rng>::t {};
 
@@ -167,7 +167,7 @@ namespace PractRand::RNGs::Adaptors {
 			template<class base_rng> class NORMALIZE_DISTRIBUTIONS : public _NORMALIZE_DISTRIBUTIONS<base_rng>::t {};
 
 			template<class base_rng> class NORMALIZE {
-				public:using t = typename _NORMALIZE_SEEDING<
+				public:using t = _NORMALIZE_SEEDING<
 					typename _NORMALIZE_DISTRIBUTIONS<
 						typename _NORMALIZE_OUTPUT<base_rng>::t
 					>::t
