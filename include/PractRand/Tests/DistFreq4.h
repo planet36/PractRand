@@ -136,6 +136,7 @@ namespace PractRand::Tests {
 			int blocks_per_pass;
 			int passes_at_once;
 			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
+			//This array is too small for test_blocks().  See the comment there.
 			Uint64 coup_masks[1 << (TOTAL_INDEX_BITS >> 6)]{};
 			Uint64 coup_counts[COUP_BUCKETS]{};
 			Uint64 coup_last[1 << POSITIONS_L2]{};

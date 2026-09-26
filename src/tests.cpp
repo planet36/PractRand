@@ -8448,6 +8448,18 @@ void PractRand::Tests::TripleMirrorCoup::test_blocks(TestBlock *data, int numblo
 				index |= (static_cast<unsigned long>(b & ((1 << SIZE2) - 1))) << SIZE3;
 				index |= (static_cast<unsigned long>(c & ((1 << SIZE3) - 1))) << 0;
 				counts.increment(index);
+				//Two upstream bugs break this coupon tracking.  Nothing else reads coup_masks,
+				//and this test is in no battery, so neither bug changes what RNG_test reports.
+				//
+				//First, coup_masks is declared with 1 << (TOTAL_INDEX_BITS >> 6) elements.
+				//With TOTAL_INDEX_BITS at 15, that is 1 element, where
+				//(1 << TOTAL_INDEX_BITS) >> 6, or 512, was likely meant.  index >> 6 runs up
+				//to 511, so the line below writes past the end of the array and past the end
+				//of the TripleMirrorCoup object.
+				//
+				//Second, the line below ORs in the bit number, index & 63, instead of the bit
+				//itself, Uint64(1) << (index & 63).  A mask can then never have all 64 bits
+				//set, so the completion branch never runs.
 				coup_masks[index >> 6] |= (index & 63);
 				if (0 == ~coup_masks[index >> 6]) {
 					//we *might* have completed a coupon set here
