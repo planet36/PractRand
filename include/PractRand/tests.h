@@ -14,7 +14,7 @@ namespace PractRand {
 		double processed;//varies depending upon type:
 		long type;
 		double weight;
-		enum { TYPE_RAW, TYPE_RAW_NORMAL, TYPE_BAD_P, TYPE_BAD_S, TYPE_GOOD_P, TYPE_GOOD_S, TYPE_PASSFAIL, TYPE_UNKNOWN };
+		enum : Uint8 { TYPE_RAW, TYPE_RAW_NORMAL, TYPE_BAD_P, TYPE_BAD_S, TYPE_GOOD_P, TYPE_GOOD_S, TYPE_PASSFAIL, TYPE_UNKNOWN };
 		//  TYPE_RAW           there is no processed value
 		//  TYPE_RAW_NORMAL    there is no processed value, but treat the raw value as roughly a badly distorted normal distribution
 		//  TYPE_BAD_P         a p-value, but probably a VERY low quality p-value
