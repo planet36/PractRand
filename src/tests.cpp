@@ -2287,6 +2287,7 @@ void PractRand::Tests::DistC7::get_results(std::vector<TestResult> &results) {
 
 
 
+#if 0
 static constexpr char bit_count_table8[256] = {
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
@@ -2305,6 +2306,7 @@ static constexpr char bit_count_table8[256] = {
 	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
 	4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 };
+#endif
 
 #if 0
 PractRand::Tests::BCFN_MT::BCFN_MT( int unitsL2_, int tbits_ ) {
@@ -3790,6 +3792,7 @@ static constexpr Uint8 count_low_zeroes_table[256] = {
 	5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//14
 	4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//15
 };
+#if 0
 static constexpr Uint8 count_high_zeroes_table[256] = {
 //	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
 	8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4,//0
@@ -3809,6 +3812,7 @@ static constexpr Uint8 count_high_zeroes_table[256] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//14
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//15
 };
+#endif
 /*
 static unsigned long count_high_zeroes32(Uint32 value) {
 	Uint8 count = 0;
