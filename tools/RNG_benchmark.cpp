@@ -142,7 +142,7 @@ union DataBlock {
 	while ((clock1 = clock()) == clock0) ;\
 	int j = 0;\
 	do {\
-		for (int i = 0; i < DataBlock::SIZE*8 / bits; i++) entropy_pool.add_entropy ## bits (data->as ## bits [i]);\
+		for (int i = 0; i < DataBlock::SIZE*8 / (bits); i++) entropy_pool.add_entropy ## bits (data->as ## bits [i]);\
 		j++;\
 	} while ((clock2=clock())-clock1 < NUM_CLOCKS_TO_TEST);\
 	double delta = (clock2 - clock1) / double(CLOCKS_PER_SEC);\
@@ -182,7 +182,7 @@ void benchmark_random_access_rngs() {
 	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
-#define POLYPERF(a) {printf("  %s\n", a.get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
+#define POLYPERF(a) {printf("  %s\n", (a).get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
 	POLYPERF(poly_arbee)
 	POLYPERF(sha2_based)
 }
@@ -193,7 +193,7 @@ void benchmark_entropy_pool_input() {
 	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
-#define POLYPERF(a) {printf("  %s\n", a.get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
+#define POLYPERF(a) {printf("  %s\n", (a).get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
 	POLYPERF(poly_arbee)
 	POLYPERF(sha2_based)
 }

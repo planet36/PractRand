@@ -7,23 +7,23 @@
 
 #define PRACTRAND_RANDI_IMPLEMENTATION(max)     \
 	Uint32 mask, tmp;\
-	max -= 1;\
+	(max) -= 1;\
 	mask = max;\
 	mask |= mask >> 1; mask |= mask >>  2; mask |= mask >> 4;\
 	mask |= mask >> 8; mask |= mask >> 16;\
 	do {\
 		tmp = raw32() & mask;\
-	} while (tmp > max);\
+	} while (tmp > (max));\
 	return tmp;
 #define PRACTRAND_RANDLI_IMPLEMENTATION(max)     \
 	Uint64 mask, tmp;\
-	max -= 1;\
+	(max) -= 1;\
 	mask = max;\
 	mask |= mask >> 1; mask |= mask >>  2; mask |= mask >>  4;\
 	mask |= mask >> 8; mask |= mask >> 16; mask |= mask >> 32;\
 	do {\
 		tmp = raw64() & mask;\
-	} while (tmp > max);\
+	} while (tmp > (max));\
 	return tmp;
 
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(RNG) \

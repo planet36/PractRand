@@ -2767,7 +2767,7 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 #define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
 #define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
 #define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
-#define HANDLE_BITS(level,var) if constexpr (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
+#define HANDLE_BITS(level,var) if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
@@ -2827,7 +2827,7 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 #define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
 #define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
 #define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
-#define HANDLE_BITS(level,var) if (var){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
+#define HANDLE_BITS(level,var) if (var){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
@@ -2890,7 +2890,7 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
 					long tmp = 0;
-#define HANDLE_BITS(level,var) if constexpr (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
+#define HANDLE_BITS(level,var) if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3063,7 +3063,7 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
 					long tmp = 0;
-#define HANDLE_BITS(level,var) if (var){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
+#define HANDLE_BITS(level,var) if (var){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3519,7 +3519,7 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 #define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
 #define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
 #define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
-#define HANDLE_BITS(level,var) {counts2[level][var+COUNTS2_SIZE/2]++; if constexpr (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
+#define HANDLE_BITS(level,var) {counts2[level][(var)+COUNTS2_SIZE/2]++; if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
@@ -3582,7 +3582,7 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
 					long tmp = 0;
-#define HANDLE_BITS(level,var) {counts2[level][var+COUNTS2_SIZE/2]++; if constexpr (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
+#define HANDLE_BITS(level,var) {counts2[level][(var)+COUNTS2_SIZE/2]++; if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);

@@ -184,10 +184,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				#define ind32(mm,x)  (*reinterpret_cast<Uint32*>((reinterpret_cast<Uint8*>(mm)) + ((x) & ((MASK)<<2))))
 				#define rngstep32(mix,a,b,mm,m,m2,r,x) \
 				{ \
-				  x = *m;  \
-				  a = (a^(mix)) + *(m2++); \
-				  *(m++) = y = ind32(mm,x) + a + b; \
-				  *(r++) = b = ind32(mm,y>>table_size_L2) + x; \
+				  (x) = *(m);  \
+				  (a) = ((a)^(mix)) + *((m2)++); \
+				  *((m)++) = y = ind32(mm,x) + (a) + (b); \
+				  *((r)++) = (b) = ind32(mm,y>>table_size_L2) + (x); \
 				}
 				Uint32 isaac32_varqual::raw32() {
 					if (left) {
@@ -258,10 +258,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				#define ind16(mm,x)  (*reinterpret_cast<Uint16*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((MASK)<<1))))
 				#define rngstep16(mix,a,b,mm,m,m2,r,x) \
 				{ \
-				  x = *m;  \
-				  a = (a^(mix)) + *(m2++); \
-				  *(m++) = y = ind16(mm,x) + a + b; \
-				  *(r++) = b = ind16(mm,y>>table_size_L2) + x; \
+				  (x) = *(m);  \
+				  (a) = ((a)^(mix)) + *((m2)++); \
+				  *((m)++) = y = ind16(mm,x) + (a) + (b); \
+				  *((r)++) = (b) = ind16(mm,y>>table_size_L2) + (x); \
 				}
 				Uint16 isaac16_varqual::raw16() {
 					if (left) {

@@ -29,10 +29,10 @@ PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {std::memset(this, 0, sizeof(*
 #define ind32(mm,x)  (*reinterpret_cast<Uint32*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((SIZE-1)<<2))))
 #define rngstep32(mix,a,b,mm,m,m2,r,x) \
 { \
-  x = *m;  \
-  a = (a^(mix)) + *(m2++); \
-  *(m++) = y = ind32(mm,x) + a + b; \
-  *(r++) = b = ind32(mm,y>>SIZE_L2) + x; \
+  (x) = *(m);  \
+  (a) = ((a)^(mix)) + *((m2)++); \
+  *((m)++) = y = ind32(mm,x) + (a) + (b); \
+  *((r)++) = (b) = ind32(mm,y>>SIZE_L2) + (x); \
 }
 void PractRand::RNGs::Raw::isaac32x256::_advance_state() {//do not change
 	Uint32 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
@@ -158,10 +158,10 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 #define ind64(mm,x)  (*reinterpret_cast<Uint64*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((SIZE-1)<<3))))
 #define rngstep64(mix,a,b,mm,m,m2,r,x) \
 { \
-  x = *m;  \
-  a = (a^(mix)) + *(m2++); \
-  *(m++) = y = ind64(mm,x) + a + b; \
-  *(r++) = b = ind64(mm,y>>SIZE_L2) + x; \
+  (x) = *(m);  \
+  (a) = ((a)^(mix)) + *((m2)++); \
+  *((m)++) = y = ind64(mm,x) + (a) + (b); \
+  *((r)++) = (b) = ind64(mm,y>>SIZE_L2) + (x); \
 }
 void PractRand::RNGs::Raw::isaac64x256::_advance_state() {//do not change
 	Uint64 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
