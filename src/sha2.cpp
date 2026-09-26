@@ -35,40 +35,40 @@ namespace PractRand::Crypto {
 			0x510e527fade682d1ULL, 0x9b05688c2b3e6c1fULL,
 			0x1f83d9abfb41bd6bULL, 0x5be0cd19137e2179ULL
 		};
-			static inline Word PREPROCESS_SHIFT_S0_1(Word value) {
+			static Word PREPROCESS_SHIFT_S0_1(Word value) {
 				constexpr int SHIFT=1;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word PREPROCESS_SHIFT_S0_2(Word value) {
+			static Word PREPROCESS_SHIFT_S0_2(Word value) {
 				constexpr int SHIFT=8;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word PREPROCESS_SHIFT_S0_3(Word value) {
+			static Word PREPROCESS_SHIFT_S0_3(Word value) {
 				constexpr int SHIFT=7;
 				return value >> SHIFT;}
-			static inline Word PREPROCESS_SHIFT_S1_1(Word value) {
+			static Word PREPROCESS_SHIFT_S1_1(Word value) {
 				constexpr int SHIFT=19;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word PREPROCESS_SHIFT_S1_2(Word value) {
+			static Word PREPROCESS_SHIFT_S1_2(Word value) {
 				constexpr int SHIFT=61;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word PREPROCESS_SHIFT_S1_3(Word value) {
+			static Word PREPROCESS_SHIFT_S1_3(Word value) {
 				constexpr int SHIFT=6;
 				return value >> SHIFT;}
 			static Word MAINLOOP_SHIFT_S0_1(Word value) {
 				constexpr int SHIFT=28;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word MAINLOOP_SHIFT_S0_2(Word value) {
+			static Word MAINLOOP_SHIFT_S0_2(Word value) {
 				constexpr int SHIFT=34;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word MAINLOOP_SHIFT_S0_3(Word value) {
+			static Word MAINLOOP_SHIFT_S0_3(Word value) {
 				constexpr int SHIFT=39;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word MAINLOOP_SHIFT_S1_1(Word value) {
+			static Word MAINLOOP_SHIFT_S1_1(Word value) {
 				constexpr int SHIFT=14;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word MAINLOOP_SHIFT_S1_2(Word value) {
+			static Word MAINLOOP_SHIFT_S1_2(Word value) {
 				constexpr int SHIFT=18;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
-			static inline Word MAINLOOP_SHIFT_S1_3(Word value) {
+			static Word MAINLOOP_SHIFT_S1_3(Word value) {
 				constexpr int SHIFT=41;
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 		};
