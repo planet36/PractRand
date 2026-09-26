@@ -469,7 +469,7 @@ namespace PractRand {
 		void vRNG::add_entropy32(Uint32) {}
 		void vRNG::add_entropy64(Uint64) {}
 		void vRNG::add_entropy_N(const void *_data, std::size_t length) {
-			auto *data = static_cast<const Uint8*>(_data);
+			const auto *data = static_cast<const Uint8*>(_data);
 			for (unsigned long i = 0; i < length; i++) add_entropy8(data[i]);
 		}
 		bool vRNG::add_entropy_automatically(int milliseconds) {
