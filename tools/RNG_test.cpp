@@ -7,6 +7,7 @@
 #include <ctime>
 #include <list>
 #include <map>
+#include <numbers>
 #include <set>
 #include <sstream>
 #include <string>
@@ -182,7 +183,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 			if (a > 0.49) {
 				double s = result.get_suspicion();
 				double ns = std::abs(s) + 1;
-				double dec = ns / (std::log(10.0) / std::log(2.0));
+				double dec = ns / (std::numbers::ln10 / std::numbers::ln2);
 				double dig = std::ceil(dec);
 				double sig = std::floor(std::pow(0.1, dec - dig));
 				if (dig > 999) std::printf(" %d        ", (s > 0) ? 1 : 0);
@@ -204,7 +205,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 			if (p >= 0.01 && p <= 0.99) std::printf(" %.3f     ", p);
 			else {
 				double ns = std::abs(s) + 1;
-				double dec = ns / (std::log(10.0) / std::log(2.0));
+				double dec = ns / (std::numbers::ln10 / std::numbers::ln2);
 				double dig = std::ceil(dec);
 				double sig = std::pow(0.1, dec - dig);
 				sig = std::floor(sig * 10) * 0.1;
@@ -224,7 +225,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 		}
 	}
 
-	double dec = std::log(2.) / std::log(10.0);
+	double dec = std::numbers::ln2 / std::numbers::ln10;
 	double as = (std::abs(result.get_suspicion()) + 1 - 1) * dec;// +1 for suspicion conversion, -1 to account for there being 2 failure regions (near-zero and near-1)
 	double wmod = std::log(result.get_weight()) / std::log(0.5) * dec;
 	double rs = as - wmod;
@@ -287,7 +288,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 
 	std::printf("length= ");
 	Uint64 length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
-	double log2b = std::log(double(length)) / std::log(2.0);
+	double log2b = std::log(double(length)) / std::numbers::ln2;
 	const char *unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
 	int units = int(std::floor(log2b / 10)) - 1;
 	if (units < 0 || units > 5) {std::printf("internal error: length out of bounds?\n");std::exit(1);}

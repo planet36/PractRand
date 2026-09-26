@@ -29,6 +29,7 @@
 #include <cstring>
 #include <list>
 #include <map>
+#include <numbers>
 //#include <ostream>
 #include <set>
 #include <sstream>
@@ -119,7 +120,7 @@ static long double gap_log2_variance(long double chance_of_gap1 = 1.0 / 65536) {
 
 double PractRand::TestResult::pvalue_to_suspicion(double pvalue) {
 	if (pvalue > 0.5) return -1 * pvalue_to_suspicion(1 - pvalue);
-	return std::log(pvalue) / std::log(2.0) + 1;
+	return std::log(pvalue) / std::numbers::ln2 + 1;
 }
 double PractRand::TestResult::suspicion_to_pvalue(double suspicion) {
 	return (suspicion < 0) ? std::pow(2.0, suspicion-1) : (1 - std::pow(0.5, suspicion+1));
@@ -3933,7 +3934,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		if ((i & max_sig) == max_sig && inter_counts[e]) {
 			double expected = std::pow(0.5, e+1.0+(e==max_exp?-1:0)) * samples;
 
-			double _ebits = std::log(expected) / std::log(2.0) - 4;
+			double _ebits = std::log(expected) / std::numbers::ln2 - 4;
 			int ebits = int(std::floor(_ebits * 0.75 + 0.1));
 			if (ebits > sig_bits) ebits = sig_bits;
 
@@ -4005,7 +4006,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 		for (unsigned int e = 0; e <= max_exp; e++) inter_probs[e] = std::pow(0.5, e+1.0+(e==max_exp?-1:0));
 		int bins = simplify_prob_table(max_exp+1, samples/40.0, &inter_probs[0], &inter_counts[0], true, true);
 		double raw = g_test(bins, &inter_probs[0], &inter_counts[0]);
-		double norm = math_chisquared_to_normal(raw, bins-1) / std::sqrt(2.0);
+		double norm = math_chisquared_to_normal(raw, bins-1) / std::numbers::sqrt2;
 		//double p = math_normaldist_to_pvalue(norm);
 		std::ostringstream str; str << get_name() << ":cross";
 		TestCalibrationData *calib = calibration_manager.get_calibration_data( "FPF-14+6/16:cross", samples / 512.0 + 0.5 );
@@ -5639,7 +5640,7 @@ void PractRand::Tests::BirthdaySystematic128::do_incomplete_buffer() {
 //	int effective_bufsize_L2 = 10;
 	if (num_buffered < 64) return;
 	//while ((2ull << effective_bufsize_L2) < num_buffered) effective_bufsize_L2++;
-	double log2_of_buffer_size = std::log(double(num_buffered)) / std::log(2.0);
+	double log2_of_buffer_size = std::log(double(num_buffered)) / std::numbers::ln2;
 	long bits_per_sample = std::floor(3 * log2_of_buffer_size - 2);
 	if (bits_per_sample > bits_to_use) issue_error();
 	//const Uint64 effective_buffer_size = 1ull << effective_bufsize_L2;
@@ -6307,7 +6308,7 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult> &results) {
 		long double sum = 0;
 		for (const auto _base_prob : _base_probs) sum += _base_prob;
 		for (auto & _base_prob : _base_probs) _base_prob /= sum;
-		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) base_score[i] = -std::log(_base_probs[i]) / std::log(2.0);
+		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) base_score[i] = -std::log(_base_probs[i]) / std::numbers::ln2;
 		long double expected = 0;
 		for (int i = 0; i < PerSize::NUM_COUNTS + 1; i++) expected += base_score[i] * _base_probs[i];
 		for (auto & i : base_score) i -= expected;

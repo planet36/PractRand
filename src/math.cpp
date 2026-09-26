@@ -9,6 +9,7 @@
 #include <cstdlib>
 //#include <list>
 #include <map>
+#include <numbers>
 //#include <ostream>
 #include <set>
 //#include <sstream>
@@ -501,7 +502,7 @@ namespace PractRand {
 				};
 				return lookup[a];
 			}
-			static double halfL2Pi = std::log(3.14159265358979323 * 2) / 2;
+			static double halfL2Pi = std::log(std::numbers::pi * 2) / 2;
 			/*static double halfLPi = std::log(3.14159265358979323) / 2;
 			double L = std::log(a);
 			double r = a * (L - 1) + std::log(a * (1 + 4 * a * (1 + 2 * a))) / 6 + halfLPi;
@@ -519,7 +520,7 @@ namespace PractRand {
 			return rv;
 		}
 		static double math_harmonic_series(int n) {
-			if (n > 1000) return std::log(double(n)) + 0.57721566490153286;
+			if (n > 1000) return std::log(double(n)) + std::numbers::egamma;
 			long double sum = 0;
 			for (;n > 0; n--) sum += 1.0 / n;
 			return sum;
@@ -527,7 +528,7 @@ namespace PractRand {
 		static double math_erf ( double a ) {
 			if (a < 0) return -math_erf(-a);
 			if (a < 8) {
-				double scale = 2 / std::sqrt(3.14159265358979323);
+				double scale = 2 / std::sqrt(std::numbers::pi);
 				double a2 = a*a;
 				double x = a2*a;
 				//double f = 1;
@@ -633,7 +634,7 @@ namespace PractRand {
 			double scale = 1.0;
 			double offset = 0.0;
 		recurse:
-			if (a == 0.5) return (std::sqrt(3.141592653589793238) * math_erf(std::sqrt(x))) * scale + offset;
+			if (a == 0.5) return (std::sqrt(std::numbers::pi) * math_erf(std::sqrt(x))) * scale + offset;
 			if (a == 1) return (1 - std::exp(-x)) * scale + offset;
 			//if (a > 1) return (a - 1) * math_lower_incomplete_gamma(a - 1, x) - std::pow(x, a - 1) * std::exp(-x);
 			if (a > 1) {
@@ -646,7 +647,7 @@ namespace PractRand {
 			issue_error(); return -1;
 		}
 		double math_gamma_function ( double a ) {
-			if (a == 0.5) return std::sqrt(3.141592653589793238);
+			if (a == 0.5) return std::sqrt(std::numbers::pi);
 			if (a == 1) return 1;
 			if (a == 2) return 1;
 			if (a > 1) return math_gamma_function(a-1) * (a-1);
@@ -667,7 +668,7 @@ namespace PractRand {
 				for (std::vector<double>::iterator it = ln_offsets.begin(); it != ln_offsets.end(); it++)
 					sum_offsets += std::exp(*it - ln_scale);
 				//return math_erf(std::sqrt(x)) + offset / (std::sqrt(3.141592653589793238) * scale);
-				return math_erf(std::sqrt(x)) - sum_offsets / std::sqrt(3.141592653589793238);
+				return math_erf(std::sqrt(x)) - sum_offsets / std::sqrt(std::numbers::pi);
 			}
 			if (a == 1) {
 				//double gamma = scale;
@@ -742,7 +743,7 @@ namespace PractRand {
 			double scaled = math_erfcx(norm);
 			double scale = norm * norm;
 			//double ec = 1 - math_erf(norm);
-			double l = (std::log(scaled) - scale) / std::log(2.0);
+			double l = (std::log(scaled) - scale) / std::numbers::ln2;
 			return -(l + 0);
 		}
 		double math_normaldist_to_pvalue(double norm) {
@@ -1000,7 +1001,7 @@ namespace PractRand {
 			//sum_exp /= 1 + std::pow(size_a * 0.00047515, 5);
 
 			sum_log = -sum_log;
-			sum_log -= size_a * 0.57721566490153286 - 0.5;
+			sum_log -= size_a * std::numbers::egamma - 0.5;
 			sum_log /= std::sqrt(size_f);
 			sum_log += std::pow(2*size_f+1, -1.442695) * 0.2;
 			sum_log *= 1.245;
