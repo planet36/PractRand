@@ -341,7 +341,7 @@ void show_checkpoint(TestManager *tman, int mode, Uint64 seed, double time, bool
 	else
 		std::printf("  ...and %d test result(s) without anomalies\n", int(results.size() - marked.size()));
 	std::printf("\n");
-	std::fflush(stdout);
+	(void)std::fflush(stdout);
 	if (end_on_failure && biggest_decimal_suspicion > 8.5) {
 		std::exit(0);
 	}
@@ -659,8 +659,8 @@ int main(int argc, char **argv) {
 	std::string errmsg;
 	RNGs::vRNG *rng = RNG_Factories::create_rng(argv[1], &errmsg);
 	if (!rng) {
-		if (errmsg.empty()) std::fprintf(stderr, "unrecognized RNG name.  aborting.\n");
-		else std::fprintf(stderr, "%s\n", errmsg.c_str());
+		if (errmsg.empty()) (void)std::fprintf(stderr, "unrecognized RNG name.  aborting.\n");
+		else (void)std::fprintf(stderr, "%s\n", errmsg.c_str());
 		std::exit(1);
 	}
 
