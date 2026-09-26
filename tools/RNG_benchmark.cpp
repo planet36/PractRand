@@ -4,6 +4,7 @@
 #include <ctime>
 //#include <list>
 //#include <map>
+#include <print>
 #include <sstream>
 #include <string>
 //#include <vector>
@@ -58,35 +59,35 @@ double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	if (sum == 0) std::printf("unlikely!");
+	if (sum == 0) std::print("unlikely!");
 
 	return rate;
 }
 
 void benchmark_RNG_speeds() {
 //#define PERF(RNG) printf("  %5.3f GB/s  :  %5.3f GB/s  :  %s\n", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >()/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, #RNG );
-#define PERF(RNG) printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >()/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
+#define PERF(RNG) std::println("  {:5.3f} GB/s  :  {:5.3f} GB/s  :{:7.0f} KHz  :  {}", measure_RNG_performance< PractRand::RNGs::LightWeight:: RNG >()/1024, measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
 //#define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, #RNG );
-#define PERF_POLYMORPHIC_ONLY(RNG) printf("  ----- GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
-#define PERF_CANIDATE(rng) { typedef Candidates:: raw_ ## rng RawRNG;typedef Candidates:: polymorphic_ ## rng PolymorphicRNG; const char* name = #rng ; printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s\n", measure_RNG_performance< PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG< RawRNG > >()/1024, measure_RNG_performance<PolymorphicRNG>()/1024, benchmark_seeding<PolymorphicRNG>()/1000, name ); }
-#define PERF_CHACHA(RNG,ROUNDS) { PractRand::RNGs::LightWeight::RNG light_rng(PractRand::SEED_AUTO); PractRand::RNGs::Polymorphic::RNG poly_rng(PractRand::SEED_AUTO); light_rng.set_rounds(ROUNDS); poly_rng.set_rounds(ROUNDS); printf("  %5.3f GB/s  :  %5.3f GB/s  :%7.0f KHz  :  %s(%d)\n", measure_RNG_performance_32(&light_rng)/1024, measure_RNG_performance_32(&poly_rng)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG, ROUNDS );}
+#define PERF_POLYMORPHIC_ONLY(RNG) std::println("  ----- GB/s  :  {:5.3f} GB/s  :{:7.0f} KHz  :  {}", measure_RNG_performance<PractRand::RNGs::Polymorphic:: RNG >()/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG );
+#define PERF_CANIDATE(rng) { typedef Candidates:: raw_ ## rng RawRNG;typedef Candidates:: polymorphic_ ## rng PolymorphicRNG; const char* name = #rng ; std::println("  {:5.3f} GB/s  :  {:5.3f} GB/s  :{:7.0f} KHz  :  {}", measure_RNG_performance< PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG< RawRNG > >()/1024, measure_RNG_performance<PolymorphicRNG>()/1024, benchmark_seeding<PolymorphicRNG>()/1000, name ); }
+#define PERF_CHACHA(RNG,ROUNDS) { PractRand::RNGs::LightWeight::RNG light_rng(PractRand::SEED_AUTO); PractRand::RNGs::Polymorphic::RNG poly_rng(PractRand::SEED_AUTO); light_rng.set_rounds(ROUNDS); poly_rng.set_rounds(ROUNDS); std::println("  {:5.3f} GB/s  :  {:5.3f} GB/s  :{:7.0f} KHz  :  {}({})", measure_RNG_performance_32(&light_rng)/1024, measure_RNG_performance_32(&poly_rng)/1024, benchmark_seeding<PractRand::RNGs::Polymorphic:: RNG >()/1000, #RNG, ROUNDS );}
 //	printf("  light-weight   polymorphic    name\n");
-	printf("  light-weight   polymorphic    seeding       name\n");
-	printf("small fast RNGs:\n");
+	std::println("  light-weight   polymorphic    seeding       name");
+	std::println("small fast RNGs:");
 	PERF(jsf32);
 	PERF(jsf64);
 	PERF(sfc32);
 	PERF(sfc64);
-	printf("random access RNGs:\n");
+	std::println("random access RNGs:");
 	PERF(xsm32);
 	PERF(xsm64);
 	PERF(rarns16);
 	PERF(rarns32);
 	PERF(rarns64);
-	printf("entropy pooling RNGs:\n");
+	std::println("entropy pooling RNGs:");
 	PERF(arbee);
 	PERF_POLYMORPHIC_ONLY(sha2_based_pool);
-	printf("crypto / high quality RNGs:\n");
+	std::println("crypto / high quality RNGs:");
 	PERF(hc256);
 	PERF(trivium);
 	PERF(isaac32x256);
@@ -101,14 +102,14 @@ void benchmark_RNG_speeds() {
 	PERF_CHACHA(salsa, 8);
 	PERF_CHACHA(salsa, 12);
 	PERF_CHACHA(salsa, 20);
-	printf("popular RNGs:\n");
+	std::println("popular RNGs:");
 	PERF(mt19937);
-	printf("16 bit variants:\n");
+	std::println("16 bit variants:");
 	PERF(sfc16);
 	PERF(efiix16x48);
-	printf("8 bit variants:\n");
+	std::println("8 bit variants:");
 	PERF(efiix8x48);
-	printf("candidate RNGs: (not recommended, but almost)\n");
+	std::println("candidate RNGs: (not recommended, but almost)");
 	PERF_CANIDATE(siphash);
 	PERF_CANIDATE(VeryFast32)
 	PERF_CANIDATE(VeryFast64)
@@ -116,7 +117,7 @@ void benchmark_RNG_speeds() {
 	PERF_CANIDATE(sfc_alternative64)
 	PERF_CANIDATE(ranrot_variant32)
 	PERF_CANIDATE(ranrot_variant64)
-	printf("16 & 8 bit candidate RNGs: (not recommended, but almost)\n");
+	std::println("16 & 8 bit candidate RNGs: (not recommended, but almost)");
 	PERF_CANIDATE(VeryFast16)
 	PERF_CANIDATE(ranrot_variant16)
 	PERF_CANIDATE(ranrot_variant8)
@@ -150,7 +151,7 @@ union DataBlock {
 	double rate = amount / delta;\
 	entropy_pool.flush_buffers();\
 	Uint64 a = entropy_pool.raw64() & entropy_pool.raw64();\
-	if (a == 0) printf("unlikely!");\
+	if (a == 0) std::print("unlikely!");\
 	return rate;\
 }
 DECLARE_EP_BENCH_FUNC(8)
@@ -172,7 +173,7 @@ double benchmark_entropy_pool_N (PractRand::RNGs::vRNG& entropy_pool, DataBlock*
 	double rate = amount / delta;
 	entropy_pool.flush_buffers();
 	Uint64 a = entropy_pool.raw64() & entropy_pool.raw64();
-	if (a == 0) printf("unlikely!");
+	if (a == 0) std::print("unlikely!");
 	return rate;
 }
 void benchmark_random_access_rngs() {
@@ -182,7 +183,7 @@ void benchmark_random_access_rngs() {
 	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
-#define POLYPERF(a) {printf("  %s\n", (a).get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
+#define POLYPERF(a) {std::println("  {}", (a).get_name() ); std::println("    add_entropy8  :{:6.1f} MB/s\n    add_entropy16 :{:6.1f} MB/s\n    add_entropy32 :{:6.1f} MB/s\n    add_entropy64 :{:6.1f} MB/s\n    add_entropy_N :{:6.1f} MB/s", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
 	POLYPERF(poly_arbee)
 	POLYPERF(sha2_based)
 }
@@ -193,7 +194,7 @@ void benchmark_entropy_pool_input() {
 	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
-#define POLYPERF(a) {printf("  %s\n", (a).get_name().c_str() ); printf("    add_entropy8  :%6.1f MB/s\n    add_entropy16 :%6.1f MB/s\n    add_entropy32 :%6.1f MB/s\n    add_entropy64 :%6.1f MB/s\n    add_entropy_N :%6.1f MB/s\n", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
+#define POLYPERF(a) {std::println("  {}", (a).get_name() ); std::println("    add_entropy8  :{:6.1f} MB/s\n    add_entropy16 :{:6.1f} MB/s\n    add_entropy32 :{:6.1f} MB/s\n    add_entropy64 :{:6.1f} MB/s\n    add_entropy_N :{:6.1f} MB/s", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
 	POLYPERF(poly_arbee)
 	POLYPERF(sha2_based)
 }
@@ -203,12 +204,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
 	PractRand::hook_error_handler(PractRand::print_err);
 //	PractRand::self_test_PractRand();
 
-	printf("Random number generation speeds:\n");
+	std::println("Random number generation speeds:");
 	benchmark_RNG_speeds();
-	printf("\n");
-	printf("Entropy pool input speeds:\n");
+	std::println("");
+	std::println("Entropy pool input speeds:");
 	benchmark_entropy_pool_input();
-	printf("\n");
+	std::println("");
 
 	return 0;
 }
