@@ -178,7 +178,7 @@ public:
 			break;
 		}
 	}
-	PractRand::Uint64 hash_message(const std::vector<Uint8> &message) {
+	PractRand::Uint64 hash_message(const std::vector<Uint8> &message) const {
 		base_entropy_pool->reset_entropy();
 		base_entropy_pool->add_entropy_N(message.data(), message.size());
 		//base_entropy_pool->add_entropy64(0);
