@@ -66,5 +66,8 @@ Checks:
   - -readability-math-missing-parentheses
   - -readability-named-parameter
   - -readability-use-concise-preprocessor-directives
+CheckOptions:
+  # The default of 0.001 flags calibration-table entries that merely lie near a constant.
+  modernize-use-std-numbers.DiffThreshold: '1e-16'
 HeaderFilterRegex: '.*'
 ...
