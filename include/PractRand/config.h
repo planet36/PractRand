@@ -5,7 +5,6 @@
 /*
 Things to configure in this file:
 1.  Endianness (usually CPU dependent)
-2.  Thread-local-storage aka TLS
 3.  Integer types (compiler and CPU dependent)
 */
 
@@ -25,18 +24,6 @@ it may report an endianness error.
 */
 #define PRACTRAND_TARGET_IS_LITTLE_ENDIAN 1
 //#define PRACTRAND_TARGET_IS_BIG_ENDIAN 1
-
-
-
-/*
-2.  Thread-local-storage aka TLS
-	This is the standard C++ thread_local keyword.
-	See http://en.wikipedia.org/wiki/Thread-local_storage for more
-information.
-	If this one is left undefined then PractRand autoseeding will not work
-as well in multithreaded programs, but it will still work.
-*/
-#define PRACTRAND_THREAD_LOCAL_STORAGE thread_local
 
 
 

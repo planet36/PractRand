@@ -176,9 +176,8 @@ namespace PractRand {
 		static void get_autoseed_fixed_entropy(Uint64 entropy[5], [[maybe_unused]] const void* target) {
 			// NOT thread-safe the first time it's run
 			if (!initialized) initialize();
-#if defined PRACTRAND_THREAD_LOCAL_STORAGE
-			static PRACTRAND_THREAD_LOCAL_STORAGE Uint64 intrathread_count = 0;
-			static PRACTRAND_THREAD_LOCAL_STORAGE Uint64 thread_identifier = 0;
+			static thread_local Uint64 intrathread_count = 0;
+			static thread_local Uint64 thread_identifier = 0;
 			if (!intrathread_count) thread_identifier = PractRand::Internals::issue_unique_identifier();
 			++intrathread_count;
 			entropy[0] = shared_entropy[0] ^ intrathread_count;
@@ -186,7 +185,7 @@ namespace PractRand {
 			entropy[2] = shared_entropy[2];
 			entropy[3] = shared_entropy[3];
 			entropy[4] = shared_entropy[4];
-#else
+#if 0
 			//I think the combination of an address and a non-zero time span guarantees uniqueness on a per-run basis
 			//but it requires blocking on the time span
 			std::clock_t start_clock = std::clock();
