@@ -142,6 +142,13 @@ namespace PractRand::Tests {
 			}
 			void set_size(int size_) {
 				size = size_;
+				if (!size) {
+					std::free(low);
+					std::free(high);
+					low = nullptr;
+					high = nullptr;
+					return;
+				}
 				low = static_cast<LowIntType*>(std::realloc(low, sizeof(LowIntType) * size));
 				high = static_cast<Uint64*>(std::realloc(high, sizeof(Uint64) * size));
 				reset_counts();
