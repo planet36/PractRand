@@ -32,7 +32,7 @@ CXXFLAGS += -march=native
 
 #LDFLAGS =
 
-LDLIBS = -pthread
+#LDLIBS =
 
 all: $(BINS)
 
