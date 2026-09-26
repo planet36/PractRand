@@ -175,7 +175,7 @@ namespace PractRand::Tests {
 		};
 
 		class BitMatrix {
-			typedef Uint32 Word;
+			using Word = Uint32;
 			std::vector<Word> data;
 			int w{}, h{}, ww{};
 		public:

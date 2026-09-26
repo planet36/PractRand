@@ -183,8 +183,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};*/
 
 				class Discard16to8 : public Transform8 {
-					typedef Uint16 InWord;
-					typedef Uint8 OutWord;
+					using InWord = Uint16;
+					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
@@ -195,8 +195,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class Discard32to8 : public Transform8 {
-					typedef Uint32 InWord;
-					typedef Uint8 OutWord;
+					using InWord = Uint32;
+					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
@@ -207,8 +207,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class Discard64to8 : public Transform8 {
-					typedef Uint64 InWord;
-					typedef Uint8 OutWord;
+					using InWord = Uint64;
+					using OutWord = Uint8;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
@@ -219,8 +219,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class Discard32to16 : public Transform16 {
-					typedef Uint32 InWord;
-					typedef Uint16 OutWord;
+					using InWord = Uint32;
+					using OutWord = Uint16;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
@@ -231,8 +231,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class Discard64to16 : public Transform16 {
-					typedef Uint64 InWord;
-					typedef Uint16 OutWord;
+					using InWord = Uint64;
+					using OutWord = Uint16;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;
@@ -243,8 +243,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class Discard64to32 : public Transform32 {
-					typedef Uint64 InWord;
-					typedef Uint32 OutWord;
+					using InWord = Uint64;
+					using OutWord = Uint32;
 					static constexpr int INPUT_BITS = sizeof(InWord)* 8;
 					InWord *buffer;
 					int index;

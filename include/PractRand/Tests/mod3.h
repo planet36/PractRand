@@ -13,7 +13,7 @@ namespace PractRand::Tests {
 
 			void test_blocks(TestBlock *data, int numblocks) override;
 		protected:
-			typedef Uint32 Word;
+			using Word = Uint32;
 			static constexpr int WORD_BITS = 8 * sizeof(Word);
 			static constexpr int EXP = 11;//the number of words used in an overlapping sample; 9 matches what gjrand does, but I think 10 is good given cache sizes
 			static constexpr int K = ((EXP & 1) ? 3 : 1) * ((EXP & 2) ? 9 : 1) * ((EXP & 4) ? 81 : 1) * ((EXP & 8) ? 6561 : 1);

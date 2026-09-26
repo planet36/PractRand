@@ -6,7 +6,7 @@
 namespace PractRand::Crypto {
 		class SHA2_512_constants {
 		public:
-			typedef Uint64 Word;
+			using Word = Uint64;
 			static constexpr int ROUNDS = 80;
 			static constexpr int INPUT_WORDS = 16;
 			static constexpr int OUTPUT_WORDS = 8;
@@ -73,13 +73,13 @@ namespace PractRand::Crypto {
 				return (value >> SHIFT) | (value << (WORD_BITS-SHIFT));}
 		};
 		void SHA2_512::reset() {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			for (int i = 0; i < 8; i++) state[i] = Constants::initial_values[i];
 			length = 0;
 			leftover_input_bytes = 0;
 		}
 		void SHA2_512::process_block() {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			//do preprocessing on the block
 			Word preprocessed[Constants::ROUNDS];
 			long i = 0;
@@ -160,7 +160,7 @@ namespace PractRand::Crypto {
 			//finished with block
 		}
 		SHA2_512::Word SHA2_512::endianness_word(Word a) {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			if (Constants::REVERSE_ENDIANNESS) {
 				if constexpr (false) ;
 				else if constexpr (sizeof(Word)==8) return invert_endianness64(Uint64(a));
@@ -170,7 +170,7 @@ namespace PractRand::Crypto {
 			return a;
 		}
 		void SHA2_512::endianness_state() {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			if (Constants::REVERSE_ENDIANNESS) {
 				for (auto & i : state) {
 					i = endianness_word(i);
@@ -178,7 +178,7 @@ namespace PractRand::Crypto {
 			}
 		}
 		void SHA2_512::endianness_input() {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			if (Constants::REVERSE_ENDIANNESS) {
 				for (auto & i : input_buffer.as_word) {
 					i = endianness_word(i);
@@ -186,7 +186,7 @@ namespace PractRand::Crypto {
 			}
 		}
 		void SHA2_512::handle_input ( const Uint8 *input, unsigned long input_length ) {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			unsigned long input_left = input_length;
 			length += input_length;
 			unsigned long space_left = Constants::INPUT_SIZE - leftover_input_bytes;
@@ -214,7 +214,7 @@ namespace PractRand::Crypto {
 			}
 		}
 		void SHA2_512::process_final_block () {
-			typedef SHA2_512_constants Constants;
+			using Constants = SHA2_512_constants;
 			constexpr int EXTRAS = sizeof(Word) * 2 + 1;
 			input_buffer.as_byte[leftover_input_bytes] = 0x80;
 			std::memset( input_buffer.as_byte + leftover_input_bytes + 1, 0, Constants::INPUT_SIZE - leftover_input_bytes - 1);

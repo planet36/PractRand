@@ -77,7 +77,7 @@ public:
 };
 class EntropyPool_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
-	typedef PractRand::Uint64 Transform;
+	using Transform = PractRand::Uint64;
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG *base_entropy_pool;
 	unsigned int min_length, max_length;

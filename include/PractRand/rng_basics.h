@@ -187,22 +187,22 @@ namespace PractRand {
 		constexpr int SEEDING_UNSUPPORTED = 1<<16;//PRNG does not support conventional seeding (example: an RNG that just returns data from standard input)
 		constexpr int NEEDS_GENERIC_SEEDING = 1<<31;
 		}
-		typedef vRNG PolymorphicRNG;
-		typedef vRNG8 PolymorphicRNG8;
-		typedef vRNG16 PolymorphicRNG16;
-		typedef vRNG32 PolymorphicRNG32;
-		typedef vRNG64 PolymorphicRNG64;
+		using PolymorphicRNG = vRNG;
+		using PolymorphicRNG8 = vRNG8;
+		using PolymorphicRNG16 = vRNG16;
+		using PolymorphicRNG32 = vRNG32;
+		using PolymorphicRNG64 = vRNG64;
 		namespace Polymorphic {
 			using PractRand::RNGs::vRNG;
 			using PractRand::RNGs::vRNG8;
 			using PractRand::RNGs::vRNG16;
 			using PractRand::RNGs::vRNG32;
 			using PractRand::RNGs::vRNG64;
-			typedef vRNG PolymorphicRNG;
-			typedef vRNG8 PolymorphicRNG8;
-			typedef vRNG16 PolymorphicRNG16;
-			typedef vRNG32 PolymorphicRNG32;
-			typedef vRNG64 PolymorphicRNG64;
+			using PolymorphicRNG = vRNG;
+			using PolymorphicRNG8 = vRNG8;
+			using PolymorphicRNG16 = vRNG16;
+			using PolymorphicRNG32 = vRNG32;
+			using PolymorphicRNG64 = vRNG64;
 		}
 	}//namespace RNGs
 	namespace Tests { union TestBlock; }

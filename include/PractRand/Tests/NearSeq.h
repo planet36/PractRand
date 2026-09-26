@@ -5,7 +5,7 @@
 namespace PractRand::Tests {
 		class NearSeq final : public TestBaseclass {
 		protected:
-			typedef Uint64 Word;
+			using Word = Uint64;
 				/*
 					parameterizations of interest:
 						blocks*bits=core		thresholds				evaluation
@@ -68,7 +68,7 @@ namespace PractRand::Tests {
 		};
 		class NearSeq2 final : public TestBaseclass {
 		protected:
-			typedef Uint32 Word;
+			using Word = Uint32;
 				/*
 				parameterizations of interest:
 				blocks*bits=core		thresholds				evaluation

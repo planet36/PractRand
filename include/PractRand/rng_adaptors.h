@@ -23,7 +23,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
-					typedef base_rng base_rng_type;
+					using base_rng_type = base_rng;
 					void seed     (Uint64 seed) {StateWalkingObject *walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
 					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
 					void autoseed ()            {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
@@ -32,7 +32,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
-					typedef base_rng base_rng_type;
+					using base_rng_type = base_rng;
 					using base_rng :: seed;
 					void seed     (vRNG *seeder){StateWalkingObject *walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
 					void autoseed ()            {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
@@ -42,7 +42,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
-					typedef base_rng base_rng_type;
+					using base_rng_type = base_rng;
 					Uint16 raw16() {return this->raw8()  + (static_cast<Uint16>(this->raw8()) <<  8);}
 					Uint32 raw32() {return raw16() + (static_cast<Uint32>(raw16()) << 16);}
 					Uint64 raw64() {return raw32() + (static_cast<Uint64>(raw32()) << 32);}
@@ -51,7 +51,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
-					typedef base_rng base_rng_type;
+					using base_rng_type = base_rng;
 					Uint8  raw8()  {return static_cast<Uint8>(this->raw16());}
 					Uint32 raw32() {return this->raw16() + (static_cast<Uint32>(this->raw16()) << 16);}
 					Uint64 raw64() {return raw32() + (static_cast<Uint64>(raw32()) << 32);}
@@ -60,7 +60,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
-					typedef base_rng base_rng_type;
+					using base_rng_type = base_rng;
 					Uint8  raw8()  {return static_cast<Uint8>(this->raw32());}
 					Uint16 raw16() {return static_cast<Uint16>(this->raw32());}
 					Uint64 raw64() {return this->raw32() + (static_cast<Uint64>(this->raw32()) << 32);}
@@ -69,7 +69,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
-					typedef base_rng base_rng_type;
+					using base_rng_type = base_rng;
 					Uint8  raw8()  {return static_cast<Uint8>(this->raw64());}
 					Uint16 raw16() {return static_cast<Uint16>(this->raw64());}
 					Uint32 raw32() {return static_cast<Uint32>(this->raw64());}
@@ -78,10 +78,10 @@ namespace PractRand::RNGs::Adaptors {
 
 				template<class base_rng, int output_type, int output_bits> class _NORMALIZE_OUTPUT_HELPER;
 				template<class base_rng, int output_bits> class _NORMALIZE_OUTPUT_HELPER<base_rng, OUTPUT_TYPES::NORMAL_1, output_bits> {
-					public:typedef ADAPT_OUTPUT_1_TO_ALL<base_rng, output_bits> t;
+					public:using t = ADAPT_OUTPUT_1_TO_ALL<base_rng, output_bits>;
 				};
 				template<class base_rng, int output_bits> class _NORMALIZE_OUTPUT_HELPER<base_rng, OUTPUT_TYPES::NORMAL_ALL, output_bits> {
-					public:typedef base_rng t;
+					public:using t = base_rng;
 				};
 
 				template<class base_rng> class ADD_DISTRIBUTIONS : public base_rng {
@@ -138,40 +138,40 @@ namespace PractRand::RNGs::Adaptors {
 				};
 				template<class base_rng, bool needs_distributions_added> class _NORMALIZE_DISTRIBUTIONS_HELPER;
 				template<class base_rng> class _NORMALIZE_DISTRIBUTIONS_HELPER<base_rng,true> {
-				public:typedef ADD_DISTRIBUTIONS<base_rng> t;
+				public:using t = ADD_DISTRIBUTIONS<base_rng>;
 				};
 				template<class base_rng> class _NORMALIZE_DISTRIBUTIONS_HELPER<base_rng,false> {
-				public:typedef base_rng t;
+				public:using t = base_rng;
 				};
 
 			}//namespace Internal
 
 			template<class base_rng> class _NORMALIZE_SEEDING {
-			public: typedef typename
+			public: using t = typename
 				Internal::ADAPT_SEEDING<
 					base_rng, (base_rng::FLAGS & RNGs::FLAG::NEEDS_GENERIC_SEEDING) ? true : false
-				> t;
+				>;
 			//public:typedef typename base_rng t;
 			};
 			template<class base_rng> class NORMALIZE_SEEDING : public _NORMALIZE_SEEDING<base_rng>::t {};
 
 			template<class base_rng> class _NORMALIZE_OUTPUT {
-				public:typedef typename Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t t;
+				public:using t = typename Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t;
 			};
 			template<class base_rng> class NORMALIZE_OUTPUT : public _NORMALIZE_OUTPUT<base_rng>::t {};
 
 			template<class base_rng> class _NORMALIZE_DISTRIBUTIONS {
 				//public:typedef typename Internal::_NORMALIZE_DISTRUBTIONS_HELPER<base_rng,bool(base_rng::DISTRUBTIONS_TYPE & DISTRIBUTIONS_TYPE__NORMAL)>::t t;
-				public:typedef Internal::ADD_DISTRIBUTIONS<base_rng> t;
+				public:using t = Internal::ADD_DISTRIBUTIONS<base_rng>;
 			};
 			template<class base_rng> class NORMALIZE_DISTRIBUTIONS : public _NORMALIZE_DISTRIBUTIONS<base_rng>::t {};
 
 			template<class base_rng> class NORMALIZE {
-				public:typedef typename _NORMALIZE_SEEDING<
+				public:using t = typename _NORMALIZE_SEEDING<
 					typename _NORMALIZE_DISTRIBUTIONS<
 						typename _NORMALIZE_OUTPUT<base_rng>::t
 					>::t
-				>::t t;
+				>::t;
 			};
 			template<class base_rng> class RAW_TO_LIGHT_WEIGHT_RNG : public NORMALIZE<base_rng>::t {
 			public:

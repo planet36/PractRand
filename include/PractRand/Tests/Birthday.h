@@ -80,7 +80,7 @@ namespace PractRand::Tests {
 		protected:
 			//optimized for lambda=1, few runs, as described in "On the performance of birthday spacings tests with certain families of random number generators" (L'ecuyer & Simard, 2001)
 			//using namespace BirthdayHelpers; using BirthdayHelpers::i128// these are illegal in C++, I guess instead I'll try:
-			typedef BirthdayHelpers::i128 i128;
+			using i128 = BirthdayHelpers::i128;
 			static constexpr int SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS;
 			static constexpr int DO_LARGEST_SPACING = 1;
 			bool autofail{};
@@ -148,7 +148,7 @@ namespace PractRand::Tests {
 			//as for BirthdayLambda1, but:
 			// keep all bits regardless of buffer size, just count an adjusting range of near deltas as if they were exact matches (or score them based upon how exact they are?)
 			// try filtering the initial samples range, as if it was a small part of a larger sort buffer
-			typedef BirthdayHelpers::i128 i128;
+			using i128 = BirthdayHelpers::i128;
 			static constexpr int SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS;
 			//static constexpr int FILTER_BITS = 0;
 			//i128 buffer[1 << BUFFER_SIZE_L2];

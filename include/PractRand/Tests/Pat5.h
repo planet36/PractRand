@@ -11,7 +11,7 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock *data, int numblocks) override;
 
 		protected:
-			typedef Uint32 Word;
+			using Word = Uint32;
 			static constexpr int WORD_BITS = sizeof(Word) * 8;
 			static constexpr int ZERO_FILTER_BITS = 20;//should not exceed WORD_BITS - PATTERN_INDEX_BITS - (1 << PRIMARY_WORD_DISTANCE_BITS) + 1
 			static constexpr int PATTERN_INDEX_BITS = 3;

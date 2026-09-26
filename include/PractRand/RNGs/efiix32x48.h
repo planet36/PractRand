@@ -11,7 +11,7 @@ namespace PractRand::RNGs {
 				static constexpr int OUTPUT_BITS = 32;
 				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::USES_INDIRECTION | FLAG::USES_CYCLIC_BUFFER | FLAG::ENDIAN_SAFE;
 			protected:
-				typedef Uint32 Word;
+				using Word = Uint32;
 				static constexpr int ITERATION_SIZE_L2 = 5;
 				static constexpr int ITERATION_SIZE = 1 << ITERATION_SIZE_L2;
 				static constexpr int INDIRECTION_SIZE_L2 = 4;

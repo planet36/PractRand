@@ -4,7 +4,7 @@
 
 namespace PractRand::Crypto {
 		class SHA2_512 {
-			typedef Uint64 Word;
+			using Word = Uint64;
 			Word state[8]{};
 			Uint64 length{};
 			union InputBlock {

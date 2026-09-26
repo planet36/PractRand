@@ -646,7 +646,7 @@ POLYMORPHIC_CANDIDATE(mcx, 32)
 
 class raw_siphash {
 public:
-	typedef Uint64 Word;
+	using Word = Uint64;
 	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
 	static constexpr int OUTPUT_BITS = sizeof(Word)* 8;
 	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
@@ -783,7 +783,7 @@ public:
 };
 class polymorphic_siphash final : public PractRand::RNGs::vRNG64 {
 public:
-	typedef raw_siphash ImplementationType;
+	using ImplementationType = raw_siphash;
 	static constexpr int OUTPUT_BITS = ImplementationType::OUTPUT_BITS;
 	static constexpr int FLAGS = ImplementationType::FLAGS;
 	polymorphic_siphash(PractRand::SEED_NONE_TYPE) {}
