@@ -5,7 +5,7 @@
 /*
 Things to configure in this file:
 1.  Endianness (usually CPU dependent)
-3.  Integer types (compiler and CPU dependent)
+2.  Integer types (compiler and CPU dependent)
 */
 
 /*
@@ -28,7 +28,7 @@ it may report an endianness error.
 
 
 /*
-3.  Integer type sizes - reconfigure if needed
+2.  Integer type sizes - reconfigure if needed
 	If you know C/C++ programing this one should be self-explanatory.  The
 default configuration should work for most 32 bit and 64 bit platforms.
 If you are on a 16 bit or 8 bit platform then you will have to
@@ -63,7 +63,7 @@ namespace PractRand {
 }
 
 /*
-4. SIMD stuff can greatly speed up the ChaCha RNG
+3. SIMD stuff can greatly speed up the ChaCha RNG
 (not used by much yet, only ChaCha so far and only on MSVC)
 
 SIMD strongly NOT recommended at this time, as I haven't come up with a
