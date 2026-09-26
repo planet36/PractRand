@@ -136,7 +136,7 @@ double PractRand::TestResult::get_pvalue() const {
 	return 0;//just to avoid the warning
 }
 double PractRand::TestResult::get_suspicion() const {
-	if (type == TYPE_RAW) return 0;
+	if (type == TYPE_RAW) { return 0; }
 	else if (type == TYPE_RAW_NORMAL) {
 		double m = std::abs(raw);
 		double s = (raw < 0) ? 1 : -1;//backwards to make normal failures occur at p=0 instead of p=1
@@ -148,11 +148,11 @@ double PractRand::TestResult::get_suspicion() const {
 		else if (m < 28) return ((m - 24) * 1.75 + 22) * s;
 		return ((m - 28) * 2.0 + 29) * s;
 	}
-	else if (type == TYPE_BAD_P || type == TYPE_GOOD_P) return pvalue_to_suspicion(processed);
-	else if (type == TYPE_BAD_S || type == TYPE_GOOD_S) return processed;
-	else if (type == TYPE_PASSFAIL) return processed ? -9999 : 0;
-	else if (type == TYPE_UNKNOWN) return 0;
-	else issue_error();
+	else if (type == TYPE_BAD_P || type == TYPE_GOOD_P) { return pvalue_to_suspicion(processed); }
+	else if (type == TYPE_BAD_S || type == TYPE_GOOD_S) { return processed; }
+	else if (type == TYPE_PASSFAIL) { return processed ? -9999 : 0; }
+	else if (type == TYPE_UNKNOWN) { return 0; }
+	else { issue_error(); }
 	return 0;//just to avoid the warning
 }
 static double interp_s2i(double value, double low, double high) {
@@ -173,7 +173,7 @@ double PractRand::Tests::RawTestCalibrationData_117::sample_to_index(double samp
 			max = mid - 1;
 			if (max < min) return mid - 1 + interp_s2i(sample, table[mid-1], table[mid]);
 		}
-		else if (v == sample) return mid;
+		else if (v == sample) { return mid; }
 		else {
 			issue_error("sample_to_index117: sample is NaN");
 		}
@@ -218,7 +218,7 @@ double PractRand::Tests::RawTestCalibrationData_129::sample_to_index(double samp
 			max = mid - 1;
 			if (max < min) return mid - 1 + interp_s2i(sample, table[mid - 1], table[mid]);
 		}
-		else if (v == sample) return mid;
+		else if (v == sample) { return mid; }
 		else {
 			issue_error("sample_to_index129: sample is NaN");
 		}
@@ -277,7 +277,7 @@ class TestCalibrationData {
 		// p1 >= 1/sqrt(num_samples)
 		// p2 >= p1 + 1/sqrt(num_samples)
 		//asside from that, p1 & p2 should be as small as possible
-		if constexpr (false);
+		if constexpr (false) {; }
 		else if (n >= 8192 * 8192) {
 			p1 = 0.0001;
 			p2 = 0.0002;
@@ -1588,7 +1588,7 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 			if (lag < (SIZE1 << SET1_SHIFT)) counts.increment(lag >> SET1_SHIFT);
 			else increment_lag(lag);
 		}
-		else warmup--;
+		else { warmup--; }
 	}
 	else while (ofs != max2) {
 		Uint16 a = 0;
@@ -2166,7 +2166,7 @@ void PractRand::Tests::DistC7::test_blocks(TestBlock *data, int numblocks) {
 			}
 			advance_index(bits);
 			i++;
-			if (warmup) warmup--;
+			if (warmup) { warmup--; }
 			else {
 				if (odd) odd_counts.increment(last_index);
 				else counts.increment(last_index);
@@ -2175,7 +2175,7 @@ void PractRand::Tests::DistC7::test_blocks(TestBlock *data, int numblocks) {
 		}
 		else while (max2 > i) {
 			last_index = _advance_index(last_index, lookup_table[data->as8[i++]]);
-			if (warmup) warmup--;
+			if (warmup) { warmup--; }
 			else {
 				if (odd) odd_counts.increment(last_index);
 				else counts.increment(last_index);
@@ -2732,7 +2732,7 @@ void PractRand::Tests::BCFN::handle_high_levels_balanced ( long level, long bits
 		int tmp = bits < 0 ? 1 : 0;
 		int index = ((cur[level] << 1) | tmp) & mask[level];
 		cur[level] = index;
-		if (warmup[level]) warmup[level] --;
+		if (warmup[level]) { warmup[level] --; }
 		else {
 			counts[level].increment(index);
 		}
@@ -2755,7 +2755,7 @@ void PractRand::Tests::BCFN::handle_high_levels_unbalanced ( long level, long bi
 		int tmp = bits < 0 ? 1 : 0;
 		int index = ((cur[level] << 1) | tmp) & mask[level];
 		cur[level] = index;
-		if (warmup[level]) warmup[level] --;
+		if (warmup[level]) { warmup[level] --; }
 		else {
 			counts[level].increment(index);
 		}
@@ -3450,7 +3450,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 					counts2_dup[i+1] = counts2[level][i];
 					int min = (i - COUNTS2_SIZE/2) << shifts[level];
 					int max = min + (1 << shifts[level]) - 1;
-					if (max < -n || min > n) probs_[i+1] = 0;
+					if (max < -n || min > n) { probs_[i+1] = 0; }
 					else {
 						double p = 0;
 						for (int j = min; j <= max; j++) p += abs(j) <= n ? pdf[n-abs(j)] : 0;
@@ -3510,7 +3510,7 @@ void PractRand::Tests::BCFN_FF::handle_high_levels ( int level, int bits ) {
 		int tmp = bits >> 31;
 		int index = ((cur[level] << 1) - tmp) & mask;
 		cur[level] = index;
-		if (warmup[level]) warmup[level] --;
+		if (warmup[level]) { warmup[level] --; }
 		else {
 			counts[level].increment(index);
 		}
@@ -3964,7 +3964,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult> &results) {
 					num_s++;
 					results.emplace_back(namestr.str() + ")", norm, suspicioun, TestResult::TYPE_GOOD_S, ebits * 0.00625 / sig_bits);
 				}
-				else results.emplace_back(namestr.str() + ")", norm, norm,  TestResult::TYPE_RAW_NORMAL, ebits * 0.00625 / sig_bits);
+				else { results.emplace_back(namestr.str() + ")", norm, norm,  TestResult::TYPE_RAW_NORMAL, ebits * 0.00625 / sig_bits); }
 			}
 		}
 	}
@@ -4867,7 +4867,7 @@ void PractRand::Tests::Birthday32::flush_buffer() {
 void PractRand::Tests::Birthday32::test_blocks(TestBlock *data, int numblocks) {
 	while (numblocks) {
 		//Uint32 *ptr = &buffer[num_buffered];
-		if constexpr (false) buffer[num_buffered++] = data[0].as32[0];
+		if constexpr (false) { buffer[num_buffered++] = data[0].as32[0]; }
 		else {
 			std::memcpy(&buffer[num_buffered], &data[0].as32[0], TestBlock::SIZE);
 			num_buffered += TestBlock::SIZE / sizeof(Uint32);
@@ -4950,7 +4950,7 @@ void PractRand::Tests::Birthday64::_histogram_in_place_sort64(Uint64 *buffer, lo
 				}
 				_histogram_in_place_sort64(&buffer[region_bases2[i]], len, bits_already + SORT_HELPER_BITS, region_counts);
 			}
-			else std::sort(&buffer[region_bases2[i]], &buffer[region_bases2[i + 1]]);
+			else { std::sort(&buffer[region_bases2[i]], &buffer[region_bases2[i + 1]]); }
 		}
 	}
 }
@@ -5004,7 +5004,7 @@ void PractRand::Tests::Birthday64::_histogram_sort64(Uint64 *buffer, long length
 			}
 			_histogram_sort64(&buffer[begin], end - begin, bits_already, region_counts);
 		}
-		else std::sort(&buffer[begin], &buffer[end]);
+		else { std::sort(&buffer[begin], &buffer[end]); }
 		begin = end;
 	}
 }
@@ -5191,7 +5191,7 @@ void PractRand::Tests::BirthdayHelpers::radix_sort_and_copy(i128 *buffer, i128 *
 	Uint64 run_length = 0;
 	for (long i = 1; i < (1 << SORT_HELPER_BITS); i++) {
 		Uint64 value = buffer[i].high & sorted_mask;
-		if (value == run_value) run_length++;//run continuing
+		if (value == run_value) { run_length++; }//run continuing
 		else {
 			run_value = value;
 			if (!run_length) {// no run, needs a single-copy
@@ -5291,7 +5291,7 @@ void PractRand::Tests::BirthdayHelpers::histogram_in_place_sort128(i128 *buffer,
 				}
 				histogram_in_place_sort128(&buffer[region_bases2[i]], len, bits_already, region_counts);
 			}
-			else std::sort(&buffer[region_bases2[i]], &buffer[region_bases2[i + 1]]);
+			else { std::sort(&buffer[region_bases2[i]], &buffer[region_bases2[i + 1]]); }
 		}
 	}
 }
@@ -5328,7 +5328,7 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128 *ba
 			i128 delta = base[i + 1] - base[i];
 			base[i] = delta;
 			long ri = delta.high >> shift;
-			if (ri >= (1 << SORT_HELPER_BITS)) spills.push_back(delta);
+			if (ri >= (1 << SORT_HELPER_BITS)) { spills.push_back(delta); }
 			else {
 				freq_counts[ri]++;
 				base[i - spills.size()] = delta;
@@ -5357,7 +5357,7 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128 *ba
 			i128 delta = base[i + 1] - base[i];
 			base[i] = delta;
 			long ri = delta.high >> shift;
-			if (ri >= (1 << SORT_HELPER_BITS)) spills.push_back(delta);
+			if (ri >= (1 << SORT_HELPER_BITS)) { spills.push_back(delta); }
 			else {
 				freq_counts[ri]++;
 				base[i - spills.size()] = delta;
@@ -5373,7 +5373,7 @@ void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128 *ba
 		// it's now sorted deltas of sorted values
 		delete[] buffer2;
 	}
-	else issue_error();
+	else { issue_error(); }
 }
 void PractRand::Tests::BirthdayHelpers::_sorted_deltas_of_sorted_values(i128 *base, long length_L2) {
 	if (length_L2 < 1) issue_error();
@@ -5433,7 +5433,7 @@ static double largest_spacing_cdf(Uint64 N, double value) {
 			p += (pp + term);
 			pp = 0;
 		}
-		else pp = term;
+		else { pp = term; }
 	}
 	p += pp;
 	if (invert_result) p = 1 - p;
@@ -5492,7 +5492,7 @@ Uint64 PractRand::Tests::BirthdayLamda1::flush_buffer() {
 			largest = delta;
 		}
 		long ri = delta.high >> shift;
-		if (ri >= (1 << SORT_HELPER_BITS)) spills.push_back(delta);
+		if (ri >= (1 << SORT_HELPER_BITS)) { spills.push_back(delta); }
 		else {
 			sort_helper_counts[ri]++;
 			buffer[i - spills.size()] = delta;
@@ -5537,12 +5537,12 @@ void PractRand::Tests::BirthdayLamda1::test_blocks(TestBlock *data, int numblock
 		mask_low = 0;
 		mask_high <<= (64 - bits_to_use);
 	}
-	else if (bits_to_use == 64) mask_low = 0;
+	else if (bits_to_use == 64) { mask_low = 0; }
 	else if (bits_to_use < 128) {
 		mask_low = mask_high << (128 - bits_to_use);
 	}
-	else if (bits_to_use == 128) mask_low = mask_high;
-	else issue_error();
+	else if (bits_to_use == 128) { mask_low = mask_high; }
+	else { issue_error(); }
 	while (numblocks) {
 		i128 *dest = &buffer[num_buffered];
 		Uint64 *cur = &data[0].as64[0];
@@ -5563,7 +5563,7 @@ void PractRand::Tests::BirthdayLamda1::test_blocks(TestBlock *data, int numblock
 				mask_low = 0;
 				mask_high <<= (64 - bits_to_use);
 			}
-			else if (bits_to_use == 64) mask_low = 0;
+			else if (bits_to_use == 64) { mask_low = 0; }
 			else if (bits_to_use < 128) {
 				mask_low = mask_high << (128 - bits_to_use);
 			}
@@ -5645,9 +5645,9 @@ void PractRand::Tests::BirthdaySystematic128::do_incomplete_buffer() {
 	if (bits_per_sample > bits_to_use) issue_error();
 	//const Uint64 effective_buffer_size = 1ull << effective_bufsize_L2;
 	Uint64 high_mask = 0xFFffFFffFFffFFffULL, low_mask = 0;
-	if (bits_per_sample == 128) low_mask = high_mask;
-	else if (bits_per_sample > 64) low_mask = high_mask << (128 - bits_per_sample);
-	else if (bits_per_sample == 64) low_mask = 0;
+	if (bits_per_sample == 128) { low_mask = high_mask; }
+	else if (bits_per_sample > 64) { low_mask = high_mask << (128 - bits_per_sample); }
+	else if (bits_per_sample == 64) { low_mask = 0; }
 	else {//bits_per_sample < 64
 		low_mask = 0;
 		high_mask <<= (64 - bits_per_sample);
@@ -5755,11 +5755,11 @@ void PractRand::Tests::BirthdaySystematic128::test_blocks(TestBlock *data, int n
 		mask_low = 0;
 		mask_high <<= (64 - bits_to_use);
 	}
-	else if (bits_to_use == 64) mask_low = 0;
+	else if (bits_to_use == 64) { mask_low = 0; }
 	else if (bits_to_use < 128) {
 		mask_low = mask_high << (128 - bits_to_use);
 	}
-	else if (bits_to_use == 128) mask_low = mask_high;
+	else if (bits_to_use == 128) { mask_low = mask_high; }
 	else {
 		issue_error();
 		mask_low = 0;
@@ -5784,7 +5784,7 @@ void PractRand::Tests::BirthdaySystematic128::test_blocks(TestBlock *data, int n
 				mask_low = 0;
 				mask_high <<= (64 - bits_to_use);
 			}
-			else if (bits_to_use == 64) mask_low = 0;
+			else if (bits_to_use == 64) { mask_low = 0; }
 			else if (bits_to_use < 128) {
 				mask_low = mask_high << (128 - bits_to_use);
 			}
@@ -5865,7 +5865,7 @@ void PractRand::Tests::BirthdayAlt::_lookup_constants(int table_size_L2,long dou
 	};
 	//long double offset, dev, samples;
 	if (_offset) {
-		if (table[table_size_L2].mean > 0) *_offset = table[table_size_L2].mean;
+		if (table[table_size_L2].mean > 0) { *_offset = table[table_size_L2].mean; }
 		else {}
 	}
 	if (_deviation) *_deviation = table[table_size_L2].dev;
@@ -6499,7 +6499,7 @@ void PractRand::Tests::NearSeq::init(PractRand::RNGs::vRNG *known_good) {
 			bits = BITS_PER_BLOCK - bits;
 			lookup_table[i] = 1;
 		}
-		else lookup_table[i] = 0;
+		else { lookup_table[i] = 0; }
 		if (bits > MAX_ERRORS_PER_BLOCK) lookup_table[i] |= 128;
 
 		if (bits > 7) bits = 7;
@@ -7397,7 +7397,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult> &results
 		base1 = 6148914691236517205.0 / 18446744073709551616.0;
 		base2 = 6148914691236517206.0 / 18446744073709551616.0;
 	}
-	else issue_error("mod3_simple - impossible settings");
+	else { issue_error("mod3_simple - impossible settings"); }
 	std::vector<double> probs; probs.resize(K);
 	for (int i = 0; i < K; i++) {
 		int num_zeroes = 0;
@@ -7619,7 +7619,7 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 			}
 			cs = g_test(effective_K, &probs[0], &counts[0]);
 		}
-		else cs = g_test_flat(effective_K, &counts[0]);
+		else { cs = g_test_flat(effective_K, &counts[0]); }
 		double n = math_chisquared_to_normal(cs, effective_K - 1);
 		std::ostringstream buf;
 		buf << "mod3_simple(" << (effective_EXP < 11 ? effective_EXP : 11) << ")";
@@ -7635,7 +7635,7 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 			double sus = calib->sample_to_suspicion(n);
 			results.emplace_back(buf.str(), n, -sus, TestResult::TYPE_GOOD_S, priority);
 		}
-		else results.emplace_back(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, priority);
+		else { results.emplace_back(buf.str(), n, n, TestResult::TYPE_RAW_NORMAL, priority); }
 	}
 }
 unsigned long PractRand::Tests::mod3n::update_index(unsigned long index, Uint8 remainder) {
@@ -10797,7 +10797,7 @@ PractRand::Tests::Transforms::multiplex::multiplex(const char *name_, const List
 	subtests(testlist)
 {
 //	for (unsigned int i = 0; i < testlist.tests.size(); i++) subtests.push_back(testlist.tests[i]);
-	if (name_) name = name_;
+	if (name_) { name = name_; }
 	//else if (subtests.tests.size() == 1) name = subtests.tests[0]->get_name();
 	else {
 		//std::ostringstream str;

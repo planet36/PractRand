@@ -116,9 +116,9 @@ int main(int argc, char **argv) {
 			(void)std::fprintf(stderr, "RNG_output ERROR: invalid number of output bytes\n"); print_usage(argv[0]);
 		}
 	}
-	else n = Uint64(_n);
+	else { n = Uint64(_n); }
 
-	if (argc == 3) rng->autoseed();
+	if (argc == 3) { rng->autoseed(); }
 	else {
 		Uint64 seed = 0;
 		if (!interpret_seed(argv[3],seed)) {(void)std::fprintf(stderr, "RNG_output ERROR: \"%s\" is not a valid 64 bit hexadecimal seed\n", argv[3]); std::exit(0);}

@@ -228,7 +228,7 @@ namespace PractRand::Crypto {
 				input_buffer.as_word[Constants::INPUT_WORDS-2] =
 					endianness_word(length>>(sizeof(Word)*8-3));
 			}
-			else input_buffer.as_word[Constants::INPUT_WORDS-2] = 0;
+			else { input_buffer.as_word[Constants::INPUT_WORDS-2] = 0; }
 			endianness_input();
 			process_block();
 		}

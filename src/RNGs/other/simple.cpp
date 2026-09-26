@@ -79,8 +79,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						low ^= high << (64 - bits);
 						high ^= high >> bits;
 					}
-					else if (bits > 64) low ^= high >> (bits - 64);
-					else low ^= high;
+					else if (bits > 64) { low ^= high >> (bits - 64); }
+					else { low ^= high; }
 				}
 				void xorshift64of128::xls(int bits) {
 					if (bits < 64) {
@@ -88,8 +88,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						high ^= low >> (64 - bits);
 						low ^= low << bits;
 					}
-					else if (bits > 64) low ^= high >> (bits - 64);
-					else low ^= high;
+					else if (bits > 64) { low ^= high >> (bits - 64); }
+					else { low ^= high; }
 				}
 				Uint64 xorshift64of128::raw64() {
 					xls(16);

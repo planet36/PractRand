@@ -31,7 +31,7 @@ namespace PractRand::RNGs {
 						_advance_state();
 						return state[used++];
 					}
-					else return state[used++];
+					else { return state[used++]; }
 				}
 				static void self_test();
 			};

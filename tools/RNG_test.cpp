@@ -152,10 +152,12 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 	if constexpr (false) {// 12 characters?
 		bool printed = false;
 		double susp = result.get_suspicion();
-		if (result.type == result.TYPE_PASSFAIL)
+		if (result.type == result.TYPE_PASSFAIL) {
 			std::printf("  %s    ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
-		else if (result.type == result.TYPE_RAW)
+		}
+		else if (result.type == result.TYPE_RAW) {
 			std::printf("            ");
+		}
 		else if (result.type == result.TYPE_BAD_P || result.type == result.TYPE_BAD_S || result.type == result.TYPE_RAW_NORMAL) {
 			std::printf("S=~%+6.1f   ", susp);
 			printed = true;
@@ -172,10 +174,12 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 
 	//RESULT AS A p-value
 	if constexpr (true) {// 14 characters?
-		if (result.type == result.TYPE_PASSFAIL)
+		if (result.type == result.TYPE_PASSFAIL) {
 			std::printf("  %s      ", result.get_pvalue() ? "\"pass\"" : "\"fail\"");
-		else if (result.type == result.TYPE_RAW)
+		}
+		else if (result.type == result.TYPE_RAW) {
 			std::printf("              ");
+		}
 		else if (result.type == result.TYPE_BAD_P || result.type == result.TYPE_GOOD_P || result.type == result.TYPE_RAW_NORMAL) {
 			double p = result.get_pvalue();
 			double a = std::abs(p-0.5);
@@ -186,7 +190,7 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 				double dec = ns / (std::numbers::ln10 / std::numbers::ln2);
 				double dig = std::ceil(dec);
 				double sig = std::floor(std::pow(0.1, dec - dig));
-				if (dig > 999) std::printf(" %d        ", (s > 0) ? 1 : 0);
+				if (dig > 999) { std::printf(" %d        ", (s > 0) ? 1 : 0); }
 				else {
 					if (s > 0) std::printf("1-%1.0fe-%.0f  ", sig, dig);
 					else       std::printf("  %1.0fe-%.0f  ", sig, dig);
@@ -194,22 +198,22 @@ double print_result(const PractRand::TestResult &result, bool print_header = fal
 					if (dig < 10) std::printf(" ");
 				}
 			}
-			else if (result.type == result.TYPE_GOOD_P) std::printf("%5.3f     ", p);
-			else if (a >= 0.4)                          std::printf("%4.2f      ", p);
-			else                                        std::printf("%3.1f       ", p);
+			else if (result.type == result.TYPE_GOOD_P) { std::printf("%5.3f     ", p); }
+			else if (a >= 0.4) {                          std::printf("%4.2f      ", p); }
+			else {                                        std::printf("%3.1f       ", p); }
 		}
 		else if (result.type == result.TYPE_BAD_S || result.type == result.TYPE_GOOD_S) {
 			double s = result.get_suspicion();
 			double p = result.get_pvalue();
 			std::printf((result.type == result.TYPE_BAD_S || result.type == result.TYPE_RAW_NORMAL) ? "p~=" : "p =");
-			if (p >= 0.01 && p <= 0.99) std::printf(" %.3f     ", p);
+			if (p >= 0.01 && p <= 0.99) { std::printf(" %.3f     ", p); }
 			else {
 				double ns = std::abs(s) + 1;
 				double dec = ns / (std::numbers::ln10 / std::numbers::ln2);
 				double dig = std::ceil(dec);
 				double sig = std::pow(0.1, dec - dig);
 				sig = std::floor(sig * 10) * 0.1;
-				if (dig > 9999) std::printf(" %d         ", (s > 0) ? 1 : 0);
+				if (dig > 9999) { std::printf(" %d         ", (s > 0) ? 1 : 0); }
 				else if (dig > 999) {
 					sig = std::floor(sig);
 					if (s > 0) std::printf("1-%1.0fe-%.0f  ", sig, dig);
@@ -673,7 +677,7 @@ int main(int argc, char **argv) {
 		//-a
 		//-e EXPECTED
 		//-p THRESHOLD
-		if constexpr (false) ;
+		if constexpr (false) { ; }
 		else if (!std::strcmp(argv[i], "-a")) {
 			smart_thresholds = false;
 			threshold = 1;
@@ -718,26 +722,26 @@ int main(int argc, char **argv) {
 		//-ttnormal
 		//-ttseed64
 		//-ttep
-		else if (!std::strcmp(argv[i], "-ttnormal")) mode = 0;
-		else if (!std::strcmp(argv[i], "-ttseed64")) mode = 1;
-		else if (!std::strcmp(argv[i], "-ttep"))     mode = 2;
+		else if (!std::strcmp(argv[i], "-ttnormal")) { mode = 0; }
+		else if (!std::strcmp(argv[i], "-ttseed64")) { mode = 1; }
+		else if (!std::strcmp(argv[i], "-ttep"))     { mode = 2; }
 		//-tlmin LENGTH
 		//-tlmax LENGTH
 		//-tlshow LENGTH
-		else if (!std::strcmp(argv[i], "-tlmin")) i++;
-		else if (!std::strcmp(argv[i], "-tlmax")) i++;
-		else if (!std::strcmp(argv[i], "-tlshow")) i++;
+		else if (!std::strcmp(argv[i], "-tlmin")) { i++; }
+		else if (!std::strcmp(argv[i], "-tlmax")) { i++; }
+		else if (!std::strcmp(argv[i], "-tlshow")) { i++; }
 		//-tlfail
 		//-tlmaxonly
-		else if (!std::strcmp(argv[i], "-tlfail")) end_on_failure = true;
-		else if (!std::strcmp(argv[i], "-tlmaxonly")) end_on_failure = false;
+		else if (!std::strcmp(argv[i], "-tlfail")) { end_on_failure = true; }
+		else if (!std::strcmp(argv[i], "-tlmaxonly")) { end_on_failure = false; }
 
 		//-threads
 		//-nothreads
 		//-seed SEED
-		else if (!std::strcmp(argv[i], "-multithreaded")) use_multithreading = true;
-		else if (!std::strcmp(argv[i], "-singlethreaded")) use_multithreading = false;
-		else if (!std::strcmp(argv[i], "-skip_selftest")) do_self_test = false;
+		else if (!std::strcmp(argv[i], "-multithreaded")) { use_multithreading = true; }
+		else if (!std::strcmp(argv[i], "-singlethreaded")) { use_multithreading = false; }
+		else if (!std::strcmp(argv[i], "-skip_selftest")) { do_self_test = false; }
 		else if (!std::strcmp(argv[i], "-seed")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
 			seed_str = argv[++i];
@@ -763,7 +767,7 @@ int main(int argc, char **argv) {
 	//walking parameters a second time to force the mode to be known prior to finding the test lengths
 	for (int i = 2; i < argc; i++) {
 		int params_left = argc - i - 1;
-		if constexpr (false) ;
+		if constexpr (false) { ; }
 		else if (!std::strcmp(argv[i], "-tlmin")) {
 			if (params_left < 1) {std::printf("command line option %s must be followed by a value\n", argv[i]); std::exit(0);}
 			double length = interpret_length(argv[++i], !mode);
@@ -880,10 +884,10 @@ int main(int argc, char **argv) {
 
 	Tests::ListOfTests tests( static_cast<Tests::TestBaseclass*>(nullptr));
 	if (test_set_index == -1) { std::printf("internal error\n"); std::exit(1); }
-	if constexpr (false) ;
-	else if (folding == 0) tests = test_sets[test_set_index].callback();
-	else if (folding == 1) tests = Tests::Batteries::apply_standard_foldings(testing_rng, test_sets[test_set_index].callback);
-	else if (folding == 2) tests = Tests::Batteries::apply_extended_foldings(test_sets[test_set_index].callback);
+	if constexpr (false) { ; }
+	else if (folding == 0) { tests = test_sets[test_set_index].callback(); }
+	else if (folding == 1) { tests = Tests::Batteries::apply_standard_foldings(testing_rng, test_sets[test_set_index].callback); }
+	else if (folding == 2) { tests = Tests::Batteries::apply_extended_foldings(test_sets[test_set_index].callback); }
 	else { std::printf("internal error\n"); std::exit(1); }
 
 //	Tests::ListOfTests tests = Tests::Batteries::get_expanded_standard_tests(rng);
@@ -937,7 +941,7 @@ int main(int argc, char **argv) {
 				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
 				already_shown = true;
 			}
-			else if (action == TL_MIN) showing_powers_of_2 = true;
+			else if (action == TL_MIN) { showing_powers_of_2 = true; }
 			else if (action == TL_MAX) {
 				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
 				return 0;

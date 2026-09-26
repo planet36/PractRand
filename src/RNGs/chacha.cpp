@@ -256,7 +256,7 @@ void PractRand::RNGs::Raw::chacha::walk_state(StateWalkingObject *walker) {
 		state[IV_INDEX0] = 0;
 		state[IV_INDEX1] = 0;
 	}
-	else walker->handle(rounds);
+	else { walker->handle(rounds); }
 
 
 	if (used >= 16) used = 16;
@@ -290,7 +290,7 @@ static void test_chacha ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_s
 	else rng.seed_short(seed_and_iv, false);
 	Uint32 observed0 = rng.raw32();
 	Uint32 observed1 = 0;
-	if (!index) observed1 = observed0;
+	if (!index) { observed1 = observed0; }
 	else {
 		for (Uint32 i = 1; i < index; i++) rng.raw32();
 		observed1 = rng.raw32();

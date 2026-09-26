@@ -176,8 +176,8 @@ namespace RNG_Factories {
 		int level = 1;
 		while (level) {
 			tmp = strpbrk(tmp+1, "(,)");
-			if (!tmp) return false;
-			else if (*tmp == '(') level++;
+			if (!tmp) { return false; }
+			else if (*tmp == '(') { level++; }
 			else if (*tmp == ')' || *tmp == ',') {
 				if (level == 1) {
 					std::size_t new_checkpoint = tmp-base+1;
@@ -317,7 +317,7 @@ namespace RNG_Factories {
 				return new PractRand::RNGs::Polymorphic::NotRecommended::xlcg32of64_varqual(total_bits - out_bits);
 			else return new PractRand::RNGs::Polymorphic::NotRecommended::xlcg32of128_varqual(total_bits - out_bits);
 		}
-		else return nullptr;
+		else { return nullptr; }
 	}
 	PractRand::RNGs::vRNG *clcg_factory(std::vector<std::string> &params) {
 		if (params.size() != 2) {params.emplace_back("wrong number of parameters to clcg - should be clcg(out_bits,total_bits)");return nullptr;}

@@ -545,7 +545,7 @@ namespace PractRand {
 				}
 				return scale * r;
 			}
-			else return 1;
+			else { return 1; }
 		}
 		static double math_erfcx(double x) {//scaled complementary error function, may have the wrong scale or otherwise be wonky?
 			//found this on stackoverflow, http://stackoverflow.com/questions/34723644/scaled-complementary-error-function-erfcxx-computation-avoiding-arithmetic-o
@@ -1079,7 +1079,7 @@ namespace PractRand {
 				if (rs[mid] < other_result) {
 					low = mid;
 				}
-				else high = mid;
+				else { high = mid; }
 			}
 			return low + 1;
 		//	for (i = 0; i < s && rs[i] < other_result; i++) ;

@@ -134,7 +134,7 @@ void PractRand::RNGs::Raw::isaac32x256::walk_state(StateWalkingObject *walker) {
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
-	if (walker->is_seeder()) used = SIZE;
+	if (walker->is_seeder()) { used = SIZE; }
 	else {
 		for (auto & result : results) walker->handle(result);
 		walker->handle(used);
@@ -262,7 +262,7 @@ void PractRand::RNGs::Raw::isaac64x256::walk_state(StateWalkingObject *walker) {
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);
-	if (walker->is_seeder()) used = SIZE;
+	if (walker->is_seeder()) { used = SIZE; }
 	else {
 		for (auto & result : results) walker->handle(result);
 		walker->handle(used);

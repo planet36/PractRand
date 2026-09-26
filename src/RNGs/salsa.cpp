@@ -181,7 +181,7 @@ void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject *walker) {
 		extend_cycle = true;
 		position_overflow = 0;
 	}
-	else walker->handle(rounds);
+	else { walker->handle(rounds); }
 
 	if (used >= 16) used = 16;
 	if (!walker->is_read_only()) {

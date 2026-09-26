@@ -24,7 +24,7 @@ namespace PractRand {
 	void print_err(const char* msg) { (void)std::fputs(msg, stderr); (void)std::fputc('\n', stderr); }
 	void (*error_callback)(const char *) = nullptr;
 	void issue_error ( const char *msg) {
-		if (error_callback) error_callback(msg);
+		if (error_callback) { error_callback(msg); }
 		else {
 			if (msg) (void)std::fprintf(stderr, "%s\n", msg);
 			std::exit(1);
