@@ -3765,6 +3765,7 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 
 
 
+#if 0
 static constexpr Uint8 count_low_zeroes_table[256] = {
 //	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,
 	8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,//0
@@ -3854,15 +3855,18 @@ static unsigned long count_low_zeroes64(Uint64 value) {
 	return count_low_zeroes_table[value & 255] + 56;
 }
 #endif
+#endif
 
 PractRand::Tests::FPF::FPF(int stride_bits_L2_ , int sig_bits_ , int exp_bits_ ) : sig_bits(sig_bits_), exp_bits(exp_bits_), stride_bits_L2(stride_bits_L2_) {
 	if (sig_bits > MAX_SIG_BITS) issue_error();
 	if (exp_bits > 6) issue_error();
+#if 0
 	for (int i = 0; i <= 32; i++) {
 		Uint32 x = i, y = 1LL << i;
 		if (x >= 32) { x = 32; y = 0; }
 		if (count_low_zeroes32(y) != x) issue_error("count_low_zeroes32 behaving incorrectly");
 	}
+#endif
 }
 void PractRand::Tests::FPF::init([[maybe_unused]] RNGs::vRNG* known_good ) {
 	unsigned long max_exp = (1 << exp_bits) - 1;
@@ -3874,6 +3878,7 @@ void PractRand::Tests::FPF::init([[maybe_unused]] RNGs::vRNG* known_good ) {
 	int total_size = (max_sig + 1) * (max_exp + 1);
 //	int bits = sig_bits + exp_bits;
 	counts.set_size(total_size);
+#if 0
 	static bool zeroes_table_inited = false;
 	if (!zeroes_table_inited) {
 		for (int i = 0; i < 256; i++) {
@@ -3884,6 +3889,7 @@ void PractRand::Tests::FPF::init([[maybe_unused]] RNGs::vRNG* known_good ) {
 		}
 		zeroes_table_inited = true;
 	}
+#endif
 	blocks_tested = 0;
 }
 void PractRand::Tests::FPF::deinit( ) {
@@ -4019,7 +4025,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 			long max = numblocks * (TestBlock::SIZE / 4);
 			for (long i = 0; i < max; i += stride32) {
 				Uint32 cur = data->as32[i];
-				unsigned long e = count_low_zeroes32(cur);
+				unsigned long e = std::countr_zero(cur);
 				if (e < max_exp) {
 					unsigned long sig = (cur >> (e+1)) & max_sig;
 					unsigned long index = (e << sig_bits) + sig;
@@ -4053,7 +4059,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 						cur = (cur << 1) | (word & 1);
 						word >>= 1;
 					}
-					unsigned long e = count_low_zeroes32(cur);
+					unsigned long e = std::countr_zero(cur);
 					unsigned long sig = 0;
 					if (e >= max_exp) {
 						e = max_exp;
@@ -4075,7 +4081,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 			const unsigned long inv_sig_bits = 32 - sig_bits;
 			for (long i = blocks_tested ? -1 : 0; i < max; i += stride32) {
 				Uint32 cur = data->as32[i];
-				unsigned long e = count_low_zeroes32(cur);
+				unsigned long e = std::countr_zero(cur);
 				if (e < inv_sig_bits) {
 					unsigned long sig = (cur >> (e+1)) & max_sig;
 					unsigned long index = (e << sig_bits) + sig;
@@ -4083,7 +4089,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 				}
 				else {
 					Uint64 cur2 = cur | (Uint64(data->as32[i+1]) << 32);
-					if (e == 32) e += count_low_zeroes32(data->as32[i+1]);
+					if (e == 32) e += std::countr_zero(data->as32[i+1]);
 					unsigned long sig = 0;
 					if (e < max_exp) {
 						sig = Uint32(cur2 >> (e+1)) & max_sig;
@@ -4119,14 +4125,14 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 					cur >>= STRIDE_BITS;
 					cur |= word << (32 - STRIDE_BITS);
 					word >>= stride_bits;//
-					e = count_low_zeroes32(cur);
+					e = std::countr_zero(cur);
 					if (e < inv_sig_bits) {
 						sig = (cur >> (e+1)) & max_sig;
 						counts.increment((e << sig_bits) + sig);
 					}
 					else {
 						Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i+1]) << (64 - STRIDE_BITS));
-						if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+						if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 						if (e < max_exp) {
 							sig = Uint32(cur2 >> (e+1)) & max_sig;
 						}
@@ -4139,7 +4145,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 
 					cur >>= STRIDE_BITS;
 					cur |= word << (32 - STRIDE_BITS);
-					e = count_low_zeroes32(cur);
+					e = std::countr_zero(cur);
 					if (e < inv_sig_bits) {
 						sig = (cur >> (e+1)) & max_sig;
 						counts.increment((e << sig_bits) + sig);
@@ -4147,7 +4153,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 					else {
 						word >>= stride_bits;//
 						Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i+1]) << (64 - 2*STRIDE_BITS));
-						if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+						if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 						if (e < max_exp) {
 							sig = Uint32(cur2 >> (e+1)) & max_sig;
 						}
@@ -4167,14 +4173,14 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 						cur >>= STRIDE_BITS;
 						cur |= word << (32 - STRIDE_BITS);
 						word >>= stride_bits;//
-						unsigned long e = count_low_zeroes32(cur);
+						unsigned long e = std::countr_zero(cur);
 						unsigned long sig = 0;
 						if (e < inv_sig_bits) {
 							sig = (cur >> (e+1)) & max_sig;
 						}
 						else {
 							Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i+1]) << (64 - (sub_word+1) * STRIDE_BITS));//
-							if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+							if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 							if (e < max_exp) {
 								sig = Uint32(cur2 >> (e+1)) & max_sig;
 							}
@@ -4196,14 +4202,14 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 						cur >>= STRIDE_BITS;
 						cur |= word << (32 - STRIDE_BITS);
 						word >>= stride_bits;//
-						unsigned long e = count_low_zeroes32(cur);
+						unsigned long e = std::countr_zero(cur);
 						unsigned long sig = 0;
 						if (e < inv_sig_bits) {
 							sig = (cur >> (e+1)) & max_sig;
 						}
 						else {
 							Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i+1]) << (64 - (sub_word+1) * STRIDE_BITS));//
-							if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+							if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 							if (e < max_exp) {
 								sig = Uint32(cur2 >> (e+1)) & max_sig;
 							}
@@ -4225,7 +4231,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 						cur >>= stride_bits;
 						cur |= word << (32 - stride_bits);
 						word >>= stride_bits;//
-						unsigned long e = count_low_zeroes32(cur);
+						unsigned long e = std::countr_zero(cur);
 						unsigned long sig = 0;
 						if (e < inv_sig_bits) {
 							sig = (cur >> (e+1)) & max_sig;
@@ -4233,7 +4239,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock* data, int numblocks) {
 						else {
 							//Uint64 cur2 = cur | (Uint64(reverse_bits32(data->as32[i+1])) << 32);
 							Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i+1]) << (64 - (sub_word+1) * stride_bits));//
-							if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+							if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 							if (e < max_exp) {
 								sig = Uint32(cur2 >> (e+1)) & max_sig;
 							}
@@ -4385,6 +4391,7 @@ void PractRand::Tests::FPMulti::process(Uint64 position, unsigned long e, unsign
 }
 void PractRand::Tests::FPMulti::init(RNGs::vRNG* known_good) {
 	TestBaseclass::init(known_good);
+#if 0
 	static bool zeroes_table_inited = false;
 	if (!zeroes_table_inited) {//now just a validity check, not initialization
 		for (int i = 0; i < 256; i++) {
@@ -4394,6 +4401,7 @@ void PractRand::Tests::FPMulti::init(RNGs::vRNG* known_good) {
 		}
 		zeroes_table_inited = true;
 	}
+#endif
 	autofail = false;
 
 	for (int e = 0; e <= MAX_EXP; e++) platter[e].reset(known_good, e);
@@ -4645,7 +4653,7 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 	if (autofail) return;
 	for (unsigned long i = 0; i < end; i++) {
 		Uint64 raw = data[0].as64[i];
-		unsigned long e = count_low_zeroes64(raw);
+		unsigned long e = std::countr_zero(raw);
 		unsigned long sig = 0;
 		if (e < MAX_EXP) {
 			sig = (raw >> (e + 1)) & ((1 << BASE_SIG_BITS) - 1);
@@ -4669,13 +4677,13 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 		for (long i = blocks_tested ? -1 : 0; i < max; i += stride32) {
 			Uint32 cur = data->as32[i];
 			if (cur & skip_mask) continue;
-			unsigned long e = count_low_zeroes32(cur);
+			unsigned long e = std::countr_zero(cur);
 			unsigned long sig;
 			if (e < 32 - BASE_SIG_BITS) process(platter[e], cur >> (e + 1),  i);
 			else {
 				//Uint64 cur2 = cur | (Uint64(reverse_bits32(data->as32[i + 1])) << 32);
 				Uint64 cur2 = cur | (Uint64(data->as32[i + 1]) << 32);
-				if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+				if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 				if (e < MAX_EXP) process(platter[e], Uint32(cur2 >> (e + 1)), i);
 				else process(platter[MAX_EXP], cur2 >> MAX_EXP, i);
 			}
@@ -4695,8 +4703,8 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 			next = data->as32[1];
 			start = 1;
 			//...so we have a special case just for the first possible sample (unoptimized)
-			unsigned long e = count_low_zeroes32(cur);
-			if (e == 32) e += count_low_zeroes32(next);
+			unsigned long e = std::countr_zero(cur);
+			if (e == 32) e += std::countr_zero(next);
 			if (e < MAX_EXP) process(platter[e], Uint32(data->as64[0] >> (e + 1)), 1);
 			else process(platter[MAX_EXP], Uint32(data->as64[0] >> MAX_EXP), 1);
 		}
@@ -4713,11 +4721,11 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 				word >>= STRIDE_BITS;// it's easier to keep cur and word up to date as the window slides, but next rarely gets used
 				if (!(cur & skip_mask)) {
 					Uint32 n = (i << 1) + 0;
-					e = count_low_zeroes32(cur);
+					e = std::countr_zero(cur);
 					if (e < 32 - BASE_SIG_BITS) process(platter[e], cur >> (e + 1), n);
 					else {
 						Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(next) << (64 - STRIDE_BITS));
-						if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+						if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 						if (e < MAX_EXP) process(platter[e], Uint32(cur2 >> (e + 1)), n);
 						else process(platter[MAX_EXP], cur2 >> MAX_EXP, n);
 					}
@@ -4729,12 +4737,12 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 				if (!(cur & skip_mask)) {
 					Uint32 n = (i << 1) + 1;
 					cur |= next << (32 - STRIDE_BITS);
-					e = count_low_zeroes32(cur);
+					e = std::countr_zero(cur);
 					if (e < 32 - BASE_SIG_BITS) process(platter[e], cur >> (e + 1), n);
 					else {
 						//Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(next) << (64 - STRIDE_BITS * 2)); // word is now zero, ignore it
 						Uint64 cur2 = cur | (Uint64(next) << (64 - STRIDE_BITS * 2));
-						if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+						if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 						if (e < MAX_EXP) process(platter[e], Uint32(cur2 >> (e + 1)), n);
 						else process(platter[MAX_EXP], cur2 >> MAX_EXP, n);
 					}
@@ -4751,12 +4759,12 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 					cur >>= STRIDE_BITS;
 					cur |= word << (32 - STRIDE_BITS);
 					word >>= STRIDE_BITS;//
-					unsigned long e = count_low_zeroes32(cur);
+					unsigned long e = std::countr_zero(cur);
 					unsigned long sig;
 					if (e < 32 - BASE_SIG_BITS) platter[e].process(cur >> (e + 1));
 					else {
 						Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i + 1]) << (64 - (sub_word + 1) * STRIDE_BITS));//
-						if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+						if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 						if (e < MAX_EXP) platter[e].process(Uint32(cur2 >> (e + 1)));
 						else platter[MAX_EXP].process(cur2 >> MAX_EXP);
 					}
@@ -4771,12 +4779,12 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock* data, int numblocks) {
 					cur >>= STRIDE_BITS;
 					cur |= word << (32 - STRIDE_BITS);
 					word >>= STRIDE_BITS;//
-					unsigned long e = count_low_zeroes32(cur);
+					unsigned long e = std::countr_zero(cur);
 					unsigned long sig;
 					if (e < 32 - BASE_SIG_BITS) platter[e].process(cur >> (e + 1));
 					else {
 						Uint64 cur2 = cur | (Uint64(word) << 32) | (Uint64(data->as32[i + 1]) << (64 - (sub_word + 1) * STRIDE_BITS));//
-						if (e == 32) e += count_low_zeroes32(Uint32(cur2 >> 32));
+						if (e == 32) e += std::countr_zero(Uint32(cur2 >> 32));
 						if (e < MAX_EXP) platter[e].process(Uint32(cur2 >> (e + 1)));
 						else platter[MAX_EXP].process(cur2 >> MAX_EXP);
 					}
