@@ -759,7 +759,7 @@ int main(int argc, char **argv) {
 	std::map<double,int> show_times;
 	std::map<Uint64,int> show_datas;
 	double show_min = -2.0;
-	double show_max = 1ull << 45;
+	double show_max = 1ULL << 45;
 	//walking parameters a second time to force the mode to be known prior to finding the test lengths
 	for (int i = 2; i < argc; i++) {
 		int params_left = argc - i - 1;

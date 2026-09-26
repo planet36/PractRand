@@ -42,7 +42,7 @@ public:
 	void evolve_seed() {
 		Uint64 bits_tried = 0;
 		while (true) {
-			Uint64 bit = 1ull << known_good.randi(64);
+			Uint64 bit = 1ULL << known_good.randi(64);
 			Uint64 new_seed = current_seed ^ bit;
 			bits_tried |= bit;
 			if (record_seed(new_seed)) return;
@@ -140,7 +140,7 @@ public:
 			break;
 		case 1://insert byte
 		{
-				   int position = (transform >> 8) & ((1ull << 28) - 1);
+				   int position = (transform >> 8) & ((1ULL << 28) - 1);
 				   int value = transform & 255;
 				   int old_size = message.size();
 				   if (position > old_size) { std::printf("internal error - invalid EntropyPool_MetaRNG transform (insert)\n"); std::exit(1); }
@@ -151,7 +151,7 @@ public:
 			break;
 		case 2://delete byte
 		{
-				   int position = (transform >> 8) & ((1ull << 28) - 1);
+				   int position = (transform >> 8) & ((1ULL << 28) - 1);
 				   int value = transform & 255;
 				   int old_size = message.size();
 				   if (message[position] != value || position >= old_size) { std::printf("internal error - invalid EntropyPool_MetaRNG transform (deletion)\n"); std::exit(1); }

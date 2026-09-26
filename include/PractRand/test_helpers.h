@@ -115,7 +115,7 @@ namespace PractRand::Tests {
 				for (int i = 0; i < size; i++) high[i] = 0;
 			}
 			FixedSizeCount() {reset_counts();}
-			void increment(int index) {if (!++low[index]) high[index] += 1ull << (8*sizeof(LowIntType));}
+			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
 			const Uint64 &operator[] (int index) {
 				high[index] += low[index];
 				low[index] = 0;
@@ -149,7 +149,7 @@ namespace PractRand::Tests {
 			VariableSizeCount() : low(nullptr), high(nullptr), size(0) {}
 			VariableSizeCount(int size_) : low(nullptr), high(nullptr), size(0) {set_size(size_);}
 			VariableSizeCount(const VariableSizeCount &other) = delete;//copy constructor disallowed
-			void increment(int index) {if (!++low[index]) high[index] += 1ull << (8*sizeof(LowIntType));}
+			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
 			const Uint64 &operator[] (int index) {
 				high[index] += low[index];
 				low[index] = 0;

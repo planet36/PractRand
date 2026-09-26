@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 		}
 		else if (!strcmp(argv[2], "inf")) {
 			_n = 0;
-			n = 0xFFFFffffFFFFffffull;
+			n = 0xFFFFffffFFFFffffULL;
 		}
 		else {
 			(void)std::fprintf(stderr, "RNG_output ERROR: invalid number of output bytes\n"); print_usage(argv[0]);

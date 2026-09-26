@@ -13,10 +13,10 @@ using namespace PractRand::Internals;
 //raw:
 void PractRand::RNGs::Raw::arbee::reset_entropy() {
 	//the default state is arrived at by setting all values to 1, then calling mix()
-	a = 9873171087373218264ull;
-	b = 10599573592049074392ull;
-	c = 16865209178899817893ull;
-	d = 5013818595375203225ull;
+	a = 9873171087373218264ULL;
+	b = 10599573592049074392ULL;
+	c = 16865209178899817893ULL;
+	d = 5013818595375203225ULL;
 	i = 13;
 }
 Uint64 PractRand::RNGs::Raw::arbee::raw64() {

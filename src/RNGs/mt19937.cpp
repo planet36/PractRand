@@ -17,8 +17,8 @@ std::string PractRand::RNGs::Polymorphic::mt19937::get_name() const {return "mt1
 
 //raw:
 static inline unsigned long twist32( unsigned long m, unsigned long s0, unsigned long s1 ) {
-	static constexpr unsigned long gfsr_twist_table[2] = {0, 0x9908b0dful};
-	return m ^ gfsr_twist_table[s1&1] ^ (((s0&0x80000000ul)|(s1&0x7ffffffful))>>1);
+	static constexpr unsigned long gfsr_twist_table[2] = {0, 0x9908b0dfUL};
+	return m ^ gfsr_twist_table[s1&1] ^ (((s0&0x80000000UL)|(s1&0x7fffffffUL))>>1);
 }
 void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change
 	Uint32 *p = state;
@@ -34,8 +34,8 @@ void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change
 Uint32 PractRand::RNGs::Raw::mt19937::raw32() {//LOCKED, do not change
 	Uint32 r = untempered_raw32();
 	r ^= (r >> 11);
-	r ^= (r <<  7) & 0x9d2c5680u;
-	r ^= (r << 15) & 0xefc60000u;
+	r ^= (r <<  7) & 0x9d2c5680U;
+	r ^= (r << 15) & 0xefc60000U;
 	return r ^ (r >> 18);
 }
 void PractRand::RNGs::Raw::mt19937::seed(Uint64 s) {
@@ -90,7 +90,7 @@ void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
 	}
 }
 void PractRand::RNGs::Raw::mt19937::self_test() {
-	const Uint64 expected = 0x7d9883055dc1141ull;
+	const Uint64 expected = 0x7d9883055dc1141ULL;
 	Raw::mt19937 rng{}; rng.seed(1371941);
 	Uint64 checksum = 0;
 	for (int i = 0; i < 8192; i++) {
@@ -100,7 +100,7 @@ void PractRand::RNGs::Raw::mt19937::self_test() {
 	}
 	if (checksum != expected) issue_error("mt19937::self_test() failed");
 
-	const Uint64 expected2 = 0x2ec23c02564d6339ull;
+	const Uint64 expected2 = 0x2ec23c02564d6339ULL;
     Uint32 init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
 	rng.seed(init, length);
 	Uint64 checksum2 = 0;

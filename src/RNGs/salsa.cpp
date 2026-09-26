@@ -243,7 +243,7 @@ void PractRand::RNGs::Raw::salsa::self_test() {
 	engine.set_rounds(20);
 	for (int i = 0; i < 6; i++) seed_and_iv[i] = 0;
 	engine.seed_short(seed_and_iv, false);
-	Uint64 E2 = 0x4c12ebcfaead1365ull;
+	Uint64 E2 = 0x4c12ebcfaead1365ULL;
 	if (Uint32(E2) != engine.raw32()) issue_error("salsa::self_test() failed a\n");
 	if (Uint32(E2>>32) != engine.raw32()) issue_error("salsa::self_test() failed b\n");
 }

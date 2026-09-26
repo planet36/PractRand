@@ -100,7 +100,7 @@ void PractRand::RNGs::Raw::xsm32::seek_forward (Uint64 how_far) {
 	if (!how_far) return;
 	Uint64 lcg_state = lcg_low | (Uint64(lcg_high) << 32);
 	Uint64 lcg_adder = lcg_adder_low + (Uint64(lcg_adder_high) << 32);
-	lcg_state = fast_forward_lcg64(how_far, lcg_state, 0x0000000100000001ull, lcg_adder);
+	lcg_state = fast_forward_lcg64(how_far, lcg_state, 0x0000000100000001ULL, lcg_adder);
 	lcg_low = Uint32(lcg_state);
 	lcg_high = Uint32(lcg_state >> 32);
 }
@@ -110,7 +110,7 @@ void PractRand::RNGs::Raw::xsm32::seek_backward(Uint64 how_far) {
 
 
 Uint64 PractRand::RNGs::Raw::xsm64::raw64() {
-	const Uint64 K = 0xA3EC647659359ACDull;//1010001111101100011001000111011001011001001101011001101011001101
+	const Uint64 K = 0xA3EC647659359ACDULL;//1010001111101100011001000111011001011001001101011001101011001101
 
 	Uint64 tmp = lcg_high ^ std::rotl(lcg_high + lcg_low, 16); tmp ^= std::rotl(tmp + lcg_adder_high, 40);
 	tmp *= K;

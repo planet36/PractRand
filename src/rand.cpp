@@ -486,8 +486,8 @@ namespace PractRand {
 
 		RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
-		{RNGs::Polymorphic::chacha rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ull << 36); }
-		{RNGs::Polymorphic::salsa rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ull << 36); }
+		{RNGs::Polymorphic::chacha rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ULL << 36); }
+		{RNGs::Polymorphic::salsa rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1ULL << 36); }
 		{RNGs::Polymorphic::xsm32 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 1); }
 		{RNGs::Polymorphic::xsm64 rng(PractRand::SEED_NONE); PractRand::Internals::test_random_access(&rng, &known_good, 0, 0); }
 	}
@@ -500,7 +500,7 @@ namespace PractRand {
 			Uint16 as16[4];
 			Uint8   as8[8];
 		};
-		as64[0] = 0x0123456789ABCDEFull;
+		as64[0] = 0x0123456789ABCDEFULL;
 #if defined PRACTRAND_TARGET_IS_LITTLE_ENDIAN
 		if (as8[7] != 0x01) {
 #elif defined PRACTRAND_TARGET_IS_BIG_ENDIAN

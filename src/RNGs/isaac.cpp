@@ -143,14 +143,14 @@ void PractRand::RNGs::Raw::isaac32x256::walk_state(StateWalkingObject *walker) {
 }
 void PractRand::RNGs::Raw::isaac32x256::self_test() {
 	Raw::isaac32x256 rng{};
-	rng.seed(0ul);
+	rng.seed(0UL);
 	Uint64 checksum = 0;
 	for (int i = 0; i < 8192; i++) {
 		checksum ^= checksum << 24;
 		checksum ^= checksum >> 27;
 		checksum += rng.raw32();
 	}
-	if (checksum != 0x3ff1d629d8878831ull) issue_error("isaac32x256::self_test() failed");
+	if (checksum != 0x3ff1d629d8878831ULL) issue_error("isaac32x256::self_test() failed");
 }
 
 
@@ -207,7 +207,7 @@ void PractRand::RNGs::Raw::isaac64x256::_seed(bool flag) {//LOCKED, do not chang
 	//but the visible seeding methods map to this
 	Uint64 tmp[8];
 	a = b = c = 0;
-	for (auto & i : tmp) i = 0x9e3779b97f4a7c13uLL;  // the golden ratio
+	for (auto & i : tmp) i = 0x9e3779b97f4a7c13ULL;  // the golden ratio
 
 	for (int i=0; i<4; ++i)          // scramble it
 	{

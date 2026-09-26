@@ -209,9 +209,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 pcg32::raw32() {
 					Uint64 oldstate = state;
 					state = state * 0x5851f42d4c957f2dULL + inc;
-					auto xorshifted = Uint32(((oldstate >> 18u) ^ oldstate) >> 27u);
-					auto rot = Uint32(oldstate >> 59u);
-					return (xorshifted >> rot) | (xorshifted << ((~rot + 1u) & 31));
+					auto xorshifted = Uint32(((oldstate >> 18U) ^ oldstate) >> 27U);
+					auto rot = Uint32(oldstate >> 59U);
+					return (xorshifted >> rot) | (xorshifted << ((~rot + 1U) & 31));
 				}
 				std::string pcg32::get_name() const {
 					if (inc == 0xda3e39cb94b95bdbULL) return "pcg32";
@@ -226,7 +226,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 pcg32_norot::raw32() {
 					Uint64 oldstate = state;
 					state = state * 0x5851f42d4c957f2dULL + inc;
-					auto xorshifted = Uint32(((oldstate >> 18u) ^ oldstate) >> 27u);
+					auto xorshifted = Uint32(((oldstate >> 18U) ^ oldstate) >> 27U);
 					return xorshifted;
 					//auto rot = Uint32(oldstate >> 59u);
 					//return (xorshifted >> rot) | (xorshifted << ((~rot + 1u) & 31));
@@ -247,8 +247,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					n2m1 = n2m2 = 1;
 				}
 				Uint32 cmrg32of192::raw32() {
-					Uint64 n1 = (Uint64(n1m1) * 1403580 - Uint64(n1m2) * 810728) % ((1ull << 32) - 209);
-					Uint64 n2 = (Uint64(n2m0) * 527612 - Uint64(n2m2) * 1370589) % ((1ull << 32) - 22853);
+					Uint64 n1 = (Uint64(n1m1) * 1403580 - Uint64(n1m2) * 810728) % ((1ULL << 32) - 209);
+					Uint64 n2 = (Uint64(n2m0) * 527612 - Uint64(n2m2) * 1370589) % ((1ULL << 32) - 22853);
 					n1m2 = n1m1;
 					n1m1 = n1m0;
 					n1m0 = Uint32(n1);
@@ -279,7 +279,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string xsh_lcg_bad::get_name() const { return "xsh_lcg_bad"; }
 				void xsh_lcg_bad::seed(Uint64 s) {
 					x1 = s;
-					x0 = x2 = x3 = 0xFFffFFffFFffFFffull;//changed to prevent the bad all-zeroes case
+					x0 = x2 = x3 = 0xFFffFFffFFffFFffULL;//changed to prevent the bad all-zeroes case
 					lcg = 2233445566;
 					for (int i = 0; i < 64; i++) raw32();
 				}
@@ -766,7 +766,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 				Uint32 mo_Cmfr32::raw32() {
-					state = ~(2911329625u*state); state = std::rotl(state,17);
+					state = ~(2911329625U*state); state = std::rotl(state,17);
 					return state;
 				}
 				std::string mo_Cmfr32::get_name() const {return "mo_Cmfr32";}
@@ -774,7 +774,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint32 mo_Cmr32::raw32() {
-					state = 4031235431u * state; state = std::rotl(state, 15);
+					state = 4031235431U * state; state = std::rotl(state, 15);
 					return state;
 				}
 				std::string mo_Cmr32::get_name() const { return "mo_Cmr32"; }
@@ -782,7 +782,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state);
 				}
 				Uint32 mo_Cmr32of64::raw32() {
-					state = 38217494031235431ull * state; state = std::rotl(state, 37);
+					state = 38217494031235431ULL * state; state = std::rotl(state, 37);
 					return Uint32(state);
 				}
 				std::string mo_Cmr32of64::get_name() const { return "mo_Cmr32of64"; }
@@ -793,7 +793,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				Uint32 murmlac32::raw32() {
 					Uint32 tmp = state1;
 					for (int i = 0; i < rounds; i++) {
-						tmp *= 4031235431u;
+						tmp *= 4031235431U;
 						tmp ^= tmp >> 16;
 					}
 					state1 += state2;
@@ -824,7 +824,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					count |= 1;
 				}
 				Uint32 mulcr32::raw32() {
-					Uint32 rv = a * 2911329625u;
+					Uint32 rv = a * 2911329625U;
 					a = b ^ count++;
 					b = std::rotl(b, 11) + rv;
 					return rv;
@@ -836,7 +836,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(count);
 				}
 				Uint16 mulcr16::raw16() {
-					Uint16 rv = a * 2911329625u;
+					Uint16 rv = a * 2911329625U;
 					a = b ^ count++;
 					b = std::rotl(b, 6) + rv;
 					return rv;

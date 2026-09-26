@@ -125,13 +125,13 @@ void PractRand::RNGs::Raw::trivium::self_test() {
 	Raw::trivium rng{};
 	Uint8 seed_and_iv[10+10] = {0};
 	rng.seed(seed_and_iv, 14);
-	validate_trivium_result(rng.raw64(), 0xFBE0BF265859051Bull);
+	validate_trivium_result(rng.raw64(), 0xFBE0BF265859051BULL);
 	seed_and_iv[0] = 0x80; rng.seed(seed_and_iv, 14); seed_and_iv[0] = 0x00;
-	validate_trivium_result(rng.raw64(), 0x38EB86FF730D7A9Cull);
+	validate_trivium_result(rng.raw64(), 0x38EB86FF730D7A9CULL);
 	seed_and_iv[9] = 0x80; rng.seed(seed_and_iv, 14); seed_and_iv[9] = 0x00;
-	validate_trivium_result(rng.raw64(), 0x5D492E77F8FE62D7ull);
+	validate_trivium_result(rng.raw64(), 0x5D492E77F8FE62D7ULL);
 	seed_and_iv[13] = 0x10; rng.seed(seed_and_iv, 14); seed_and_iv[13] = 0x00;
-	validate_trivium_result(rng.raw64(), 0xB0820A503ABB0329ull);
+	validate_trivium_result(rng.raw64(), 0xB0820A503ABB0329ULL);
 	seed_and_iv[17] = 0x01; rng.seed(seed_and_iv, 18); seed_and_iv[17] = 0x00;
-	validate_trivium_result(rng.raw64(), 0x9A5C56169E7FA406ull);
+	validate_trivium_result(rng.raw64(), 0x9A5C56169E7FA406ULL);
 }
