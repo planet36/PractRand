@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bit>
+#include <print>
 
 #include "parse_number.h"
 
@@ -144,7 +145,7 @@ public:
 				   int position = (transform >> 8) & ((1ULL << 28) - 1);
 				   int value = transform & 255;
 				   int old_size = message.size();
-				   if (position > old_size) { std::printf("internal error - invalid EntropyPool_MetaRNG transform (insert)\n"); std::exit(1); }
+				   if (position > old_size) { std::println("internal error - invalid EntropyPool_MetaRNG transform (insert)"); std::exit(1); }
 				   message.resize(old_size + 1);
 				   if (position < old_size) std::memmove(&message[position + 1], &message[position], old_size - position);
 				   message[position] = value;
@@ -155,13 +156,13 @@ public:
 				   int position = (transform >> 8) & ((1ULL << 28) - 1);
 				   int value = transform & 255;
 				   int old_size = message.size();
-				   if (message[position] != value || position >= old_size) { std::printf("internal error - invalid EntropyPool_MetaRNG transform (deletion)\n"); std::exit(1); }
+				   if (message[position] != value || position >= old_size) { std::println("internal error - invalid EntropyPool_MetaRNG transform (deletion)"); std::exit(1); }
 				   if (position != old_size - 1) std::memmove(&message[position], &message[position + 1], old_size - 1 - position);
 				   message.resize(old_size - 1);
 		}
 			break;
 		default:
-			std::printf("internal error - unrecognized EntropyPool_MetaRNG transform\n");
+			std::println("internal error - unrecognized EntropyPool_MetaRNG transform");
 			std::exit(1);
 		}
 	}
