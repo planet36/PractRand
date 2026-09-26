@@ -7,6 +7,7 @@ static_assert(std::endian::native == std::endian::little || std::endian::native 
 	"PractRand requires a little-endian or big-endian target");
 
 namespace PractRand {
+#if 0
 	static inline Uint16 invert_endianness16(Uint16 v) {return (v >> 8) | (v << 8);}
 	static inline Uint32 invert_endianness32(Uint32 v) {
 		v = ((v & 0xFF00FF00) >> 8) | ((v & 0x00ff00ff) << 8);
@@ -17,32 +18,33 @@ namespace PractRand {
 		v = ((v & 0xFFFF0000FFFF0000ULL) >> 16) | ((v & 0x0000ffff0000ffffULL) << 16);
 		return (v >> 32) | (v << 32);
 	}
+#endif
 #if 0
 	static inline Uint16 little_endian_conversion16 ( Uint16 v ) {
 		if constexpr (std::endian::native == std::endian::little) return v;
-		else return invert_endianness16(v);
+		else return std::byteswap(v);
 	}
 	static inline Uint32 little_endian_conversion32 ( Uint32 v ) {
 		if constexpr (std::endian::native == std::endian::little) return v;
-		else return invert_endianness32(v);
+		else return std::byteswap(v);
 	}
 #endif
 	static inline Uint64 little_endian_conversion64 ( Uint64 v ) {
 		if constexpr (std::endian::native == std::endian::little) return v;
-		else return invert_endianness64(v);
+		else return std::byteswap(v);
 	}
 #if 0
 	static inline Uint16 big_endian_conversion16 ( Uint16 v ) {
 		if constexpr (std::endian::native == std::endian::big) return v;
-		else return invert_endianness16(v);
+		else return std::byteswap(v);
 	}
 	static inline Uint32 big_endian_conversion32 ( Uint32 v ) {
 		if constexpr (std::endian::native == std::endian::big) return v;
-		else return invert_endianness32(v);
+		else return std::byteswap(v);
 	}
 	static inline Uint64 big_endian_conversion64 ( Uint64 v ) {
 		if constexpr (std::endian::native == std::endian::big) return v;
-		else return invert_endianness64(v);
+		else return std::byteswap(v);
 	}
 #endif
 #if 0

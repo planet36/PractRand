@@ -4,6 +4,7 @@
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+#include <bit>
 #include <cstring>
 #include <string>
 
@@ -111,7 +112,7 @@ static void validate_trivium_result(Uint64 output, Uint64 reference) {
 	//convert format of reference
 	//	it will always be in the wrong endianness, regardless of platform
 	//	due to how it was cut & pasted
-	reference = PractRand::invert_endianness64(reference);
+	reference = std::byteswap(reference);
 	//raise an error if they don't match
 	if (output != reference) {
 		//Uint64 r = output;
