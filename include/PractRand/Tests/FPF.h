@@ -10,7 +10,7 @@ namespace PractRand::Tests {
 			const int stride_bits_L2;
 			VariableSizeCount<Uint8> counts;
 		public:
-			FPF(int stride_bits_L2_ = 3, int sig_bits_ = 8, int exp_bits_ = 4);
+			explicit FPF(int stride_bits_L2_ = 3, int sig_bits_ = 8, int exp_bits_ = 4);
 			void init( PractRand::RNGs::vRNG *known_good ) override;
 			void deinit( ) override;
 			[[nodiscard]] std::string get_name() const override;

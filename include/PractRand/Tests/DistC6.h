@@ -3,7 +3,7 @@
 namespace PractRand::Tests {
 		class DistC6 : public TestBaseclass {
 		public:
-			DistC6 ( int length_ = 9, int unitsL_ = 0,
+			explicit DistC6 ( int length_ = 9, int unitsL_ = 0,
 				int bits_clipped_0_ = 1,
 				int bits_clipped_1_ = 0,
 				int bits_clipped_2_ = 0 );
@@ -52,7 +52,7 @@ namespace PractRand::Tests {
 		};
 		class DistC7 final : public DistC6 {
 		public:
-			DistC7(int length_ = 9, int unitsL_ = 0,
+			explicit DistC7(int length_ = 9, int unitsL_ = 0,
 				int bits_clipped_0_ = 1,
 				int bits_clipped_1_ = 0,
 				int bits_clipped_2_ = 0

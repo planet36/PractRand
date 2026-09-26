@@ -176,7 +176,7 @@ namespace PractRand::Tests {
 		};
 		class LPerm16 final : public TestBaseclass {//not yet implemented
 		public:
-			LPerm16(int word_bits_, int passes_at_once_ = 0, int blocks_per_pass_ = 1) : word_bits(word_bits_), blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
+			explicit LPerm16(int word_bits_, int passes_at_once_ = 0, int blocks_per_pass_ = 1) : word_bits(word_bits_), blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;

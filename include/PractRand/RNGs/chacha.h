@@ -61,7 +61,7 @@ namespace PractRand::RNGs {
 		namespace Polymorphic {
 			class chacha final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(chacha)
-				chacha(Uint32 seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
+				explicit chacha(Uint32 seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
 				void seed(Uint64 s) override;
 				void seed(Uint32 seed_and_iv[10], bool extend_cycle_ = false);
 				void seed_short(Uint32 seed_and_iv[6], bool extend_cycle_ = false);

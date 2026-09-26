@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] const PractRand::RNGs::vRNG *get_rng() const {return rng;}//RNG being tested
 	Uint64 get_blocks_so_far() const {return blocks_so_far;}//number of blocks tested
 
-	TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));
+	explicit TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));
 	//rng_ = RNG to test
 	//tests_ = list of tests use on the RNG
 	//known_good_ = sometimes the tests or test manager need good random numbers for some reason

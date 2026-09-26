@@ -167,7 +167,7 @@ namespace PractRand::Tests {
 			Uint64 count{};
 			static void _lookup_constants(int table_size_L2, long double *offset, long double *deviation, long double *sample_size);
 		public:
-			BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
+			explicit BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
 			~BirthdayAlt() override;
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
