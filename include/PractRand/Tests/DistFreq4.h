@@ -3,7 +3,7 @@
 namespace PractRand::Tests {
 		class DistFreq4 final : public TestBaseclass {
 		public:
-			DistFreq4(int blocks_per_) : blocks_per(blocks_per_) {}
+			explicit DistFreq4(int blocks_per_) : blocks_per(blocks_per_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
@@ -80,7 +80,7 @@ namespace PractRand::Tests {
 		};
 		class TripleMirrorFreqN : public TestBaseclass {
 		public:
-			TripleMirrorFreqN(int minimum_level_) : blocks_per_pass(1 << minimum_level_), minimum_level(minimum_level_) {}
+			explicit TripleMirrorFreqN(int minimum_level_) : blocks_per_pass(1 << minimum_level_), minimum_level(minimum_level_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;

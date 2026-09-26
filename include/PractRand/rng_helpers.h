@@ -69,10 +69,10 @@ namespace PractRand {
 		static constexpr int OUTPUT_BITS = Raw:: RNG ::OUTPUT_BITS;\
 		static constexpr int FLAGS = Raw:: RNG ::FLAGS;\
 		Raw:: RNG implementation{};\
-		RNG (Uint64 s) {seed(s);}\
-		RNG (vRNG *seeder) {seed(seeder);}\
-		RNG (SEED_AUTO_TYPE ) {autoseed();}\
-		RNG (SEED_NONE_TYPE ) {}\
+		explicit RNG (Uint64 s) {seed(s);}\
+		explicit RNG (vRNG *seeder) {seed(seeder);}\
+		explicit RNG (SEED_AUTO_TYPE ) {autoseed();}\
+		explicit RNG (SEED_NONE_TYPE ) {}\
 		Uint8  raw8 () override;\
 		Uint16 raw16() override;\
 		Uint32 raw32() override;\

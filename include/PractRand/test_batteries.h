@@ -7,7 +7,7 @@ namespace PractRand::Tests {
 		public:
 			std::vector<TestBaseclass*> tests;
 			ListOfTests ( ) = default;
-			ListOfTests ( TestBaseclass **tests_ );
+			explicit ListOfTests ( TestBaseclass **tests_ );
 			ListOfTests (
 				TestBaseclass *test1, TestBaseclass *test2=nullptr, TestBaseclass *test3=nullptr, TestBaseclass *test4=nullptr,
 				TestBaseclass *test5=nullptr, TestBaseclass *test6=nullptr, TestBaseclass *test7=nullptr, TestBaseclass *test8=nullptr,

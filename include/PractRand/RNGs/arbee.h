@@ -15,10 +15,10 @@ namespace PractRand::RNGs {
 				void mix();
 			public:
 				arbee() {reset_entropy();}
-				arbee(Uint64 s) {seed(s);}
+				explicit arbee(Uint64 s) {seed(s);}
 				arbee(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {seed(s1,s2,s3,s4);}
-				arbee(SEED_NONE_TYPE ) {}
-				arbee(SEED_AUTO_TYPE ) {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
+				explicit arbee(SEED_NONE_TYPE ) {}
+				explicit arbee(SEED_AUTO_TYPE ) {StateWalkingObject *walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
 				Uint8  raw8 () {return Uint8 (raw64());}
 				Uint16 raw16() {return Uint16(raw64());}
 				Uint32 raw32() {return Uint32(raw64());}
@@ -45,11 +45,11 @@ namespace PractRand::RNGs {
 				Raw::arbee implementation;
 				[[nodiscard]] Uint64 get_flags() const override;
 				[[nodiscard]] std::string get_name() const override;
-				arbee(Uint64 s) : implementation(s) {}
+				explicit arbee(Uint64 s) : implementation(s) {}
 				arbee(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) : implementation(s1,s2,s3,s4) {}
-				arbee(vRNG *seeder) {seed(seeder);}
-				arbee(SEED_AUTO_TYPE ) {autoseed();}
-				arbee(SEED_NONE_TYPE ) {}
+				explicit arbee(vRNG *seeder) {seed(seeder);}
+				explicit arbee(SEED_AUTO_TYPE ) {autoseed();}
+				explicit arbee(SEED_NONE_TYPE ) {}
 				arbee() = default;
 				Uint8  raw8 () override;
 				Uint16 raw16() override;

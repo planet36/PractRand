@@ -16,10 +16,10 @@ namespace PractRand::RNGs::Polymorphic {
 				Uint8 output_buffer[64]{};
 				Uint16 input_buffer_left{}, output_buffer_left{}, state_phase{};
 
-				sha2_based_pool(Uint64 s) {seed(s);}
-				sha2_based_pool(vRNG *seeder) {seed(seeder);}
-				sha2_based_pool(SEED_AUTO_TYPE ) {autoseed();}
-				sha2_based_pool(SEED_NONE_TYPE ) {reset_state();}
+				explicit sha2_based_pool(Uint64 s) {seed(s);}
+				explicit sha2_based_pool(vRNG *seeder) {seed(seeder);}
+				explicit sha2_based_pool(SEED_AUTO_TYPE ) {autoseed();}
+				explicit sha2_based_pool(SEED_NONE_TYPE ) {reset_state();}
 				sha2_based_pool() {reset_state();}
 				~sha2_based_pool() override;
 

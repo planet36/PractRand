@@ -366,11 +366,11 @@ class TestCalibrationData {
 		}
 	}
 public:
-	TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_117 *raw_) {
+	explicit TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_117 *raw_) {
 		raw = PractRand::Tests::RawTestCalibrationData_129::convert117to129(raw_);
 		init();
 	}
-	TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_129 *raw_) : raw(raw_) {
+	explicit TestCalibrationData(const PractRand::Tests::RawTestCalibrationData_129 *raw_) : raw(raw_) {
 		init();
 	}
 

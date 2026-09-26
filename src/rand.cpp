@@ -137,7 +137,7 @@ namespace PractRand {
 	class GenericIntegerSeedingStateWalker : public StateWalkingObject {
 	public:
 		PractRand::RNGs::Raw::arbee seeder;
-		GenericIntegerSeedingStateWalker(Uint64 seed) : seeder(seed) {}
+		explicit GenericIntegerSeedingStateWalker(Uint64 seed) : seeder(seed) {}
 		void handle(bool   &v) override {v = (seeder.raw8() & 1) ? true : false;}
 		void handle(Uint8  &v) override {v = seeder.raw8 ();}
 		void handle(Uint16 &v) override {v = seeder.raw16();}
@@ -150,7 +150,7 @@ namespace PractRand {
 	class GenericSeedingStateWalker : public StateWalkingObject {
 	public:
 		PractRand::RNGs::vRNG *seeder;
-		GenericSeedingStateWalker(RNGs::vRNG *seeder_) : seeder(seeder_) {}
+		explicit GenericSeedingStateWalker(RNGs::vRNG *seeder_) : seeder(seeder_) {}
 		void handle(bool   &v) override { v = (seeder->raw8() & 1) ? true : false; }
 		void handle(Uint8  &v) override {v = seeder->raw8 ();}
 		void handle(Uint16 &v) override {v = seeder->raw16();}
@@ -212,7 +212,7 @@ namespace PractRand {
 		class AutoSeedingStateWalker : public StateWalkingObject {
 		public:
 			PractRand::RNGs::Polymorphic::arbee seeder;
-			AutoSeedingStateWalker([[maybe_unused]] const void *target) {
+			explicit AutoSeedingStateWalker([[maybe_unused]] const void *target) {
 				//get_autoseed_entropy(&seeder, target);
 				Uint32 seed_and_iv[10] = {0};
 				get_autoseed_fixed_entropy(reinterpret_cast<Uint64*>(&seed_and_iv[0]), &seeder);
@@ -237,7 +237,7 @@ namespace PractRand {
 		public:
 			//PractRand::RNGs::Polymorphic::sha2_based_pool seeder;
 			PractRand::RNGs::Polymorphic::trivium seeder;
-			CryptoAutoSeedingStateWalker(void *ptr1) : seeder(PractRand::SEED_NONE) {
+			explicit CryptoAutoSeedingStateWalker(void *ptr1) : seeder(PractRand::SEED_NONE) {
 				PractRand::RNGs::Polymorphic::sha2_based_pool entropy_pool;
 				if (!entropy_pool.add_entropy_automatically())
 					issue_error("PractRand: failed to obtain entropy for cryptographic quality autoseeding");

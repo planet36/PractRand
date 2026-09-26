@@ -15,7 +15,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
-					Transform64(vRNG *rng) : base_rng(rng) {}
+					explicit Transform64(vRNG *rng) : base_rng(rng) {}
 					~Transform64() override;
 				};
 				class Transform32 : public vRNG32 {
@@ -25,7 +25,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
-					Transform32(vRNG *rng) : base_rng(rng) {}
+					explicit Transform32(vRNG *rng) : base_rng(rng) {}
 					~Transform32() override;
 				};
 				class Transform16 : public vRNG16 {
@@ -35,7 +35,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
-					Transform16(vRNG *rng) : base_rng(rng) {}
+					explicit Transform16(vRNG *rng) : base_rng(rng) {}
 					~Transform16() override;
 				};
 				class Transform8 : public vRNG8 {
@@ -45,7 +45,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					using vRNG::seed;
 					[[nodiscard]] Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
-					Transform8(vRNG *rng) : base_rng(rng) {}
+					explicit Transform8(vRNG *rng) : base_rng(rng) {}
 					~Transform8() override;
 				};
 				class MultiplexTransformRNG : public vRNG {
@@ -63,7 +63,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void seed(vRNG *seeder) override;
 					[[nodiscard]] Uint64 get_flags() const override;
 					void walk_state(StateWalkingObject *walker) override;
-					MultiplexTransformRNG(const std::vector<vRNG*> &sources);
+					explicit MultiplexTransformRNG(const std::vector<vRNG*> &sources);
 					~MultiplexTransformRNG() override;
 					[[nodiscard]] int get_native_output_size() const override;
 				};
@@ -103,7 +103,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					ReinterpretAsUnknown( vRNG *rng );
+					explicit ReinterpretAsUnknown( vRNG *rng );
 					~ReinterpretAsUnknown() override;
 					Uint8 raw8() override;
 					//to do: fix endianness issues
@@ -115,7 +115,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					ReinterpretAs8( vRNG *rng );
+					explicit ReinterpretAs8( vRNG *rng );
 					~ReinterpretAs8() override;
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -125,7 +125,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					ReinterpretAs16( vRNG *rng );
+					explicit ReinterpretAs16( vRNG *rng );
 					~ReinterpretAs16() override;
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -135,7 +135,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					ReinterpretAs32( vRNG *rng );
+					explicit ReinterpretAs32( vRNG *rng );
 					~ReinterpretAs32() override;
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -145,7 +145,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					ReinterpretAs64( vRNG *rng );
+					explicit ReinterpretAs64( vRNG *rng );
 					~ReinterpretAs64() override;
 					Uint64 raw64() override;
 					[[nodiscard]] std::string get_name() const override;
@@ -154,7 +154,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class Xor : public MultiplexTransformRNG {
 					void refill() override;
 				public:
-					Xor(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
+					explicit Xor(const std::vector<vRNG*> &sources) : MultiplexTransformRNG(sources) {}
 					[[nodiscard]] std::string get_name() const override;
 				};
 				/*class Interleave8 : public MultiplexTransformRNG {
@@ -190,7 +190,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard16to8(vRNG *base_rng_);
+					explicit Discard16to8(vRNG *base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -202,7 +202,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard32to8(vRNG *base_rng_);
+					explicit Discard32to8(vRNG *base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -214,7 +214,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard64to8(vRNG *base_rng_);
+					explicit Discard64to8(vRNG *base_rng_);
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -226,7 +226,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard32to16(vRNG *base_rng_);
+					explicit Discard32to16(vRNG *base_rng_);
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -238,7 +238,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard64to16(vRNG *base_rng_);
+					explicit Discard64to16(vRNG *base_rng_);
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -250,7 +250,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int index;
 					void refill();
 				public:
-					Discard64to32(vRNG *base_rng_);
+					explicit Discard64to32(vRNG *base_rng_);
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 				};

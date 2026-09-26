@@ -96,7 +96,7 @@ namespace PractRand::Tests {
 			int buffer_size_L2;
 			int bits_to_use;
 		public:
-			BirthdayLamda1(int buffer_size_L2_ = 26);
+			explicit BirthdayLamda1(int buffer_size_L2_ = 26);
 			~BirthdayLamda1() override;
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
@@ -138,7 +138,7 @@ namespace PractRand::Tests {
 			double incomplete_duplicates{};
 			double incomplete_expected_duplicates{};
 		public:
-			BirthdaySystematic128(int max_bufsize_L2_ = 28);
+			explicit BirthdaySystematic128(int max_bufsize_L2_ = 28);
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;

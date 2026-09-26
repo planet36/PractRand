@@ -27,7 +27,7 @@ namespace PractRand::Tests {
 		};
 		class mod3n : public TestBaseclass {
 		public:
-			mod3n(int block_fraction_);//0 is all, 1 is half, 2 is a quarter, 3 is an 8th, etc
+			explicit mod3n(int block_fraction_);//0 is all, 1 is half, 2 is a quarter, 3 is an 8th, etc
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;

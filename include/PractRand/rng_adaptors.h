@@ -175,10 +175,10 @@ namespace PractRand::RNGs::Adaptors {
 			};
 			template<class base_rng> class RAW_TO_LIGHT_WEIGHT_RNG : public NORMALIZE<base_rng>::t {
 			public:
-				RAW_TO_LIGHT_WEIGHT_RNG(SEED_AUTO_TYPE) {this->autoseed();}
-				RAW_TO_LIGHT_WEIGHT_RNG(SEED_NONE_TYPE) {}
-				RAW_TO_LIGHT_WEIGHT_RNG(Uint64 s) {this->seed(s);}
-				RAW_TO_LIGHT_WEIGHT_RNG(vRNG *seeder) {this->seed(seeder);}
+				explicit RAW_TO_LIGHT_WEIGHT_RNG(SEED_AUTO_TYPE) {this->autoseed();}
+				explicit RAW_TO_LIGHT_WEIGHT_RNG(SEED_NONE_TYPE) {}
+				explicit RAW_TO_LIGHT_WEIGHT_RNG(Uint64 s) {this->seed(s);}
+				explicit RAW_TO_LIGHT_WEIGHT_RNG(vRNG *seeder) {this->seed(seeder);}
 			};
 			//to do:
 			//template<class base_rng> class RAW_TO_POLYMORPHIC_RNG;

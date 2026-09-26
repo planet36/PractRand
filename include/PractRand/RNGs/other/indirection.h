@@ -57,7 +57,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
-					ibaa8(int table_size_L2_);
+					explicit ibaa8(int table_size_L2_);
 					~ibaa8() override;
 				};
 				class ibaa16 : public vRNG16 {
@@ -68,7 +68,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
-					ibaa16(int table_size_L2_);
+					explicit ibaa16(int table_size_L2_);
 					~ibaa16() override;
 				};
 				class ibaa32 : public vRNG32 {
@@ -79,7 +79,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
-					ibaa32(int table_size_L2_);
+					explicit ibaa32(int table_size_L2_);
 					~ibaa32() override;
 				};
 				//based upon the ISAAC algorithm by Robert Jenkins
@@ -92,7 +92,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
-					isaac32_varqual(int table_size_L2_);
+					explicit isaac32_varqual(int table_size_L2_);
 					~isaac32_varqual() override;
 				};
 				//as isaac32_small, but adapted to use 16 bit integers instead of 32
@@ -104,7 +104,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
-					isaac16_varqual(int table_size_L2_);
+					explicit isaac16_varqual(int table_size_L2_);
 					~isaac16_varqual() override;
 				};
 				class efiix8_varqual : public vRNG8 {
@@ -148,7 +148,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int table_size_mask;
 					int shift;
 				public:
-					genindA(int size_L2);
+					explicit genindA(int size_L2);
 					~genindA() override;
 					Uint16 raw16() override;
 					void walk_state(StateWalkingObject *) override;
@@ -162,7 +162,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 *table;
 					Uint16 a{}, b{}, i{};
 				public:
-					genindB(int size_L2);
+					explicit genindB(int size_L2);
 					~genindB() override;
 					Uint16 raw16() override;
 					void walk_state(StateWalkingObject *) override;
@@ -180,7 +180,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						if (left >= 0) return table[left--];
 						else return refill();
 					}
-					genindC(int size_L2);
+					explicit genindC(int size_L2);
 					~genindC() override;
 					Uint16 refill();
 					void walk_state(StateWalkingObject *) override;
@@ -195,7 +195,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 table_size_L2;
 				public:
 					Uint16 raw16() override;
-					genindD(int size_L2);
+					explicit genindD(int size_L2);
 					~genindD() override;
 					void walk_state(StateWalkingObject *) override;
 					[[nodiscard]] std::string get_name() const override;
@@ -210,7 +210,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 table_size_L2;
 				public:
 					Uint16 raw16() override;
-					genindE(int size_L2);
+					explicit genindE(int size_L2);
 					~genindE() override;
 					void walk_state(StateWalkingObject *) override;
 					[[nodiscard]] std::string get_name() const override;
@@ -225,7 +225,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint16 table_size_L2;
 				public:
 					Uint16 raw16() override;
-					genindF(int size_L2);
+					explicit genindF(int size_L2);
 					~genindF() override;
 					void walk_state(StateWalkingObject *) override;
 					[[nodiscard]] std::string get_name() const override;
