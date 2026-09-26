@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
 #include <list>
 #include <map>
 #include <numbers>
@@ -54,9 +53,9 @@ PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 #include "Candidate_RNGs.h"
 
 #include <chrono>
-using TimeUnit = std::chrono::system_clock::rep;
-TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
-double get_time_period() { return std::chrono::system_clock::period::num / static_cast<double>(std::chrono::system_clock::period::den); }
+//using TimeUnit = std::chrono::system_clock::rep;
+//TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
+//double get_time_period() { return std::chrono::system_clock::period::num / static_cast<double>(std::chrono::system_clock::period::den); }
 
 /*
 A minimal RNG implementation, just enough to make it usable.
@@ -796,8 +795,7 @@ int main(int argc, char** argv) {
 	if (do_self_test) PractRand::self_test_PractRand();
 
 
-	std::time_t start_time = std::time(nullptr);
-	TimeUnit start_clock = get_time();
+	const auto start_time = std::chrono::steady_clock::now();
 
 	Uint64 seed = known_good.raw32();//64 bit space, as that's what the interface accepts, but 32 bit random value so that by default it's not too onerous to record/compare/whatever the value by hand
 	if (seed_str && !(rng->get_flags() & PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED)) {
@@ -961,10 +959,7 @@ int main(int argc, char** argv) {
 		blocks_tested += blocks_to_test;
 		already_shown = false;
 
-		double clocks_passed = (get_time() - start_clock) * get_time_period();//may wrap too quickly
-		int seconds_passed = std::time(nullptr) - start_time;
-		if (seconds_passed >= 1000 || seconds_passed > clocks_passed + 2.0) time_passed = seconds_passed;
-		else time_passed = clocks_passed;
+		time_passed = std::chrono::duration<double>(std::chrono::steady_clock::now() - start_time).count();
 	}
 
 	return 0;
