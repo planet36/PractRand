@@ -8,7 +8,7 @@ namespace PractRand::Tests::Transforms {
 			protected:
 				ListOfTests subtests;
 				std::string name;
-				Uint64 blocks_already{};//# of blocks outputed to subtests
+				uint64_t blocks_already{};//# of blocks outputed to subtests
 			public:
 				multiplex ( const char* name_, ListOfTests testlist );
 				void init( RNGs::vRNG* known_good ) override;
@@ -26,25 +26,25 @@ namespace PractRand::Tests::Transforms {
 				[[nodiscard]] virtual int get_num_children() const;
 				[[nodiscard]] virtual TestBaseclass* get_child(int index) const;
 				[[nodiscard]] const ListOfTests& _get_children() const {return subtests;}
-				[[nodiscard]] virtual Uint64 get_blocks_passed_through(int index) const;// {return blocks_already;}
+				[[nodiscard]] virtual uint64_t get_blocks_passed_through(int index) const;// {return blocks_already;}
 				//virtual std::string get_child_name  (int index) const;
 				//virtual double      get_child_result(int index);
 			};
 			class switching final : public multiplex {
-				std::vector<Uint64> lengths;
-				std::vector<Uint64> blocks_already_per;
-				Uint64 total_length;
-				Uint64 phase{};
+				std::vector<uint64_t> lengths;
+				std::vector<uint64_t> blocks_already_per;
+				uint64_t total_length;
+				uint64_t phase{};
 				unsigned int which{};
 			public:
 				switching( const char* name_, const ListOfTests& testlist,
-					std::vector<Uint64> lengths_ );
+					std::vector<uint64_t> lengths_ );
 				switching( const char* name_, const ListOfTests& testlist,
-					Uint64 length );
+					uint64_t length );
 				void init( RNGs::vRNG* known_good ) override;
 				void test_blocks(TestBlock* data, int numblocks) override;
 			//	virtual double get_result();
-				[[nodiscard]] Uint64 get_blocks_passed_through(int index) const override;
+				[[nodiscard]] uint64_t get_blocks_passed_through(int index) const override;
 			};
 			class Transform_Baseclass : public multiplex {
 			private:
@@ -64,7 +64,7 @@ namespace PractRand::Tests::Transforms {
 			};
 			class shrink : public Transform_Baseclass {
 			protected:
-				Uint8 sbox[65536]{};
+				uint8_t sbox[65536]{};
 				int pattern;//
 				int outbitsL;//1,2,4, or 8
 				int unitsL;//0= 8 bit input words, 1 = 16 bit input words

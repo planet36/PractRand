@@ -19,8 +19,8 @@ void PractRand::RNGs::Raw::arbee::reset_entropy() {
 	d = 5013818595375203225ULL;
 	i = 13;
 }
-Uint64 PractRand::RNGs::Raw::arbee::raw64() {
-	Uint64 e = a + std::rotl(b,45);
+uint64_t PractRand::RNGs::Raw::arbee::raw64() {
+	uint64_t e = a + std::rotl(b,45);
 	a = b ^ std::rotl(c, 13);
 	b = c + std::rotl(d, 37);
 	c = e + d + i++;
@@ -37,7 +37,7 @@ void PractRand::RNGs::Raw::arbee::mix() {
 			7 - 34-35 12
 	*/
 }
-void PractRand::RNGs::Raw::arbee::seed(Uint64 seed1, Uint64 seed2, Uint64 seed3, Uint64 seed4) {
+void PractRand::RNGs::Raw::arbee::seed(uint64_t seed1, uint64_t seed2, uint64_t seed3, uint64_t seed4) {
 	a = seed1;
 	b = seed2;
 	c = seed3;
@@ -45,7 +45,7 @@ void PractRand::RNGs::Raw::arbee::seed(Uint64 seed1, Uint64 seed2, Uint64 seed3,
 	i = 1;
 	mix();
 }
-void PractRand::RNGs::Raw::arbee::seed(Uint64 s) {
+void PractRand::RNGs::Raw::arbee::seed(uint64_t s) {
 	a = s;
 	b = 1;
 	c = 2;
@@ -69,13 +69,13 @@ void PractRand::RNGs::Raw::arbee::walk_state(StateWalkingObject* walker) {
 	if (walker->is_seeder()) i = 1;
 }
 void PractRand::RNGs::Raw::arbee::add_entropy_N(const void* _data, size_t length) {
-	const auto* data = static_cast<const Uint8*>(_data);
+	const auto* data = static_cast<const uint8_t*>(_data);
 #if 0 // little-endian only
 	//maybe add an ifdef to enable misaligned reads at compile time where appropriate?
-/*	if (!(7 & reinterpret_cast<Uint64>(data))) {
+/*	if (!(7 & reinterpret_cast<uint64_t>(data))) {
 	//if (!(((unsigned long)data) & 7)) {
 		while (length >= 8) {
-			add_entropy64(*(Uint64*)data);
+			add_entropy64(*(uint64_t*)data);
 			data += 8;
 			length -= 8;
 		}
@@ -83,42 +83,42 @@ void PractRand::RNGs::Raw::arbee::add_entropy_N(const void* _data, size_t length
 	else*/
 #endif
 	while (length >= 8) {
-		auto in = Uint64(*(data++));
-		in |= Uint64(*(data++)) << 8;
-		in |= Uint64(*(data++)) << 16;
-		in |= Uint64(*(data++)) << 24;
-		in |= Uint64(*(data++)) << 32;
-		in |= Uint64(*(data++)) << 40;
-		in |= Uint64(*(data++)) << 48;
-		in |= Uint64(*(data++)) << 56;
+		auto in = uint64_t(*(data++));
+		in |= uint64_t(*(data++)) << 8;
+		in |= uint64_t(*(data++)) << 16;
+		in |= uint64_t(*(data++)) << 24;
+		in |= uint64_t(*(data++)) << 32;
+		in |= uint64_t(*(data++)) << 40;
+		in |= uint64_t(*(data++)) << 48;
+		in |= uint64_t(*(data++)) << 56;
 		add_entropy64(in);
 		length -= 8;
 	}
 	while (length >= 2) {
-		Uint16 in = Uint64(*(data++));
-		in |= Uint16(*(data++)) << 8;
+		uint16_t in = uint64_t(*(data++));
+		in |= uint16_t(*(data++)) << 8;
 		add_entropy16(in);
 		length -= 2;
 	}
 	if (length) add_entropy8(*data);
 }
-void PractRand::RNGs::Raw::arbee::add_entropy8(Uint8 value) {
+void PractRand::RNGs::Raw::arbee::add_entropy8(uint8_t value) {
 	add_entropy16(value);
 }
-void PractRand::RNGs::Raw::arbee::add_entropy16(Uint16 value) {
+void PractRand::RNGs::Raw::arbee::add_entropy16(uint16_t value) {
 	d ^= value;
 	b += value;
 	raw64();
 	b += value;
 }
-void PractRand::RNGs::Raw::arbee::add_entropy32(Uint32 value) {
+void PractRand::RNGs::Raw::arbee::add_entropy32(uint32_t value) {
 	d ^= value;
 	b += value;
 	raw64();
 	raw64();
 	b += value;
 }
-void PractRand::RNGs::Raw::arbee::add_entropy64(Uint64 value) {
+void PractRand::RNGs::Raw::arbee::add_entropy64(uint64_t value) {
 	d ^= value;
 	b += value;
 	raw64();
@@ -130,46 +130,46 @@ void PractRand::RNGs::Raw::arbee::add_entropy64(Uint64 value) {
 
 
 //polymorphic:
-Uint64 PractRand::RNGs::Polymorphic::arbee::get_flags() const {
+uint64_t PractRand::RNGs::Polymorphic::arbee::get_flags() const {
 	return FLAGS;
 }
 std::string PractRand::RNGs::Polymorphic::arbee::get_name() const {
 	return {"arbee"};
 }
-Uint8  PractRand::RNGs::Polymorphic::arbee::raw8 () {
-	return Uint8(implementation.raw64());
+uint8_t  PractRand::RNGs::Polymorphic::arbee::raw8 () {
+	return uint8_t(implementation.raw64());
 }
-Uint16 PractRand::RNGs::Polymorphic::arbee::raw16() {
-	return Uint16(implementation.raw64());
+uint16_t PractRand::RNGs::Polymorphic::arbee::raw16() {
+	return uint16_t(implementation.raw64());
 }
-Uint32 PractRand::RNGs::Polymorphic::arbee::raw32() {
-	return Uint32(implementation.raw64());
+uint32_t PractRand::RNGs::Polymorphic::arbee::raw32() {
+	return uint32_t(implementation.raw64());
 }
-Uint64 PractRand::RNGs::Polymorphic::arbee::raw64() {
+uint64_t PractRand::RNGs::Polymorphic::arbee::raw64() {
 	return implementation.raw64();
 }
 void PractRand::RNGs::Polymorphic::arbee::add_entropy_N(const void* data, size_t length) {
 	implementation.add_entropy_N(data, length);
 }
-void PractRand::RNGs::Polymorphic::arbee::add_entropy8 (Uint8  value) {
+void PractRand::RNGs::Polymorphic::arbee::add_entropy8 (uint8_t  value) {
 	implementation.add_entropy8 (value);
 }
-void PractRand::RNGs::Polymorphic::arbee::add_entropy16(Uint16 value) {
+void PractRand::RNGs::Polymorphic::arbee::add_entropy16(uint16_t value) {
 	implementation.add_entropy16(value);
 }
-void PractRand::RNGs::Polymorphic::arbee::add_entropy32(Uint32 value) {
+void PractRand::RNGs::Polymorphic::arbee::add_entropy32(uint32_t value) {
 	implementation.add_entropy32(value);
 }
-void PractRand::RNGs::Polymorphic::arbee::add_entropy64(Uint64 value) {
+void PractRand::RNGs::Polymorphic::arbee::add_entropy64(uint64_t value) {
 	implementation.add_entropy64(value);
 }
-void PractRand::RNGs::Polymorphic::arbee::seed(Uint64 s) {
+void PractRand::RNGs::Polymorphic::arbee::seed(uint64_t s) {
 	implementation.seed(s);
 }
 void PractRand::RNGs::Polymorphic::arbee::seed(vRNG* rng) {
 	implementation.seed(rng);
 }
-void PractRand::RNGs::Polymorphic::arbee::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
+void PractRand::RNGs::Polymorphic::arbee::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	implementation.seed(s1, s2, s3, s4);
 }
 void PractRand::RNGs::Polymorphic::arbee::reset_entropy() {

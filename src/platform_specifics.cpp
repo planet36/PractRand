@@ -39,7 +39,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 	{//unix (linux/bsd/osx/etc, all flavors supposedly)
 		//mostly safe to use even on platforms where it won't work
 		std::FILE* f = std::fopen("/dev/urandom", "rb");
-		Uint64 buf[N64];
+		uint64_t buf[N64];
 		if (f) {
 			if (std::fread(buf,N64*sizeof(buf[0]),1,f) == 1) {
 				for (const auto i : buf) entropy_pool->add_entropy64(i);
@@ -57,7 +57,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 	//disabled to avoid the possibility of blocking
 		if (millseconds && f = std::fopen("/dev/random", "rb")) {
 			//skip this if a good source was already found, because this can block
-			Uint64 buf[N64];
+			uint64_t buf[N64];
 			if(std::fread(buf,N64*sizeof(buf[0]),1,f)) {
 				for (int i = 0; i < N64; i++) entropy_pool->add_entropy64(buf[i]);
 				entropy_pool->flush_buffers();
@@ -70,11 +70,11 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 #if 1
 	{//libc
 		//not much entropy, but we take what we can get
-		entropy_pool->add_entropy64(static_cast<Uint64>(std::time(nullptr)));
-		entropy_pool->add_entropy64(static_cast<Uint64>(std::clock()));
-		entropy_pool->add_entropy64(reinterpret_cast<Uint64>(entropy_pool));
-		auto* p = static_cast<Uint64*>(std::malloc(sizeof(Uint64)));
-		entropy_pool->add_entropy64(reinterpret_cast<Uint64>(p));
+		entropy_pool->add_entropy64(static_cast<uint64_t>(std::time(nullptr)));
+		entropy_pool->add_entropy64(static_cast<uint64_t>(std::clock()));
+		entropy_pool->add_entropy64(reinterpret_cast<uint64_t>(entropy_pool));
+		auto* p = static_cast<uint64_t*>(std::malloc(sizeof(uint64_t)));
+		entropy_pool->add_entropy64(reinterpret_cast<uint64_t>(p));
 		//entropy_pool->add_entropy64(*p);//commented to avoid issues with memory debuggers
 		free(p);
 	}
@@ -84,32 +84,32 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 	return false;
 }
 
-Uint64 PractRand::Internals::issue_unique_identifier ( ) {
+uint64_t PractRand::Internals::issue_unique_identifier ( ) {
 #if 1
-	static std::atomic<Uint64> count = 0;
+	static std::atomic<uint64_t> count = 0;
 	return count++;
 #elif defined __GNUC__
-	static volatile Uint64 count = 0;
-	return __sync_fetch_and_add(&count, Uint64(1) );
+	static volatile uint64_t count = 0;
+	return __sync_fetch_and_add(&count, uint64_t(1) );
 #else
 	//ugly, but without more knowledge of the target system or more dependencies there's not much more that can be done
-	return (Uint64)std::malloc(1);
+	return (uint64_t)std::malloc(1);
 #endif
 }
 
 /*
 	//don't care about the units since it's only used as an entropy source
 	//however, rdtscp is to be avoided since not enough CPUs support it
-Uint64 PractRand::Internals::high_resolution_time() {
+uint64_t PractRand::Internals::high_resolution_time() {
 #if defined __GNUC__ && ( defined(__i386__) || defined(__x86_64__) )
 	//from wikipedia
-	Uint32 low, high;
+	uint32_t low, high;
 	__asm__ __volatile__("rdtsc" : "=a"(low), "=d"(high) :: "ecx" );
 	//__asm__ __volatile__("rdtscp" : "=a"(low), "=d"(high) :: "ecx" );
-	return (Uint64(high) << 32) | low;
+	return (uint64_t(high) << 32) | low;
 #elif defined __GNUC__ && defined(__powerpc__)
 	//from http://www.mcs.anl.gov/~kazutomo/rdtsc.html
-	Uint64 result = 0;
+	uint64_t result = 0;
 	unsigned long int upper, lower,tmp;
 	__asm__ volatile(
 		"0:                  \n"
@@ -129,7 +129,7 @@ Uint64 PractRand::Internals::high_resolution_time() {
 	//to do: figure out the appropriate preprocessor defines to check for gettimeofday
 
 	//very poor resolution, but we don't have a lot of alternatives at this point:
-	return (Uint64)std::clock();
+	return (uint64_t)std::clock();
 #endif
 }
 */

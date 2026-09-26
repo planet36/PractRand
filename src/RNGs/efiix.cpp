@@ -16,25 +16,25 @@ using namespace PractRand;
 using namespace PractRand::Internals;
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(efiix8x48)
-void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s) { implementation.seed(s); }
+void PractRand::RNGs::Polymorphic::efiix8x48::seed(uint64_t s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix8x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix8x48::get_name() const { return "efiix8x48"; }
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(efiix16x48)
-void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s) { implementation.seed(s); }
+void PractRand::RNGs::Polymorphic::efiix16x48::seed(uint64_t s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix16x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix16x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix16x48::get_name() const { return "efiix16x48"; }
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(efiix32x48)
-void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s) { implementation.seed(s); }
+void PractRand::RNGs::Polymorphic::efiix32x48::seed(uint64_t s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix32x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
-//void PractRand::RNGs::Polymorphic::efiix32x48::seed(const Uint32 *seeds, int num_seeds, int quality) {implementation.seed(seeds, num_seeds, quality);}
-void PractRand::RNGs::Polymorphic::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+//void PractRand::RNGs::Polymorphic::efiix32x48::seed(const uint32_t *seeds, int num_seeds, int quality) {implementation.seed(seeds, num_seeds, quality);}
+void PractRand::RNGs::Polymorphic::efiix32x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix32x48::get_name() const { return "efiix32x48"; }
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(efiix64x48)
-void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s) { implementation.seed(s); }
+void PractRand::RNGs::Polymorphic::efiix64x48::seed(uint64_t s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
-void PractRand::RNGs::Polymorphic::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) { implementation.seed(s1, s2, s3, s4); }
+void PractRand::RNGs::Polymorphic::efiix64x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return "efiix64x48"; }
 
 #define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
@@ -194,7 +194,7 @@ Some oddities related to empirical quality vs parameterization visible there at 
 
 /*class efiix8_seeding_helper {
 public:
-	typedef Uint8 Word;
+	typedef uint8_t Word;
 	Word *iter_table;
 	Word *ind_table;
 	Word a, b, c, i;
@@ -238,11 +238,11 @@ PractRand::RNGs::Raw::efiix32x48::~efiix32x48() { std::memset(this, 0, sizeof(*t
 PractRand::RNGs::Raw::efiix64x48::~efiix64x48() { std::memset(this, 0, sizeof(*this)); }
 
 
-Uint8 PractRand::RNGs::Raw::efiix8x48::raw8() {
+uint8_t PractRand::RNGs::Raw::efiix8x48::raw8() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(8, 3)
 }
-void PractRand::RNGs::Raw::efiix8x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
+void PractRand::RNGs::Raw::efiix8x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	//EFIIX_SEED(8)
 	a = b = c = i = 0;
 	iteration_table[0] = 0;
@@ -314,11 +314,11 @@ void PractRand::RNGs::Raw::efiix8x48::walk_state(StateWalkingObject* walker) {
 }
 
 
-Uint16 PractRand::RNGs::Raw::efiix16x48::raw16() {
+uint16_t PractRand::RNGs::Raw::efiix16x48::raw16() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(16, 7)
 }
-void PractRand::RNGs::Raw::efiix16x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
+void PractRand::RNGs::Raw::efiix16x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	EFIIX_SEED( 16 )
 }
 void PractRand::RNGs::Raw::efiix16x48::seed(PractRand::RNGs::vRNG* source_rng) {
@@ -345,12 +345,12 @@ void PractRand::RNGs::Raw::efiix16x48::walk_state(StateWalkingObject* walker) {
 }
 
 
-Uint32 PractRand::RNGs::Raw::efiix32x48::raw32() {
+uint32_t PractRand::RNGs::Raw::efiix32x48::raw32() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(32, 13)
 }
 /*
-static void mix4x32(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
+static void mix4x32(uint32_t &a, uint32_t &b, uint32_t &c, uint32_t &d) {
 	b ^= a + (a << 13);
 	c += b ^ (b >> 5);
 	d ^= c + b;
@@ -361,7 +361,7 @@ static void mix4x32(Uint32 &a, Uint32 &b, Uint32 &c, Uint32 &d) {
 	a += d ^ ((c << 8) | (c >> 24));
 }
 */
-void PractRand::RNGs::Raw::efiix32x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
+void PractRand::RNGs::Raw::efiix32x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	EFIIX_SEED(32)
 }
 void PractRand::RNGs::Raw::efiix32x48::seed(PractRand::RNGs::vRNG* source_rng) {
@@ -390,11 +390,11 @@ void PractRand::RNGs::Raw::efiix32x48::walk_state(StateWalkingObject* walker) {
 }
 
 
-Uint64 PractRand::RNGs::Raw::efiix64x48::raw64() {
+uint64_t PractRand::RNGs::Raw::efiix64x48::raw64() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
 	EFIIX_ALGORITHM(64, 25)
 }
-void PractRand::RNGs::Raw::efiix64x48::seed(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) {
+void PractRand::RNGs::Raw::efiix64x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	EFIIX_SEED( 64 )
 }
 void PractRand::RNGs::Raw::efiix64x48::seed(PractRand::RNGs::vRNG* source_rng) {

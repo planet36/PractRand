@@ -11,13 +11,13 @@ using namespace PractRand;
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(isaac32x256)
-void PractRand::RNGs::Polymorphic::isaac32x256::seed(Uint64 s) { implementation.seed(s); }
+void PractRand::RNGs::Polymorphic::isaac32x256::seed(uint64_t s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::isaac32x256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac32x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac32x256::get_name() const {return "isaac32x256";}
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(isaac64x256)
-void PractRand::RNGs::Polymorphic::isaac64x256::seed(Uint64 s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::isaac64x256::seed(uint64_t s) {implementation.seed(s);}
 void PractRand::RNGs::Polymorphic::isaac64x256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 void PractRand::RNGs::Polymorphic::isaac64x256::flush_buffers() { implementation.flush_buffers(); }
 std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return "isaac64x256";}
@@ -26,7 +26,7 @@ std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return 
 PractRand::RNGs::Raw::isaac32x256::~isaac32x256() {std::memset(this, 0, sizeof(*this));}
 PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {std::memset(this, 0, sizeof(*this));}
 
-#define ind32(mm,x)  (*reinterpret_cast<Uint32*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((SIZE-1)<<2))))
+#define ind32(mm,x)  (*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(mm) + ((x) & ((SIZE-1)<<2))))
 #define rngstep32(mix,a,b,mm,m,m2,r,x) \
 { \
   (x) = *(m);  \
@@ -35,8 +35,8 @@ PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {std::memset(this, 0, sizeof(*
   *((r)++) = (b) = ind32(mm,y>>SIZE_L2) + (x); \
 }
 void PractRand::RNGs::Raw::isaac32x256::_advance_state() {//do not change
-	Uint32 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-	Uint32 x = 0, y = 0;
+	uint32_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
+	uint32_t x = 0, y = 0;
 	//m = state;
 	r = results;
 	b += ++c;
@@ -56,13 +56,13 @@ void PractRand::RNGs::Raw::isaac32x256::_advance_state() {//do not change
 	}
 	used = 0;
 }
-//Uint32 PractRand::RNGs::Raw::isaac32x256::raw32() {//LOCKED, do not change
+//uint32_t PractRand::RNGs::Raw::isaac32x256::raw32() {//LOCKED, do not change
 //	if ( used >= SIZE ) _advance_state();
 //	return results[used++];
 //}
-static void mix32x8(Uint32 t[8]) {
-	Uint32 &a = t[0], &b = t[1], &c = t[2], &d = t[3];
-	Uint32 &e = t[4], &f = t[5], &g = t[6], &h = t[7];
+static void mix32x8(uint32_t t[8]) {
+	uint32_t &a = t[0], &b = t[1], &c = t[2], &d = t[3];
+	uint32_t &e = t[4], &f = t[5], &g = t[6], &h = t[7];
 	a^=b<<11; d+=a; b+=c;
 	b^=c>>2;  e+=b; c+=d;
 	c^=d<<8;  f+=c; d+=e;
@@ -76,7 +76,7 @@ void PractRand::RNGs::Raw::isaac32x256::_seed(bool flag) {//LOCKED, do not chang
 	//the reference seeding algorithm for ISAAC
 	//not used directly by PractRand since it isn't a good match for any PractRand interface
 	//but the visible seeding methods map to this
-	Uint32 tmp[8];
+	uint32_t tmp[8];
 	a = b = c = 0;
 	for (auto& i : tmp) i = 0x9e3779b9UL;  // the golden ratio
 
@@ -107,16 +107,16 @@ void PractRand::RNGs::Raw::isaac32x256::_seed(bool flag) {//LOCKED, do not chang
 
 	used = SIZE;
 }
-void PractRand::RNGs::Raw::isaac32x256::seed(const Uint32 s[256]) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac32x256::seed(const uint32_t s[256]) {//LOCKED, do not change
 	for (int i = 0; i < 256; i++) state[i] = s[i];
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac32x256::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac32x256::seed(uint64_t s) {//LOCKED, do not change
 	//changed in 0.85 to improve seeding quality
 	//and to make it more similar to the reference seeding algorithm
 	//(which can't be used directly since it takes a non-standard seed structure)
-	state[0] = Uint32(s);
-	state[1] = Uint32(s>>32);
+	state[0] = uint32_t(s);
+	state[1] = uint32_t(s>>32);
 	for (int i = 2; i < SIZE; i++) state[i] = 0;
 	_seed(true);
 }
@@ -144,7 +144,7 @@ void PractRand::RNGs::Raw::isaac32x256::walk_state(StateWalkingObject* walker) {
 void PractRand::RNGs::Raw::isaac32x256::self_test() {
 	Raw::isaac32x256 rng{};
 	rng.seed(0UL);
-	Uint64 checksum = 0;
+	uint64_t checksum = 0;
 	for (int i = 0; i < 8192; i++) {
 		checksum ^= checksum << 24;
 		checksum ^= checksum >> 27;
@@ -155,7 +155,7 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 
 
 
-#define ind64(mm,x)  (*reinterpret_cast<Uint64*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((SIZE-1)<<3))))
+#define ind64(mm,x)  (*reinterpret_cast<uint64_t*>(reinterpret_cast<uint8_t*>(mm) + ((x) & ((SIZE-1)<<3))))
 #define rngstep64(mix,a,b,mm,m,m2,r,x) \
 { \
   (x) = *(m);  \
@@ -164,8 +164,8 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
   *((r)++) = (b) = ind64(mm,y>>SIZE_L2) + (x); \
 }
 void PractRand::RNGs::Raw::isaac64x256::_advance_state() {//do not change
-	Uint64 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-	Uint64 x = 0, y = 0;
+	uint64_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
+	uint64_t x = 0, y = 0;
 	//m = state;
 	r = results;
 	b += ++c;
@@ -185,13 +185,13 @@ void PractRand::RNGs::Raw::isaac64x256::_advance_state() {//do not change
 	}
 	used = 0;
 }
-//Uint64 PractRand::RNGs::Raw::isaac64x256::raw64() {//LOCKED, do not change
+//uint64_t PractRand::RNGs::Raw::isaac64x256::raw64() {//LOCKED, do not change
 //	if ( used >= SIZE ) _advance_state();
 //	return results[used++];
 //}
-static void mix64x8(Uint64 t[8]) {
-	Uint64 &a = t[0], &b = t[1], &c = t[2], &d = t[3];
-	Uint64 &e = t[4], &f = t[5], &g = t[6], &h = t[7];
+static void mix64x8(uint64_t t[8]) {
+	uint64_t &a = t[0], &b = t[1], &c = t[2], &d = t[3];
+	uint64_t &e = t[4], &f = t[5], &g = t[6], &h = t[7];
 	a-=e; f^=h>>9;  h+=a;
 	b-=f; g^=a<<9;  a+=b;
 	c-=g; h^=b>>23; b+=c;
@@ -205,7 +205,7 @@ void PractRand::RNGs::Raw::isaac64x256::_seed(bool flag) {//LOCKED, do not chang
 	//the reference seeding algorithm for ISAAC64
 	//not used directly by PractRand since it isn't a good match for any PractRand interface
 	//but the visible seeding methods map to this
-	Uint64 tmp[8];
+	uint64_t tmp[8];
 	a = b = c = 0;
 	for (auto& i : tmp) i = 0x9e3779b97f4a7c13ULL;  // the golden ratio
 
@@ -236,11 +236,11 @@ void PractRand::RNGs::Raw::isaac64x256::_seed(bool flag) {//LOCKED, do not chang
 
 	used = SIZE;
 }
-void PractRand::RNGs::Raw::isaac64x256::seed(const Uint64 s[256]) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac64x256::seed(const uint64_t s[256]) {//LOCKED, do not change
 	for (int i = 0; i < 256; i++) state[i] = s[i];
 	_seed(true);
 }
-void PractRand::RNGs::Raw::isaac64x256::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::isaac64x256::seed(uint64_t s) {//LOCKED, do not change
 	//changed in 0.85 to improve seeding quality
 	//and to make it more similar to the reference seeding algorithm
 	//(which can't be used directly since it takes a non-standard seed structure)

@@ -20,36 +20,36 @@ PractRand::RNGs::Polymorphic::sha2_based_pool::~sha2_based_pool() {
 std::string PractRand::RNGs::Polymorphic::sha2_based_pool::get_name() const {
 	return {"sha2_based_pool"};
 }
-Uint64 PractRand::RNGs::Polymorphic::sha2_based_pool::get_flags() const {
+uint64_t PractRand::RNGs::Polymorphic::sha2_based_pool::get_flags() const {
 	return FLAGS;
 }
-Uint8 PractRand::RNGs::Polymorphic::sha2_based_pool::raw8() {
+uint8_t PractRand::RNGs::Polymorphic::sha2_based_pool::raw8() {
 	if (!output_buffer_left) refill_output_buffer();
 	return output_buffer[--output_buffer_left];
 }
-void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy8(Uint8 value) {
+void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy8(uint8_t value) {
 	input_buffer[--input_buffer_left] = value;
 	if (!input_buffer_left) empty_input_buffer();
 }
-void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy16(Uint16 value) {
-	add_entropy8(Uint8(value   ));
-	add_entropy8(Uint8(value>>8));
+void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy16(uint16_t value) {
+	add_entropy8(uint8_t(value   ));
+	add_entropy8(uint8_t(value>>8));
 }
-void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy32(Uint32 value) {
-	add_entropy8(Uint8(value    ));
-	add_entropy8(Uint8(value>>8 ));
-	add_entropy8(Uint8(value>>16));
-	add_entropy8(Uint8(value>>24));
+void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy32(uint32_t value) {
+	add_entropy8(uint8_t(value    ));
+	add_entropy8(uint8_t(value>>8 ));
+	add_entropy8(uint8_t(value>>16));
+	add_entropy8(uint8_t(value>>24));
 }
-void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy64(Uint64 value) {
-	add_entropy8(Uint8(value   ));
-	add_entropy8(Uint8(value>>8));
-	add_entropy8(Uint8(value>>16));
-	add_entropy8(Uint8(value>>24));
-	add_entropy8(Uint8(value>>32));
-	add_entropy8(Uint8(value>>40));
-	add_entropy8(Uint8(value>>48));
-	add_entropy8(Uint8(value>>56));
+void PractRand::RNGs::Polymorphic::sha2_based_pool::add_entropy64(uint64_t value) {
+	add_entropy8(uint8_t(value   ));
+	add_entropy8(uint8_t(value>>8));
+	add_entropy8(uint8_t(value>>16));
+	add_entropy8(uint8_t(value>>24));
+	add_entropy8(uint8_t(value>>32));
+	add_entropy8(uint8_t(value>>40));
+	add_entropy8(uint8_t(value>>48));
+	add_entropy8(uint8_t(value>>56));
 }
 
 void PractRand::RNGs::Polymorphic::sha2_based_pool::flush_buffers() {
@@ -57,16 +57,16 @@ void PractRand::RNGs::Polymorphic::sha2_based_pool::flush_buffers() {
 	if (output_buffer_left != 0) output_buffer_left = 0;//refill_output_buffer();
 }
 
-void PractRand::RNGs::Polymorphic::sha2_based_pool::seed(Uint64 s) {
+void PractRand::RNGs::Polymorphic::sha2_based_pool::seed(uint64_t s) {
 	unsigned long i = 0;
-	for (i = 0; i < 8; i++) state[i] = Uint8(s >> (i*8));
+	for (i = 0; i < 8; i++) state[i] = uint8_t(s >> (i*8));
 	for (; i < STATE_SIZE; i++) state[i] = 0;
 	input_buffer_left = 128;
 	output_buffer_left = 0;
 	state_phase = 0;
 }
 void PractRand::RNGs::Polymorphic::sha2_based_pool::reset_state() {
-	seed(Uint64(0));
+	seed(uint64_t(0));
 }
 void PractRand::RNGs::Polymorphic::sha2_based_pool::walk_state(StateWalkingObject* walker) {
 	for (auto& i : state) walker->handle(i);

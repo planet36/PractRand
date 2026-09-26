@@ -17,13 +17,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//large-state LCGs with very poor constants
 				class bigbadlcg64X : public vRNG64 {
 					static constexpr int MAX_N = 16;
-					Uint64 state[MAX_N]{};
+					uint64_t state[MAX_N]{};
 					int n;
 				public:
 					int discard_bits;
 					int shift_i;
 					int shift_b;
-					Uint64 raw64() override;
+					uint64_t raw64() override;
 					bigbadlcg64X(int discard_bits_, int shift_);
 					//~bigbadlcgX();
 					[[nodiscard]] std::string get_name() const override;
@@ -33,7 +33,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					bigbadlcg64X base_lcg;
 					bigbadlcg32X(int discard_bits_, int shift_);
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -41,7 +41,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					bigbadlcg64X base_lcg;
 					bigbadlcg16X(int discard_bits_, int shift_);
-					Uint16 raw16() override;
+					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -49,44 +49,44 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					bigbadlcg64X base_lcg;
 					bigbadlcg8X(int discard_bits_, int shift_);
-					Uint8 raw8() override;
+					uint8_t raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 
-				//Mitchell-Moore: LFib32(Uint32, 55, 24, ADD)
+				//Mitchell-Moore: LFib32(uint32_t, 55, 24, ADD)
 				class mm32 : public vRNG32 {
-					Uint32 cbuf[55]{};
-					Uint8 index1{}, index2{};
+					uint32_t cbuf[55]{};
+					uint8_t index1{}, index2{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
-				//Mitchell-Moore modified: LFib16(Uint32, 55, 24, ADD) >> 16
+				//Mitchell-Moore modified: LFib16(uint32_t, 55, 24, ADD) >> 16
 				class mm16of32 : public vRNG16 {
-					Uint32 cbuf[55]{};
-					Uint8 index1{}, index2{};
+					uint32_t cbuf[55]{};
+					uint8_t index1{}, index2{};
 				public:
-					Uint16 raw16() override;
+					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
-				//Mitchell-Moore modified: LFib32(Uint32, 55, 24, ADC)
+				//Mitchell-Moore modified: LFib32(uint32_t, 55, 24, ADC)
 				class mm32_awc : public vRNG32 {
-					Uint32 cbuf[55]{};
-					Uint8 index1{}, index2{}, carry{};
+					uint32_t cbuf[55]{};
+					uint8_t index1{}, index2{}, carry{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
-				//Mitchell-Moore modified: LFib16(Uint32, 55, 24, ADC)
+				//Mitchell-Moore modified: LFib16(uint32_t, 55, 24, ADC)
 				class mm16of32_awc : public vRNG16 {
-					Uint32 cbuf[55]{};
-					Uint8 index1{}, index2{}, carry{};
+					uint32_t cbuf[55]{};
+					uint8_t index1{}, index2{}, carry{};
 				public:
-					Uint16 raw16() override;
+					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -94,12 +94,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				class lfsr_medium : public vRNG8 {
 					static constexpr int SIZE = 55;
 					static constexpr int LAG = 25; //0 < LAG < SIZE-2
-					Uint8 cbuf[55]{};
-					Uint8 table1[256]{}, table2[256]{};
-					Uint8 used{};
+					uint8_t cbuf[55]{};
+					uint8_t table1[256]{}, table2[256]{};
+					uint8_t used{};
 				public:
 					lfsr_medium();
-					Uint8 raw8() override;
+					uint8_t raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -107,10 +107,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				//proposed by Marsaglia
 				class mwc4691 : public vRNG32 {
-					Uint32 cbuf[4691]{};
+					uint32_t cbuf[4691]{};
 					unsigned int index{}, carry{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -119,77 +119,77 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				class cbuf_accum : public vRNG32 {
 					static constexpr int L = 32;
-					Uint32 cbuf[L]{}, accum{};
-					Uint8 index{};
+					uint32_t cbuf[L]{}, accum{};
+					uint8_t index{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class cbuf_accum_big : public vRNG32 {
 					static constexpr int L = 128;
-					Uint32 cbuf[L]{}, accum{};
-					Uint32 index{};
+					uint32_t cbuf[L]{}, accum{};
+					uint32_t index{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class cbuf_2accum_small : public vRNG32 {
 					static constexpr int L = 3;
-					Uint32 cbuf[L]{}, accum1{}, accum2{};
-					Uint8 index{};
+					uint32_t cbuf[L]{}, accum1{}, accum2{};
+					uint8_t index{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class cbuf_2accum : public vRNG32 {
 					static constexpr int L = 12;
-					Uint32 cbuf[L]{}, accum1{}, accum2{};
-					Uint8 index{};
+					uint32_t cbuf[L]{}, accum1{}, accum2{};
+					uint8_t index{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class dual_cbuf_small : public vRNG32 {
 					static constexpr int L1 = 3;
 					static constexpr int L2 = 5;
-					Uint32 cbuf1[L1]{}, cbuf2[L2]{};
-					Uint8 index1{}, index2{};
+					uint32_t cbuf1[L1]{}, cbuf2[L2]{};
+					uint8_t index1{}, index2{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class dual_cbuf : public vRNG32 {
 					static constexpr int L1 = 13;
 					static constexpr int L2 = 19;
-					Uint32 cbuf1[L1]{}, cbuf2[L2]{};
-					Uint8 index1{}, index2{};
+					uint32_t cbuf1[L1]{}, cbuf2[L2]{};
+					uint8_t index1{}, index2{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class dual_cbufa_small : public vRNG32 {
 					static constexpr int L1 = 4;
 					static constexpr int L2 = 5;
-					Uint32 cbuf1[L1]{}, cbuf2[L2]{}, accum{};
-					Uint8 index1{}, index2{};
+					uint32_t cbuf1[L1]{}, cbuf2[L2]{}, accum{};
+					uint8_t index1{}, index2{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class dual_cbuf_accum : public vRNG32 {
 					static constexpr int L1 = 13;
 					static constexpr int L2 = 19;
-					Uint32 cbuf1[L1]{}, cbuf2[L2]{}, accum{};
-					Uint8 index1{}, index2{};
+					uint32_t cbuf1[L1]{}, cbuf2[L2]{}, accum{};
+					uint8_t index1{}, index2{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -198,10 +198,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int LAG2 = 3;
 					static constexpr int ROT1 = 9;
 					static constexpr int ROT2 = 13;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > 0
-					Uint8 position{};
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > 0
+					uint8_t position{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -210,10 +210,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int LAG2 = 9;
 					static constexpr int ROT1 = 9;
 					static constexpr int ROT2 = 13;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > 0
-					Uint8 position{};
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > 0
+					uint8_t position{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -222,10 +222,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int LAG2 = 13;
 					static constexpr int ROT1 = 9;
 					static constexpr int ROT2 = 13;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > 0
-					Uint8 position{};
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > 0
+					uint8_t position{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -237,11 +237,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int ROT1 = 3;
 					static constexpr int ROT2 = 17;
 					static constexpr int ROT3 = 9;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
-					Uint8 position{};
-					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
+					uint8_t position{};
+					static uint32_t func(uint32_t a, uint32_t b, uint32_t c);
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -253,11 +253,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int ROT1 = 3;
 					static constexpr int ROT2 = 17;
 					static constexpr int ROT3 = 9;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
-					Uint8 position{};
-					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
+					uint8_t position{};
+					static uint32_t func(uint32_t a, uint32_t b, uint32_t c);
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -269,11 +269,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int ROT1 = 3;
 					static constexpr int ROT2 = 17;
 					static constexpr int ROT3 = 9;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
-					Uint8 position{};
-					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
+					uint8_t position{};
+					static uint32_t func(uint32_t a, uint32_t b, uint32_t c);
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -285,11 +285,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int ROT1 = 3;
 					static constexpr int ROT2 = 17;
 					static constexpr int ROT3 = 9;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
-					Uint8 position{};
-					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
+					uint8_t position{};
+					static uint32_t func(uint32_t a, uint32_t b, uint32_t c);
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -301,11 +301,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int ROT1 = 3;
 					static constexpr int ROT2 = 17;
 					static constexpr int ROT3 = 9;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
-					Uint8 position{};
-					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
+					uint8_t position{};
+					static uint32_t func(uint32_t a, uint32_t b, uint32_t c);
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
@@ -317,48 +317,48 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static constexpr int ROT1 = 3;
 					static constexpr int ROT2 = 17;
 					static constexpr int ROT3 = 9;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
-					Uint8 position{};
-					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > LAG3, LAG3 = 1
+					uint8_t position{};
+					static uint32_t func(uint32_t a, uint32_t b, uint32_t c);
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class fibmul16of32 : public vRNG16 {// 31 @ 17/9
 					static constexpr int LAG1 = 17;
 					static constexpr int LAG2 = 5;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > 0
-					Uint8 position{};
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > 0
+					uint8_t position{};
 				public:
-					Uint16 raw16() override;
+					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class fibmul32of64 : public vRNG32 {// 35 @ 3/2, 39 @ 7/5
 					static constexpr int LAG1 = 7;
 					static constexpr int LAG2 = 5;
-					Uint16 buffer[LAG1]{}; // LAG1 > LAG2 > 0
-					Uint8 position{};
+					uint16_t buffer[LAG1]{}; // LAG1 > LAG2 > 0
+					uint8_t position{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class fibmulmix16 : public vRNG16 {
 					static constexpr int LAG1 = 7;
 					static constexpr int LAG2 = 3;
-					Uint32 buffer[LAG1]{}; // LAG1 > LAG2 > 0
-					Uint8 position{};
+					uint32_t buffer[LAG1]{}; // LAG1 > LAG2 > 0
+					uint8_t position{};
 				public:
-					Uint16 raw16() override;
+					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
 				class mt19937_unhashed : public vRNG32 {//
 					PractRand::RNGs::Raw::mt19937 implementation{};
 				public:
-					Uint32 raw32() override;
+					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};

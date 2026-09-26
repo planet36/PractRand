@@ -28,7 +28,7 @@ namespace PractRand::Tests {
 					average nears - keep a copy of the bytes surrounding the previous occurance.  reserve space for another equal size block, initialized those those around the 1st occurance and updated by majority vote on a per-bit basis. record the average hamming distance from it
 			*/
 		protected:
-			//typedef Uint32 COUP_WORD;//must be 4 or 8 bytes
+			//typedef uint32_t COUP_WORD;//must be 4 or 8 bytes
 			static constexpr int EXP_BITS = 6;
 			static constexpr int BASE_SIG_BITS = 9;
 			static constexpr int MAX_EXP = 64 - BASE_SIG_BITS;
@@ -40,38 +40,38 @@ namespace PractRand::Tests {
 			//static constexpr int COUP_WORD_SIZE = 8 * sizeof(COUP_WORD);
 			//static constexpr int COUP_WORD_SIZE_L2 = sizeof(COUP_WORD) == 4 ? 5 : 6;
 			//static constexpr int COUP_MASK_SIZE = 1 << (COUP_SIG_BITS - COUP_WORD_SIZE_L2);
-			//static unsigned long count_leading_zeroes32( Uint32 value );
+			//static unsigned long count_leading_zeroes32( uint32_t value );
 			//const int stride_bits_L2, skip_platters;
 			bool autofail{};
 			struct Platter {
-				Uint64 total_count;//total number of times this exponent has occurred
+				uint64_t total_count;//total number of times this exponent has occurred
 
-				//FixedSizeCount<Uint16, 1 << (SEQ_SIG_BITS * SEQ_N)> seq_count;
-				//Uint32 seq_current;
+				//FixedSizeCount<uint16_t, 1 << (SEQ_SIG_BITS * SEQ_N)> seq_count;
+				//uint32_t seq_current;
 
-				Uint64 gap_global_history[1 << GAP_SIG_BITS];//4 kibibytes at current settings
+				uint64_t gap_global_history[1 << GAP_SIG_BITS];//4 kibibytes at current settings
 				double gap_product;
 				double gap_expected_inverse;
-				Sint64 gap_product_extracted_L2;
-				Uint64 gap_hits;
+				int64_t gap_product_extracted_L2;
+				uint64_t gap_hits;
 				double gap_warmed_up;
-				//Uint32 history1[1 << GAP_SIG_BITS];//relative to this platter only
-				//Uint64 history2[1 << GAP_SIG_BITS];//global - implementation is not efficient
-				//Uint64 total_count;
+				//uint32_t history1[1 << GAP_SIG_BITS];//relative to this platter only
+				//uint64_t history2[1 << GAP_SIG_BITS];//global - implementation is not efficient
+				//uint64_t total_count;
 				//double gap_sum1;//our gap test is actually closer to Maurer's Universal Statitical Test, though they're basically the same thing
-				//Uint64 gap_negative_count1;
+				//uint64_t gap_negative_count1;
 				//double gap_sum2;//using history2 instead of history1
-				//Uint64 gap_negative_count2;
+				//uint64_t gap_negative_count2;
 				//double expected_gap2;
 
-				//FixedSizeCount<Uint16, 1 << FREQ_SIG_BITS> freq_count;
+				//FixedSizeCount<uint16_t, 1 << FREQ_SIG_BITS> freq_count;
 				//COUP_WORD coup_mask[COUP_MASK_SIZE];
-				//Uint64 last_coup;
-				//FixedSizeCount<Uint16, 1024> coup_count;
+				//uint64_t last_coup;
+				//FixedSizeCount<uint16_t, 1024> coup_count;
 				void reset(PractRand::RNGs::vRNG* known_good, unsigned long e);
 			};
 			Platter platter[MAX_EXP + 1]{};
-			void process(Uint64 position, unsigned long exp, unsigned long sig);
+			void process(uint64_t position, unsigned long exp, unsigned long sig);
 		public:
 			FPMulti();// (int stride_bits_L2_ = 6, int skip_platters_ = 6);
 			void init(PractRand::RNGs::vRNG* known_good) override;

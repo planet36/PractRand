@@ -9,24 +9,24 @@
 #include <vector>
 
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
-				void Transform64::seed(Uint64 s) {base_rng->seed(s);}
-				Uint64 Transform64::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
+				void Transform64::seed(uint64_t s) {base_rng->seed(s);}
+				uint64_t Transform64::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform64::walk_state(StateWalkingObject* walker) {base_rng->walk_state(walker);}
 				Transform64::~Transform64() {delete base_rng;}
-				void Transform32::seed(Uint64 s) {base_rng->seed(s);}
-				Uint64 Transform32::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
+				void Transform32::seed(uint64_t s) {base_rng->seed(s);}
+				uint64_t Transform32::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform32::walk_state(StateWalkingObject* walker) {base_rng->walk_state(walker);}
 				Transform32::~Transform32() {delete base_rng;}
-				void Transform16::seed(Uint64 s) {base_rng->seed(s);}
-				Uint64 Transform16::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
+				void Transform16::seed(uint64_t s) {base_rng->seed(s);}
+				uint64_t Transform16::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform16::walk_state(StateWalkingObject* walker) {base_rng->walk_state(walker);}
 				Transform16::~Transform16() {delete base_rng;}
-				void Transform8::seed(Uint64 s) {base_rng->seed(s);}
-				Uint64 Transform8::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
+				void Transform8::seed(uint64_t s) {base_rng->seed(s);}
+				uint64_t Transform8::get_flags() const {return base_rng->get_flags() | FLAG::USES_INDIRECTION;}
 				void Transform8::walk_state(StateWalkingObject* walker) {base_rng->walk_state(walker);}
 				Transform8::~Transform8() {delete base_rng;}
 				void MultiplexTransformRNG::refill() { index = 0; }
-				Uint8 MultiplexTransformRNG::raw8() {
+				uint8_t MultiplexTransformRNG::raw8() {
 					if (index >= Tests::TestBlock::SIZE) {
 						refill();
 						index = 1;
@@ -34,37 +34,37 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					return buffer->as8[index++];
 				}
-				Uint16 MultiplexTransformRNG::raw16() {
+				uint16_t MultiplexTransformRNG::raw16() {
 					index += 3; index &= ~1;//round up to force alignment, and also increment position
 					if (index > Tests::TestBlock::SIZE) {
 						refill();
 						index = 2;
 						return buffer->as16[0];
 					}
-					Uint16 rv = *reinterpret_cast<Uint16*>(&buffer->as8[index - 2]);//read 16 aligned bits
+					uint16_t rv = *reinterpret_cast<uint16_t*>(&buffer->as8[index - 2]);//read 16 aligned bits
 					return rv;
 				}
-				Uint32 MultiplexTransformRNG::raw32() {
+				uint32_t MultiplexTransformRNG::raw32() {
 					index += 7; index &= ~3;
 					if (index > Tests::TestBlock::SIZE) {
 						refill();
 						index = 4;
 						return buffer->as32[0];
 					}
-					Uint32 rv = *reinterpret_cast<Uint32*>(&buffer->as8[index - 4]);
+					uint32_t rv = *reinterpret_cast<uint32_t*>(&buffer->as8[index - 4]);
 					return rv;
 				}
-				Uint64 MultiplexTransformRNG::raw64() {
+				uint64_t MultiplexTransformRNG::raw64() {
 					index += 15; index &= ~7;
 					if (index > Tests::TestBlock::SIZE) {
 						refill();
 						index = 8;
 						return buffer->as64[0];
 					}
-					Uint64 rv = *reinterpret_cast<Uint64*>(&buffer->as8[index - 8]);
+					uint64_t rv = *reinterpret_cast<uint64_t*>(&buffer->as8[index - 8]);
 					return rv;
 				}
-				void MultiplexTransformRNG::seed(Uint64 seedval) {
+				void MultiplexTransformRNG::seed(uint64_t seedval) {
 					index = 999999;
 					for (auto* vrng : source_rngs) {
 							vrng->seed(seedval);
@@ -93,11 +93,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (lowest == highest) return lowest;
 					return -1;
 				}
-				Uint64 MultiplexTransformRNG::get_flags() const {
-					auto anded_bits = Uint64(-1);
-					auto ored_bits = Uint64(0);
+				uint64_t MultiplexTransformRNG::get_flags() const {
+					auto anded_bits = uint64_t(-1);
+					auto ored_bits = uint64_t(0);
 					for (auto* source_rng : source_rngs) {
-						Uint64 lf = source_rng->get_flags();
+						uint64_t lf = source_rng->get_flags();
 						anded_bits &= lf;
 						ored_bits |= lf;
 					}
@@ -130,7 +130,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					block->fill(base_rng);
 					index = 0;
 				}
-				Uint8 ReinterpretAsUnknown::raw8() {
+				uint8_t ReinterpretAsUnknown::raw8() {
 					if (index >= 8192 / OUTPUT_BITS) refill();
 					return buffer[index++];
 				}
@@ -149,7 +149,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					block->fill(base_rng);
 					index = 0;
 				}
-				Uint8 ReinterpretAs8::raw8() {
+				uint8_t ReinterpretAs8::raw8() {
 					if (index >= 8192 / OUTPUT_BITS) refill();
 					return buffer[index++];
 				}
@@ -168,7 +168,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					block->fill(base_rng);
 					index = 0;
 				}
-				Uint16 ReinterpretAs16::raw16() {
+				uint16_t ReinterpretAs16::raw16() {
 					if (index >= 8192 / OUTPUT_BITS) refill();
 					return buffer[index++];
 				}
@@ -187,7 +187,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					block->fill(base_rng);
 					index = 0;
 				}
-				Uint32 ReinterpretAs32::raw32() {
+				uint32_t ReinterpretAs32::raw32() {
 					if (index >= 8192 / OUTPUT_BITS) refill();
 					return buffer[index++];
 				}
@@ -206,7 +206,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					block->fill(base_rng);
 					index = 0;
 				}
-				Uint64 ReinterpretAs64::raw64() {
+				uint64_t ReinterpretAs64::raw64() {
 					if (index >= 8192 / OUTPUT_BITS) refill();
 					return buffer[index++];
 				}
@@ -238,7 +238,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void Discard16to8::refill() { auto* block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
 				std::string Discard16to8::get_name() const { return std::string("Discard16to8(") + base_rng->get_name() + ")"; }
-				Uint8 Discard16to8::raw8() {
+				uint8_t Discard16to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
@@ -249,7 +249,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string Discard32to8::get_name() const { return std::string("Discard32to8(") + base_rng->get_name() + ")"; }
 				void Discard32to8::refill() { auto* block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
-				Uint8 Discard32to8::raw8() {
+				uint8_t Discard32to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
@@ -262,7 +262,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void Discard64to8::refill() {
 					auto* block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0;
 				}
-				Uint8 Discard64to8::raw8() {
+				uint8_t Discard64to8::raw8() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
@@ -273,7 +273,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string Discard32to16::get_name() const { return std::string("Discard32to16(") + base_rng->get_name() + ")"; }
 				void Discard32to16::refill() { auto* block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
-				Uint16 Discard32to16::raw16() {
+				uint16_t Discard32to16::raw16() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
@@ -284,7 +284,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string Discard64to16::get_name() const { return std::string("Discard64to16(") + base_rng->get_name() + ")"; }
 				void Discard64to16::refill() { auto* block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
-				Uint16 Discard64to16::raw16() {
+				uint16_t Discard64to16::raw16() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
@@ -295,13 +295,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string Discard64to32::get_name() const { return std::string("Discard64to32(") + base_rng->get_name() + ")"; }
 				void Discard64to32::refill() { auto* block = reinterpret_cast<PractRand::Tests::TestBlock*>(buffer); block->fill(base_rng); index = 0; }
-				Uint32 Discard64to32::raw32() {
+				uint32_t Discard64to32::raw32() {
 					if (index >= 8192 / INPUT_BITS) refill();
 					return OutWord(buffer[index++]);
 				}
 
-				void GeneralizedTableTransform::seed(Uint64 s) {base_rng->seed(s);}
-				Uint64 GeneralizedTableTransform::get_flags() const {
+				void GeneralizedTableTransform::seed(uint64_t s) {base_rng->seed(s);}
+				uint64_t GeneralizedTableTransform::get_flags() const {
 					return base_rng->get_flags() | FLAG::USES_FLOW_CONTROL | FLAG::STATE_UNAVAILABLE;//not exactly, but close enough
 				}
 				GeneralizedTableTransform::~GeneralizedTableTransform() {delete base_rng;}
@@ -311,18 +311,18 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					buf_count = 0;
 					finished_bytes.clear();
 				}
-				Uint8 GeneralizedTableTransform::raw8() {
+				uint8_t GeneralizedTableTransform::raw8() {
 					while (true) {
 						if (!finished_bytes.empty()) {
-							Uint8 rv = finished_bytes.front();
+							uint8_t rv = finished_bytes.front();
 							finished_bytes.pop_front();
 							return rv;
 						}
-						Uint64 in = base_rng->raw64();
+						uint64_t in = base_rng->raw64();
 						for (int i = 0; i < 8; i++) {
 							const Entry& e = table[in & 255];
 							in >>= 8;
-							buf_data |= Uint32(e.data) << buf_count;
+							buf_data |= uint32_t(e.data) << buf_count;
 							buf_count += e.count;
 							if (buf_count >= 8) {
 								finished_bytes.push_back(buf_data & 255);
@@ -376,14 +376,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 
-				Uint64 BaysDurhamShuffle64::raw64() {
-					Uint64& storage = table[prev];
-					Uint64 rv = storage;
+				uint64_t BaysDurhamShuffle64::raw64() {
+					uint64_t& storage = table[prev];
+					uint64_t rv = storage;
 					storage = base_rng->raw64();
-					prev = Uint8(storage >> index_shift) & index_mask;
+					prev = uint8_t(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle64::seed(Uint64 s) {
+				void BaysDurhamShuffle64::seed(uint64_t s) {
 					base_rng->seed(s);
 					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw64();
@@ -405,14 +405,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp.str();
 				}
 
-				Uint32 BaysDurhamShuffle32::raw32() {
-					Uint32& storage = table[prev];
-					Uint32 rv = storage;
+				uint32_t BaysDurhamShuffle32::raw32() {
+					uint32_t& storage = table[prev];
+					uint32_t rv = storage;
 					storage = base_rng->raw32();
-					prev = Uint8(storage >> index_shift) & index_mask;
+					prev = uint8_t(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle32::seed(Uint64 s) {
+				void BaysDurhamShuffle32::seed(uint64_t s) {
 					base_rng->seed(s);
 					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw32();
@@ -434,14 +434,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp.str();
 				}
 
-				Uint16 BaysDurhamShuffle16::raw16() {
-					Uint16& storage = table[prev];
-					Uint16 rv = storage;
+				uint16_t BaysDurhamShuffle16::raw16() {
+					uint16_t& storage = table[prev];
+					uint16_t rv = storage;
 					storage = base_rng->raw32();
-					prev = Uint8(storage >> index_shift) & index_mask;
+					prev = uint8_t(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle16::seed(Uint64 s) {
+				void BaysDurhamShuffle16::seed(uint64_t s) {
 					base_rng->seed(s);
 					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw32();
@@ -463,14 +463,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return tmp.str();
 				}
 
-				Uint8 BaysDurhamShuffle8::raw8() {
-					Uint8& storage = table[prev];
-					Uint8 rv = storage;
+				uint8_t BaysDurhamShuffle8::raw8() {
+					uint8_t& storage = table[prev];
+					uint8_t rv = storage;
 					storage = base_rng->raw32();
-					prev = Uint8(storage >> index_shift) & index_mask;
+					prev = uint8_t(storage >> index_shift) & index_mask;
 					return rv;
 				}
-				void BaysDurhamShuffle8::seed(Uint64 s) {
+				void BaysDurhamShuffle8::seed(uint64_t s) {
 					base_rng->seed(s);
 					for (int i = 0; i <= index_mask; i++)
 						table[i] = base_rng->raw32();

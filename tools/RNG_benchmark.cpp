@@ -46,7 +46,7 @@ double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
 
-	Uint64 sum = 0;
+	uint64_t sum = 0;
 	int j = 0;
 	do {
 		rng->seed(known_fast.raw64());
@@ -131,10 +131,10 @@ void benchmark_RNG_speeds() {
 union DataBlock {
 	static constexpr int SIZE_L2 = 10;
 	static constexpr int SIZE = 1<<SIZE_L2;
-	Uint8  as8 [SIZE  ];
-	Uint16 as16[SIZE/2];
-	Uint32 as32[SIZE/4];
-	Uint64 as64[SIZE/8];
+	uint8_t  as8 [SIZE  ];
+	uint16_t as16[SIZE/2];
+	uint32_t as32[SIZE/4];
+	uint64_t as64[SIZE/8];
 };
 #define DECLARE_EP_BENCH_FUNC(bits) double benchmark_entropy_pool_ ## bits (PractRand::RNGs::vRNG& entropy_pool, DataBlock* data) {\
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;\
@@ -150,7 +150,7 @@ union DataBlock {
 	double amount = j / 1024.0;\
 	double rate = amount / delta;\
 	entropy_pool.flush_buffers();\
-	Uint64 a = entropy_pool.raw64() & entropy_pool.raw64();\
+	uint64_t a = entropy_pool.raw64() & entropy_pool.raw64();\
 	if (a == 0) std::print("unlikely!");\
 	return rate;\
 }
@@ -172,7 +172,7 @@ double benchmark_entropy_pool_N (PractRand::RNGs::vRNG& entropy_pool, DataBlock*
 	double amount = j / 1024.0;
 	double rate = amount / delta;
 	entropy_pool.flush_buffers();
-	Uint64 a = entropy_pool.raw64() & entropy_pool.raw64();
+	uint64_t a = entropy_pool.raw64() & entropy_pool.raw64();
 	if (a == 0) std::print("unlikely!");
 	return rate;
 }

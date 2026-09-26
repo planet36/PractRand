@@ -9,8 +9,8 @@
 
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
 	using namespace Internals;
-				Uint16 xsalta16x3::raw16() {//slightly more complex output function
-					Uint16 tmp = 0, old = 0;
+				uint16_t xsalta16x3::raw16() {//slightly more complex output function
+					uint16_t tmp = 0, old = 0;
 					tmp = a + c + ((b >> 11) | (b << 5));
 					old = a;
 					a = b ^ (b >> 3);
@@ -23,8 +23,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 					if (!a && !b && !c) a = 1;
 				}
-				Uint16 xsaltb16x3::raw16() {//radically different output function
-					Uint16 tmp = 0, old = 0;
+				uint16_t xsaltb16x3::raw16() {//radically different output function
+					uint16_t tmp = 0, old = 0;
 					tmp = (a & b) | (b & c) | (c & a);
 					old = a;
 					a = b ^ (b >> 3);
@@ -37,8 +37,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 					if (!a && !b && !c) a = 1;
 				}
-				Uint16 xsaltc16x3::raw16() {//deviating from the standard LFSR state function
-					Uint16 old = 0;
+				uint16_t xsaltc16x3::raw16() {//deviating from the standard LFSR state function
+					uint16_t old = 0;
 					old = a;
 					a = b ^ (b >> 5);
 					b = c + (c << 3);
@@ -51,7 +51,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!a && !b && !c) a = 1;
 				}
 
-				Uint32 xorshift32::raw32() {
+				uint32_t xorshift32::raw32() {
 					a ^= a << 13;
 					a ^= a >> 17;
 					a ^= a << 5;
@@ -62,7 +62,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a);
 					if (!a) a = 1;
 				}
-				Uint64 xorshift64::raw64() {
+				uint64_t xorshift64::raw64() {
 					a ^= a << 13;
 					a ^= a >> 7;
 					a ^= a << 17;
@@ -91,7 +91,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					else if (bits > 64) { low ^= high >> (bits - 64); }
 					else { low ^= high; }
 				}
-				Uint64 xorshift64of128::raw64() {
+				uint64_t xorshift64of128::raw64() {
 					xls(16);
 					xrs(53);
 					xls(47);
@@ -110,8 +110,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string xorshift16of32::get_name() const { return "xorshift16of32"; }
 				void xorshift16of32::walk_state(StateWalkingObject* walker) { impl.walk_state(walker); }
 
-				Uint32 xorshift32x4::raw32() {
-					Uint32 tmp = x ^ (x << 15);
+				uint32_t xorshift32x4::raw32() {
+					uint32_t tmp = x ^ (x << 15);
 					x = y;
 					y = z;
 					z = w;
@@ -128,7 +128,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!(x || y || z || w)) x = 1;
 				}
 
-				Uint32 xorwow32plus32::raw32() {
+				uint32_t xorwow32plus32::raw32() {
 					i += 362437;
 					x ^= x << 13;
 					x ^= x >> 17;
@@ -141,7 +141,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!x) x = 1;
 					walker->handle(i);
 				}
-				Uint32 xorwow32of96::raw32() {
+				uint32_t xorwow32of96::raw32() {
 					a += 362437;
 					return a + impl.raw32();
 				}
@@ -150,8 +150,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					impl.walk_state(walker);
 					walker->handle(a);
 				}
-				Uint32 xorwow32x6::raw32() {
-					Uint32 tmp = x;
+				uint32_t xorwow32x6::raw32() {
+					uint32_t tmp = x;
 					x = y;
 					y = z;
 					z = w ^ (w << 1);
@@ -170,9 +170,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(d);
 					if (!(x || y || z || w || v)) x = 1;
 				}
-				Uint64 xorshift128plus::raw64() {
-					Uint64 a = state0;
-					Uint64 b = state1;
+				uint64_t xorshift128plus::raw64() {
+					uint64_t a = state0;
+					uint64_t b = state1;
 
 					state0 = b;
 					a ^= a << 23;
@@ -188,9 +188,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state0);
 					walker->handle(state1);
 				}
-				Uint64 xoroshiro128plus::raw64() {
-					Uint64 result = state0 + state1;
-					Uint64 tmp = state0 ^ state1;
+				uint64_t xoroshiro128plus::raw64() {
+					uint64_t result = state0 + state1;
+					uint64_t tmp = state0 ^ state1;
 					state0 = std::rotl(state0, 55) ^ tmp ^ (tmp << 14);
 					state1 = std::rotl(tmp, 36);
 					return result;
@@ -200,19 +200,19 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state0);
 					walker->handle(state1);
 				}
-				Uint64 xoroshiro128plus_2p64::raw64() {
-					Uint64 result = state0 + state1;
-					static constexpr Uint64 JUMP[] = { 0xbeac0467eba5facb, 0xd86b048b86aa9922 };
+				uint64_t xoroshiro128plus_2p64::raw64() {
+					uint64_t result = state0 + state1;
+					static constexpr uint64_t JUMP[] = { 0xbeac0467eba5facb, 0xd86b048b86aa9922 };
 
-					Uint64 s0 = 0;
-					Uint64 s1 = 0;
+					uint64_t s0 = 0;
+					uint64_t s1 = 0;
 					for (const auto i : JUMP) {
 						for (int b = 0; b < 64; b++) {
 							if (i & 1ULL << b) {
 								s0 ^= state0;
 								s1 ^= state1;
 							}
-							Uint64 tmp = state0 ^ state1;
+							uint64_t tmp = state0 ^ state1;
 							state0 = std::rotl(state0, 55) ^ tmp ^ (tmp << 14);
 							state1 = std::rotl(tmp, 36);
 						}
@@ -227,7 +227,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state1);
 				}
 				void tinyMT::next_state() {
-					Uint32 x = 0, y = 0;
+					uint32_t x = 0, y = 0;
 					y = state[3];
 					x = (state[0] & 0x7fFFffFF) ^ state[1] ^ state[2];
 					x ^= x << 1;
@@ -236,16 +236,16 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					state[1] = state[2];
 					state[2] = x ^ (y << 10);
 					state[3] = y;
-					state[1] ^= -Sint32(y & 1) & state_param1;
-					state[2] ^= -Sint32(y & 1) & state_param2;
+					state[1] ^= -int32_t(y & 1) & state_param1;
+					state[2] ^= -int32_t(y & 1) & state_param2;
 				}
-				Uint32 tinyMT::raw32() {
+				uint32_t tinyMT::raw32() {
 					next_state();
-					Uint32 a = 0, b = 0;
+					uint32_t a = 0, b = 0;
 					a = state[3];
 					b = state[0] + (state[2] >> 8);
 					a ^= b;
-					a ^= -Sint32(b & 1) & out_param;
+					a ^= -int32_t(b & 1) & out_param;
 					return a;
 				}
 				std::string tinyMT::get_name() const { return "tinyMT"; }
@@ -260,8 +260,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 
-				Uint32 sapparot::raw32() {
-					Uint32 tmp = 0;
+				uint32_t sapparot::raw32() {
+					uint32_t tmp = 0;
 					tmp = a + 0x9e3779b9;
 					tmp = (tmp << 7) | (tmp >> 25);
 					a = b ^ (~tmp) ^ (tmp << 3);
@@ -275,8 +275,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 				}
 
-				Uint16 sap16of48::raw16() {
-					Uint16 tmp = 0;
+				uint16_t sap16of48::raw16() {
+					uint16_t tmp = 0;
 					tmp = a + 0x79b9 + c;
 					tmp = (tmp << 5) | (tmp >> 11);
 					a = b ^ (~tmp) ^ (tmp << 3);
@@ -291,8 +291,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 sap32of96::raw32() {
-					Uint32 tmp = 0;
+				uint32_t sap32of96::raw32() {
+					uint32_t tmp = 0;
 					tmp = a + 0x9e3779b9 + c;
 					tmp = (tmp << 7) | (tmp >> 25);
 					a = b ^ (~tmp) ^ (tmp << 3);
@@ -308,10 +308,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 
-				Uint32 flea32x1::raw32() {
+				uint32_t flea32x1::raw32() {
 					constexpr int SHIFT1 = 15;
 					constexpr int SHIFT2 = 27;
-					Uint32 e = a[d % SIZE];
+					uint32_t e = a[d % SIZE];
 					a[d % SIZE] = std::rotl(b, SHIFT1);
 					b = c + std::rotl(d, SHIFT2);
 					c = d + a[i++ % SIZE];
@@ -400,8 +400,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				32 bit: 25,8,3
 				64 bit: 25,12,3
 				*/
-				Uint16 sfc_v1_16::raw16() {
-					Uint16 tmp = a ^ counter++;
+				uint16_t sfc_v1_16::raw16() {
+					uint16_t tmp = a ^ counter++;
 					a = b + (b << 2);
 					constexpr int BARREL_SHIFT = 5;
 					b = std::rotl(b, BARREL_SHIFT) + tmp;
@@ -413,8 +413,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(counter);
 				}
-				Uint32 sfc_v1_32::raw32() {
-					Uint32 tmp = a ^ counter++;
+				uint32_t sfc_v1_32::raw32() {
+					uint32_t tmp = a ^ counter++;
 					a = b + (b << 5);
 					constexpr int BARREL_SHIFT = 12;
 					b = std::rotl(b, BARREL_SHIFT) + tmp;
@@ -426,8 +426,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(counter);
 				}
-				Uint16 sfc_v2_16::raw16() {
-					Uint16 tmp = a ^ b;
+				uint16_t sfc_v2_16::raw16() {
+					uint16_t tmp = a ^ b;
 					a = b + (b << 2);
 					constexpr int BARREL_SHIFT = 5;
 					b = std::rotl(b, BARREL_SHIFT) + tmp + counter++;
@@ -439,8 +439,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(counter);
 				}
-				Uint32 sfc_v2_32::raw32() {
-					Uint32 tmp = a ^ b;
+				uint32_t sfc_v2_32::raw32() {
+					uint32_t tmp = a ^ b;
 					a = b + (b << 5);
 					constexpr int BARREL_SHIFT = 12;
 					b = std::rotl(b, BARREL_SHIFT) + tmp + counter++;
@@ -452,8 +452,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(counter);
 				}
-				Uint16 sfc_v3_16::raw16() {
-					Uint16 tmp = a + b + counter++;
+				uint16_t sfc_v3_16::raw16() {
+					uint16_t tmp = a + b + counter++;
 					a = b ^ (b >> 2);
 					constexpr int BARREL_SHIFT = 5;
 					b = std::rotl(b, BARREL_SHIFT) + tmp;
@@ -465,8 +465,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(counter);
 				}
-				Uint32 sfc_v3_32::raw32() {
-					Uint32 tmp = a + b + counter++;
+				uint32_t sfc_v3_32::raw32() {
+					uint32_t tmp = a + b + counter++;
 					a = b ^ (b >> 5);
 					constexpr int BARREL_SHIFT = 12;
 					b = std::rotl(b, BARREL_SHIFT) + tmp;
@@ -478,8 +478,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(counter);
 				}
-				Uint16 jsf16::raw16() {
-					Uint16 e = a - ((b << 13) | (b >> 3));
+				uint16_t jsf16::raw16() {
+					uint16_t e = a - ((b << 13) | (b >> 3));
 					a = b ^ ((c << 9) | (c >> 7));
 					b = c + d;
 					c = d + e;
@@ -488,10 +488,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				std::string jsf16::get_name() const { return "jsf16"; }
 				/*seed:
-					a = Uint16(s);
-					b = Uint16(s >> 16);
-					c = Uint16(s >> 32);
-					d = Uint16(s >> 48);
+					a = uint16_t(s);
+					b = uint16_t(s >> 16);
+					c = uint16_t(s >> 32);
+					d = uint16_t(s >> 48);
 					if (!(a|b) && !(c|d)) d++;
 					for (int i = 0; i < 20; i++) raw16();
 					*/
@@ -503,7 +503,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!(a | b) && !(c | d)) d++;
 				}
 
-				Uint32 tyche::raw32() {
+				uint32_t tyche::raw32() {
 					a += b;
 					d ^= a;
 					d = std::rotl(d, 16);
@@ -518,10 +518,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					b = std::rotl(b, 7);
 					return b;
 				}
-				void tyche::seed(Uint64 s) { seed(s, 0); }
-				void tyche::seed(Uint64 s, Uint32 idx) {
-					a = Uint32(s >> 32);
-					b = Uint32(s);
+				void tyche::seed(uint64_t s) { seed(s, 0); }
+				void tyche::seed(uint64_t s, uint32_t idx) {
+					a = uint32_t(s >> 32);
+					b = uint32_t(s);
 					c = 2654435769;
 					d = 1367130551 ^ idx;
 					for (int i = 0; i < 20; i++) raw32();
@@ -534,7 +534,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(d);
 					if (!(a | b) && !(c | d)) d++;
 				}
-				Uint16 tyche16::raw16() {
+				uint16_t tyche16::raw16() {
 					a += b;
 					d ^= a;
 					d = std::rotl(d, 8);
@@ -558,9 +558,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!(a | b) && !(c | d)) d++;
 				}
 
-				Uint32 simpleA::raw32() {
+				uint32_t simpleA::raw32() {
 					constexpr int BARREL_SHIFT1 = 19;
-					Uint32 tmp = b ^ std::rotl(a, BARREL_SHIFT1);
+					uint32_t tmp = b ^ std::rotl(a, BARREL_SHIFT1);
 					a = ~b + c;
 					b = c;
 					c += tmp;
@@ -572,10 +572,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 simpleB::raw16() {
+				uint16_t simpleB::raw16() {
 					constexpr int BARREL_SHIFT1 = 3;
 					constexpr int BARREL_SHIFT2 = 5;
-					Uint16 tmp = std::rotl(a, BARREL_SHIFT1) ^ ~b;
+					uint16_t tmp = std::rotl(a, BARREL_SHIFT1) ^ ~b;
 					a = b + c;
 					b = c;
 					c = tmp + std::rotl(c, BARREL_SHIFT2);
@@ -587,10 +587,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 simpleC::raw16() {
+				uint16_t simpleC::raw16() {
 					constexpr int BARREL_SHIFT1 = 3;
 					constexpr int BARREL_SHIFT2 = 5;
-					Uint16 tmp = std::rotl(a, BARREL_SHIFT1) ^ ~b;
+					uint16_t tmp = std::rotl(a, BARREL_SHIFT1) ^ ~b;
 					a = b + std::rotl(c, BARREL_SHIFT2);
 					b = c ^ (c >> 2);
 					c += tmp;
@@ -602,10 +602,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 simpleD::raw32() {
+				uint32_t simpleD::raw32() {
 					constexpr int BARREL_SHIFT1 = 19;
-					Uint32 old = a;
-					Uint32 tmp = b ^ std::rotl(a, BARREL_SHIFT1);
+					uint32_t old = a;
+					uint32_t tmp = b ^ std::rotl(a, BARREL_SHIFT1);
 					a = b + c;
 					b = c ^ old;
 					c = old + tmp;
@@ -617,8 +617,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 simpleE::raw32() {
-					Uint32 old = a + b;
+				uint32_t simpleE::raw32() {
+					uint32_t old = a + b;
 					a = b ^ c;
 					b = c + old;
 					c = old + ((c << 13) | (c >> 19));
@@ -630,8 +630,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 simpleF::raw16() {
-					Uint16 old = a ^ b;
+				uint16_t simpleF::raw16() {
+					uint16_t old = a ^ b;
 					a = b ^ (c & d);
 					b = c + old;
 					c = ~d;
@@ -644,8 +644,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 simpleG::raw32() {
-					Uint32 old = a ^ (b >> 7);
+				uint32_t simpleG::raw32() {
+					uint32_t old = a ^ (b >> 7);
 					a = b + c + d;
 					b = c ^ d;
 					c = d + old;
@@ -661,17 +661,17 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				/*
-				static Uint64 shift_array64(Uint64 vec[2], unsigned long bits) {
+				static uint64_t shift_array64(uint64_t vec[2], unsigned long bits) {
 					bits -= 64;
 					if (!(bits % 64)) return vec[bits / 64];
 					return (vec[bits / 64] << (bits & 63)) | (vec[1 + bits / 64] >> (64 - (bits & 63)));
 				}
 				*/
-				Uint32 trivium_weakenedA::raw32() {
-					Uint32 tmp_a = Uint32(b >> 2) ^ Uint32(b >> 17);
-					Uint32 tmp_b = Uint32(a >> 2) ^ Uint32(a >> 23);
-					Uint32 new_a = tmp_a ^ Uint32(a >> 16) ^ (Uint32(b >> 16) & Uint32(b >> 18));
-					Uint32 new_b = tmp_b ^ Uint32(b >> 13) ^ (Uint32(a >> 22) & Uint32(a >> 24));
+				uint32_t trivium_weakenedA::raw32() {
+					uint32_t tmp_a = uint32_t(b >> 2) ^ uint32_t(b >> 17);
+					uint32_t tmp_b = uint32_t(a >> 2) ^ uint32_t(a >> 23);
+					uint32_t new_a = tmp_a ^ uint32_t(a >> 16) ^ (uint32_t(b >> 16) & uint32_t(b >> 18));
+					uint32_t new_b = tmp_b ^ uint32_t(b >> 13) ^ (uint32_t(a >> 22) & uint32_t(a >> 24));
 					a <<= 32; a |= new_a;
 					b <<= 32; b |= new_b;
 
@@ -682,13 +682,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a);
 					walker->handle(b);
 				}
-				Uint16 trivium_weakenedB::raw16() {
-					Uint16 tmp_a = Uint16(c >> 2) ^ Uint16(c >> 15);
-					Uint16 tmp_b = Uint16(a >> 2) ^ Uint16(a >> 13);
-					Uint16 tmp_c = Uint16(b >> 5) ^ Uint16(b >> 10);
-					Uint16 new_a = tmp_a ^ Uint16(a >> 9) ^ (Uint16(c >> 14) & Uint16(c >> 16));
-					Uint16 new_b = tmp_b ^ Uint16(b >> 7) ^ (Uint16(a >> 12) & Uint16(a >> 14));
-					Uint16 new_c = tmp_c ^ Uint16(c >> 11) ^ (Uint16(b >> 9) & Uint16(b >> 11));
+				uint16_t trivium_weakenedB::raw16() {
+					uint16_t tmp_a = uint16_t(c >> 2) ^ uint16_t(c >> 15);
+					uint16_t tmp_b = uint16_t(a >> 2) ^ uint16_t(a >> 13);
+					uint16_t tmp_c = uint16_t(b >> 5) ^ uint16_t(b >> 10);
+					uint16_t new_a = tmp_a ^ uint16_t(a >> 9) ^ (uint16_t(c >> 14) & uint16_t(c >> 16));
+					uint16_t new_b = tmp_b ^ uint16_t(b >> 7) ^ (uint16_t(a >> 12) & uint16_t(a >> 14));
+					uint16_t new_c = tmp_c ^ uint16_t(c >> 11) ^ (uint16_t(b >> 9) & uint16_t(b >> 11));
 					a <<= 16; a |= new_a;
 					b <<= 16; b |= new_b;
 					c <<= 16; c |= new_c;
@@ -702,7 +702,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 
-				Uint32 mo_Lesr32::raw32() {
+				uint32_t mo_Lesr32::raw32() {
 					state = (state << 7) - state; state = std::rotl(state, 23);
 					return state;
 				}
@@ -710,7 +710,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void mo_Lesr32::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
-				Uint32 mo_ResrRers32::raw32() {
+				uint32_t mo_ResrRers32::raw32() {
 					a = std::rotl(a, 21) - a; a = std::rotl(a, 26);
 					b = std::rotl(b, 20) - std::rotl(b, 9);
 					return a ^ b;
@@ -720,33 +720,33 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a);
 					walker->handle(b);
 				}
-				Uint32 mo_Rers32of64::raw32() {
+				uint32_t mo_Rers32of64::raw32() {
 					state = std::rotl(state, 8) - std::rotl(state, 29);
-					return Uint32(state);
+					return uint32_t(state);
 				}
 				std::string mo_Rers32of64::get_name() const { return "mo_Rers32of64"; }
 				void mo_Rers32of64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
-				Uint32 mo_Resr32of64::raw32() {
+				uint32_t mo_Resr32of64::raw32() {
 					state = std::rotl(state, 21) - state; state = std::rotl(state, 20);
-					return Uint32(state);
+					return uint32_t(state);
 				}
 				std::string mo_Resr32of64::get_name() const { return "mo_Resr32of64"; }
 				void mo_Resr32of64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
-				Uint32 mo_Resdra32of64::raw32() {
+				uint32_t mo_Resdra32of64::raw32() {
 					state = std::rotl(state, 42) - state;
 					state += std::rotl(state, 14);
-					return Uint32(state);
+					return uint32_t(state);
 				}
 				std::string mo_Resdra32of64::get_name() const { return "mo_Resdra32of64"; }
 				void mo_Resdra32of64::walk_state(StateWalkingObject* walker) {
 					walker->handle(state);
 				}
-				Uint32 murmlacish::raw32() {
-					Uint32 tmp = state1 + (state1 << 3);
+				uint32_t murmlacish::raw32() {
+					uint32_t tmp = state1 + (state1 << 3);
 					tmp ^= tmp >> 8;
 					state1 = std::rotl(state1, 11) + state2;
 					state2 += state3 ^ (state3 >> 7) ^ tmp;
@@ -764,7 +764,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state3);
 				}
 
-				Uint16 gjishA::raw16() {
+				uint16_t gjishA::raw16() {
 					b += a; c = std::rotl(c, 4); a ^= b;
 					c += b; a = std::rotl(a, 7); b ^= c;
 					a += c; b = std::rotl(b, 11); c ^= a;
@@ -776,7 +776,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 gjishB::raw16() {
+				uint16_t gjishB::raw16() {
 					b += a; c = std::rotl(c, 4); a ^= b;
 					c += b; a = std::rotl(a, 7); b ^= c;
 					c += counter++;
@@ -790,7 +790,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 					walker->handle(counter);
 				}
-				Uint32 gjishC::raw32() {
+				uint32_t gjishC::raw32() {
 					b += a; c = std::rotl(c, 21); a ^= b;
 					c += b; a = std::rotl(a, 13); b ^= c;
 					a += c; b = std::rotl(b, 0); c ^= a;
@@ -802,7 +802,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 gjishD::raw32() {
+				uint32_t gjishD::raw32() {
 					//			4,10,17		4,10,19		5,7,11		5,7,12		5,7,13		5,7,14		5,7,15		5,8,10		5,8,11		5,8,12		5,8,13		5,8,14		5,8,15
 					//--big		3			5			1			1			1			1			4			6			2			4			3			1			4
 					//--huge	78						32			10			31			23									67						79			62
@@ -834,7 +834,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 
-				Uint16 ara16::raw16() {
+				uint16_t ara16::raw16() {
 					a += std::rotl(static_cast<uint16_t>(b + c), 3);
 					b += std::rotl(static_cast<uint16_t>(c + a), 5);
 					c += std::rotl(static_cast<uint16_t>(a + b), 7);
@@ -846,7 +846,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 ara32::raw32() {
+				uint32_t ara32::raw32() {
 					a += std::rotl(b + c, 7);
 					b += std::rotl(c + a, 11);
 					c += std::rotl(a + b, 15);
@@ -858,7 +858,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 arx16::raw16() {
+				uint16_t arx16::raw16() {
 					a ^= std::rotl(static_cast<uint16_t>(b + c), 3);
 					b ^= std::rotl(static_cast<uint16_t>(c + a), 5);
 					c ^= std::rotl(static_cast<uint16_t>(a + b), 7);
@@ -870,7 +870,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint32 arx32::raw32() {
+				uint32_t arx32::raw32() {
 					a ^= std::rotl(b + c, 7);
 					b ^= std::rotl(c + a, 11);
 					c ^= std::rotl(a + b, 15);
@@ -882,7 +882,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 hara16::raw16() {
+				uint16_t hara16::raw16() {
 					a += std::rotl(static_cast<uint16_t>(b + c), 3);
 					b ^= std::rotl(static_cast<uint16_t>(c + a), 5);
 					c += std::rotl(static_cast<uint16_t>(a + b), 7);
@@ -894,7 +894,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 harx16::raw16() {
+				uint16_t harx16::raw16() {
 					a ^= std::rotl(static_cast<uint16_t>(b + c), 3);
 					b += std::rotl(static_cast<uint16_t>(c + a), 5);
 					c ^= std::rotl(static_cast<uint16_t>(a + b), 7);
@@ -907,7 +907,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 
-				Uint16 learx16::raw16() {
+				uint16_t learx16::raw16() {
 					a ^= std::rotl(static_cast<uint16_t>(b + c), 3);
 					b ^= std::rotl(static_cast<uint16_t>(c + (c << 3)), 5);
 					c ^= std::rotl(static_cast<uint16_t>(a + (a << 3)), 7);
@@ -919,7 +919,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(b);
 					walker->handle(c);
 				}
-				Uint16 hlearx16::raw16() {
+				uint16_t hlearx16::raw16() {
 					a ^= std::rotl(static_cast<uint16_t>(b + c), 3);
 					b ^= std::rotl(static_cast<uint16_t>(c + (c << 3)), 5);
 					c += std::rotl(static_cast<uint16_t>(a + (a << 3)), 7);
@@ -932,7 +932,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 
-				Uint16 alearx16::raw16() {
+				uint16_t alearx16::raw16() {
 					a ^= std::rotl(static_cast<uint16_t>(b + c), 3);
 					b ^= std::rotl(static_cast<uint16_t>(c + (c << 3)), 5);
 					c ^= std::rotl(static_cast<uint16_t>(a + (a << 3)), 7) + b;
@@ -945,7 +945,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 
-				Uint16 arac16::raw16() {
+				uint16_t arac16::raw16() {
 					a += std::rotl(static_cast<uint16_t>(b + c), 3) + counter++;
 					b += std::rotl(static_cast<uint16_t>(c + a), 5);
 					c += std::rotl(static_cast<uint16_t>(a + b), 7);
@@ -958,7 +958,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 					walker->handle(counter);
 				}
-				Uint16 arxc16::raw16() {
+				uint16_t arxc16::raw16() {
 					a ^= std::rotl(static_cast<uint16_t>(b + c), 3) + counter++;
 					b ^= std::rotl(static_cast<uint16_t>(c + a), 5);
 					c ^= std::rotl(static_cast<uint16_t>(a + b), 7);

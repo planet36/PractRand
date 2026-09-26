@@ -11,7 +11,7 @@
 template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
-	PractRand::Uint16 buffy[1024];
+	uint16_t buffy[1024];
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
@@ -26,7 +26,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	PractRand::Uint16 a = 0;
+	uint16_t a = 0;
 	for (const auto i : buffy) a |= i;
 	if (a == 0) std::print("unlikely!");
 
@@ -35,7 +35,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG* rng) {
 template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
-	PractRand::Uint32 buffy[1024] = {0};
+	uint32_t buffy[1024] = {0};
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
@@ -50,7 +50,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	PractRand::Uint32 a = 0;
+	uint32_t a = 0;
 	for (const auto i : buffy) a |= i;
 	if (a == 0) std::print("unlikely!");
 
@@ -59,7 +59,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG* rng) {
 template<typename RNG> double measure_RNG_performance_64(RNG* rng) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.5) + 1;
 	//RAW_RNG rng(PractRand::SEED_AUTO);
-	PractRand::Uint64 buffy[1024] = {0};
+	uint64_t buffy[1024] = {0};
 	long clock0 = clock();
 	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
@@ -74,7 +74,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG* rng) {
 	double rate = amount / delta;
 
 	//just to make very sure that some smart compiler won't optimize everything away:
-	PractRand::Uint64 a = 0;
+	uint64_t a = 0;
 	for (const auto i : buffy) a |= i;
 	if (a == 0) std::print("unlikely!");
 

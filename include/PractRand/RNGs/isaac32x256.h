@@ -13,23 +13,23 @@ namespace PractRand::RNGs {
 			protected:
 				static constexpr int SIZE_L2 = 8;
 				static constexpr int SIZE = 1 << SIZE_L2;
-				Uint32 results[SIZE];
-				Uint32 used;
-				Uint32 state[SIZE];
-				Uint32 a, b, c;
+				uint32_t results[SIZE];
+				uint32_t used;
+				uint32_t state[SIZE];
+				uint32_t a, b, c;
 				void _advance_state();
 				void _seed(bool flag = true);
 			public:
 				~isaac32x256();
 				void flush_buffers() {used = SIZE;}
-				Uint32 raw32() {//LOCKED, do not change
+				uint32_t raw32() {//LOCKED, do not change
 					//note: this walks the buffer in the same direction as the buffer is filled
 					//  whereas (some of) Bob Jenkins original code walked the buffer backwards
 					if ( used >= SIZE ) _advance_state();
 					return results[used++];
 				}
-				void seed(Uint64 s);
-				void seed(const Uint32 s[256]);
+				void seed(uint64_t s);
+				void seed(const uint32_t s[256]);
 				void seed(vRNG* seeder_rng);
 				void walk_state(StateWalkingObject* walker);
 				static void self_test();
@@ -39,7 +39,7 @@ namespace PractRand::RNGs {
 		namespace Polymorphic {
 			class isaac32x256 final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(isaac32x256)
-				void seed(Uint64 s) override;
+				void seed(uint64_t s) override;
 				void seed(vRNG* seeder_rng) override;
 				void flush_buffers() override;
 			};

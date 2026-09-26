@@ -14,7 +14,7 @@ namespace PractRand {
 		double processed;//varies depending upon type:
 		long type;
 		double weight;
-		enum : Uint8 { TYPE_RAW, TYPE_RAW_NORMAL, TYPE_BAD_P, TYPE_BAD_S, TYPE_GOOD_P, TYPE_GOOD_S, TYPE_PASSFAIL, TYPE_UNKNOWN };
+		enum : uint8_t { TYPE_RAW, TYPE_RAW_NORMAL, TYPE_BAD_P, TYPE_BAD_S, TYPE_GOOD_P, TYPE_GOOD_S, TYPE_PASSFAIL, TYPE_UNKNOWN };
 		//  TYPE_RAW           there is no processed value
 		//  TYPE_RAW_NORMAL    there is no processed value, but treat the raw value as roughly a badly distorted normal distribution
 		//  TYPE_BAD_P         a p-value, but probably a VERY low quality p-value
@@ -37,16 +37,16 @@ namespace PractRand {
 		union TestBlock {
 			static constexpr int SIZE_L2 = 10;
 			static constexpr int SIZE = 1<<SIZE_L2;
-			Uint8  as8 [SIZE  ];
-			Uint16 as16[SIZE/2];
-			Uint32 as32[SIZE/4];
-			Uint64 as64[SIZE/8];
+			uint8_t  as8 [SIZE  ];
+			uint16_t as16[SIZE/2];
+			uint32_t as32[SIZE/4];
+			uint64_t as64[SIZE/8];
 			void fill(RNGs::vRNG* rng, unsigned long numblocks = 1);
 		};
 		class ListOfTests;
 		class TestBaseclass {
 		protected:
-			Uint64 blocks_tested{};
+			uint64_t blocks_tested{};
 		public:
 			virtual void init(PractRand::RNGs::vRNG* known_good);
 			virtual void deinit() {}

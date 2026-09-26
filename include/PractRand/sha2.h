@@ -4,12 +4,12 @@
 
 namespace PractRand::Crypto {
 		class SHA2_512 {
-			using Word = Uint64;
+			using Word = uint64_t;
 			Word state[8]{};
-			Uint64 length{};
+			uint64_t length{};
 			union InputBlock {
 				Word as_word[16];
-				Uint8 as_byte[16 * sizeof(Word)];
+				uint8_t as_byte[16 * sizeof(Word)];
 			};
 			InputBlock input_buffer{};
 			unsigned long leftover_input_bytes{};
@@ -21,8 +21,8 @@ namespace PractRand::Crypto {
 		public:
 			static constexpr int RESULT_LENGTH = 64;
 			void reset();
-			void handle_input(const Uint8* input, unsigned long length);
-			void finish(Uint8 destination[RESULT_LENGTH]);
+			void handle_input(const uint8_t* input, unsigned long length);
+			void finish(uint8_t destination[RESULT_LENGTH]);
 			SHA2_512() {reset();}
 		};
 }//PractRand

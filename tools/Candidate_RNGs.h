@@ -97,9 +97,9 @@ public:\
 	static constexpr int FLAGS = ImplementationType ::FLAGS;\
 	explicit polymorphic_ ## rng ## bits (PractRand::SEED_NONE_TYPE) {}\
 	explicit polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
-	explicit polymorphic_ ## rng ## bits (PractRand::Uint64 seed_value) {seed(seed_value);}\
+	explicit polymorphic_ ## rng ## bits (uint64_t seed_value) {seed(seed_value);}\
 	ImplementationType implementation{};\
-	PractRand::Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
+	uint ## bits ## _t raw ## bits () override {return implementation.raw ## bits ();}\
 	void walk_state(PractRand::StateWalkingObject* walker) override {implementation.walk_state(walker);}\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
@@ -112,10 +112,10 @@ public:\
 	ImplementationType implementation{}; \
 	explicit polymorphic_ ## rng ## bits(PractRand::SEED_NONE_TYPE) {}\
 	explicit polymorphic_ ## rng ## bits (PractRand::SEED_AUTO_TYPE) {autoseed();}\
-	explicit polymorphic_ ## rng ## bits (PractRand::Uint64 seed_value) {implementation.seed(seed_value);}\
-	void seed(PractRand::Uint64 seed_value) override {implementation.seed(seed_value);}\
+	explicit polymorphic_ ## rng ## bits (uint64_t seed_value) {implementation.seed(seed_value);}\
+	void seed(uint64_t seed_value) override {implementation.seed(seed_value);}\
 	using vRNG::seed; \
-	PractRand::Uint ## bits raw ## bits () override {return implementation.raw ## bits ();}\
+	uint ## bits ## _t raw ## bits () override {return implementation.raw ## bits ();}\
 	void walk_state(PractRand::StateWalkingObject* walker) override {implementation.walk_state(walker);}\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
@@ -164,10 +164,10 @@ public:
 		if (position > LAG1) position = 0;
 	}
 };
-class raw_ranrot_variant64 : public RanrotVariant<PractRand::Uint64,45,24,0,0,29> {public: PractRand::Uint64 raw64() {return _raw_native();}};
-class raw_ranrot_variant32 : public RanrotVariant<PractRand::Uint32,45,24,0,0,13> {public: PractRand::Uint32 raw32() {return _raw_native();}};
-class raw_ranrot_variant16 : public RanrotVariant<PractRand::Uint16,45,24,0,0, 5> {public: PractRand::Uint16 raw16() {return _raw_native();}};
-class raw_ranrot_variant8  : public RanrotVariant<PractRand::Uint8 ,45,24,0,0, 3> {public: PractRand::Uint8  raw8 () {return _raw_native();}};
+class raw_ranrot_variant64 : public RanrotVariant<uint64_t,45,24,0,0,29> {public: uint64_t raw64() {return _raw_native();}};
+class raw_ranrot_variant32 : public RanrotVariant<uint32_t,45,24,0,0,13> {public: uint32_t raw32() {return _raw_native();}};
+class raw_ranrot_variant16 : public RanrotVariant<uint16_t,45,24,0,0, 5> {public: uint16_t raw16() {return _raw_native();}};
+class raw_ranrot_variant8  : public RanrotVariant<uint8_t ,45,24,0,0, 3> {public: uint8_t  raw8 () {return _raw_native();}};
 POLYMORPHIC_CANDIDATE(ranrot_variant, 64)
 POLYMORPHIC_CANDIDATE(ranrot_variant, 32)
 POLYMORPHIC_CANDIDATE(ranrot_variant, 16)
@@ -267,10 +267,10 @@ public:
 		walker->handle(c);
 	}
 };
-class raw_VeryFast64 : public VeryFast<PractRand::Uint64,29,9,3> {public: PractRand::Uint64 raw64() {return _raw_native();}};
-class raw_VeryFast32 : public VeryFast<PractRand::Uint32,13,7,3> {public: PractRand::Uint32 raw32() {return _raw_native();}};
-class raw_VeryFast16 : public VeryFast<PractRand::Uint16, 7,3,2> {public: PractRand::Uint16 raw16() {return _raw_native();}};
-class raw_VeryFast8  : public VeryFast<PractRand::Uint8 , 3,2,2> {public: PractRand::Uint8  raw8 () {return _raw_native();}};
+class raw_VeryFast64 : public VeryFast<uint64_t,29,9,3> {public: uint64_t raw64() {return _raw_native();}};
+class raw_VeryFast32 : public VeryFast<uint32_t,13,7,3> {public: uint32_t raw32() {return _raw_native();}};
+class raw_VeryFast16 : public VeryFast<uint16_t, 7,3,2> {public: uint16_t raw16() {return _raw_native();}};
+class raw_VeryFast8  : public VeryFast<uint8_t , 3,2,2> {public: uint8_t  raw8 () {return _raw_native();}};
 POLYMORPHIC_CANDIDATE(VeryFast, 64)
 POLYMORPHIC_CANDIDATE(VeryFast, 32)
 POLYMORPHIC_CANDIDATE(VeryFast, 16)
@@ -474,7 +474,7 @@ public:
 		//		sum:64nc:19..24					195				194							191												.
 		return a;
 	}
-	void _seed(PractRand::Uint64 s) {
+	void _seed(uint64_t s) {
 		constexpr int SEEDING_ROUNDS = (OUTPUT_BITS == 64) ? 24 : ((OUTPUT_BITS == 32) ? 24 : ((OUTPUT_BITS == 16) ? 16 : ((OUTPUT_BITS == 8) ? 12 : -1)));
 		//16 bit: 9/10/12/16
 		//32 bit: 15/18/21/24
@@ -500,35 +500,35 @@ public:
 	32 bit: 25,8,3
 	64 bit: 25,12,3
 */
-class raw_sfc_alternative8  : public _sfc_alternative<PractRand::Uint8 , 3, 2,1> { public: PractRand::Uint8  raw8() {return _raw_native();} void seed(PractRand::Uint64 s) {_seed(s);}};
-class raw_sfc_alternative16 : public _sfc_alternative<PractRand::Uint16, 7, 3,2> {public: PractRand::Uint16 raw16() {return _raw_native();} void seed(PractRand::Uint64 s) {_seed(s);}};
-class raw_sfc_alternative32 : public _sfc_alternative<PractRand::Uint32,25, 8,3> {public: PractRand::Uint32 raw32() {return _raw_native();} void seed(PractRand::Uint64 s) {_seed(s);}};
-class raw_sfc_alternative64 : public _sfc_alternative<PractRand::Uint64,25,12,3>{public: PractRand::Uint64 raw64() {return _raw_native();} void seed(PractRand::Uint64 s) {_seed(s);}};
+class raw_sfc_alternative8  : public _sfc_alternative<uint8_t , 3, 2,1> { public: uint8_t  raw8() {return _raw_native();} void seed(uint64_t s) {_seed(s);}};
+class raw_sfc_alternative16 : public _sfc_alternative<uint16_t, 7, 3,2> {public: uint16_t raw16() {return _raw_native();} void seed(uint64_t s) {_seed(s);}};
+class raw_sfc_alternative32 : public _sfc_alternative<uint32_t,25, 8,3> {public: uint32_t raw32() {return _raw_native();} void seed(uint64_t s) {_seed(s);}};
+class raw_sfc_alternative64 : public _sfc_alternative<uint64_t,25,12,3>{public: uint64_t raw64() {return _raw_native();} void seed(uint64_t s) {_seed(s);}};
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 64)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 32)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 16)
 SEEDED_POLYMORPHIC_CANDIDATE(sfc_alternative, 8)
 
 
-template<typename Word, int rotate_bits, PractRand::Uint64 K_>
+template<typename Word, int rotate_bits, uint64_t K_>
 class _mcx {
 	//Word a, b, c, d, e, f, g, h, i;
-	//Uint64 a64, b64, c64;
-	PractRand::Uint32 state_0, state_1, state_2, state_3;
-	PractRand::Uint32 lfsr_0, lfsr_1, lfsr_01;
-	PractRand::Uint32 cycle;
+	//uint64_t a64, b64, c64;
+	uint32_t state_0, state_1, state_2, state_3;
+	uint32_t lfsr_0, lfsr_1, lfsr_01;
+	uint32_t cycle;
 public:
 	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
 	static constexpr int OUTPUT_BITS = sizeof(Word) * 8;
 	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 	Word lfsr(Word n, Word m) {return (n >> 1) ^ (-(n & 1) & m);}
 	Word _raw_native() {
-		PractRand::Uint32 save = state_0 ^ (state_0 << 13);
+		uint32_t save = state_0 ^ (state_0 << 13);
 		state_0 = state_1;
 		state_1 = state_2;
 		state_2 = state_3;
 		state_3 = state_3 ^ (state_3 >> 17) ^ (save ^ (save >> 7));
-		/*PractRand::Uint32 save = state_0;
+		/*uint32_t save = state_0;
 		state_0 = state_1;
 		state_1 = state_2 ^ (state_2 >> 7);
 		state_2 = state_3 ^ (state_3 << 13);
@@ -548,7 +548,7 @@ public:
 		//b = c + (c << SHIFT3);//1 TB
 		//c = old + std::rotl(c,SHIFT1);//important!
 		//return old;
-		/*PractRand::Uint64 rv;
+		/*uint64_t rv;
 		asm (
 			"lea (%1, %2), %0\n"
 			"mov %2, %1\n"
@@ -561,7 +561,7 @@ public:
 			://clobbers
 		);*/
 		//return rv;
-		/*PractRand::Uint64 rv;
+		/*uint64_t rv;
 		asm (
 			"mov    0(%%rdi), %%rax \n"
 			"mov    8(%%rdi), %%rbx \n"
@@ -586,15 +586,15 @@ public:
 		);
 		return rv;*/
 
-		/*PractRand::Uint64 x = b;
+		/*uint64_t x = b;
 		x *= K;
-		PractRand::Uint32 old_a = a;
+		uint32_t old_a = a;
 		a += K;
 		b += old_a + (a < K);
-		x = PractRand::Uint32(x) ^ PractRand::Uint32(x >> 32) ^ old_a;
+		x = uint32_t(x) ^ uint32_t(x >> 32) ^ old_a;
 		x *= K;
-		return PractRand::Uint32(x) + PractRand::Uint32(x >> 32) + old_a;*/
-		//Uint64 rv;
+		return uint32_t(x) + uint32_t(x >> 32) + old_a;*/
+		//uint64_t rv;
 		/*asm volatile (
 			"mov    8(%%rdi), %%rax \n"
 			"movabs $0x6595a395a1ec531b, %%rcx \n"
@@ -639,16 +639,16 @@ public:
 		walker->handle(cycle);
 	}
 };
-//class raw_mcx16 : public _mcx<Uint16, 7,0x6595a395a1ec531b> {public: Uint16 raw16() {return _raw_native();}};
-class raw_mcx32 : public _mcx<PractRand::Uint32,13,0x6595a395a1ec531b> {public: PractRand::Uint32 raw32() {return _raw_native();}};
-//class raw_mcx64 : public _mcx<Uint64,27,0x6595a395a1ec531b> {public: Uint64 raw64() {return _raw_native();}};
+//class raw_mcx16 : public _mcx<uint16_t, 7,0x6595a395a1ec531b> {public: uint16_t raw16() {return _raw_native();}};
+class raw_mcx32 : public _mcx<uint32_t,13,0x6595a395a1ec531b> {public: uint32_t raw32() {return _raw_native();}};
+//class raw_mcx64 : public _mcx<uint64_t,27,0x6595a395a1ec531b> {public: uint64_t raw64() {return _raw_native();}};
 //POLYMORPHIC_CANDIDATE(mcx, 16)
 POLYMORPHIC_CANDIDATE(mcx, 32)
 //POLYMORPHIC_CANDIDATE(mcx, 64)
 
 class raw_siphash {
 public:
-	using Word = PractRand::Uint64;
+	using Word = uint64_t;
 	static constexpr int OUTPUT_TYPE = PractRand::RNGs::OUTPUT_TYPES::NORMAL_1;
 	static constexpr int OUTPUT_BITS = sizeof(Word)* 8;
 	static constexpr int FLAGS = PractRand::RNGs::FLAG::NEEDS_GENERIC_SEEDING;
@@ -764,7 +764,7 @@ public:
 		tmp << "SipHash" << (8 * sizeof(Word)) << "-" << ROUNDS_PER_INPUT << "-" << EXTRA_ROUNDS << "-" << ROUNDS_PER_OUTPUT;
 		return tmp.str();
 	}
-	void seed64(PractRand::Uint64 seed) {
+	void seed64(uint64_t seed) {
 		SipHash hasher{};
 		hasher.initstate();
 		hasher.feed_in_word(seed);
@@ -790,9 +790,9 @@ public:
 	static constexpr int FLAGS = ImplementationType::FLAGS;
 	explicit polymorphic_siphash(PractRand::SEED_NONE_TYPE) {}
 	explicit polymorphic_siphash(PractRand::SEED_AUTO_TYPE) { autoseed(); }
-	explicit polymorphic_siphash(PractRand::Uint64 seed_value) { seed(seed_value); }
+	explicit polymorphic_siphash(uint64_t seed_value) { seed(seed_value); }
 	ImplementationType implementation{};
-	PractRand::Uint64 raw64() override { return implementation.raw64(); }
+	uint64_t raw64() override { return implementation.raw64(); }
 	void walk_state(PractRand::StateWalkingObject* walker) override { implementation.walk_state(walker); }
 	[[nodiscard]] std::string get_name() const override { return ImplementationType::get_name(); }
 };

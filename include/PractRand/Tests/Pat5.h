@@ -14,7 +14,7 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock* data, int numblocks) override;
 
 		protected:
-			using Word = Uint32;
+			using Word = uint32_t;
 			static constexpr int WORD_BITS = sizeof(Word) * 8;
 			static constexpr int ZERO_FILTER_BITS = 20;//should not exceed WORD_BITS - PATTERN_INDEX_BITS - (1 << PRIMARY_WORD_DISTANCE_BITS) + 1
 			static constexpr int PATTERN_INDEX_BITS = 3;
@@ -35,13 +35,13 @@ namespace PractRand::Tests {
 			public:
 				Word base_pattern[PATTERN_WIDTH];
 				Word _padding;
-				Sint64 total_count;
+				int64_t total_count;
 			};
 			//PractRand::RNGs::Raw::arbee internal_rng;
 			//state:
 			Pattern patterns[1 << PATTERN_INDEX_BITS]{};
-			FixedSizeCount<Uint8, 1 << TABLE_SIZE_L2> counts;
-			//Uint64 lifespan;
+			FixedSizeCount<uint8_t, 1 << TABLE_SIZE_L2> counts;
+			//uint64_t lifespan;
 			//internal helpers:
 			[[nodiscard]] int transform_bitcount_primary(int bit_count) const;
 			[[nodiscard]] int transform_bitcount_secondary(int bit_count) const;

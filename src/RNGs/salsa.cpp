@@ -43,24 +43,24 @@ std::string PractRand::RNGs::Polymorphic::salsa::get_name() const {
 	tmp << "salsa(" << implementation.get_rounds() << ")";
 	return tmp.str();
 }
-void PractRand::RNGs::Polymorphic::salsa::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::salsa::seed(Uint32 seed_and_iv[10], bool extend_cycle_) {implementation.seed(seed_and_iv, extend_cycle_);}
-void PractRand::RNGs::Polymorphic::salsa::seed_short(Uint32 seed_and_iv[6], bool extend_cycle_) {implementation.seed(seed_and_iv, extend_cycle_);}
-void PractRand::RNGs::Polymorphic::salsa::seek_forward128 (Uint64 how_far_low64, Uint64 how_far_high64) {implementation.seek_forward (how_far_low64, how_far_high64);}
-void PractRand::RNGs::Polymorphic::salsa::seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) {implementation.seek_backward(how_far_low64, how_far_high64);}
+void PractRand::RNGs::Polymorphic::salsa::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::salsa::seed(uint32_t seed_and_iv[10], bool extend_cycle_) {implementation.seed(seed_and_iv, extend_cycle_);}
+void PractRand::RNGs::Polymorphic::salsa::seed_short(uint32_t seed_and_iv[6], bool extend_cycle_) {implementation.seed(seed_and_iv, extend_cycle_);}
+void PractRand::RNGs::Polymorphic::salsa::seek_forward128 (uint64_t how_far_low64, uint64_t how_far_high64) {implementation.seek_forward (how_far_low64, how_far_high64);}
+void PractRand::RNGs::Polymorphic::salsa::seek_backward128(uint64_t how_far_low64, uint64_t how_far_high64) {implementation.seek_backward(how_far_low64, how_far_high64);}
 void PractRand::RNGs::Polymorphic::salsa::set_rounds(int rounds_) {implementation.set_rounds(rounds_);}
 int PractRand::RNGs::Polymorphic::salsa::get_rounds() const {return implementation.get_rounds();}
 
 
 //raw:
 PractRand::RNGs::Raw::salsa::~salsa() {std::memset(this, 0, sizeof(*this));}
-static void salsa_mix_core(Uint32& a, Uint32& b, Uint32& c, Uint32& d) {
+static void salsa_mix_core(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
 	b ^= std::rotl(a + d, 7);
 	c ^= std::rotl(b + a, 9);
 	d ^= std::rotl(c + b, 13);
 	a ^= std::rotl(d + c, 18);
 }
-//	const Uint32 *constants = short_seed ? salsa_short_seed_constants : salsa_long_seed_constants;
+//	const uint32_t *constants = short_seed ? salsa_short_seed_constants : salsa_long_seed_constants;
 void PractRand::RNGs::Raw::salsa::_core() {
 	for (int i = 0; i < 16; i++) outbuf[i] = state[i];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
@@ -85,7 +85,7 @@ void PractRand::RNGs::Raw::salsa::_core() {
 	for (int i = 0; i < 16; i++) outbuf[i] += state[i];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
 }
-Uint32 PractRand::RNGs::Raw::salsa::_refill_and_raw32() {
+uint32_t PractRand::RNGs::Raw::salsa::_refill_and_raw32() {
 	_advance_1();
 	_core();
 	used = 1;
@@ -97,40 +97,40 @@ void PractRand::RNGs::Raw::salsa::_advance_1() {
 	}
 }
 //void PractRand::RNGs::Raw::salsa::_reverse_1();
-void PractRand::RNGs::Raw::salsa::_set_position(Uint64 low, Uint64 high) {
+void PractRand::RNGs::Raw::salsa::_set_position(uint64_t low, uint64_t high) {
 	used = low & 15;
 	low >>= 4;
 	low |= high << 60;
 	high >>= 4;
-	state[POS_INDEX0] = Uint32(low);
-	state[POS_INDEX1] = Uint32(low >> 32);
-	position_overflow = Uint32(high);
+	state[POS_INDEX0] = uint32_t(low);
+	state[POS_INDEX1] = uint32_t(low >> 32);
+	position_overflow = uint32_t(high);
 	_core();
 }
-void PractRand::RNGs::Raw::salsa::_get_position(Uint64& low, Uint64& high) const {
-	low = used + (Uint64(state[POS_INDEX0]) << 4) + (Uint64(state[POS_INDEX1]) << 36);
-	high = (state[POS_INDEX1] >> 28) + (Uint64(position_overflow) << 4);
+void PractRand::RNGs::Raw::salsa::_get_position(uint64_t& low, uint64_t& high) const {
+	low = used + (uint64_t(state[POS_INDEX0]) << 4) + (uint64_t(state[POS_INDEX1]) << 36);
+	high = (state[POS_INDEX1] >> 28) + (uint64_t(position_overflow) << 4);
 }
-void PractRand::RNGs::Raw::salsa::seed(Uint64 s) {
-	Uint32 seed_and_iv[10] = {0};
-	seed_and_iv[0] = Uint32(s);
-	seed_and_iv[1] = Uint32(s >> 32);
+void PractRand::RNGs::Raw::salsa::seed(uint64_t s) {
+	uint32_t seed_and_iv[10] = {0};
+	seed_and_iv[0] = uint32_t(s);
+	seed_and_iv[1] = uint32_t(s >> 32);
 	seed(seed_and_iv, true);
 }
-const Uint32 salsa_short_seed_constants[4] = {
-	(Uint32(101) << 0) + (Uint32(120) << 8) + (Uint32(112) << 16) + (Uint32( 97) << 24),
-	(Uint32(110) << 0) + (Uint32(100) << 8) + (Uint32( 32) << 16) + (Uint32( 49) << 24),
-	(Uint32( 54) << 0) + (Uint32( 45) << 8) + (Uint32( 98) << 16) + (Uint32(121) << 24),
-	(Uint32(116) << 0) + (Uint32(101) << 8) + (Uint32( 32) << 16) + (Uint32(107) << 24),
+const uint32_t salsa_short_seed_constants[4] = {
+	(uint32_t(101) << 0) + (uint32_t(120) << 8) + (uint32_t(112) << 16) + (uint32_t( 97) << 24),
+	(uint32_t(110) << 0) + (uint32_t(100) << 8) + (uint32_t( 32) << 16) + (uint32_t( 49) << 24),
+	(uint32_t( 54) << 0) + (uint32_t( 45) << 8) + (uint32_t( 98) << 16) + (uint32_t(121) << 24),
+	(uint32_t(116) << 0) + (uint32_t(101) << 8) + (uint32_t( 32) << 16) + (uint32_t(107) << 24),
 };
-const Uint32 salsa_long_seed_constants[4] = {
-	(Uint32(101) << 0) + (Uint32(120) << 8) + (Uint32(112) << 16) + (Uint32( 97) << 24),
-	(Uint32(110) << 0) + (Uint32(100) << 8) + (Uint32( 32) << 16) + (Uint32( 51) << 24),
-	(Uint32( 50) << 0) + (Uint32( 45) << 8) + (Uint32( 98) << 16) + (Uint32(121) << 24),
-	(Uint32(116) << 0) + (Uint32(101) << 8) + (Uint32( 32) << 16) + (Uint32(107) << 24),
+const uint32_t salsa_long_seed_constants[4] = {
+	(uint32_t(101) << 0) + (uint32_t(120) << 8) + (uint32_t(112) << 16) + (uint32_t( 97) << 24),
+	(uint32_t(110) << 0) + (uint32_t(100) << 8) + (uint32_t( 32) << 16) + (uint32_t( 51) << 24),
+	(uint32_t( 50) << 0) + (uint32_t( 45) << 8) + (uint32_t( 98) << 16) + (uint32_t(121) << 24),
+	(uint32_t(116) << 0) + (uint32_t(101) << 8) + (uint32_t( 32) << 16) + (uint32_t(107) << 24),
 };
-void PractRand::RNGs::Raw::salsa::seed(const Uint32 seed_and_iv[10], bool extend_cycle_) {
-	const Uint32* constants = salsa_long_seed_constants;
+void PractRand::RNGs::Raw::salsa::seed(const uint32_t seed_and_iv[10], bool extend_cycle_) {
+	const uint32_t* constants = salsa_long_seed_constants;
 	state[CONST_INDEX_0] = constants[0];
 	state[CONST_INDEX_1] = constants[1];
 	state[CONST_INDEX_2] = constants[2];
@@ -146,8 +146,8 @@ void PractRand::RNGs::Raw::salsa::seed(const Uint32 seed_and_iv[10], bool extend
 	_core();
 	used = 0;
 }
-void PractRand::RNGs::Raw::salsa::seed_short(const Uint32 seed_and_iv[6], bool extend_cycle_) {
-	const Uint32* constants = salsa_short_seed_constants;
+void PractRand::RNGs::Raw::salsa::seed_short(const uint32_t seed_and_iv[6], bool extend_cycle_) {
+	const uint32_t* constants = salsa_short_seed_constants;
 	state[CONST_INDEX_0] = constants[0];
 	state[CONST_INDEX_1] = constants[1];
 	state[CONST_INDEX_2] = constants[2];
@@ -169,7 +169,7 @@ void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject* walker) {
 	walker->handle(extend_cycle);
 	if (extend_cycle) walker->handle(position_overflow);
 	if (walker->is_seeder()) {
-		const Uint32* constants = salsa_long_seed_constants;
+		const uint32_t* constants = salsa_long_seed_constants;
 		state[CONST_INDEX_0] = constants[0];
 		state[CONST_INDEX_1] = constants[1];
 		state[CONST_INDEX_2] = constants[2];
@@ -189,15 +189,15 @@ void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject* walker) {
 		used &= 15;
 	}
 }
-void PractRand::RNGs::Raw::salsa::seek_forward (Uint64 how_far_low, Uint64 how_far_high) {
-	Uint64 pos_low = 0, pos_high = 0;
+void PractRand::RNGs::Raw::salsa::seek_forward (uint64_t how_far_low, uint64_t how_far_high) {
+	uint64_t pos_low = 0, pos_high = 0;
 	_get_position(pos_low, pos_high);
-	Uint64 new_pos_low = pos_low + how_far_low;
+	uint64_t new_pos_low = pos_low + how_far_low;
 	if (new_pos_low < pos_low) how_far_high++;
-	Uint64 new_pos_high = pos_high + how_far_high;
+	uint64_t new_pos_high = pos_high + how_far_high;
 	_set_position(new_pos_low, new_pos_high);
 }
-void PractRand::RNGs::Raw::salsa::seek_backward(Uint64 how_far_low, Uint64 how_far_high) {
+void PractRand::RNGs::Raw::salsa::seek_backward(uint64_t how_far_low, uint64_t how_far_high) {
 	seek_forward(~how_far_low, ~how_far_high);
 	raw32();
 }
@@ -208,16 +208,16 @@ void PractRand::RNGs::Raw::salsa::set_rounds(int rounds_) {
 	//_core();
 }
 /*
-static void test_salsa ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_seed, Uint32 expected0, Uint32 index, Uint32 expected1) {
+static void test_salsa ( uint32_t rounds, const uint32_t *seed_and_iv, bool short_seed, uint32_t expected0, uint32_t index, uint32_t expected1) {
 	PractRand::RNGs::Raw::salsa rng;
 	rng.set_rounds(rounds);
 	if (!short_seed) rng.seed(seed_and_iv, false);
 	else rng.seed_short(seed_and_iv, false);
-	Uint32 observed0 = rng.raw32();
-	Uint32 observed1;
+	uint32_t observed0 = rng.raw32();
+	uint32_t observed1;
 	if (!index) observed1 = observed0;
 	else {
-		for (Uint32 i = 1; i < index; i++) rng.raw32();
+		for (uint32_t i = 1; i < index; i++) rng.raw32();
 		observed1 = rng.raw32();
 	}
 
@@ -228,24 +228,24 @@ static void test_salsa ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_se
 */
 void PractRand::RNGs::Raw::salsa::self_test() {
 	PractRand::RNGs::Raw::salsa engine;
-	Uint32 seed_and_iv[10] = {0};
+	uint32_t seed_and_iv[10] = {0};
 	for (int i = 0; i < 4; i++) seed_and_iv[i+0] = i * 0x04040404 + 0x04030201;
 	for (int i = 0; i < 4; i++) seed_and_iv[i+4] = i * 0x04040404 + 0xCCCBCAC9;
 	for (int i = 0; i < 2; i++) seed_and_iv[i+8] = i * 0x04040404 + 0x68676665;
 	engine.set_rounds(20);
 	engine.seed(seed_and_iv, false);
-	Uint64 N = (Uint64(109)<<0)+(Uint64(110)<<8)+(Uint64(111)<<16)+(Uint64(112)<<24)+(Uint64(113)<<32)+(Uint64(114)<<40)+(Uint64(115)<<48)+(Uint64(116)<<56);
+	uint64_t N = (uint64_t(109)<<0)+(uint64_t(110)<<8)+(uint64_t(111)<<16)+(uint64_t(112)<<24)+(uint64_t(113)<<32)+(uint64_t(114)<<40)+(uint64_t(115)<<48)+(uint64_t(116)<<56);
 	engine.seek_forward( N << 4, N >> 60);
-	Uint64 E = (Uint64(69)<<0)+(Uint64(37)<<8)+(Uint64(68)<<16)+(Uint64(39)<<24)+(Uint64(41)<<32)+(Uint64(15)<<40)+(Uint64(107)<<48)+(Uint64(193)<<56);
-	if (Uint32(E) != engine.raw32()) issue_error("salsa::self_test() failed\n");
-	if (Uint32(E>>32) != engine.raw32()) issue_error("salsa::self_test() failed\n");
+	uint64_t E = (uint64_t(69)<<0)+(uint64_t(37)<<8)+(uint64_t(68)<<16)+(uint64_t(39)<<24)+(uint64_t(41)<<32)+(uint64_t(15)<<40)+(uint64_t(107)<<48)+(uint64_t(193)<<56);
+	if (uint32_t(E) != engine.raw32()) issue_error("salsa::self_test() failed\n");
+	if (uint32_t(E>>32) != engine.raw32()) issue_error("salsa::self_test() failed\n");
 
 	engine.set_rounds(20);
 	for (int i = 0; i < 6; i++) seed_and_iv[i] = 0;
 	engine.seed_short(seed_and_iv, false);
-	Uint64 E2 = 0x4c12ebcfaead1365ULL;
-	if (Uint32(E2) != engine.raw32()) issue_error("salsa::self_test() failed a\n");
-	if (Uint32(E2>>32) != engine.raw32()) issue_error("salsa::self_test() failed b\n");
+	uint64_t E2 = 0x4c12ebcfaead1365ULL;
+	if (uint32_t(E2) != engine.raw32()) issue_error("salsa::self_test() failed a\n");
+	if (uint32_t(E2>>32) != engine.raw32()) issue_error("salsa::self_test() failed b\n");
 }
 
 

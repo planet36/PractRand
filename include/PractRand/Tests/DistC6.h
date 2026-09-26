@@ -28,23 +28,23 @@ namespace PractRand::Tests {
 			//precalcs:
 			int bits_per_sample;
 			int size;
-			Uint32 mask_pre{Uint32(-1)};
-			Uint32 lookup_table[ENABLE_8_BIT_BYPASS ? 256 : 65]{};//reorder_bits(reorder_codes(transform_bitcount( X ))) or reorder_bits(reorder_codes(transform_bitcount(count_bits8( X ))))
-			Uint8 reorder_codes_table[64]{};
-			Uint8 unreorder_codes_table[64]{};
+			uint32_t mask_pre{uint32_t(-1)};
+			uint32_t lookup_table[ENABLE_8_BIT_BYPASS ? 256 : 65]{};//reorder_bits(reorder_codes(transform_bitcount( X ))) or reorder_bits(reorder_codes(transform_bitcount(count_bits8( X ))))
+			uint8_t reorder_codes_table[64]{};
+			uint8_t unreorder_codes_table[64]{};
 			//state:
 			int warmup{};
-			Uint32 last_index{};
-			VariableSizeCount<Uint8> counts;
+			uint32_t last_index{};
+			VariableSizeCount<uint8_t> counts;
 			//internal helpers:
 			[[nodiscard]] virtual int transform_bitcount ( int bit_count ) const final;
-			static Uint32 _reorder_bits ( Uint32 rcode, int bits_per_sample, int length ) ;
-			[[nodiscard]] Uint32 reorder_bits( Uint32 rcode ) const {return _reorder_bits(rcode, bits_per_sample, length);}
-			[[nodiscard]] Uint32 unreorder_bits ( Uint32 rbcode ) const {return _reorder_bits(rbcode, length, bits_per_sample);}
-			[[nodiscard]] Uint32 reorder_codes   ( Uint32 code ) const {return reorder_codes_table[code];}
-			[[nodiscard]] Uint32 unreorder_codes ( Uint32 rcode ) const {return unreorder_codes_table[rcode];}
+			static uint32_t _reorder_bits ( uint32_t rcode, int bits_per_sample, int length ) ;
+			[[nodiscard]] uint32_t reorder_bits( uint32_t rcode ) const {return _reorder_bits(rcode, bits_per_sample, length);}
+			[[nodiscard]] uint32_t unreorder_bits ( uint32_t rbcode ) const {return _reorder_bits(rbcode, length, bits_per_sample);}
+			[[nodiscard]] uint32_t reorder_codes   ( uint32_t code ) const {return reorder_codes_table[code];}
+			[[nodiscard]] uint32_t unreorder_codes ( uint32_t rcode ) const {return unreorder_codes_table[rcode];}
 			void generate_reorder_codes ();
-			[[nodiscard]] Uint32 _advance_index ( Uint32 index, int rbcode ) const {
+			[[nodiscard]] uint32_t _advance_index ( uint32_t index, int rbcode ) const {
 				if constexpr (ENABLE_REORDER)
 					return ((index & mask_pre) << 1) | rbcode ;
 				else
@@ -70,7 +70,7 @@ namespace PractRand::Tests {
 			//precalcs:
 			//state:
 			bool odd{};
-			VariableSizeCount<Uint8> odd_counts;
+			VariableSizeCount<uint8_t> odd_counts;
 			//internal helpers:
 		};
 }//PractRand

@@ -5,7 +5,7 @@
 #include <thread>
 
 class MultithreadedTestManager : public TestManager {
-	static void run_test(PractRand::Tests::TestBaseclass* test, PractRand::Tests::TestBlock* base_block, PractRand::Uint64 numblocks) {
+	static void run_test(PractRand::Tests::TestBaseclass* test, PractRand::Tests::TestBlock* base_block, uint64_t numblocks) {
 		constexpr int MAX_BLOCKS_PER_CALL = 1ULL << 18;
 		while (numblocks > MAX_BLOCKS_PER_CALL) {
 			test->test_blocks(base_block,MAX_BLOCKS_PER_CALL);
@@ -30,8 +30,8 @@ public:
 	//unsigned int max_buffer_amount;
 	//int prefix_blocks;
 	//int main_blocks;
-	//Uint64 blocks_so_far;
-	void multithreaded_prep_blocks(PractRand::Uint64 num_blocks) {
+	//uint64_t blocks_so_far;
+	void multithreaded_prep_blocks(uint64_t num_blocks) {
 		int new_prefix_blocks = blocks_to_repeat;
 		if (new_prefix_blocks > prefix_blocks + main_blocks)
 			new_prefix_blocks = prefix_blocks + main_blocks;
@@ -43,7 +43,7 @@ public:
 			);
 		}
 		prefix_blocks = new_prefix_blocks;
-		main_blocks = (num_blocks > max_buffer_amount) ? max_buffer_amount : PractRand::Uint32(num_blocks);
+		main_blocks = (num_blocks > max_buffer_amount) ? max_buffer_amount : uint32_t(num_blocks);
 		buffer[prefix_blocks].fill(rng, main_blocks);
 		blocks_so_far += main_blocks;
 	}
@@ -52,7 +52,7 @@ public:
 		//buffer1.resize(max_buffer_amount + Tests::TestBaseclass::REPEATED_BLOCKS);
 		for (auto& test : tests->tests) test->init(known_good);
 	}
-	void test(PractRand::Uint64 num_blocks) override {
+	void test(uint64_t num_blocks) override {
 		while (num_blocks) {
 			multithreaded_prep_blocks(num_blocks);
 			num_blocks -= main_blocks;

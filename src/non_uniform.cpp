@@ -58,9 +58,9 @@ namespace PractRand::Internals {
 			+3.3328691249e-012, +3.3916838777e-012, +3.4548515714e-012, +3.5227890436e-012, +3.5959724575e-012, +3.6749481583e-012, +3.7603460307e-012, +3.8528960586e-012, +3.9534490258e-012, +4.0630026198e-012, +4.1827346681e-012, +4.3140458994e-012, +4.4586155873e-012, +4.6184748659e-012, +4.7961046655e-012, +4.9945685304e-012,
 			+5.2176958089e-012, +5.4703391261e-012, +5.7587440258e-012, +6.0910925944e-012, +6.4783253196e-012, +6.9354238958e-012, +7.4834897566e-012, +8.1532648440e-012, +8.9914242845e-012, +1.0072595101e-011, +1.1524333934e-011, +1.3585169202e-011, +1.6762242066e-011, +2.2374584217e-011, +3.5445721984e-011, +1.0270065287e-010
 		};
-		double generate_gaussian_fast(Uint64 raw64) {//fast CDF-based hybrid method
-			auto si = Sint32(raw64 >> 32);
-			auto indeces = Uint32(raw64);
+		double generate_gaussian_fast(uint64_t raw64) {//fast CDF-based hybrid method
+			auto si = int32_t(raw64 >> 32);
+			auto indeces = uint32_t(raw64);
 			long index = (indeces >> (GAUSSIAN_CDF_TABLE_SIZE_L2*0)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
 			double rv = primary_gaussian_cdf_table[index];
 			rv += si * secondary_gaussian_cdf_table[index];

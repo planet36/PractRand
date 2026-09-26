@@ -7,7 +7,7 @@
 namespace PractRand::Tests {
 		class NearSeq final : public TestBaseclass {
 		protected:
-			using Word = Uint64;
+			using Word = uint64_t;
 				/*
 					parameterizations of interest:
 						blocks*bits=core		thresholds				evaluation
@@ -43,18 +43,18 @@ namespace PractRand::Tests {
 			//static constexpr int ARES_THRESHOLD = 8;//core distances less than or equal to this are required for rares
 			//static constexpr int ARES_SIZE_L2 = 16;
 			struct Bucket {
-				Uint64 sequence[SEQUENCE_WORDS];
+				uint64_t sequence[SEQUENCE_WORDS];
 			};
 			Bucket buckets[NUM_BUCKETS]{};
-			Uint64 core_distances[MAX_CORE_DISTANCES]{};
-			Uint64 sum_extra_distances[MAX_CORE_DISTANCES]{};//sum of all overall distances at a given core distances... divide by the same index on core_distance to get the average
-			//Uint32 rare_index;
-			//Uint32 rare_warmup;
-			//FixedSizeCount<Uint16, 1 << RARES_SIZE_L2> count_rares;
-			//FixedSizeCount<Uint16, NUM_BUCKETS * EXTRA_WORDS * 16> count_region;
-			//void handle_rare(Uint8 one);
-			Uint8* lookup_table{nullptr};//used by core_to_index
-			Uint8* lookup_table2{};//used by is_core_good
+			uint64_t core_distances[MAX_CORE_DISTANCES]{};
+			uint64_t sum_extra_distances[MAX_CORE_DISTANCES]{};//sum of all overall distances at a given core distances... divide by the same index on core_distance to get the average
+			//uint32_t rare_index;
+			//uint32_t rare_warmup;
+			//FixedSizeCount<uint16_t, 1 << RARES_SIZE_L2> count_rares;
+			//FixedSizeCount<uint16_t, NUM_BUCKETS * EXTRA_WORDS * 16> count_region;
+			//void handle_rare(uint8_t one);
+			uint8_t* lookup_table{nullptr};//used by core_to_index
+			uint8_t* lookup_table2{};//used by is_core_good
 			int core_to_index(const Word* core) const;//returns -1 on invalid core
 			int is_core_good(const Word* core) const;
 			int get_core_distance(const Word* core, int bucket_index) const;
@@ -70,7 +70,7 @@ namespace PractRand::Tests {
 		};
 		class NearSeq2 final : public TestBaseclass {
 		protected:
-			using Word = Uint32;
+			using Word = uint32_t;
 				/*
 				parameterizations of interest:
 				blocks*bits=core		thresholds				evaluation
@@ -110,31 +110,31 @@ namespace PractRand::Tests {
 			static constexpr int CHECK_VALIDITY_EARLY = 0;//if true, checks for a bad core after each block for the first word, then once per word thereafter
 			struct Bucket {
 				//Word ideal_sequence[SEQUENCE_WORDS];
-				Uint64 core_hdist[MAX_TOTAL_HDIST + 1];
-				Uint64 extra_counts[HDIST_BINS][EXTRA_BITS];
+				uint64_t core_hdist[MAX_TOTAL_HDIST + 1];
+				uint64_t extra_counts[HDIST_BINS][EXTRA_BITS];
 				void reset();
 			};
 			Bucket buckets[NUM_BUCKETS]{};
-			Uint64 _total_cores{};
-			Uint64 _total_invalid_cores{};
+			uint64_t _total_cores{};
+			uint64_t _total_invalid_cores{};
 
-			Sint8* lookup_table1{nullptr};//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
-			Uint8* lookup_table2{nullptr};//hamming distance from idealized value for core block
+			int8_t* lookup_table1{nullptr};//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
+			uint8_t* lookup_table2{nullptr};//hamming distance from idealized value for core block
 
-			[[nodiscard]] Sint8 lookup1(Word value) const {
+			[[nodiscard]] int8_t lookup1(Word value) const {
 				if constexpr (BITS_PER_BLOCK < WORD_BITS) value &= (1UL << BITS_PER_BLOCK) - 1;
 				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
 				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
 				else return lookup_table1[std::popcount(value)];
 			}
-			[[nodiscard]] Sint32 _lookup1(Word value) const {
+			[[nodiscard]] int32_t _lookup1(Word value) const {
 				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
 				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
 				else return lookup_table1[std::popcount(value)];
 			}
-			[[nodiscard]] Uint32 _lookup2(Word value) const {
+			[[nodiscard]] uint32_t _lookup2(Word value) const {
 				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table2[value];
 				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table2[std::popcount(value)];
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table2[std::popcount(value)];
@@ -148,7 +148,7 @@ namespace PractRand::Tests {
 			[[nodiscard]] static int get_hdist_bin(int hdist);
 			bool is_core_bad(const Word* core) const;
 			void core_analysis(const Word* core, int& index, int& ham) const;//only call on valid cores
-			static void count_bits_distribution(Word bits, Uint64* counts, int num = WORD_BITS);
+			static void count_bits_distribution(Word bits, uint64_t* counts, int num = WORD_BITS);
 		public:
 			NearSeq2();
 			void init(PractRand::RNGs::vRNG* known_good) override;

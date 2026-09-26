@@ -12,12 +12,12 @@ namespace PractRand::RNGs {
 				static constexpr int OUTPUT_BITS = 64;
 				static constexpr int FLAGS = FLAG::ENDIAN_SAFE | FLAG::USES_SPECIFIED;
 			protected:
-				Uint64 a, b, c, counter;
+				uint64_t a, b, c, counter;
 			public:
-				Uint64 raw64();
-				void seed(Uint64 s);
-				void seed_fast(Uint64 s);
-				void seed(Uint64 s1, Uint64 s2, Uint64 s3);
+				uint64_t raw64();
+				void seed(uint64_t s);
+				void seed_fast(uint64_t s);
+				void seed(uint64_t s1, uint64_t s2, uint64_t s3);
 				void walk_state(StateWalkingObject* walker);
 			};
 		}
@@ -25,9 +25,9 @@ namespace PractRand::RNGs {
 		namespace Polymorphic {
 			class sfc64 final : public vRNG64 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(sfc64)
-				void seed(Uint64 s) override;
-				void seed_fast(Uint64 s) override;
-				void seed(Uint64 s1, Uint64 s2, Uint64 s3);
+				void seed(uint64_t s) override;
+				void seed_fast(uint64_t s) override;
+				void seed(uint64_t s1, uint64_t s2, uint64_t s3);
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(sfc64)

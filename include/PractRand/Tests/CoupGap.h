@@ -9,20 +9,20 @@ namespace PractRand::Tests {
 			static constexpr int MAX_CURRENT_AGE = 256 * 2;
 
 			//low8 = current_sym, high8 = oldest_sym
-			FixedSizeCount<Uint8, 256*256> count_syms_by_oldest_sym;
+			FixedSizeCount<uint8_t, 256*256> count_syms_by_oldest_sym;
 
 			//low8 = oldest_sym, high8 = current_gap
-//			FixedSizeCount<Uint8, 256*MAX_CURRENT_AGE> count_gaps_by_oldest_sym;
+//			FixedSizeCount<uint8_t, 256*MAX_CURRENT_AGE> count_gaps_by_oldest_sym;
 
-//			Uint32 last_sym_pos[256];
+//			uint32_t last_sym_pos[256];
 			unsigned long oldest_sym{};
 			unsigned long youngest_sym{};
-			Uint8 next_younger_sym[256]{};
+			uint8_t next_younger_sym[256]{};
 			bool sym_has_appeared[256]{};
 			int symbols_ready{};
 
-			Uint32 autofail{};
-//			Uint64 blocks;
+			uint32_t autofail{};
+//			uint64_t blocks;
 		public:
 			CoupGap() = default;
 

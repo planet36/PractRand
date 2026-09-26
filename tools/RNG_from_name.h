@@ -41,40 +41,40 @@ namespace Special_RNGs {
 		Word read() { if (pos == end) refill(); return *(pos++); }
 	};
 	class RNG_stdin : public PractRand::RNGs::vRNG8 {
-		_stdin_reader<PractRand::Uint8> source;
-		PractRand::Uint8 raw8() override {
+		_stdin_reader<uint8_t> source;
+		uint8_t raw8() override {
 			return source.read();
 		}
-		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		[[nodiscard]] uint64_t get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin"; }
 		[[nodiscard]] int get_native_output_size() const override {return -1;}
 		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin8 : public PractRand::RNGs::vRNG8 {
-		_stdin_reader<PractRand::Uint8> source;
-		PractRand::Uint8 raw8() override { return source.read(); }
-		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		_stdin_reader<uint8_t> source;
+		uint8_t raw8() override { return source.read(); }
+		[[nodiscard]] uint64_t get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin8"; }
 		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin16 : public PractRand::RNGs::vRNG16 {
-		_stdin_reader<PractRand::Uint16> source;
-		PractRand::Uint16 raw16() override { return source.read(); }
-		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		_stdin_reader<uint16_t> source;
+		uint16_t raw16() override { return source.read(); }
+		[[nodiscard]] uint64_t get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin16"; }
 		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin32 : public PractRand::RNGs::vRNG32 {
-		_stdin_reader<PractRand::Uint32> source;
-		PractRand::Uint32 raw32() override { return source.read(); }
-		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		_stdin_reader<uint32_t> source;
+		uint32_t raw32() override { return source.read(); }
+		[[nodiscard]] uint64_t get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin32"; }
 		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
 	class RNG_stdin64 : public PractRand::RNGs::vRNG64 {
-		_stdin_reader<PractRand::Uint64> source;
-		PractRand::Uint64 raw64() override { return source.read(); }
-		[[nodiscard]] PractRand::Uint64 get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
+		_stdin_reader<uint64_t> source;
+		uint64_t raw64() override { return source.read(); }
+		[[nodiscard]] uint64_t get_flags() const override { return PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED | PractRand::RNGs::FLAG::STATE_UNAVAILABLE; }
 		[[nodiscard]] std::string get_name() const override { return "RNG_stdin64"; }
 		void walk_state(PractRand::StateWalkingObject*) override {}
 	};
@@ -161,7 +161,7 @@ namespace RNG_Factories {
 		int speed;
 		int word;
 		int size;
-		Uint64 flags;
+		uint64_t flags;
 	};*/
 
 	bool parse_argument_list(const std::string& raw, std::string& name, std::vector<std::string>& parameters) {

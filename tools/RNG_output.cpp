@@ -42,7 +42,7 @@
 using namespace PractRand;
 
 
-bool interpret_seed(const std::string& seedstr, Uint64& seed) {
+bool interpret_seed(const std::string& seedstr, uint64_t& seed) {
 	const char* first = seedstr.data();
 	const char* last = first + seedstr.size();
 	if (seedstr.starts_with("0x")) first += 2;
@@ -89,7 +89,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 
 	double _n = 0;//stays 0 if argv[2] is not a number, such as "name"
 	parse_number(argv[2], _n);
-	Uint64 n = 0;
+	uint64_t n = 0;
 	if (_n <= 0 || _n >= 18446744073709551616.0) {
 		if (!strcmp(argv[2], "name")) {
 			std::println("{}", rng->get_name());
@@ -103,11 +103,11 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			std::println(stderr, "RNG_output ERROR: invalid number of output bytes"); print_usage(argv[0]);
 		}
 	}
-	else { n = Uint64(_n); }
+	else { n = uint64_t(_n); }
 
 	if (argc == 3) { rng->autoseed(); }
 	else {
-		Uint64 seed = 0;
+		uint64_t seed = 0;
 		if (!interpret_seed(argv[3],seed)) {std::println(stderr, "RNG_output ERROR: \"{}\" is not a valid 64 bit hexadecimal seed", argv[3]); std::exit(0);}
 		rng->seed(seed);
 	}
@@ -120,7 +120,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 #endif
 
 	constexpr int BUFFER_SIZE = 8;
-	//Uint64 buffer[BUFFER_SIZE];
+	//uint64_t buffer[BUFFER_SIZE];
 	PractRand::Tests::TestBlock buffer[BUFFER_SIZE];
 	while (n && !signaled) {
 		//for (int i = 0; i < BUFFER_SIZE; i++) buffer[i] = rng->raw64();
@@ -138,7 +138,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		//std::cerr << "WARNING: Received signal " << signaled << ". Closing the application." << std::endl; // this was generating spurious error messages on linux
 	}
 	if (n && _n) {
-		std::cerr << "RNG_output ERROR: " << Uint64(_n) << " bytes were requested, but only " << (Uint64(_n) - n) << " bytes were written.\n";
+		std::cerr << "RNG_output ERROR: " << uint64_t(_n) << " bytes were requested, but only " << (uint64_t(_n) - n) << " bytes were written.\n";
 	}
 	return 0;
 }

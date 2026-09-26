@@ -28,13 +28,13 @@ namespace PractRand {
 		class vRNG {
 		public:
 		//constuctors, destructors, seeding, serialization, & low level state manipulation:
-			//vRNG(Uint64 seed_) {seed_64(seed_);}
+			//vRNG(uint64_t seed_) {seed_64(seed_);}
 			//vRNG(vRNG *rng_) {seed(rng_);}
 			//vRNG(_dummy_SeedingTypeAuto *) {autoseed();}
 			//vRNG(_dummy_SeedingTypeNone *) {}
 			virtual ~vRNG();
-			virtual void seed(Uint64 seed);
-			virtual void seed_fast(Uint64 seed);
+			virtual void seed(uint64_t seed);
+			virtual void seed_fast(uint64_t seed);
 			virtual void seed(vRNG* rng);
 			virtual void autoseed();
 			long serialize( char* buffer, long buffer_size );//returns serialized size, or zero on failure
@@ -45,19 +45,19 @@ namespace PractRand {
 
 
 		//raw random bits
-			virtual Uint8  raw8 () = 0;
-			virtual Uint16 raw16() = 0;
-			virtual Uint32 raw32() = 0;
-			virtual Uint64 raw64() = 0;
-			//virtual void raw_N(Uint8 *, size_t length) = 0;
+			virtual uint8_t  raw8 () = 0;
+			virtual uint16_t raw16() = 0;
+			virtual uint32_t raw32() = 0;
+			virtual uint64_t raw64() = 0;
+			//virtual void raw_N(uint8_t *, size_t length) = 0;
 
 		//uniform distributions
-			Uint32 randi(Uint32 max);
-			Uint32 randi(Uint32 min, Uint32 max) {return randi(max-min)+min;}
-			Uint32 randi_fast(Uint32 max);
-			Uint32 randi_fast(Uint32 min, Uint32 max) {return randi_fast(max-min)+min;}
-			Uint64 randli(Uint64 max);
-			Uint64 randli(Uint64 min, Uint64 max) {return randli(max-min)+min;}
+			uint32_t randi(uint32_t max);
+			uint32_t randi(uint32_t min, uint32_t max) {return randi(max-min)+min;}
+			uint32_t randi_fast(uint32_t max);
+			uint32_t randi_fast(uint32_t min, uint32_t max) {return randi_fast(max-min)+min;}
+			uint64_t randli(uint64_t max);
+			uint64_t randli(uint64_t min, uint64_t max) {return randli(max-min)+min;}
 			float randf();
 			float randf(float max) {return randf() * max;}
 			float randf(float min, float max) {return randf() * (max-min) + min;}
@@ -70,23 +70,23 @@ namespace PractRand {
 			double gaussian(double mean, double stddev) { return gaussian() * stddev + mean; }
 
 		//metadata functions
-			[[nodiscard]] virtual Uint64 get_flags() const;
+			[[nodiscard]] virtual uint64_t get_flags() const;
 			[[nodiscard]] virtual std::string get_name() const = 0;
 			[[nodiscard]] virtual int get_native_output_size() const = 0;//generally 8, 16, 32, 64, or -1 (unknown)
 
 		//exotic methods (not supported by many implementations - check flags to see if they support it):
 		//exotic methods 1: random access
-			virtual void seek_forward128 (Uint64 how_far_low64, Uint64 how_far_high64);
-			virtual void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64);
-			void seek_forward (Uint64 how_far) {seek_forward128 (how_far, 0);}
-			void seek_backward(Uint64 how_far) {seek_backward128(how_far, 0);}
+			virtual void seek_forward128 (uint64_t how_far_low64, uint64_t how_far_high64);
+			virtual void seek_backward128(uint64_t how_far_low64, uint64_t how_far_high64);
+			void seek_forward (uint64_t how_far) {seek_forward128 (how_far, 0);}
+			void seek_backward(uint64_t how_far) {seek_backward128(how_far, 0);}
 
 		//exotic methods 2: entropy pooling
 			virtual void reset_entropy();//returns an entropy pool to its default state
-			virtual void add_entropy8 (Uint8 );
-			virtual void add_entropy16(Uint16);
-			virtual void add_entropy32(Uint32);
-			virtual void add_entropy64(Uint64);
+			virtual void add_entropy8 (uint8_t );
+			virtual void add_entropy16(uint16_t);
+			virtual void add_entropy32(uint32_t);
+			virtual void add_entropy64(uint64_t);
 			//note that "add_entropy_N(&byte_buffer[0], 13)" will typically NOT produce the same state transition
 			//  as "add_entropy_N(&byte_buffer[0], 7);add_entropy_N(&byte_buffer[0], 6);"
 			virtual void add_entropy_N(const void*, size_t length);
@@ -99,7 +99,7 @@ namespace PractRand {
 
 		// C++2011 compatibility:
 #if defined PRACTRAND_BOOST_COMPATIBILITY
-			typedef Uint64 result_type;
+			typedef uint64_t result_type;
 			result_type operator()() {return raw64();}
 			static constexpr bool has_fixed_value = true;
 			static constexpr result_type min_value = 0;
@@ -111,33 +111,33 @@ namespace PractRand {
 		class vRNG8 : public vRNG {
 		public:
 			static constexpr int OUTPUT_BITS = 8;
-			Uint16 raw16() override;
-			Uint32 raw32() override;
-			Uint64 raw64() override;
+			uint16_t raw16() override;
+			uint32_t raw32() override;
+			uint64_t raw64() override;
 			[[nodiscard]] int get_native_output_size() const override;
 		};
 		class vRNG16 : public vRNG {
 		public:
 			static constexpr int OUTPUT_BITS = 16;
-			Uint8  raw8 () override;
-			Uint32 raw32() override;
-			Uint64 raw64() override;
+			uint8_t  raw8 () override;
+			uint32_t raw32() override;
+			uint64_t raw64() override;
 			[[nodiscard]] int get_native_output_size() const override;
 		};
 		class vRNG32 : public vRNG {
 		public:
 			static constexpr int OUTPUT_BITS = 32;
-			Uint8  raw8 () override;
-			Uint16 raw16() override;
-			Uint64 raw64() override;
+			uint8_t  raw8 () override;
+			uint16_t raw16() override;
+			uint64_t raw64() override;
 			[[nodiscard]] int get_native_output_size() const override;
 		};
 		class vRNG64 : public vRNG {
 		public:
 			static constexpr int OUTPUT_BITS = 64;
-			Uint8  raw8 () override;
-			Uint16 raw16() override;
-			Uint32 raw32() override;
+			uint8_t  raw8 () override;
+			uint16_t raw16() override;
+			uint32_t raw32() override;
 			[[nodiscard]] int get_native_output_size() const override;
 		};
 		namespace OUTPUT_TYPES {
@@ -151,7 +151,7 @@ namespace PractRand {
 //			DISTRIBUTIONS_TYPE__NORMAL = 1
 //		};
 //		namespace SEEDING_TYPES { enum {
-//			SEEDING_TYPE_INT = 1,//seed(Uint64)
+//			SEEDING_TYPE_INT = 1,//seed(uint64_t)
 //			SEEDING_TYPE_VRNG = 2//seed(vRNG *)
 //		};}
 //		enum INTERNAL_STATES_VALID {

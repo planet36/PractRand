@@ -17,36 +17,36 @@
 
 namespace PractRand {
 	namespace Internals {
-		static void add_128 ( const Uint32* a, const Uint32* b, Uint32* result ) {
-			Uint64 tmp = 0;
+		static void add_128 ( const uint32_t* a, const uint32_t* b, uint32_t* result ) {
+			uint64_t tmp = 0;
 			for (int x = 0; x < 4; x++) {
 				tmp += a[x];
 				tmp += b[x];
-				result[x] = Uint32(tmp);
+				result[x] = uint32_t(tmp);
 				tmp >>= 32;
 			}
 		}
-		static void multiply_128 ( const Uint32* a, const Uint32* b, Uint32* result ) {
-			Uint32 buffer[4];
-			Uint64 current = 0, carry = 0, tmp = 0;
+		static void multiply_128 ( const uint32_t* a, const uint32_t* b, uint32_t* result ) {
+			uint32_t buffer[4];
+			uint64_t current = 0, carry = 0, tmp = 0;
 			for (int x = 0; x < 4; x++) {
 				for (int y = 0; y <= x; y++) {
-					tmp = Uint64(a[y]) * b[x-y];
+					tmp = uint64_t(a[y]) * b[x-y];
 					carry += tmp >> 32;
-					current += Uint32(tmp);
+					current += uint32_t(tmp);
 				}
-				buffer[x] = Uint32(current);
+				buffer[x] = uint32_t(current);
 				current = (current >> 32) + carry;
 				carry = 0;
 			}
 			for (int i = 0; i < 4; i++) result[i] = buffer[i];
 		}
-		static void convert128_64to32( Uint64 low, Uint64 high, Uint32* destination ) {
-			destination[0] = Uint32(low);  destination[1] = Uint32(low >> 32);
-			destination[2] = Uint32(high); destination[3] = Uint32(high >> 32);
+		static void convert128_64to32( uint64_t low, uint64_t high, uint32_t* destination ) {
+			destination[0] = uint32_t(low);  destination[1] = uint32_t(low >> 32);
+			destination[2] = uint32_t(high); destination[3] = uint32_t(high >> 32);
 		}
-		void fast_forward_lcg128 ( Uint64 how_far_low, Uint64 how_far_high, Uint64& value_low, Uint64& value_high, Uint64 mul_low, Uint64 mul_high, Uint64 add_low, Uint64 add_high ) {
-			Uint32 value[4], mul[4], add[4], tmp[4];
+		void fast_forward_lcg128 ( uint64_t how_far_low, uint64_t how_far_high, uint64_t& value_low, uint64_t& value_high, uint64_t mul_low, uint64_t mul_high, uint64_t add_low, uint64_t add_high ) {
+			uint32_t value[4], mul[4], add[4], tmp[4];
 			convert128_64to32(value_low, value_high, value);
 			convert128_64to32(mul_low, mul_high, mul);
 			convert128_64to32(add_low, add_high, add);
@@ -65,10 +65,10 @@ namespace PractRand {
 				multiply_128(mul, mul, mul);
 				//mul = mul * mul;
 			}
-			value_low  = value[0] | (Uint64(value[1]) << 32);
-			value_high = value[2] | (Uint64(value[3]) << 32);
+			value_low  = value[0] | (uint64_t(value[1]) << 32);
+			value_high = value[2] | (uint64_t(value[3]) << 32);
 		}
-		Uint64 fast_forward_lcg64 ( Uint64 how_far, Uint64 val, Uint64 mul, Uint64 add ) {
+		uint64_t fast_forward_lcg64 ( uint64_t how_far, uint64_t val, uint64_t mul, uint64_t add ) {
 			while (true) {
 				if (how_far & 1) val = val * mul + add;
 				how_far >>= 1;
@@ -78,7 +78,7 @@ namespace PractRand {
 			}
 			return val;
 		}
-		Uint32 fast_forward_lcg32 ( Uint32 how_far, Uint32 val, Uint32 mul, Uint32 add ) {
+		uint32_t fast_forward_lcg32 ( uint32_t how_far, uint32_t val, uint32_t mul, uint32_t add ) {
 			while (true) {
 				if (how_far & 1) val = val * mul + add;
 				how_far >>= 1;
@@ -88,38 +88,38 @@ namespace PractRand {
 			}
 			return val;
 		}
-		/*static Uint64 rewind_lcg64 ( Uint64 how_far, Uint64 val, Uint64 mul, Uint64 add ) {
+		/*static uint64_t rewind_lcg64 ( uint64_t how_far, uint64_t val, uint64_t mul, uint64_t add ) {
 			return fast_forward_lcg64( ~how_far + 1, val, mul, add );
 		}
-		static Uint32 pow_mod_N32(Uint32 x, Uint32 pow, Uint32 mod) {
+		static uint32_t pow_mod_N32(uint32_t x, uint32_t pow, uint32_t mod) {
 			if (x <= 1) return x;
 			if (pow == 0) return 1;
 
 			pow -= 1;
 			if (pow == 0) return x;
 
-			Uint64 mul = x;
+			uint64_t mul = x;
 
 			while (1) {
-				if (pow & 1) x = Uint32((x * mul) % mod);
+				if (pow & 1) x = uint32_t((x * mul) % mod);
 				pow >>= 1;
 				if (!pow) return x;
 				mul = (mul * mul) % mod;
 			}
 		}*/
-		Uint32 fast_forward_lcg32c ( Uint32 how_far, Uint32 val, Uint32 mul, Uint32 add, Uint32 mod ) {
+		uint32_t fast_forward_lcg32c ( uint32_t how_far, uint32_t val, uint32_t mul, uint32_t add, uint32_t mod ) {
 			if (val >= mod) val %= mod;
 			if (mul >= mod) mul %= mod;
 			if (add >= mod) add %= mod;
 			if (how_far >= mod) how_far %= mod;
 			while (true) {
 				if (how_far & 1) {
-					val = Uint32((Uint64(val) * mul + add) % mod);
+					val = uint32_t((uint64_t(val) * mul + add) % mod);
 				}
 				how_far >>= 1;
 				if (how_far == 0) break;
-				add = Uint32((Uint64(add) * mul + add) % mod);
-				mul = Uint32((Uint64(mul) * mul) % mod);
+				add = uint32_t((uint64_t(add) * mul + add) % mod);
+				mul = uint32_t((uint64_t(mul) * mul) % mod);
 			}
 			return val;
 		}
@@ -156,7 +156,7 @@ namespace PractRand {
 			}
 			return rv;
 		}
-		XorshiftMatrix XorshiftMatrix::exponent(Uint64 exponent_value) const {
+		XorshiftMatrix XorshiftMatrix::exponent(uint64_t exponent_value) const {
 			XorshiftMatrix rv(size, true), tmp(*this);
 			if (!exponent_value) return rv;
 			while (true) {
@@ -167,7 +167,7 @@ namespace PractRand {
 			}
 			return rv;
 		}
-		XorshiftMatrix XorshiftMatrix::exponent2Xminus1(Uint64 x) const {
+		XorshiftMatrix XorshiftMatrix::exponent2Xminus1(uint64_t x) const {
 			//exponent(2**X-1), X may be >=64
 			XorshiftMatrix rv(size, true);
 			while (x) {
@@ -176,7 +176,7 @@ namespace PractRand {
 			}
 			return rv;
 		}
-		bool XorshiftMatrix::verify_period_factorization(const std::vector<Uint64> &factors) const {
+		bool XorshiftMatrix::verify_period_factorization(const std::vector<uint64_t> &factors) const {
 			for (size_t i = 0; i < factors.size(); i++) {
 				XorshiftMatrix tmp = *this;
 				for (size_t j = 0; j < factors.size(); j++) {
@@ -196,22 +196,22 @@ namespace PractRand {
 		//if aggressive is true, it will treat N as a hard limit on how low probabilities can be
 		//otherwise, it will treat it as a soft limit
 		//linear combines only adjacent entries; non-linear is not yet implemented
-		int simplify_prob_table ( unsigned long categories, double N, double* prob_table, Uint64* counts, bool linear, bool aggressive ) {
+		int simplify_prob_table ( unsigned long categories, double N, double* prob_table, uint64_t* counts, bool linear, bool aggressive ) {
 			if (N < 2.0) N = 2.0;
 			double E = 1.0 / N;
 			int reduced_size = categories;
 			if (!linear) {
-				std::multimap<double,Uint64> indexed;
-				for (unsigned long i = 0; i < categories; i++) indexed.insert(std::pair<double,Uint64>(prob_table[i], counts[i]));
+				std::multimap<double,uint64_t> indexed;
+				for (unsigned long i = 0; i < categories; i++) indexed.insert(std::pair<double,uint64_t>(prob_table[i], counts[i]));
 				while (reduced_size > 2) {
-					std::multimap<double,Uint64>::iterator a, b;
+					std::multimap<double,uint64_t>::iterator a, b;
 					a = b = indexed.begin(); b++;
 					if (a->first >= E || (b->first >= E && !aggressive)) break;
 					double ps = a->first + b->first;
-					Uint64 cs = a->second + b->second;
+					uint64_t cs = a->second + b->second;
 					indexed.erase(a);
 					indexed.erase(b);
-					indexed.insert(std::pair<double,Uint64>(ps, cs));
+					indexed.insert(std::pair<double,uint64_t>(ps, cs));
 					reduced_size -= 1;
 				}
 				int i = 0;
@@ -259,7 +259,7 @@ namespace PractRand {
 		}
 
 
-		double chi_squared_test ( unsigned long categories, const double* prob_table, const Uint64* counts ) {
+		double chi_squared_test ( unsigned long categories, const double* prob_table, const uint64_t* counts ) {
 			unsigned long i = 0;
 			long double sum = 0, v = 0;
 
@@ -276,7 +276,7 @@ namespace PractRand {
 		//	double normal = (V-(categories-1))/sqrt((double)(categories-1));
 			return static_cast<double>(v);
 		}
-		double rarity_test(unsigned long categories, const double* prob_table, const Uint64* counts) {
+		double rarity_test(unsigned long categories, const double* prob_table, const uint64_t* counts) {
 			long double total = 0;
 			std::vector<double> logs; logs.resize(categories);
 			long double mean = 0.0;
@@ -319,12 +319,12 @@ namespace PractRand {
 
 			return sum / std::sqrt(total);
 		}
-		double my_test(unsigned long categories, const double* prob_table, const Uint64* counts) {
+		double my_test(unsigned long categories, const double* prob_table, const uint64_t* counts) {
 			double score_actual = 0;
 			double score_mean = 0;
 			//double score_mean_sqr = 0;
 			double prob_sum = 0;
-			Uint64 total = 0;
+			uint64_t total = 0;
 			for (unsigned long i = 0; i < categories; i++) {
 				double score = prob_table[i] > 0 ? -std::log(prob_table[i]) : 999.0;
 				score_mean += prob_table[i] * score;
@@ -374,7 +374,7 @@ namespace PractRand {
 			if (prob_sum < 0.999 || prob_sum > 1.001) issue_error("G_TEST::get_result - probability total is badly off");
 			if (categories < 2) issue_error("G_TEST::get_result - ...how many categories?");
 		}
-		void G_TEST::add_category(Uint64 count, long double prob) {
+		void G_TEST::add_category(uint64_t count, long double prob) {
 			if (minimum_prob && prob < minimum_prob) {//currently allows combining of non-adjent categories
 				partial_count += count;
 				partial_prob += prob;
@@ -394,7 +394,7 @@ namespace PractRand {
 				categories += 1;
 			}
 		}
-		double g_test(unsigned long categories, const double* prob_table, const Uint64* counts) {
+		double g_test(unsigned long categories, const double* prob_table, const uint64_t* counts) {
 			long double total = 0;
 			long double sum = 0;
 			for (unsigned long i = 0; i < categories; i++) {
@@ -405,7 +405,7 @@ namespace PractRand {
 			sum -= total * std::log(double(total));
 			return static_cast<double>(sum) * 2.0;
 		}
-		double g_test_flat(unsigned long categories, const Uint64* counts) {
+		double g_test_flat(unsigned long categories, const uint64_t* counts) {
 			long double total = 0;
 			long double sum = 0;
 			for (unsigned long i = 0; i < categories; i++) {
@@ -416,9 +416,9 @@ namespace PractRand {
 			sum -= total * std::log(double(total) / double(categories));
 			return static_cast<double>(sum) * 2.0;
 		}
-		double g_test_flat_merge_normal(unsigned long categories, const Uint64* counts, Uint64 total, double target_ratio) {
+		double g_test_flat_merge_normal(unsigned long categories, const uint64_t* counts, uint64_t total, double target_ratio) {
 			if (categories < 2) return 0;
-			if (total == Uint64(-1)) {
+			if (total == uint64_t(-1)) {
 				total = 0;
 				for (unsigned long i = 0; i < categories; i++) total += counts[i];
 			}
@@ -429,7 +429,7 @@ namespace PractRand {
 			if (merge > categories/2) merge = (categories + 1) / 2;
 			long double sum = 0;
 			unsigned long max = categories - merge;
-			Uint64 so_far = 0;
+			uint64_t so_far = 0;
 			for (unsigned long i = 0; i <= max; i+=merge) {
 				long double observed = 0;
 				for (unsigned int sub = 0; sub < merge; sub++) {
@@ -450,7 +450,7 @@ namespace PractRand {
 			return math_chisquared_to_normal(sum, ((categories+merge-1) / merge)-1);
 		}
 
-		Uint64 math_nChooseR(int set_size, int num_choices) {
+		uint64_t math_nChooseR(int set_size, int num_choices) {
 			//remember, larger values will quickly overflow
 			if (set_size < 1) issue_error("math_nChooseR - set_size out of range");
 			if (!num_choices) return 1;
@@ -458,7 +458,7 @@ namespace PractRand {
 			if (num_choices > set_size - num_choices) {
 				num_choices = set_size - num_choices;
 			}
-			Uint64 rv = set_size;
+			uint64_t rv = set_size;
 			for (int i = 2; i <= num_choices; i++) {
 				rv *= set_size + 1 - i;
 				rv /= i;//guaranteed to divide evenly, if we haven't overflowed yet
@@ -475,12 +475,12 @@ namespace PractRand {
 			//	double r = a * (L - 1) + L/2 + halfL2Pi;
 			return exp(r);
 		}
-		double math_factorial_log(Uint64 a) {
+		double math_factorial_log(uint64_t a) {
 			//only an aproximation, but a decent one
 			//double actual = 0;
 			/*if (a <= 1) return 0;
 			else if (a <= 16) {
-				Uint64 f = 1;
+				uint64_t f = 1;
 				for (int i = 2; i <= a; i++) {
 					f *= i;
 				}
@@ -914,7 +914,7 @@ namespace PractRand {
 			}
 		}
 
-		static constexpr Uint8 reverse_table[256] = {
+		static constexpr uint8_t reverse_table[256] = {
 		//	  0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
 			0  , 128,  64, 192,  32, 160,  96, 224,  16, 144,  80, 208,  48, 176, 112, 240,//0
 			8  , 136,  72, 200,  40, 168, 104, 232,  24, 152,  88, 216,  56, 184, 120, 248,//16
@@ -933,10 +933,10 @@ namespace PractRand {
 			7  , 135,  71, 199,  39, 167, 103, 231,  23, 151,  87, 215,  55, 183, 119, 247,//96+128
 			15 , 143,  79, 207,  47, 175, 111, 239,  31, 159,  95, 223,  63, 191, 127, 255,//112+128
 		};
-		Uint8 reverse_bits8(Uint8 a) {return reverse_table[a];}
-		Uint16 reverse_bits16(Uint16 a) {return reverse_bits8 (a >>  8) + (Uint16(reverse_bits8 (Uint8 (a)))<<8);}
-		Uint32 reverse_bits32(Uint32 a) {return reverse_bits16(a >> 16) + (Uint32(reverse_bits16(Uint16(a)))<<16);}
-		Uint64 reverse_bits64(Uint64 a) {return reverse_bits32(a >> 32) + (Uint64(reverse_bits32(Uint32(a)))<<32);}
+		uint8_t reverse_bits8(uint8_t a) {return reverse_table[a];}
+		uint16_t reverse_bits16(uint16_t a) {return reverse_bits8 (a >>  8) + (uint16_t(reverse_bits8 (uint8_t (a)))<<8);}
+		uint32_t reverse_bits32(uint32_t a) {return reverse_bits16(a >> 16) + (uint32_t(reverse_bits16(uint16_t(a)))<<16);}
+		uint64_t reverse_bits64(uint64_t a) {return reverse_bits32(a >> 32) + (uint64_t(reverse_bits32(uint32_t(a)))<<32);}
 
 		/*static double integral_of_ln_x(double x) {
 			return x * (std::log(x) - 1);
@@ -946,7 +946,7 @@ namespace PractRand {
 			double avg2 = (integral_of_ln_x(1-min_x) - integral_of_ln_x(1-(min_x+delta_x))) / delta_x;
 			return -(avg1 + avg2);
 		}
-		double raw_test_edge_distribution( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
+		double raw_test_edge_distribution( unsigned long categories, const double *prob_table, const uint64_t *counts ) {
 			//  this is NOT actually used anywhere yet, though it's based upon code used in Test_calibration
 			double cum_prob1 = 0;
 			double cum_prob2 = 0;
@@ -964,7 +964,7 @@ namespace PractRand {
 				else if (cum_prob1 >= 0.5) return sum;
 			}
 		}
-		double test_edge_distribution( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
+		double test_edge_distribution( unsigned long categories, const double *prob_table, const uint64_t *counts ) {
 			//  this is NOT actually used anywhere yet, though it's based upon code used in Test_calibration
 			double raw = raw_test_edge_distribution(categories, prob_table, counts);
 			return raw;
@@ -1031,7 +1031,7 @@ namespace PractRand {
 
 			return rv;
 		}
-		double test_table_uniformity( unsigned long categories, [[maybe_unused]] const double* prob_table, const Uint64* counts ) {
+		double test_table_uniformity( unsigned long categories, [[maybe_unused]] const double* prob_table, const uint64_t* counts ) {
 			//long double prob_sum = 0;
 			long double total = 0;
 			for (unsigned long i = 0; i < categories; i++) total += counts[i];

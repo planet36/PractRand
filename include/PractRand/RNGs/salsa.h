@@ -12,34 +12,34 @@ namespace PractRand::RNGs {
 				static constexpr int OUTPUT_BITS = 32;
 				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::OUTPUT_IS_BUFFERED | FLAG::OUTPUT_IS_HASHED | FLAG::ENDIAN_SAFE | FLAG::CRYPTOGRAPHIC_SECURITY;
 			protected:
-				Uint32 outbuf[16]{};
-				Uint32 state[16]{};
-				Uint32 used{};
-				Uint32 position_overflow{};
-				Uint8 rounds{20};
+				uint32_t outbuf[16]{};
+				uint32_t state[16]{};
+				uint32_t used{};
+				uint32_t position_overflow{};
+				uint8_t rounds{20};
 				bool extend_cycle{};//true allows carries from the position field to overflow in to the upper word of the IV
-				Uint8 padding[1]{};//just to make the size a round number
+				uint8_t padding[1]{};//just to make the size a round number
 
 				void _advance_1();
 				//void _reverse_1();
-				void _set_position(Uint64 low, Uint64 high);
-				void _get_position(Uint64& low, Uint64& high) const;
+				void _set_position(uint64_t low, uint64_t high);
+				void _get_position(uint64_t& low, uint64_t& high) const;
 
 				void _core();
-				Uint32 _refill_and_raw32();
+				uint32_t _refill_and_raw32();
 			public:
 				salsa() = default;
 				~salsa();
-				Uint32 raw32() {
+				uint32_t raw32() {
 					if (used < 16) return outbuf[used++];
 					return _refill_and_raw32();
 				}
-				void seed(Uint64 s);
-				void seed( const Uint32 seed_and_iv[10], bool extend_cycle_ = false );
-				void seed_short( const Uint32 seed_and_iv[6], bool extend_cycle_ = false );
+				void seed(uint64_t s);
+				void seed( const uint32_t seed_and_iv[10], bool extend_cycle_ = false );
+				void seed_short( const uint32_t seed_and_iv[6], bool extend_cycle_ = false );
 				void walk_state(StateWalkingObject* walker);
-				void seek_forward (Uint64 how_far_low, Uint64 how_far_high);
-				void seek_backward(Uint64 how_far_low, Uint64 how_far_high);
+				void seek_forward (uint64_t how_far_low, uint64_t how_far_high);
+				void seek_backward(uint64_t how_far_low, uint64_t how_far_high);
 
 				//normally rounds is 8, 12, or 20, but it can be anywhere from 1 to 255
 				//the default is 20
@@ -57,12 +57,12 @@ namespace PractRand::RNGs {
 		namespace Polymorphic {
 			class salsa final : public vRNG32 {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(salsa)
-				explicit salsa(Uint32 seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
-				void seed(Uint64 s) override;
-				void seed(Uint32 seed_and_iv[10], bool extend_cycle_ = false);
-				void seed_short(Uint32 seed_and_iv[6], bool extend_cycle_ = false);
-				void seek_forward128 (Uint64 how_far_low64, Uint64 how_far_high64) override;
-				void seek_backward128(Uint64 how_far_low64, Uint64 how_far_high64) override;
+				explicit salsa(uint32_t seed_and_iv[10], bool extend_cycle_ = false) {seed(seed_and_iv, extend_cycle_);}
+				void seed(uint64_t s) override;
+				void seed(uint32_t seed_and_iv[10], bool extend_cycle_ = false);
+				void seed_short(uint32_t seed_and_iv[6], bool extend_cycle_ = false);
+				void seek_forward128 (uint64_t how_far_low64, uint64_t how_far_high64) override;
+				void seek_backward128(uint64_t how_far_low64, uint64_t how_far_high64) override;
 
 				//normally rounds is 8, 12, or 20, but lower and higher values are also possible
 				//default is 20

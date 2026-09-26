@@ -21,11 +21,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (shift_bits_ < 1 || shift_bits_ > discard_bits_) issue_error("bigbadlcg64 - shift_bits out of range (1 <= shift_bits <= discard_bits)");
 				}
 				//bigbadlcgX::~bigbadlcgX() { delete[] state; }
-				Uint64 bigbadlcg64X::raw64() {
-					static constexpr Uint64 K = 0xB5;//0xA3EC647659359ACDull;
-					Uint64 olda[MAX_N] = {0};
+				uint64_t bigbadlcg64X::raw64() {
+					static constexpr uint64_t K = 0xB5;//0xA3EC647659359ACDull;
+					uint64_t olda[MAX_N] = {0};
 					for (int i = 0; i < n; i++) olda[i] = state[i];
-					Uint64 rv = state[n - 1];
+					uint64_t rv = state[n - 1];
 					if (discard_bits & 63) {
 						int b = discard_bits & 63;
 						rv = (rv << (64 - b)) | (state[n - 2] >> b);
@@ -33,12 +33,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					bool carry = false;
 					if (shift_b) {
 						if constexpr (true) {
-							Uint64 old = olda[0] << shift_b;
+							uint64_t old = olda[0] << shift_b;
 							state[shift_i] += old;
 							carry = state[shift_i] < old;
 						}
 						for (int i = shift_i+1; i < n; i++) {
-							Uint64 old = (olda[i - shift_i] << shift_b) | (olda[i - shift_i - 1] >> (64 - shift_b));
+							uint64_t old = (olda[i - shift_i] << shift_b) | (olda[i - shift_i - 1] >> (64 - shift_b));
 							state[i] += old;
 							bool c1 = state[i] < old;
 							state[i] += carry ? 1 : 0;
@@ -48,12 +48,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					else {
 						if constexpr (true) {
-							Uint64 old = olda[0];
+							uint64_t old = olda[0];
 							state[shift_i] += old;
 							//bool carry = state[shift_i] < old;
 						}
 						for (int i = shift_i+1; i < n; i++) {
-							Uint64 old = olda[i - shift_i];
+							uint64_t old = olda[i - shift_i];
 							state[i] += old;
 							bool c1 = state[i] < old;
 							state[i] += carry ? 1 : 0;
@@ -77,7 +77,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (int i = 0; i < n; i++) walker->handle(state[i]);
 				}
 				bigbadlcg32X::bigbadlcg32X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint32 bigbadlcg32X::raw32() { return base_lcg.raw32(); }
+				uint32_t bigbadlcg32X::raw32() { return base_lcg.raw32(); }
 				std::string bigbadlcg32X::get_name() const {
 					std::ostringstream str;
 					str << "bigbadlcgX(32," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";
@@ -85,7 +85,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void bigbadlcg32X::walk_state(StateWalkingObject* walker) { base_lcg.walk_state(walker); }
 				bigbadlcg16X::bigbadlcg16X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint16 bigbadlcg16X::raw16() { return Uint16(base_lcg.raw64()); }
+				uint16_t bigbadlcg16X::raw16() { return uint16_t(base_lcg.raw64()); }
 				std::string bigbadlcg16X::get_name() const {
 					std::ostringstream str;
 					str << "bigbadlcgX(16," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";
@@ -93,7 +93,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void bigbadlcg16X::walk_state(StateWalkingObject* walker) { base_lcg.walk_state(walker); }
 				bigbadlcg8X::bigbadlcg8X(int discard_bits_, int shift_) : base_lcg(discard_bits_, shift_) {}
-				Uint8 bigbadlcg8X::raw8() { return Uint8(base_lcg.raw32()); }
+				uint8_t bigbadlcg8X::raw8() { return uint8_t(base_lcg.raw32()); }
 				std::string bigbadlcg8X::get_name() const {
 					std::ostringstream str;
 					str << "bigbadlcgX(8," << (base_lcg.discard_bits + OUTPUT_BITS) << "," << (base_lcg.shift_i * 64 + base_lcg.shift_b) << ")";
@@ -101,7 +101,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void bigbadlcg8X::walk_state(StateWalkingObject* walker) { base_lcg.walk_state(walker); }
 
-				Uint8 lfsr_medium::raw8() {
+				uint8_t lfsr_medium::raw8() {
 					if (used < SIZE) return cbuf[used++];
 					for (int i = 0; i < LAG; i++) {
 						cbuf[i] ^= cbuf[i+(SIZE-LAG)] ^ table1[cbuf[i+1]] ^ table2[cbuf[i+2]];
@@ -121,10 +121,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (used >= SIZE) used = 0;
 				}
 				lfsr_medium::lfsr_medium() {
-					Uint8 vartaps = 1+2;//255 - 16;
-					for (Uint32 i = 0; i < 256; i++) {
-						Uint8 low = 0;
-						Uint8 high = 0;
+					uint8_t vartaps = 1+2;//255 - 16;
+					for (uint32_t i = 0; i < 256; i++) {
+						uint8_t low = 0;
+						uint8_t high = 0;
 						for (int b = 0; b < 8; b++) {
 							if ((vartaps >> b) & 1) {
 								low ^= i >> b;
@@ -136,9 +136,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 				}
 
-				//Mitchell-Moore: LFib32(Uint32, 55, 24, ADD)
-				Uint32 mm32::raw32() {
-					Uint32 tmp = 0;
+				//Mitchell-Moore: LFib32(uint32_t, 55, 24, ADD)
+				uint32_t mm32::raw32() {
+					uint32_t tmp = 0;
 					tmp = cbuf[index1] += cbuf[index2];
 					if ( ++index1 == 55 ) index1 = 0;
 					if ( ++index2 == 55 ) index2 = 0;
@@ -152,9 +152,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index2 = index1 - 24;
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
 				}
-				//Mitchell-Moore modified: LFib16(Uint32, 55, 24, ADD) >> 16
-				Uint16 mm16of32::raw16() {
-					Uint32 tmp = 0;
+				//Mitchell-Moore modified: LFib16(uint32_t, 55, 24, ADD) >> 16
+				uint16_t mm16of32::raw16() {
+					uint32_t tmp = 0;
 					tmp = cbuf[index1] += cbuf[index2];
 					if ( ++index1 == 55 ) index1 = 0;
 					if ( ++index2 == 55 ) index2 = 0;
@@ -168,9 +168,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					index2 = index1 - 24;
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
 				}
-				//Mitchell-Moore modified: LFib32(Uint32, 55, 24, ADD) >> 16
-				Uint32 mm32_awc::raw32() {
-					Uint32 tmp1 = 0, tmp2 = 0, tmp3 = 0;
+				//Mitchell-Moore modified: LFib32(uint32_t, 55, 24, ADD) >> 16
+				uint32_t mm32_awc::raw32() {
+					uint32_t tmp1 = 0, tmp2 = 0, tmp3 = 0;
 					tmp1 = cbuf[index1];
 					tmp2 = cbuf[index2];
 					tmp3 = tmp1 + tmp2 + carry;
@@ -191,9 +191,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index2 >= 55) index2 += 55;//it's an unsigned value
 					carry &= 1;
 				}
-				//Mitchell-Moore modified: LFib32(Uint32, 55, 24, ADC) >> 16
-				Uint16 mm16of32_awc::raw16() {
-					Uint32 tmp1 = 0, tmp2 = 0, tmp3 = 0;
+				//Mitchell-Moore modified: LFib32(uint32_t, 55, 24, ADC) >> 16
+				uint16_t mm16of32_awc::raw16() {
+					uint32_t tmp1 = 0, tmp2 = 0, tmp3 = 0;
 					tmp1 = cbuf[index1];
 					tmp2 = cbuf[index2];
 					tmp3 = tmp1 + tmp2 + carry;
@@ -202,7 +202,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if ((tmp3 == tmp1) && tmp2) carry = 1;
 					if (++index1 == 55) index1 = 0;
 					if (++index2 == 55) index2 = 0;
-					return Uint16(tmp3);
+					return uint16_t(tmp3);
 				}
 				std::string mm16of32_awc::get_name() const { return "mm16of32_awc"; }
 				void mm16of32_awc::walk_state(StateWalkingObject* walker) {
@@ -216,9 +216,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				//used by Marsaglia in KISS4691 (2010)
-				Uint32 mwc4691::raw32() {
+				uint32_t mwc4691::raw32() {
 					index = (index < 4691-1) ? index + 1 : 0;
-					Uint32 x = 0, t = 0;
+					uint32_t x = 0, t = 0;
 					x = cbuf[index];
 					t = (x << 13) + carry + x;
 					carry = (x>>19) + (t<=x);
@@ -234,8 +234,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				//
-				Uint32 cbuf_accum::raw32() {
-					Uint32 tmp = cbuf[--index];
+				uint32_t cbuf_accum::raw32() {
+					uint32_t tmp = cbuf[--index];
 					accum = ((accum << 11) | (accum >> 21)) + ~tmp;
 					cbuf[index] = accum;
 					if (!index) index = L;
@@ -249,8 +249,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
-				Uint32 cbuf_accum_big::raw32() {
-					Uint32 tmp = cbuf[--index];
+				uint32_t cbuf_accum_big::raw32() {
+					uint32_t tmp = cbuf[--index];
 					accum = ((accum << 11) | (accum >> 21)) + ~tmp;
 					cbuf[index] = accum;
 					if (!index) index = L;
@@ -264,8 +264,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
-				Uint32 cbuf_2accum_small::raw32() {
-					Uint32 tmp = cbuf[--index] + accum2;
+				uint32_t cbuf_2accum_small::raw32() {
+					uint32_t tmp = cbuf[--index] + accum2;
 					accum2 += accum1;
 					constexpr int SHIFT = 11;// 3,11 for small, 12,11 for medium
 					accum1 = std::rotl(accum1, SHIFT) ^ tmp;
@@ -289,8 +289,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
-				Uint32 cbuf_2accum::raw32() {
-					Uint32 tmp = cbuf[--index] + accum2;
+				uint32_t cbuf_2accum::raw32() {
+					uint32_t tmp = cbuf[--index] + accum2;
 					accum2 += accum1;
 					accum1 = ((accum1 << 11) | (accum1 >> 21)) ^ tmp;
 					cbuf[index] = accum2;
@@ -306,8 +306,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index >= L) index %= L;
 					if (!index) index = L;
 				}
-				Uint32 dual_cbuf_small::raw32() {
-					Uint32 tmp1 = 0, tmp2 = 0;
+				uint32_t dual_cbuf_small::raw32() {
+					uint32_t tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					cbuf1[index1] = tmp1 + tmp2;
@@ -327,8 +327,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index2 > L2) index2 %= L2;
 					if (!index2) index2 = L2;
 				}
-				Uint32 dual_cbuf::raw32() {
-					Uint32 tmp1 = 0, tmp2 = 0;
+				uint32_t dual_cbuf::raw32() {
+					uint32_t tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					cbuf1[index1] = tmp1 + tmp2;
@@ -348,8 +348,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (index2 > L2) index2 %= L2;
 					if (!index2) index2 = L2;
 				}
-				Uint32 dual_cbufa_small::raw32() {
-					Uint32 tmp1 = 0, tmp2 = 0;
+				uint32_t dual_cbufa_small::raw32() {
+					uint32_t tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					accum = ((accum << 11) | (accum >> 21)) + tmp1;
@@ -371,8 +371,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if ( !index1 ) index1 = L1;
 					if ( !index2 ) index2 = L2;
 				}
-				Uint32 dual_cbuf_accum::raw32() {
-					Uint32 tmp1 = 0, tmp2 = 0;
+				uint32_t dual_cbuf_accum::raw32() {
+					uint32_t tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					accum = ((accum << 11) | (accum >> 21)) + tmp1;
@@ -397,7 +397,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 
-				Uint32 ranrot32small::raw32() {
+				uint32_t ranrot32small::raw32() {
 					if (position) return buffer[--position];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] =
@@ -418,7 +418,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot32::raw32() {
+				uint32_t ranrot32::raw32() {
 					if (position) return buffer[--position];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] =
@@ -439,7 +439,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot32big::raw32() {
+				uint32_t ranrot32big::raw32() {
 					if (position) return buffer[--position];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] =
@@ -460,12 +460,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot3tap32small::func(Uint32 a, Uint32 b, Uint32 c) {
+				uint32_t ranrot3tap32small::func(uint32_t a, uint32_t b, uint32_t c) {
 					return std::rotl(a, ROT1) + std::rotl(b, ROT2) + std::rotl(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
 				}
-				Uint32 ranrot3tap32small::raw32() {
+				uint32_t ranrot3tap32small::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					uint32_t old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
@@ -481,12 +481,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot3tap32::func(Uint32 a, Uint32 b, Uint32 c) {
+				uint32_t ranrot3tap32::func(uint32_t a, uint32_t b, uint32_t c) {
 					return std::rotl(a, ROT1) + std::rotl(b, ROT2) + std::rotl(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
 				}
-				Uint32 ranrot3tap32::raw32() {
+				uint32_t ranrot3tap32::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					uint32_t old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
@@ -502,12 +502,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot3tap32big::func(Uint32 a, Uint32 b, Uint32 c) {
+				uint32_t ranrot3tap32big::func(uint32_t a, uint32_t b, uint32_t c) {
 					return std::rotl(a, ROT1) + std::rotl(b, ROT2) + std::rotl(c, ROT3);//30 @ 7/5, 36 @ 11/7, 36 @ 17/9
 				}
-				Uint32 ranrot3tap32big::raw32() {
+				uint32_t ranrot3tap32big::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					uint32_t old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
@@ -523,13 +523,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot32hetsmall::func(Uint32 a, Uint32 b, Uint32 c) {
+				uint32_t ranrot32hetsmall::func(uint32_t a, uint32_t b, uint32_t c) {
 					a = std::rotl(a, ROT1); b = std::rotl(b, ROT2); c = std::rotl(c, ROT3);
 					return (a + b) ^ c;
 				}
-				Uint32 ranrot32hetsmall::raw32() {
+				uint32_t ranrot32hetsmall::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					uint32_t old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
@@ -545,13 +545,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot32het::func(Uint32 a, Uint32 b, Uint32 c) {
+				uint32_t ranrot32het::func(uint32_t a, uint32_t b, uint32_t c) {
 					a = std::rotl(a, ROT1); b = std::rotl(b, ROT2); c = std::rotl(c, ROT3);
 					return (a + b) ^ c;
 				}
-				Uint32 ranrot32het::raw32() {
+				uint32_t ranrot32het::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					uint32_t old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
@@ -567,13 +567,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (auto& i : buffer) walker->handle(i);
 					if (position >= LAG1) position %= LAG1;
 				}
-				Uint32 ranrot32hetbig::func(Uint32 a, Uint32 b, Uint32 c) {
+				uint32_t ranrot32hetbig::func(uint32_t a, uint32_t b, uint32_t c) {
 					a = std::rotl(a, ROT1); b = std::rotl(b, ROT2); c = std::rotl(c, ROT3);
 					return (a + b) ^ c;
 				}
-				Uint32 ranrot32hetbig::raw32() {
+				uint32_t ranrot32hetbig::raw32() {
 					if (position) return buffer[--position];
-					Uint32 old = buffer[LAG1 - 1];
+					uint32_t old = buffer[LAG1 - 1];
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = old = func(buffer[i + LAG1 - LAG1], buffer[i + LAG1 - LAG2], old);
 					}
@@ -590,8 +590,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 				}
 
-				Uint16 fibmul16of32::raw16() {
-					if (position) return Uint16(buffer[--position] >> 16);
+				uint16_t fibmul16of32::raw16() {
+					if (position) return uint16_t(buffer[--position] >> 16);
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = buffer[i+LAG1-LAG1] * buffer[i+LAG1-LAG2];
 					}
@@ -599,7 +599,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						buffer[i] = buffer[i] * buffer[i-LAG2];
 					}
 					position = LAG1;
-					return Uint16(buffer[--position] >> 16);
+					return uint16_t(buffer[--position] >> 16);
 				}
 				std::string fibmul16of32::get_name() const {return "fibmul16of32";}
 				void fibmul16of32::walk_state(StateWalkingObject* walker) {
@@ -608,8 +608,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 					for (auto& i : buffer) i |= 1;
 				}
-				Uint32 fibmul32of64::raw32() {
-					if (position) return Uint32(buffer[--position]);
+				uint32_t fibmul32of64::raw32() {
+					if (position) return uint32_t(buffer[--position]);
 					for (unsigned long i = 0; i < LAG2; i++) {
 						buffer[i] = buffer[i+LAG1-LAG1] * buffer[i+LAG1-LAG2];
 					}
@@ -617,7 +617,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						buffer[i] = buffer[i] * buffer[i-LAG2];
 					}
 					position = LAG1;
-					return Uint32(buffer[--position]);
+					return uint32_t(buffer[--position]);
 				}
 				std::string fibmul32of64::get_name() const {return "fibmul32of64";}
 				void fibmul32of64::walk_state(StateWalkingObject* walker) {
@@ -626,21 +626,21 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (position >= LAG1) position %= LAG1;
 					for (auto& i : buffer) i |= 1;
 				}
-				Uint16 fibmulmix16::raw16() {
+				uint16_t fibmulmix16::raw16() {
 					if (position) return buffer[--position];
-					Uint16 prev = buffer[LAG1 - 1];
+					uint16_t prev = buffer[LAG1 - 1];
 					constexpr int SH1  = 0;
 					constexpr int SH2 = 0;
 					constexpr int SH3 = 5;
 					for (unsigned long i = 0; i < LAG2; i++) {
-						Uint16 a = buffer[i + LAG1 - LAG1];
-						Uint16 b = buffer[i + LAG1 - LAG2];
+						uint16_t a = buffer[i + LAG1 - LAG1];
+						uint16_t b = buffer[i + LAG1 - LAG2];
 						a = std::rotl(a, SH1); b = std::rotl(b, SH2); prev += std::rotl(prev, SH3);
 						prev = buffer[i] = (a * (b | 1)) ^ prev;
 					}
 					for (unsigned long i = LAG2; i < LAG1; i++) {
-						Uint16 a = buffer[i];
-						Uint16 b = buffer[i - LAG2];
+						uint16_t a = buffer[i];
+						uint16_t b = buffer[i - LAG2];
 						a = std::rotl(a, SH1); b = std::rotl(b, SH2); prev += std::rotl(prev, SH3);
 						prev = buffer[i] = (a * (b | 1)) ^ prev;
 					}
@@ -655,7 +655,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 
-				Uint32 mt19937_unhashed::raw32() {
+				uint32_t mt19937_unhashed::raw32() {
 					return implementation.untempered_raw32();
 				}
 				std::string mt19937_unhashed::get_name() const {return "mt19937_unhashed";}

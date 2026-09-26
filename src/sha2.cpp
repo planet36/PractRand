@@ -7,14 +7,14 @@
 namespace PractRand::Crypto {
 		class SHA2_512_constants {
 		public:
-			using Word = Uint64;
+			using Word = uint64_t;
 			static constexpr int ROUNDS = 80;
 			static constexpr int INPUT_WORDS = 16;
 			static constexpr int OUTPUT_WORDS = 8;
 			static constexpr int INPUT_SIZE = INPUT_WORDS * sizeof(Word);
 			static constexpr bool REVERSE_ENDIANNESS = std::endian::native == std::endian::little;
 			static constexpr int WORD_BITS = 8 * sizeof(Word);
-			static constexpr Uint64 round_constants[ROUNDS] = {
+			static constexpr uint64_t round_constants[ROUNDS] = {
 			0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL, 0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL, 0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL,
 			0xd807aa98a3030242ULL, 0x12835b0145706fbeULL, 0x243185be4ee4b28cULL, 0x550c7dc3d5ffb4e2ULL, 0x72be5d74f27b896fULL, 0x80deb1fe3b1696b1ULL, 0x9bdc06a725c71235ULL, 0xc19bf174cf692694ULL,
 			0xe49b69c19ef14ad2ULL, 0xefbe4786384f25e3ULL, 0x0fc19dc68b8cd5b5ULL, 0x240ca1cc77ac9c65ULL, 0x2de92c6f592b0275ULL, 0x4a7484aa6ea6e483ULL, 0x5cb0a9dcbd41fbd4ULL, 0x76f988da831153b5ULL,
@@ -26,7 +26,7 @@ namespace PractRand::Crypto {
 			0xca273eceea26619cULL, 0xd186b8c721c0c207ULL, 0xeada7dd6cde0eb1eULL, 0xf57d4f7fee6ed178ULL, 0x06f067aa72176fbaULL, 0x0a637dc5a2c898a6ULL, 0x113f9804bef90daeULL, 0x1b710b35131c471bULL,
 			0x28db77f523047d84ULL, 0x32caab7b40c72493ULL, 0x3c9ebe0a15c9bebcULL, 0x431d67c49c100d4cULL, 0x4cc5d4becb3e42b6ULL, 0x597f299cfc657e2aULL, 0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL
 		};
-			static constexpr Uint64 initial_values[8] = {
+			static constexpr uint64_t initial_values[8] = {
 			0x6a09e667f3bcc908ULL, 0xbb67ae8584caa73bULL,
 			0x3c6ef372fe94f82bULL, 0xa54ff53a5f1d36f1ULL,
 			0x510e527fade682d1ULL, 0x9b05688c2b3e6c1fULL,
@@ -179,7 +179,7 @@ namespace PractRand::Crypto {
 				}
 			}
 		}
-		void SHA2_512::handle_input ( const Uint8* input, unsigned long input_length ) {
+		void SHA2_512::handle_input ( const uint8_t* input, unsigned long input_length ) {
 			using Constants = SHA2_512_constants;
 			unsigned long input_left = input_length;
 			length += input_length;
@@ -218,7 +218,7 @@ namespace PractRand::Crypto {
 				std::memset(input_buffer.as_byte, 0, Constants::INPUT_SIZE - EXTRAS + 1);
 			}
 			input_buffer.as_word[Constants::INPUT_WORDS-1] = endianness_word(length << 3);
-			if constexpr (sizeof(Word) < sizeof(Uint64)) {
+			if constexpr (sizeof(Word) < sizeof(uint64_t)) {
 				input_buffer.as_word[Constants::INPUT_WORDS-2] =
 					endianness_word(length>>(sizeof(Word)*8-3));
 			}
@@ -226,7 +226,7 @@ namespace PractRand::Crypto {
 			endianness_input();
 			process_block();
 		}
-		void SHA2_512::finish (Uint8 destination[SHA2_512::RESULT_LENGTH]) {
+		void SHA2_512::finish (uint8_t destination[SHA2_512::RESULT_LENGTH]) {
 			//typedef SHA2_512_constants Constants;
 			process_final_block();
 			endianness_state();

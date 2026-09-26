@@ -8,7 +8,7 @@ namespace PractRand::Tests {
 		protected:
 			static constexpr int LEVELS = 8;
 			long overlap, tbits, mask;
-			VariableSizeCount<Uint16> counts[LEVELS];
+			VariableSizeCount<uint16_t> counts[LEVELS];
 			long current[LEVELS];
 			long warmup[LEVELS];
 		public:
@@ -24,11 +24,11 @@ namespace PractRand::Tests {
 			static constexpr int INDEX_SIZE = 1 << INDEX_SIZE_L2;
 			static constexpr int TOTAL = THRESHOLDS * LEVELS;
 
-			VariableSizeCount<Uint16> counts[TOTAL];
+			VariableSizeCount<uint16_t> counts[TOTAL];
 			long cur[TOTAL];
 			long warmup[TOTAL];
 
-			Uint8 threshold_lookup[LEVELS * INDEX_SIZE];
+			uint8_t threshold_lookup[LEVELS * INDEX_SIZE];
 			long bitcount_shift[LEVELS];
 
 			long mask;
@@ -38,19 +38,19 @@ namespace PractRand::Tests {
 			//long total[TOTAL];
 			long tbits;
 			long unitsL2;
-			//Uint64 blocks;
+			//uint64_t blocks;
 		public:
 			BCFN_MT(int unitsL2_ = 0, int tbits_ = 7);
 			virtual void init( PractRand::RNGs::vRNG *known_good );
 			virtual void deinit( );
 			virtual std::string get_name() const;
 			//virtual double get_result();
-			//virtual double result_to_pvalue ( Uint64 blocks, double r );
+			//virtual double result_to_pvalue ( uint64_t blocks, double r );
 			virtual void get_results ( std::vector<TestResult> &results );
 
 			virtual void test_blocks(TestBlock *data, int numblocks);
 			//void handle_high_levels ( int level, int bits );
-			static int sign(int value) {return ((Uint32(value)) >> 31) & 1;}
+			static int sign(int value) {return ((uint32_t(value)) >> 31) & 1;}
 			void handle_high_levels(int level, int bits ) {
 				if (bits) {
 					int adjusted_bits = abs(bits) >> bitcount_shift[level];

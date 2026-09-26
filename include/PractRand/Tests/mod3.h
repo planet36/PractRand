@@ -16,7 +16,7 @@ namespace PractRand::Tests {
 
 			void test_blocks(TestBlock* data, int numblocks) override;
 		protected:
-			using Word = Uint32;
+			using Word = uint32_t;
 			static constexpr int WORD_BITS = 8 * sizeof(Word);
 			static constexpr int EXP = 11;//the number of words used in an overlapping sample; 9 matches what gjrand does, but I think 10 is good given cache sizes
 			static constexpr int K = ((EXP & 1) ? 3 : 1) * ((EXP & 2) ? 9 : 1) * ((EXP & 4) ? 81 : 1) * ((EXP & 8) ? 6561 : 1);
@@ -24,7 +24,7 @@ namespace PractRand::Tests {
 			static constexpr int KRNDUPB = (KRNDUPA | (KRNDUPA >> 8) | (KRNDUPA >> 16) | (KRNDUPA >> 24)) + 1;
 			static constexpr int BITS = int(1.5849625007211561814537389439478 * EXP + 1);
 			static constexpr int P2 = 1 << BITS;
-			FixedSizeCount<Uint8, P2> counts;
+			FixedSizeCount<uint8_t, P2> counts;
 			unsigned long index;
 			void update_index(Word value);
 		};
@@ -39,8 +39,8 @@ namespace PractRand::Tests {
 		protected:
 			int block_fraction;
 			int block_scale{};
-			Sint64 block_phase{};
-			Sint64 total_blocks_on{};
+			int64_t block_phase{};
+			int64_t total_blocks_on{};
 			static constexpr int EXP = 9;//the number of words used in an overlapping sample; 9 matches what gjrand does, I'd like 10 but in the leveled version with all the extra cache used it may not be worth it
 			static constexpr int K = ((EXP & 1) ? 3 : 1) * ((EXP & 2) ? 9 : 1) * ((EXP & 4) ? 81 : 1) * ((EXP & 8) ? 6561 : 1);
 			static constexpr int KRNDUPA = K | (K >> 1) | (K >> 2) | (K >> 3) | (K >> 4) | (K >> 5) | (K >> 6) | (K >> 7);
@@ -51,13 +51,13 @@ namespace PractRand::Tests {
 			static constexpr bool PACKED_INDEX = true;
 			struct PerLevel {
 				unsigned long index{};
-				Uint8 remainder{};
-				Uint8 warmup{};
+				uint8_t remainder{};
+				uint8_t warmup{};
 				bool odd{};
-				FixedSizeCount<Uint16, PACKED_INDEX ? K : P2> counts;
+				FixedSizeCount<uint16_t, PACKED_INDEX ? K : P2> counts;
 			};
 			PerLevel levels[LEVELS];
-			static unsigned long update_index(unsigned long index, Uint8 remainder);
-			void handle_level(int level, Uint8 remainder);
+			static unsigned long update_index(unsigned long index, uint8_t remainder);
+			void handle_level(int level, uint8_t remainder);
 		};
 }//PractRand

@@ -71,27 +71,27 @@ Deliberately flawed, though still better than many platforms default RNGs
 class DummyRNG : public PractRand::RNGs::vRNG16 {
 public:
 	//declare state
-	//Uint16 s1, s2, s3, s4;
+	//uint16_t s1, s2, s3, s4;
 	PractRand::RNGs::Polymorphic::NotRecommended::lcg16of64_varqual rng1;
 	PractRand::RNGs::Polymorphic::NotRecommended::simpleB rng2;
 	//and any helper methods you want:
-	static Uint16 ddRot16(Uint16 value) { return std::rotr(value, (value >> (16 - 3)) << 1); }
-	static Uint32 ddRot32(Uint32 value) { return std::rotr(value, (value >> (32 - 3)) << 2); }
-	static Uint64 ddRot64(Uint64 value) { return std::rotr(value, (value >> (64 - 4)) << 2); }
+	static uint16_t ddRot16(uint16_t value) { return std::rotr(value, (value >> (16 - 3)) << 1); }
+	static uint32_t ddRot32(uint32_t value) { return std::rotr(value, (value >> (32 - 3)) << 2); }
+	static uint64_t ddRot64(uint64_t value) { return std::rotr(value, (value >> (64 - 4)) << 2); }
 	//constructor, if necessary
 	DummyRNG() : rng1(8) {}
 	//implement algorithm
-	Uint16 raw16() override {
-		Uint16 v1 = rng1.raw16();
-		Uint16 v2 = rng2.raw16();
-		Uint16 x = v1 ^ v2;
+	uint16_t raw16() override {
+		uint16_t v1 = rng1.raw16();
+		uint16_t v2 = rng2.raw16();
+		uint16_t x = v1 ^ v2;
 		return x;
-		//Uint16 old = s4;
+		//uint16_t old = s4;
 		//s4 += s3; s3 += s2; s2 += s1; s1 += s4;
 		//s4 = s3; s3 = s2; s2 = s1; s1 += old;
-		//Uint16 a = ddRot16(s1) - s2;
-		//Uint16 b = ddRot16(s3) - s4;
-		//Uint16 c = ddRot16(s2) - ddRot16(s4);
+		//uint16_t a = ddRot16(s1) - s2;
+		//uint16_t b = ddRot16(s3) - s4;
+		//uint16_t c = ddRot16(s2) - ddRot16(s4);
 		//return ddRot16((s1 + s3) * 1) + ((s2 * 9) ^ std::rotl(s2 * 9, 5)) + (s4 * 3);
 		//return (a & b) | (c & ~a);
 		//return (a & b) | (b & c) | (a & c);
@@ -112,7 +112,7 @@ public:
 	//seeding from integers
 	//not actually necessary, in the absence of such a method a default seeding-from-integer path will use walk_state to randomize the member variables
 	//note that a separate path exists for seeding-from-another-PRNG
-	void seed(Uint64 sv) override {
+	void seed(uint64_t sv) override {
 		rng1.seed(sv);
 		rng2.seed(sv);
 //		s1 = s2 = s3 = s4 = sv;
@@ -279,7 +279,7 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 
 const char* seed_str = nullptr;
 
-void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
+void show_checkpoint(TestManager* tman, int mode, uint64_t seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
 	std::print("rng={}", tman->get_rng()->get_name());
 
 	std::print(", seed=");
@@ -294,14 +294,14 @@ void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool
 	std::println("");
 
 	std::print("length= ");
-	Uint64 length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
+	uint64_t length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
 	double log2b = std::log(double(length)) / std::numbers::ln2;
 	const char* unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
 	int units = int(std::floor(log2b / 10)) - 1;
 	if (units < 0 || units > 5) {std::println("internal error: length out of bounds?");std::exit(1);}
 	if (length & (length-1))
 		std::print("{:.3f} {}s", length * std::pow(0.5,units*10.0+10), unitstr[units] );
-	else std::print("{:.0f} {}{}", length * std::pow(0.5,units*10.0+10), unitstr[units], length != (Uint64(1024)<<(units*10)) ? "s" : "" );
+	else std::print("{:.0f} {}{}", length * std::pow(0.5,units*10.0+10), unitstr[units], length != (uint64_t(1024)<<(units*10)) ? "s" : "" );
 	if (length & (length-1)) std::print(" (2^{:.3f}", log2b - (mode?3:0)); else std::print(" (2^{:.0f}", log2b - (mode?3:0));
 	const char* mode_unit_names[3] = {"bytes", "seeds", "entropy strings"};
 	std::print(" {}), time= ", mode_unit_names[mode]);
@@ -424,7 +424,7 @@ double interpret_length(const std::string& lengthstr, bool normal_mode) {
 	if (pos != lengthstr.size()) return 0;
 	return value * scale;
 }
-bool interpret_seed(const std::string& seedstr, Uint64& seed) {
+bool interpret_seed(const std::string& seedstr, uint64_t& seed) {
 	const char* first = seedstr.data();
 	const char* last = first + seedstr.size();
 	if (seedstr.starts_with("0x")) first += 2;
@@ -744,7 +744,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	constexpr int TL_MAX = 2;
 	constexpr int TL_SHOW = 3;
 	std::map<double,int> show_times;
-	std::map<Uint64,int> show_datas;
+	std::map<uint64_t,int> show_datas;
 	double show_min = -2.0;
 	double show_max = 1ULL << 45;
 	//walking parameters a second time to force the mode to be known prior to finding the test lengths
@@ -768,20 +768,20 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			double length = interpret_length(argv[++i], !mode);
 			if (!length) {std::println("invalid test length: {}", argv[i]);std::exit(0);}
 			if (length < 0) show_times[-length] = TL_SHOW;
-			else show_datas[Uint64(length) / Tests::TestBlock::SIZE] = TL_SHOW;
+			else show_datas[uint64_t(length) / Tests::TestBlock::SIZE] = TL_SHOW;
 		}
 	}
 	if (show_min < 0) show_times[-show_min] = TL_MIN;
-	else show_datas[Uint64(show_min) / Tests::TestBlock::SIZE] = TL_MIN;
+	else show_datas[uint64_t(show_min) / Tests::TestBlock::SIZE] = TL_MIN;
 	if (show_max < 0) show_times[-show_max] = TL_MAX;
-	else show_datas[Uint64(show_max) / Tests::TestBlock::SIZE] = TL_MAX;
+	else show_datas[uint64_t(show_max) / Tests::TestBlock::SIZE] = TL_MAX;
 
 	if (do_self_test) PractRand::self_test_PractRand();
 
 
 	const auto start_time = std::chrono::steady_clock::now();
 
-	Uint64 seed = known_good.raw32();//64 bit space, as that's what the interface accepts, but 32 bit random value so that by default it's not too onerous to record/compare/whatever the value by hand
+	uint64_t seed = known_good.raw32();//64 bit space, as that's what the interface accepts, but 32 bit random value so that by default it's not too onerous to record/compare/whatever the value by hand
 	if (seed_str && !(rng->get_flags() & PractRand::RNGs::FLAG::SEEDING_UNSUPPORTED)) {
 		if (!interpret_seed(seed_str, seed)) {
 			std::println("\"{}\" is not a valid 64 bit hexadecimal seed", seed_str);
@@ -808,25 +808,25 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			std::exit(0);
 		}
 		rng->reset_entropy();
-		Uint64 a = rng->raw64();
+		uint64_t a = rng->raw64();
 		rng->reset_entropy();
-		Uint64 b = rng->raw64();
+		uint64_t b = rng->raw64();
 		if (a != b) {
 			std::println("entropy pooling RNG \"{}\" failed basic check 1.\naborting", rng->get_name());
 			std::exit(0);
 		}
-		Uint64 s64 = known_good.raw64();
+		uint64_t s64 = known_good.raw64();
 		rng->reset_entropy();
 		rng->add_entropy64(s64);
-		Uint64 c1 = rng->raw64();
-		Uint64 c2 = rng->raw64();
+		uint64_t c1 = rng->raw64();
+		uint64_t c2 = rng->raw64();
 		rng->reset_entropy();
 		rng->add_entropy64(s64);
-		Uint64 d = rng->raw64();
+		uint64_t d = rng->raw64();
 		rng->reset_entropy();
 		rng->add_entropy64(s64+1);
-		Uint64 e1 = rng->raw64();
-		Uint64 e2 = rng->raw64();
+		uint64_t e1 = rng->raw64();
+		uint64_t e2 = rng->raw64();
 		if (c1 != d) {
 			std::println("entropy pooling RNG \"{}\" failed basic check 2.\naborting", rng->get_name());
 			std::exit(0);
@@ -882,17 +882,17 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 #endif
 	tman->reset(testing_rng);
 
-	Uint64 blocks_tested = 0;
+	uint64_t blocks_tested = 0;
 	bool already_shown = false;
-	Uint64 next_power_of_2 = 1;
+	uint64_t next_power_of_2 = 1;
 	bool showing_powers_of_2 = false;
 	double time_passed = 0;
 	while (true) {
-		Uint64 blocks_to_test = next_power_of_2 - blocks_tested;
+		uint64_t blocks_to_test = next_power_of_2 - blocks_tested;
 		constexpr int MAX_BLOCKS = 256 * 1024;
 		if (blocks_to_test > MAX_BLOCKS) blocks_to_test = MAX_BLOCKS;
 		while (!show_datas.empty()) {
-			Uint64 data_checkpoint = show_datas.begin()->first - blocks_tested;
+			uint64_t data_checkpoint = show_datas.begin()->first - blocks_tested;
 			if (data_checkpoint) {
 				if (data_checkpoint < blocks_to_test) blocks_to_test = data_checkpoint;
 				break;

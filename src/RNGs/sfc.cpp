@@ -13,40 +13,40 @@ using namespace PractRand::Internals;
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(sfc64)
-void PractRand::RNGs::Polymorphic::sfc64::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::sfc64::seed_fast(Uint64 s) {implementation.seed_fast(s);}
-void PractRand::RNGs::Polymorphic::sfc64::seed(Uint64 s1, Uint64 s2, Uint64 s3) {implementation.seed(s1,s2,s3);}
+void PractRand::RNGs::Polymorphic::sfc64::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::sfc64::seed_fast(uint64_t s) {implementation.seed_fast(s);}
+void PractRand::RNGs::Polymorphic::sfc64::seed(uint64_t s1, uint64_t s2, uint64_t s3) {implementation.seed(s1,s2,s3);}
 std::string PractRand::RNGs::Polymorphic::sfc64::get_name() const {return "sfc64";}
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(sfc32)
-void PractRand::RNGs::Polymorphic::sfc32::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::sfc32::seed_fast(Uint64 s) {implementation.seed_fast(s);}
-void PractRand::RNGs::Polymorphic::sfc32::seed(Uint32 s1, Uint32 s2, Uint32 s3) {implementation.seed(s1,s2,s3);}
+void PractRand::RNGs::Polymorphic::sfc32::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::sfc32::seed_fast(uint64_t s) {implementation.seed_fast(s);}
+void PractRand::RNGs::Polymorphic::sfc32::seed(uint32_t s1, uint32_t s2, uint32_t s3) {implementation.seed(s1,s2,s3);}
 std::string PractRand::RNGs::Polymorphic::sfc32::get_name() const {return "sfc32";}
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(sfc16)
-void PractRand::RNGs::Polymorphic::sfc16::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::sfc16::seed_fast(Uint64 s) {implementation.seed_fast(s);}
-void PractRand::RNGs::Polymorphic::sfc16::seed(Uint16 s1, Uint16 s2, Uint16 s3) {implementation.seed(s1,s2,s3);}
+void PractRand::RNGs::Polymorphic::sfc16::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::sfc16::seed_fast(uint64_t s) {implementation.seed_fast(s);}
+void PractRand::RNGs::Polymorphic::sfc16::seed(uint16_t s1, uint16_t s2, uint16_t s3) {implementation.seed(s1,s2,s3);}
 std::string PractRand::RNGs::Polymorphic::sfc16::get_name() const {return "sfc16";}
 
 //raw:
-Uint16 PractRand::RNGs::Raw::sfc16::raw16() {
+uint16_t PractRand::RNGs::Raw::sfc16::raw16() {
 	//good sets include {4,3,2},{6,5,2},{4,5,3},{6,5,3},{7,5,3}; older versions used {7,3,2}
 	constexpr int BARREL_SHIFT = 6;
 	constexpr int RSHIFT = 5;
 	constexpr int LSHIFT = 3;
-	Uint16 tmp = a + b + counter++;//49 / 8:30+ / 7:35 / 6:27 / 5:17
+	uint16_t tmp = a + b + counter++;//49 / 8:30+ / 7:35 / 6:27 / 5:17
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
 	c = std::rotl(c, BARREL_SHIFT) + tmp;
 	return tmp;
 }
-void PractRand::RNGs::Raw::sfc16::seed(Uint64 s) {
-	a = Uint16(s);
-	b = Uint16(s >> 16);
-	c = Uint16(s >> 32);
-	counter = Uint16(s >> 48);
+void PractRand::RNGs::Raw::sfc16::seed(uint64_t s) {
+	a = uint16_t(s);
+	b = uint16_t(s >> 16);
+	c = uint16_t(s >> 32);
+	counter = uint16_t(s >> 48);
 	for (int i = 0; i < 10; i++) raw16();//10
 /*
 _				e0f0	e0f1	e0f2		e1f0	e1f1	e1f2	732	632	532	432	332	832	932	A32	433	633	343	443	543	643	743	843	943	242	342	442	542	642	742	842	942	344	544	644	744	252	352	452	552	652	752	852	952	253	353	453	553	653	753	853	953
@@ -59,14 +59,14 @@ _																	78	86	79	92?										86																				94?								95+			.
 _		8/10/10
 */
 }
-void PractRand::RNGs::Raw::sfc16::seed_fast(Uint64 s) {
-	a = Uint16(s);
-	b = Uint16(s >> 16);
-	c = Uint16(s >> 32);
-	counter = Uint16(s >> 48);
+void PractRand::RNGs::Raw::sfc16::seed_fast(uint64_t s) {
+	a = uint16_t(s);
+	b = uint16_t(s >> 16);
+	c = uint16_t(s >> 32);
+	counter = uint16_t(s >> 48);
 	for (int i = 0; i < 8; i++) raw16();
 }
-void PractRand::RNGs::Raw::sfc16::seed(Uint16 s1, Uint16 s2, Uint16 s3) {
+void PractRand::RNGs::Raw::sfc16::seed(uint16_t s1, uint16_t s2, uint16_t s3) {
 	a = s1;
 	b = s2;
 	c = s3;
@@ -79,32 +79,32 @@ void PractRand::RNGs::Raw::sfc16::walk_state(StateWalkingObject* walker) {
 	walker->handle(c);
 	walker->handle(counter);
 }
-Uint32 PractRand::RNGs::Raw::sfc32::raw32() {
+uint32_t PractRand::RNGs::Raw::sfc32::raw32() {
 	//good sets include {21,9,3},{15,8,3}; older versions used {25,8,3} which wasn't as good
 	constexpr int BARREL_SHIFT = 21;
 	constexpr int RSHIFT = 9;
 	constexpr int LSHIFT = 3;
-	Uint32 tmp = a + b + counter++;
+	uint32_t tmp = a + b + counter++;
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
 	c = std::rotl(c, BARREL_SHIFT) + tmp;
 	return tmp;
 }
-void PractRand::RNGs::Raw::sfc32::seed(Uint64 s) {
+void PractRand::RNGs::Raw::sfc32::seed(uint64_t s) {
 	a = 0;//a gets mixed in the slowest
-	b = Uint32(s >> 0);
-	c = Uint32(s >> 32);
+	b = uint32_t(s >> 0);
+	c = uint32_t(s >> 32);
 	counter = 1;
 	for (int i = 0; i < 12; i++) raw32();//12
 }
-void PractRand::RNGs::Raw::sfc32::seed_fast(Uint64 s) {
+void PractRand::RNGs::Raw::sfc32::seed_fast(uint64_t s) {
 	a = 0;
-	b = Uint32(s >> 0);
-	c = Uint32(s >> 32);
+	b = uint32_t(s >> 0);
+	c = uint32_t(s >> 32);
 	counter = 1;
 	for (int i = 0; i < 8; i++) raw32();//8
 }
-void PractRand::RNGs::Raw::sfc32::seed(Uint32 s1, Uint32 s2, Uint32 s3) {
+void PractRand::RNGs::Raw::sfc32::seed(uint32_t s1, uint32_t s2, uint32_t s3) {
 	a = s1;
 	b = s2;
 	c = s3;
@@ -117,18 +117,18 @@ void PractRand::RNGs::Raw::sfc32::walk_state(StateWalkingObject* walker) {
 	walker->handle(c);
 	walker->handle(counter);
 }
-Uint64 PractRand::RNGs::Raw::sfc64::raw64() {
+uint64_t PractRand::RNGs::Raw::sfc64::raw64() {
 	//good sets include {24,11,3},{25,12,3},{},{} ; older versions used {25,12,3}, which is decent
 	constexpr int BARREL_SHIFT = 24;
 	constexpr int RSHIFT = 11;
 	constexpr int LSHIFT = 3;
-	Uint64 tmp = a + b + counter++;
+	uint64_t tmp = a + b + counter++;
 	a = b ^ (b >> RSHIFT);
 	b = c + (c << LSHIFT);
 	c = std::rotl(c, BARREL_SHIFT) + tmp;
 	return tmp;
 }
-void PractRand::RNGs::Raw::sfc64::seed(Uint64 s) {
+void PractRand::RNGs::Raw::sfc64::seed(uint64_t s) {
 	a = b = c = s;
 	counter = 1;
 	for (int i = 0; i < 12; i++) raw64();//12
@@ -146,12 +146,12 @@ _
 _		8/12/18
 */
 }
-void PractRand::RNGs::Raw::sfc64::seed_fast(Uint64 s) {
+void PractRand::RNGs::Raw::sfc64::seed_fast(uint64_t s) {
 	a = b = c = s;
 	counter = 1;
 	for (int i = 0; i < 8; i++) raw64();
 }
-void PractRand::RNGs::Raw::sfc64::seed(Uint64 s1, Uint64 s2, Uint64 s3) {
+void PractRand::RNGs::Raw::sfc64::seed(uint64_t s1, uint64_t s2, uint64_t s3) {
 	a = s1;
 	b = s2;
 	c = s3;

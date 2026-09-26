@@ -9,8 +9,8 @@ namespace PractRand::Tests {
 			static constexpr int BUFFER_SIZE_L2 = 12; // must be at least 8
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
 			static constexpr int MAX_DUPLICATES = 32;
-			Uint32 buffer[1 << BUFFER_SIZE_L2]{};
-			Uint64 counts[MAX_DUPLICATES]{};
+			uint32_t buffer[1 << BUFFER_SIZE_L2]{};
+			uint64_t counts[MAX_DUPLICATES]{};
 			int num_buffered{};
 			void flush_buffer();
 		public:
@@ -27,12 +27,12 @@ namespace PractRand::Tests {
 			static constexpr int BUFFER_SIZE = 1 << BUFFER_SIZE_L2;
 			static constexpr int MAX_DUPLICATES = 64;
 			static constexpr int SORT_HELPER_BITS = 10;
-			Uint64 buffer[1 << BUFFER_SIZE_L2]{};
-			Uint64 counts[MAX_DUPLICATES]{};
-			static void _histogram_in_place_sort64(Uint64* buffer, long length, long bits_already, Uint32 region_counts[1 << SORT_HELPER_BITS]);
-			static void _histogram_in_place_sort64(Uint64* base, long length);
-			static void _histogram_sort64(Uint64* buffer, long length, long bits_already, Uint32 region_counts[1 << SORT_HELPER_BITS]);
-			static void _histogram_sort64(Uint64* base, long length);
+			uint64_t buffer[1 << BUFFER_SIZE_L2]{};
+			uint64_t counts[MAX_DUPLICATES]{};
+			static void _histogram_in_place_sort64(uint64_t* buffer, long length, long bits_already, uint32_t region_counts[1 << SORT_HELPER_BITS]);
+			static void _histogram_in_place_sort64(uint64_t* base, long length);
+			static void _histogram_sort64(uint64_t* buffer, long length, long bits_already, uint32_t region_counts[1 << SORT_HELPER_BITS]);
+			static void _histogram_sort64(uint64_t* base, long length);
 			int num_buffered{};
 			void flush_buffer();
 		public:
@@ -47,8 +47,8 @@ namespace PractRand::Tests {
 		namespace BirthdayHelpers {
 			constexpr int SORT_HELPER_BITS = 8;
 			struct i128 {
-				Uint64 low;
-				Uint64 high;
+				uint64_t low;
+				uint64_t high;
 				bool operator==(const i128& other) const {
 					return high == other.high && low == other.low;
 				}
@@ -74,16 +74,16 @@ namespace PractRand::Tests {
 
 			// this is the fastest in-place sort I've tried so far
 			// in-place is important if I want to sort something huge without assuming I can allocate a comparable amount of memory to help with the sorting
-			void histogram_in_place_sort128(i128* buffer, Uint64 length, long bits_already, Uint64 region_counts[1 << SORT_HELPER_BITS]);
-			void histogram_in_place_sort128(i128* base, Uint64 length, long bits_already = 0);
+			void histogram_in_place_sort128(i128* buffer, uint64_t length, long bits_already, uint64_t region_counts[1 << SORT_HELPER_BITS]);
+			void histogram_in_place_sort128(i128* base, uint64_t length, long bits_already = 0);
 
 			// ..but sometimes I'm sorting smaller buffers, with pre-allocated regions to sort into..., so maybe another interface for that would help
-			void histogram_sort_and_copy(i128* buffer, i128* dest, Uint64 length, long bits_already, Uint64 region_counts[1 << SORT_HELPER_BITS]);
-			void histogram_sort_and_copy(i128* buffer, i128* dest, Uint64 length, long bits_already = 0);
+			void histogram_sort_and_copy(i128* buffer, i128* dest, uint64_t length, long bits_already, uint64_t region_counts[1 << SORT_HELPER_BITS]);
+			void histogram_sort_and_copy(i128* buffer, i128* dest, uint64_t length, long bits_already = 0);
 			//possibly faster algorithm for the same interface?
-			void radix_sort_and_copy(i128* buffer, i128* dest, Uint64 length, long bits_already = 0);
+			void radix_sort_and_copy(i128* buffer, i128* dest, uint64_t length, long bits_already = 0);
 
-			void _sorted_deltas_of_sorted_values(i128* base, long length_L2, Uint64 freq_counts[1 << SORT_HELPER_BITS]);
+			void _sorted_deltas_of_sorted_values(i128* base, long length_L2, uint64_t freq_counts[1 << SORT_HELPER_BITS]);
 			void _sorted_deltas_of_sorted_values(i128* base, long length_L2);
 		};
 		class BirthdayLamda1 : public TestBaseclass {
@@ -94,12 +94,12 @@ namespace PractRand::Tests {
 			static constexpr int SORT_HELPER_BITS = BirthdayHelpers::SORT_HELPER_BITS;
 			static constexpr int DO_LARGEST_SPACING = 1;
 			bool autofail{};
-			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS]{};
+			uint64_t sort_helper_counts[1 << SORT_HELPER_BITS]{};
 			//i128 buffer[1 << BUFFER_SIZE_L2];//can't have arrays this large inside a class due to object file or executable file format constraints
 			//std::vector<i128> buffer;// ... and the STL vector implementation I'm using throws some kind of exception if it exceeds about 4 GB or so
 			i128* buffer;
-			Uint64 num_buffered{};
-			virtual Uint64 flush_buffer();
+			uint64_t num_buffered{};
+			virtual uint64_t flush_buffer();
 			double duplicates;
 			double expected_duplicates;
 			double longest_spacing{};
@@ -124,12 +124,12 @@ namespace PractRand::Tests {
 			// currently undecided on whether or not early use of the buffer will suppress some bits or not
 			static constexpr int BUFSIZE_L2 = 22;
 			static constexpr int BUFSIZE = 1 << BUFSIZE_L2;
-			Uint64 buffer[BUFSIZE];
-			Uint64 elements_buffered;
-			Uint64 num_sorted; // this many elements in the buffer are already sorted, starting at the beginning, potentially allowing optimization to the final sorting of its contents
-			Uint64 observed_duplicates;
+			uint64_t buffer[BUFSIZE];
+			uint64_t elements_buffered;
+			uint64_t num_sorted; // this many elements in the buffer are already sorted, starting at the beginning, potentially allowing optimization to the final sorting of its contents
+			uint64_t observed_duplicates;
 			double expected_duplicates;
-			Uint64 evaluate_buffer();
+			uint64_t evaluate_buffer();
 		public:
 			;
 		};*/
@@ -137,12 +137,12 @@ namespace PractRand::Tests {
 			// similar to BirthdayLambda1 above
 			// but if a result is requested before the first sample is ready, it will return a result for a partial buffer
 			// and attempts to have everything optimized for the possibility of that partial-buffer case
-			Uint64 flush_buffer() override;
-			static Uint64 get_target_num_at_bufsize(int bufsize_L2_);
+			uint64_t flush_buffer() override;
+			static uint64_t get_target_num_at_bufsize(int bufsize_L2_);
 			unsigned int already_sorted{};//if this is half of (1ull << bufsize_L2) then incomplete_duplicates should hold
 
 			double score{};//for scoring method 2
-			static double evaluate_score(double lambda, Uint64 duplicates);
+			static double evaluate_score(double lambda, uint64_t duplicates);
 
 			void do_incomplete_buffer();
 			double incomplete_duplicates{};
@@ -167,14 +167,14 @@ namespace PractRand::Tests {
 			int num_buffered{};
 			int buffer_size_L2;
 			int filter_bits;
-			Uint64 sort_helper_counts[1 << SORT_HELPER_BITS]{};
+			uint64_t sort_helper_counts[1 << SORT_HELPER_BITS]{};
 			bool autofail{};
 			void flush_buffer();
 
 			double score_sum_log{};
 			double score_sum_log2{};
 			double score_sum_log_sqr{};
-			Uint64 count{};
+			uint64_t count{};
 			static void _lookup_constants(int table_size_L2, long double* offset, long double* deviation, long double* sample_size);
 		public:
 			explicit BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);

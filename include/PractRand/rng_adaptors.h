@@ -25,7 +25,7 @@ namespace PractRand::RNGs::Adaptors {
 					static constexpr int FLAGS = base_rng::FLAGS & ~ RNGs::FLAG::NEEDS_GENERIC_SEEDING;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
-					void seed     (Uint64 seed) {StateWalkingObject* walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
+					void seed     (uint64_t seed) {StateWalkingObject* walker = int_to_rng_seeder(seed); this->walk_state(walker); delete walker;}
 					void seed     (vRNG* seeder){StateWalkingObject* walker = vrng_to_rng_seeder(seeder); this->walk_state(walker); delete walker;}
 					void autoseed ()            {StateWalkingObject* walker = get_autoseeder(this); this->walk_state(walker); delete walker;}
 				};
@@ -44,36 +44,36 @@ namespace PractRand::RNGs::Adaptors {
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
-					Uint16 raw16() {return this->raw8()  + (static_cast<Uint16>(this->raw8()) <<  8);}
-					Uint32 raw32() {return raw16() + (static_cast<Uint32>(raw16()) << 16);}
-					Uint64 raw64() {return raw32() + (static_cast<Uint64>(raw32()) << 32);}
+					uint16_t raw16() {return this->raw8()  + (static_cast<uint16_t>(this->raw8()) <<  8);}
+					uint32_t raw32() {return raw16() + (static_cast<uint32_t>(raw16()) << 16);}
+					uint64_t raw64() {return raw32() + (static_cast<uint64_t>(raw32()) << 32);}
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 16> : public base_rng {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
-					Uint8  raw8()  {return static_cast<Uint8>(this->raw16());}
-					Uint32 raw32() {return this->raw16() + (static_cast<Uint32>(this->raw16()) << 16);}
-					Uint64 raw64() {return raw32() + (static_cast<Uint64>(raw32()) << 32);}
+					uint8_t  raw8()  {return static_cast<uint8_t>(this->raw16());}
+					uint32_t raw32() {return this->raw16() + (static_cast<uint32_t>(this->raw16()) << 16);}
+					uint64_t raw64() {return raw32() + (static_cast<uint64_t>(raw32()) << 32);}
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 32> : public base_rng {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
-					Uint8  raw8()  {return static_cast<Uint8>(this->raw32());}
-					Uint16 raw16() {return static_cast<Uint16>(this->raw32());}
-					Uint64 raw64() {return this->raw32() + (static_cast<Uint64>(this->raw32()) << 32);}
+					uint8_t  raw8()  {return static_cast<uint8_t>(this->raw32());}
+					uint16_t raw16() {return static_cast<uint16_t>(this->raw32());}
+					uint64_t raw64() {return this->raw32() + (static_cast<uint64_t>(this->raw32()) << 32);}
 				};
 				template<class base_rng> class ADAPT_OUTPUT_1_TO_ALL<base_rng, 64> : public base_rng {
 				public:
 					static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;
 					//static constexpr int RNG_WRAPPER_LEVEL = base_rng::RNG_WRAPPER_LEVEL+1;
 					using base_rng_type = base_rng;
-					Uint8  raw8()  {return static_cast<Uint8>(this->raw64());}
-					Uint16 raw16() {return static_cast<Uint16>(this->raw64());}
-					Uint32 raw32() {return static_cast<Uint32>(this->raw64());}
+					uint8_t  raw8()  {return static_cast<uint8_t>(this->raw64());}
+					uint16_t raw16() {return static_cast<uint16_t>(this->raw64());}
+					uint32_t raw32() {return static_cast<uint32_t>(this->raw64());}
 				};
 
 
@@ -88,8 +88,8 @@ namespace PractRand::RNGs::Adaptors {
 				template<class base_rng> class ADD_DISTRIBUTIONS : public base_rng {
 				public:
 					//static constexpr int DISTRIBUTIONS_TYPE = DISTRIBUTIONS_TYPE__NORMAL;
-					Uint32 randi ( Uint32 max ) {
-						Uint32 mask = 0, tmp = 0;
+					uint32_t randi ( uint32_t max ) {
+						uint32_t mask = 0, tmp = 0;
 						max -= 1;
 						mask = max;
 						mask |= mask >> 1; mask |= mask >>  2; mask |= mask >> 4;
@@ -99,10 +99,10 @@ namespace PractRand::RNGs::Adaptors {
 							if (tmp <= max) return tmp;
 						}
 					}
-					Uint32 randi ( Uint32 min, Uint32 max ) {return randi(max-min) + min;}
+					uint32_t randi ( uint32_t min, uint32_t max ) {return randi(max-min) + min;}
 
-					Uint64 randli ( Uint64 max ) {
-						Uint64 mask = 0, tmp = 0;
+					uint64_t randli ( uint64_t max ) {
+						uint64_t mask = 0, tmp = 0;
 						max -= 1;
 						mask = max;
 						mask |= mask >> 1; mask |= mask >>  2; mask |= mask >>  4;
@@ -112,10 +112,10 @@ namespace PractRand::RNGs::Adaptors {
 							if (tmp <= max) return tmp;
 						}
 					}
-					Uint64 randli ( Uint64 min, Uint64 max ) {return randli(max-min) + min;}
+					uint64_t randli ( uint64_t min, uint64_t max ) {return randli(max-min) + min;}
 
-					Uint32 randi_fast ( Uint32 max ) {return randi_fast_implementation(this->raw32(), max);}
-					Uint32 randi_fast ( Uint32 min, Uint32 max ) {return randi_fast(max-min) + min;}
+					uint32_t randi_fast ( uint32_t max ) {return randi_fast_implementation(this->raw32(), max);}
+					uint32_t randi_fast ( uint32_t min, uint32_t max ) {return randi_fast(max-min) + min;}
 
 					//random floating point numbers:
 					float randf ( ) { return float(this->raw32() * (1.0 / 4294967296.0)); }
@@ -128,7 +128,7 @@ namespace PractRand::RNGs::Adaptors {
 
 					//Boost / C++0x TR1 compatibility:
 #if defined PRACTRAND_BOOST_COMPATIBILITY
-					typedef Uint64 result_type;
+					typedef uint64_t result_type;
 					result_type operator()() {return this->raw64();}
 					static constexpr bool has_fixed_value = true;
 					static constexpr result_type min_value = 0;
@@ -178,7 +178,7 @@ namespace PractRand::RNGs::Adaptors {
 			public:
 				explicit RAW_TO_LIGHT_WEIGHT_RNG(SEED_AUTO_TYPE) {this->autoseed();}
 				explicit RAW_TO_LIGHT_WEIGHT_RNG(SEED_NONE_TYPE) {}
-				explicit RAW_TO_LIGHT_WEIGHT_RNG(Uint64 s) {this->seed(s);}
+				explicit RAW_TO_LIGHT_WEIGHT_RNG(uint64_t s) {this->seed(s);}
 				explicit RAW_TO_LIGHT_WEIGHT_RNG(vRNG* seeder) {this->seed(seeder);}
 			};
 			//to do:

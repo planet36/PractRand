@@ -9,7 +9,7 @@ namespace PractRand::Tests {
 			void init( PractRand::RNGs::vRNG* known_good ) override;
 			[[nodiscard]] std::string get_name() const override;// {return std::string("Gap16");}
 			//virtual double get_result();
-			//virtual double result_to_pvalue ( Uint64 blocks, double r );
+			//virtual double result_to_pvalue ( uint64_t blocks, double r );
 			void get_results ( std::vector<TestResult>& results ) override;
 
 			void test_blocks(TestBlock* data, int numblocks) override;
@@ -20,11 +20,11 @@ namespace PractRand::Tests {
 			static constexpr int SET1_SHIFT = 1;
 			static constexpr int SET2_SHIFT = 2;
 			static constexpr int SET3_SHIFT = 3;
-			FixedSizeCount<Uint8, SIZE1 + SIZE2 + SIZE3> counts;
-			std::vector<Uint32> extreme_lags;
-			void increment_lag(Uint32 lag);
+			FixedSizeCount<uint8_t, SIZE1 + SIZE2 + SIZE3> counts;
+			std::vector<uint32_t> extreme_lags;
+			void increment_lag(uint32_t lag);
 			bool autofail{};
-			Uint32 last[65536]{};
+			uint32_t last[65536]{};
 			int warmup{};
 		};
 		class Rep16 : public TestBaseclass {
@@ -35,6 +35,6 @@ namespace PractRand::Tests {
 
 			void test_blocks(TestBlock* data, int numblocks) override;
 		protected:
-			FixedSizeCount<Uint8, 65536 * 2> counts;
+			FixedSizeCount<uint8_t, 65536 * 2> counts;
 		};
 }//PractRand

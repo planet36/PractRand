@@ -12,31 +12,31 @@ using namespace PractRand;
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(jsf64)
-void PractRand::RNGs::Polymorphic::jsf64::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::jsf64::seed_fast(Uint64 s) {implementation.seed_fast(s);}
+void PractRand::RNGs::Polymorphic::jsf64::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::jsf64::seed_fast(uint64_t s) {implementation.seed_fast(s);}
 std::string PractRand::RNGs::Polymorphic::jsf64::get_name() const {return "jsf64";}
 
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(jsf32)
-void PractRand::RNGs::Polymorphic::jsf32::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::jsf32::seed_fast(Uint64 s) {implementation.seed_fast(s);}
+void PractRand::RNGs::Polymorphic::jsf32::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::jsf32::seed_fast(uint64_t s) {implementation.seed_fast(s);}
 std::string PractRand::RNGs::Polymorphic::jsf32::get_name() const {return "jsf32";}
 
 //raw:
-Uint32 PractRand::RNGs::Raw::jsf32::raw32() {//LOCKED, do not change
-	Uint32 e = a - ((b << 27) | (b >> 5));
+uint32_t PractRand::RNGs::Raw::jsf32::raw32() {//LOCKED, do not change
+	uint32_t e = a - ((b << 27) | (b >> 5));
 	a = b ^ ((c << 17) | (c >> 15));
 	b = c + d;
 	c = d + e;
 	d = e + a;
 	return d;
 }
-void PractRand::RNGs::Raw::jsf32::seed(Uint64 s) {//LOCKED, do not change
+void PractRand::RNGs::Raw::jsf32::seed(uint64_t s) {//LOCKED, do not change
 	//LOCKED, do not change
 	//exception: changed in 0.81 to match Robert Jenkins code
 	//note: only actually matches Robert Jenkins code for seeds that fit in a 32 bit value, as he only took a 32 bit seed
-	a = 0xf1ea5eed ^ Uint32(s >> 32);
-	b = Uint32(s);
-	c = b ^ Uint32(s >> 32);
+	a = 0xf1ea5eed ^ uint32_t(s >> 32);
+	b = uint32_t(s);
+	c = b ^ uint32_t(s >> 32);
 	d = b;
 	for (int i = 0; i < 20; i++) raw32();//20
 	/*
@@ -54,10 +54,10 @@ void PractRand::RNGs::Raw::jsf32::seed(Uint64 s) {//LOCKED, do not change
 			(this PRNG won't be secure no matter how good seeding is, so the best we can do is 2**64 seeds producing uncorrelated results)
 	*/
 }
-void PractRand::RNGs::Raw::jsf32::seed_fast(Uint64 s) {
-	a = 0xf1ea5eed ^ Uint32(s >> 32);
-	b = Uint32(s);
-	c = b ^ Uint32(s >> 32);
+void PractRand::RNGs::Raw::jsf32::seed_fast(uint64_t s) {
+	a = 0xf1ea5eed ^ uint32_t(s >> 32);
+	b = uint32_t(s);
+	c = b ^ uint32_t(s >> 32);
 	d = b;
 	for (int i = 0; i < 8; i++) raw32();
 }
@@ -66,7 +66,7 @@ void PractRand::RNGs::Raw::jsf32::seed(vRNG* seeder_rng) {//custom seeding
 	c = d = seeder_rng->raw32();
 	for (int i = 0; i < 4; i++) raw32();//4
 }
-void PractRand::RNGs::Raw::jsf32::seed(Uint32 seed1, Uint32 seed2, Uint32 seed3, Uint32 seed4) {//custom seeding
+void PractRand::RNGs::Raw::jsf32::seed(uint32_t seed1, uint32_t seed2, uint32_t seed3, uint32_t seed4) {//custom seeding
 		//LOCKED, do not change
 	//exception to the locked status -
 	//   when more bad cycles are found, more code might be added to prohibit them
@@ -103,22 +103,22 @@ void PractRand::RNGs::Raw::jsf32::walk_state(StateWalkingObject* walker) {
 		if (a==0x47CB8D56 && b==0xAE9B35A7 && c==0x5C78F4A8 && d==0x522240FF ) d++;
 	}
 }
-Uint64 PractRand::RNGs::Raw::jsf64::raw64() {
+uint64_t PractRand::RNGs::Raw::jsf64::raw64() {
 	//LOCKED, do not change
-	Uint64 e = a - ((b << 39) | (b >> 25));
+	uint64_t e = a - ((b << 39) | (b >> 25));
 	a = b ^ ((c << 11) | (c >> 53));
 	b = c + d;
 	c = d + e;
 	d = e + a;
 	return d;
 }
-void PractRand::RNGs::Raw::jsf64::seed(Uint64 s) {
+void PractRand::RNGs::Raw::jsf64::seed(uint64_t s) {
 	//LOCKED, do not change
 	a = 0xf1ea5eed;
 	b = c = d = s;
 	for (int i = 0; i < 20; i++) raw64();
 }
-void PractRand::RNGs::Raw::jsf64::seed_fast(Uint64 s) {
+void PractRand::RNGs::Raw::jsf64::seed_fast(uint64_t s) {
 	a = 0xf1ea5eed;
 	b = c = d = s;
 	for (int i = 0; i < 8; i++) raw64();

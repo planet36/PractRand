@@ -13,25 +13,25 @@
 using namespace PractRand::Internals;
 
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
-				Uint8 rc4::raw8() {
+				uint8_t rc4::raw8() {
 					b += arr[a];
-					Uint8 tmp = arr[b];
+					uint8_t tmp = arr[b];
 					arr[b] = arr[a];
 					arr[a] = tmp;
-					return arr[Uint8(arr[a++] + arr[b])];
+					return arr[uint8_t(arr[a++] + arr[b])];
 				}
 				std::string rc4::get_name() const {return "rc4";}
 				void rc4::walk_state(StateWalkingObject* walker) {
 					walker->handle(a);
 					walker->handle(b);
 					if (walker->is_clumsy() && !walker->is_read_only()) {
-						Uint64 seed = 0;
+						uint64_t seed = 0;
 						walker->handle(seed);
 						PractRand::RNGs::Raw::arbee seeder(seed);
 						for (int i = 0; i < 256; i++) arr[i] = i;
 						for (int i = 0; i < 256; i++) {
-							Uint8 ai = i, bi = seeder.raw8();
-							Uint8 tmp = arr[ai]; arr[ai] = arr[bi]; arr[bi] = tmp;
+							uint8_t ai = i, bi = seeder.raw8();
+							uint8_t tmp = arr[ai]; arr[ai] = arr[bi]; arr[bi] = tmp;
 						}
 					}
 					else {
@@ -39,48 +39,48 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 				}
 
-				Uint8 rc4_weakenedA::raw8() {
+				uint8_t rc4_weakenedA::raw8() {
 					b += arr[a];
-					Uint8 tmp = arr[b];
+					uint8_t tmp = arr[b];
 					arr[b] = arr[a];
 					arr[a++] = tmp;
 					return tmp;
 				}
 				std::string rc4_weakenedA::get_name() const {return "rc4_weakenedA";}
-				Uint8 rc4_weakenedB::raw8() {
+				uint8_t rc4_weakenedB::raw8() {
 					b += arr[a];
-					Uint8 tmp = arr[b];
+					uint8_t tmp = arr[b];
 					arr[b] = arr[a];
 					arr[a++] = tmp;
 					return tmp + arr[b];
 				}
 				std::string rc4_weakenedB::get_name() const { return "rc4_weakenedB"; }
-				Uint8 rc4_weakenedC::raw8() {
+				uint8_t rc4_weakenedC::raw8() {
 					b += arr[a];
-					Uint8 tmp = arr[b];
+					uint8_t tmp = arr[b];
 					arr[b] = arr[a];
 					arr[a++] = tmp;
 					return arr[tmp];
 				}
 				std::string rc4_weakenedC::get_name() const { return "rc4_weakenedC"; }
-				Uint8 rc4_weakenedD::raw8() {
+				uint8_t rc4_weakenedD::raw8() {
 					b += arr[a];
-					Uint8 tmp = arr[b];
+					uint8_t tmp = arr[b];
 					arr[b] = arr[a];
 					arr[a++] = tmp;
 					return arr[tmp] + b;
 				}
 				std::string rc4_weakenedD::get_name() const { return "rc4_weakenedD"; }
 
-				Uint8 ibaa8::raw8() {
+				uint8_t ibaa8::raw8() {
 					if (left) {
 						return table[--left];
 					}
 					const int half_size = 1<<(table_size_L2-1);
 					const int mask = (1<<table_size_L2)-1;
-					Uint8* base = &table[mask+1];
+					uint8_t* base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
-						Uint8 x = 0, y = 0;
+						uint8_t x = 0, y = 0;
 						x = base[i];
 						a = ((a << 5) | (a >> 3)) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
@@ -104,19 +104,19 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(left);
 					if (left >= table_size) left = 0;
 				}
-				ibaa8::ibaa8(int table_size_L2_) : table_size_L2(table_size_L2_), table(new Uint8[2 << table_size_L2]) {
+				ibaa8::ibaa8(int table_size_L2_) : table_size_L2(table_size_L2_), table(new uint8_t[2 << table_size_L2]) {
 				}
 				ibaa8::~ibaa8() {delete[] table;}
 
-				Uint16 ibaa16::raw16() {
+				uint16_t ibaa16::raw16() {
 					if (left) {
 						return table[--left];
 					}
 					const int half_size = 1<<(table_size_L2-1);
 					const int mask = (1<<table_size_L2)-1;
-					Uint16* base = &table[mask+1];
+					uint16_t* base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
-						Uint16 x = 0, y = 0;
+						uint16_t x = 0, y = 0;
 						x = base[i];
 						a = ((a << 11) | (a >> 5)) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
@@ -140,19 +140,19 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(left);
 					if (left >= table_size) left = 0;
 				}
-				ibaa16::ibaa16(int table_size_L2_) : table_size_L2(table_size_L2_), table(new Uint16[2 << table_size_L2]) {
+				ibaa16::ibaa16(int table_size_L2_) : table_size_L2(table_size_L2_), table(new uint16_t[2 << table_size_L2]) {
 				}
 				ibaa16::~ibaa16() {delete[] table;}
 
-				Uint32 ibaa32::raw32() {
+				uint32_t ibaa32::raw32() {
 					if (left) {
 						return table[--left];
 					}
 					const int half_size = 1<<(table_size_L2-1);
 					const int mask = (1<<table_size_L2)-1;
-					Uint32* base = &table[mask+1];
+					uint32_t* base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
-						Uint32 x = 0, y = 0;
+						uint32_t x = 0, y = 0;
 						x = base[i];
 						a = ((a << 19) | (a >> 13)) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
@@ -176,12 +176,12 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(left);
 					if (left >= table_size) left = 0;
 				}
-				ibaa32::ibaa32(int table_size_L2_) : table_size_L2(table_size_L2_), table(new Uint32[2 << table_size_L2]) {
+				ibaa32::ibaa32(int table_size_L2_) : table_size_L2(table_size_L2_), table(new uint32_t[2 << table_size_L2]) {
 				}
 				ibaa32::~ibaa32() {delete[] table;}
 
 
-				#define ind32(mm,x)  (*reinterpret_cast<Uint32*>((reinterpret_cast<Uint8*>(mm)) + ((x) & ((MASK)<<2))))
+				#define ind32(mm,x)  (*reinterpret_cast<uint32_t*>((reinterpret_cast<uint8_t*>(mm)) + ((x) & ((MASK)<<2))))
 				#define rngstep32(mix,a,b,mm,m,m2,r,x) \
 				{ \
 				  (x) = *(m);  \
@@ -189,15 +189,15 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				  *((m)++) = y = ind32(mm,x) + (a) + (b); \
 				  *((r)++) = (b) = ind32(mm,y>>table_size_L2) + (x); \
 				}
-				Uint32 isaac32_varqual::raw32() {
+				uint32_t isaac32_varqual::raw32() {
 					if (left) {
 						return table[--left];
 					}
 					const int HALF_SIZE = 1<<(table_size_L2-1);
 					const int MASK = (1<<table_size_L2)-1;
-					Uint32* base = &table[MASK+1];
-					Uint32 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-					Uint32 x = 0, y = 0;
+					uint32_t* base = &table[MASK+1];
+					uint32_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
+					uint32_t x = 0, y = 0;
 					//m = base;
 					r = table;
 					b += ++c;
@@ -247,7 +247,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				isaac32_varqual::isaac32_varqual(int table_size_L2_) : table_size_L2(table_size_L2_) {
 					if (table_size_L2 < 2) PractRand::issue_error("invalid table size for isaac32_small");
-					table = new Uint32[2 << table_size_L2];
+					table = new uint32_t[2 << table_size_L2];
 				}
 				isaac32_varqual::~isaac32_varqual() {delete[] table;}
 				#undef ind32
@@ -255,7 +255,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 
-				#define ind16(mm,x)  (*reinterpret_cast<Uint16*>(reinterpret_cast<Uint8*>(mm) + ((x) & ((MASK)<<1))))
+				#define ind16(mm,x)  (*reinterpret_cast<uint16_t*>(reinterpret_cast<uint8_t*>(mm) + ((x) & ((MASK)<<1))))
 				#define rngstep16(mix,a,b,mm,m,m2,r,x) \
 				{ \
 				  (x) = *(m);  \
@@ -263,15 +263,15 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				  *((m)++) = y = ind16(mm,x) + (a) + (b); \
 				  *((r)++) = (b) = ind16(mm,y>>table_size_L2) + (x); \
 				}
-				Uint16 isaac16_varqual::raw16() {
+				uint16_t isaac16_varqual::raw16() {
 					if (left) {
 						return table[--left];
 					}
 					const int HALF_SIZE = 1<<(table_size_L2-1);
 					const int MASK = (1<<table_size_L2)-1;
-					Uint16* base = &table[MASK+1];
-					Uint16 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-					Uint16 x = 0, y = 0;
+					uint16_t* base = &table[MASK+1];
+					uint16_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
+					uint16_t x = 0, y = 0;
 					//m = base;
 					r = table;
 					b += ++c;
@@ -322,19 +322,19 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				isaac16_varqual::isaac16_varqual(int table_size_L2_) : table_size_L2(table_size_L2_) {
 					if (table_size_L2 < 2) PractRand::issue_error("invalid table size for isaac16_small");
-					table = new Uint16[2 << table_size_L2];
+					table = new uint16_t[2 << table_size_L2];
 				}
 				isaac16_varqual::~isaac16_varqual() {delete[] table;}
 				#undef ind16
 				#undef rngstep16
 
 
-				Uint8 efiix8_varqual::raw8() {
-					Uint8 iterated = iteration_table  [i & iteration_table_size_m1];
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1];
+				uint8_t efiix8_varqual::raw8() {
+					uint8_t iterated = iteration_table  [i & iteration_table_size_m1];
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1];
 					indirection_table[c & indirection_table_size_m1] = iterated + a;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a ^ b;
+					uint8_t old = a ^ b;
 					a = b + i;
 					b = c + indirect;
 					c = old + std::rotl(c, 3);
@@ -342,11 +342,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b ^ iterated;
 
 					//1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42,
-					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ];
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1];
+					/*uint8_t iterated = iteration_table  [i & iteration_table_size_m1  ];
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1];
 					indirection_table[c & indirection_table_size_m1] = iterated ^ a;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a + i++;
+					uint8_t old = a + i++;
 					a = b + iterated;
 					b = c ^ indirect;
 					c = old + std::rotl( c, 3 );
@@ -354,22 +354,22 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 					//"^b" - 1+1: 38, 1+2: >36
 					//"^a" - 1+1: 38
-					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ a;
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1] + i;
+					/*uint8_t iterated = iteration_table  [i & iteration_table_size_m1  ] ^ a;
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1] + i;
 					indirection_table[c & indirection_table_size_m1] = iterated;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a + b;
+					uint8_t old = a + b;
 					a = b + iterated;
 					b = c + indirect;
 					c = old ^ std::rotl( c, 3 );
 					i++; return old;*/
 
 					//1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
-					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1] + a;
+					/*uint8_t iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1] + a;
 					indirection_table[c & indirection_table_size_m1] = iterated;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a ^ b;
+					uint8_t old = a ^ b;
 					a = b + indirect;
 					b = c + iterated;
 					c = old + std::rotl( c, 3 );
@@ -392,8 +392,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int indirection_table_size = 1 << indirection_table_size_L2;
 					iteration_table_size_m1 = iteration_table_size - 1;
 					indirection_table_size_m1 = indirection_table_size - 1;
-					iteration_table   = new Uint8[iteration_table_size  ];
-					indirection_table = new Uint8[indirection_table_size];
+					iteration_table   = new uint8_t[iteration_table_size  ];
+					indirection_table = new uint8_t[indirection_table_size];
 				}
 				efiix8_varqual::~efiix8_varqual() {
 					delete[] iteration_table;
@@ -401,16 +401,16 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 
-				Uint8 efiix4_varqual::rotate4(Uint8 value, int bits) {
+				uint8_t efiix4_varqual::rotate4(uint8_t value, int bits) {
 					value &= 15;
 					return (value << bits) | (value >> (4-bits));
 				}
-				Uint8 efiix4_varqual::raw4() {
-					Uint8 iterated = iteration_table  [i & iteration_table_size_m1];
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1];
+				uint8_t efiix4_varqual::raw4() {
+					uint8_t iterated = iteration_table  [i & iteration_table_size_m1];
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1];
 					indirection_table[c & indirection_table_size_m1] = iterated + a;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a ^ b;
+					uint8_t old = a ^ b;
 					a = b + i;
 					b = c + indirect;
 					c = old + rotate4(c, 2);
@@ -418,11 +418,11 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					return b ^ iterated;
 
 					//8 - 1+1: , 1+2: 38-39, 2+2: 38, 1+4: ?, 2+4: 41-42,
-					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ];
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1];
+					/*uint8_t iterated = iteration_table  [i & iteration_table_size_m1  ];
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1];
 					indirection_table[c & indirection_table_size_m1] = iterated ^ a;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a + i++;
+					uint8_t old = a + i++;
 					a = b + iterated;
 					b = c ^ indirect;
 					c = old + rotate4( c, 2 );
@@ -449,29 +449,29 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						4		32/32	31/33	33/36	36/37
 						8		37/42?
 					*/
-					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ a;
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1] + i;
+					/*uint8_t iterated = iteration_table  [i & iteration_table_size_m1  ] ^ a;
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1] + i;
 					indirection_table[c & indirection_table_size_m1] = iterated;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a + b;
+					uint8_t old = a + b;
 					a = b + iterated;
 					b = c + indirect;
 					c = old ^ rotate4( c, 3 );
 					i++; return old;*/
 
 					//8 - 1+1: 36?, 2+2: 25, 4+4: 33, 8+8: 35,
-					/*Uint8 iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
-					Uint8 indirect = indirection_table[c & indirection_table_size_m1] + a;
+					/*uint8_t iterated = iteration_table  [i & iteration_table_size_m1  ] ^ i;
+					uint8_t indirect = indirection_table[c & indirection_table_size_m1] + a;
 					indirection_table[c & indirection_table_size_m1] = iterated;
 					iteration_table  [i & iteration_table_size_m1  ] = indirect;
-					Uint8 old = a ^ b;
+					uint8_t old = a ^ b;
 					a = b + indirect;
 					b = c + iterated;
 					c = old + rotate4( c, 2 );
 					return b;*/
 				}
-				Uint8 efiix4_varqual::raw8() {
-					Uint8 rv = raw4() & 15; return rv | ((raw4() & 15) << 4);
+				uint8_t efiix4_varqual::raw8() {
+					uint8_t rv = raw4() & 15; return rv | ((raw4() & 15) << 4);
 				}
 				void efiix4_varqual::walk_state(StateWalkingObject* walker) {
 					walker->handle(a); walker->handle(b); walker->handle(c); walker->handle(i);
@@ -490,8 +490,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int indirection_table_size = 1 << indirection_table_size_L2;
 					iteration_table_size_m1 = iteration_table_size - 1;
 					indirection_table_size_m1 = indirection_table_size - 1;
-					iteration_table   = new Uint8[iteration_table_size  ];
-					indirection_table = new Uint8[indirection_table_size];
+					iteration_table   = new uint8_t[iteration_table_size  ];
+					indirection_table = new uint8_t[indirection_table_size];
 				}
 				efiix4_varqual::~efiix4_varqual() {
 					delete[] iteration_table;
@@ -503,15 +503,15 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (size_L2 < 0) issue_error("genindA - size too small");
 					shift = size_L2;
 					table_size_mask = (1 << shift) - 1;
-					table = new Uint16[table_size_mask + 1];
+					table = new uint16_t[table_size_mask + 1];
 				}
 				genindA::~genindA() {
 					delete[] table;
 				}
-				Uint16 genindA::raw16() {
+				uint16_t genindA::raw16() {
 					int i1 = a >> (16 - shift);
 					int i2 = i & table_size_mask;
-					Uint16 o = table[i2];
+					uint16_t o = table[i2];
 					table[i2] = a;
 					a += table[i1] + o + i++;
 					return o;
@@ -531,17 +531,17 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (size_L2 < 0) issue_error("genindB - size too small");
 					shift = size_L2;
 					table_size_mask = (1 << shift) - 1;
-					table = new Uint16[table_size_mask + 1];
+					table = new uint16_t[table_size_mask + 1];
 				}
 				genindB::~genindB() {
 					delete[] table;
 				}
-				Uint16 genindB::raw16() {
+				uint16_t genindB::raw16() {
 					int i1 = a >> (16 - shift);
 					int i2 = i++ & table_size_mask;
-					Uint16& t1 = table[i1];
-					Uint16& t2 = table[i2];
-					Uint16 old = a ^ i;
+					uint16_t& t1 = table[i1];
+					uint16_t& t2 = table[i2];
+					uint16_t old = a ^ i;
 					a ^= t2 + b;
 					b = std::rotl(b, 5) + old;
 					t1 = t2;
@@ -567,21 +567,21 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (size_L2 > 16) issue_error("genindC - size too large");
 					if (size_L2 < 1) issue_error("genindC - size too small");
 					table_size_L2 = size_L2;
-					table = new Uint16[1 << table_size_L2];
+					table = new uint16_t[1 << table_size_L2];
 					left = -1;
 				}
-				Uint16 genindC::refill() {
+				uint16_t genindC::refill() {
 					//int size = 1 << table_size_L2;
 					int half_size = 1 << (table_size_L2 - 1);
 					int mask = half_size - 1;
-					Uint16* table2 = table + half_size;
+					uint16_t* table2 = table + half_size;
 					for (int i = 0; i < half_size; i++) {
-						Uint16 o = table[i];
+						uint16_t o = table[i];
 						table[i] += a;
 						a = table2[o & mask] + std::rotl(a, 5);
 					}
 					for (int i = 0; i < half_size; i++) {
-						Uint16 o = table2[i];
+						uint16_t o = table2[i];
 						table2[i] += a;
 						a = table[o & mask] + std::rotl(a, 5);
 					}
@@ -607,13 +607,13 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (size_L2 > 16) issue_error("genindD - size too large");
 					if (size_L2 < 0) issue_error("genindD - size too small");
 					table_size_L2 = size_L2;
-					table = new Uint16[1ULL << table_size_L2];
+					table = new uint16_t[1ULL << table_size_L2];
 					mask = (1ULL << table_size_L2) - 1;
 				}
-				Uint16 genindD::raw16() {
+				uint16_t genindD::raw16() {
 					int i1 = i++ & mask;
 					int i2 = a & mask;
-					Uint16 tmp = table[i1] ^ a;
+					uint16_t tmp = table[i1] ^ a;
 					a += tmp;
 					table[i1] = table[i2];
 					table[i2] = tmp;
@@ -638,20 +638,20 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				genindE::genindE(int size_L2) : table_size_L2(size_L2) {
 					if (size_L2 < 1) issue_error("genindE - size too small");
 					if (size_L2 > 16) issue_error("genindE - size too large");
-					table1 = new Uint16[1ULL << (table_size_L2)];
-					table2 = new Uint16[1ULL << (table_size_L2)];
+					table1 = new uint16_t[1ULL << (table_size_L2)];
+					table2 = new uint16_t[1ULL << (table_size_L2)];
 					mask = (1ULL << table_size_L2) - 1;
 				}
-				Uint16 genindE::raw16() {
+				uint16_t genindE::raw16() {
 					int X = i++;
 					int Y = a & mask;
-					Uint16 A = std::rotl(table2[X], 3) + std::rotl(table2[Y], 0);
-					Uint16 B = std::rotl(table1[X], 0) ^ std::rotl(a, 2);
+					uint16_t A = std::rotl(table2[X], 3) + std::rotl(table2[Y], 0);
+					uint16_t B = std::rotl(table1[X], 0) ^ std::rotl(a, 2);
 					table1[X] = a;
 					a = B + A;
 					if (i > mask) {
 						i = 0;
-						Uint16* tmp = table1;
+						uint16_t* tmp = table1;
 						table1 = table2;
 						table2 = tmp;
 					}
@@ -677,17 +677,17 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				genindF::genindF(int size_L2) : table_size_L2(size_L2) {
 					if (size_L2 < 1) issue_error("genindF - size too small");
 					if (size_L2 > 16) issue_error("genindF - size too large");
-					table1 = new Uint16[1ULL << (table_size_L2)];
-					table2 = new Uint16[1ULL << (table_size_L2)];
+					table1 = new uint16_t[1ULL << (table_size_L2)];
+					table2 = new uint16_t[1ULL << (table_size_L2)];
 					mask = (1ULL << (table_size_L2)) - 1;
 				}
-				Uint16 genindF::raw16() {
+				uint16_t genindF::raw16() {
 					a ^= table2[i++ & mask];
 					int i1 = a & mask;
 					a = std::rotl(a, 11);
-					Uint16 o1 = table1[i1];
+					uint16_t o1 = table1[i1];
 					int i2 = o1 & mask;
-					Uint16 o2 = table2[i2];
+					uint16_t o2 = table2[i2];
 					table1[i1] = o2;
 					table2[i2] = o1 + a;
 					a += o1 ^ o2;

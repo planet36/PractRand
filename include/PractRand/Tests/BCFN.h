@@ -16,7 +16,7 @@ namespace PractRand::Tests {
 		class BCFN final : public TestBaseclass {
 		protected:
 			static constexpr int LEVELS = 32;
-			VariableSizeCount<Uint16> counts[LEVELS];
+			VariableSizeCount<uint16_t> counts[LEVELS];
 			long mask[LEVELS]{};
 			long cur[LEVELS]{};
 			bool even[LEVELS]{};     // <4 is never used?
@@ -25,14 +25,14 @@ namespace PractRand::Tests {
 			long tbits;
 			long unitsL2;
 			bool unbalanced;
-			Uint64 blocks{};
+			uint64_t blocks{};
 		public:
 			explicit BCFN(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
 			void init( PractRand::RNGs::vRNG* known_good ) override;
 			void deinit( ) override;
 			[[nodiscard]] std::string get_name() const override;
 			//virtual double get_result();
-			//virtual double result_to_pvalue ( Uint64 blocks, double r );
+			//virtual double result_to_pvalue ( uint64_t blocks, double r );
 			void get_results ( std::vector<TestResult>& results ) override;
 
 			void test_blocks(TestBlock* data, int numblocks) override;
@@ -42,7 +42,7 @@ namespace PractRand::Tests {
 		class BCFN_FF final : public TestBaseclass {
 		protected:
 			static constexpr int LEVELS = 32;
-			VariableSizeCount<Uint16> counts[LEVELS];
+			VariableSizeCount<uint16_t> counts[LEVELS];
 			//long mask[LEVELS];
 			unsigned long mask{};
 			long cur[LEVELS]{};
@@ -51,22 +51,22 @@ namespace PractRand::Tests {
 			long warmup[LEVELS]{};   // <4 is never used?
 
 			static constexpr int COUNTS2_SIZE = 256;//review the optimizations near the end of test_blocks() before reducing this value
-			Uint64 counts2[LEVELS][COUNTS2_SIZE]{};
-			std::vector<Sint32> extreme_counts2[LEVELS];// <= 1 in a hundred million events
+			uint64_t counts2[LEVELS][COUNTS2_SIZE]{};
+			std::vector<int32_t> extreme_counts2[LEVELS];// <= 1 in a hundred million events
 			long shifts[LEVELS]{};
 
 			long tbits;
 			long unitsL2;
 
 			bool unbalanced;
-			Uint64 blocks{};
+			uint64_t blocks{};
 		public:
 			explicit BCFN_FF(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
 			void init( PractRand::RNGs::vRNG* known_good ) override;
 			void deinit( ) override;
 			[[nodiscard]] std::string get_name() const override;
 			//virtual double get_result();
-			//virtual double result_to_pvalue ( Uint64 blocks, double r );
+			//virtual double result_to_pvalue ( uint64_t blocks, double r );
 			void get_results ( std::vector<TestResult>& results ) override;
 
 			void test_blocks(TestBlock* data, int numblocks) override;

@@ -104,8 +104,8 @@ double ref_p129_with_formatting[] = {
 	0.999995, 0.999998, 0.999999, -1,
 	0.9999995, 0.9999998, 0.9999999, -2
 };
-void print_ss(const SampleSet& ss, const std::string& name, Uint64 blocks) {
-//	std::printf("{\"BCFN-%d/%d\",%7.0f,%5d, %d, {", tbits, 1<<stride_L2, double(Uint64(std::pow(2,length_L2) / 1024)), (int)ss.size(), (int)ss.num_duplicates());
+void print_ss(const SampleSet& ss, const std::string& name, uint64_t blocks) {
+//	std::printf("{\"BCFN-%d/%d\",%7.0f,%5d, %d, {", tbits, 1<<stride_L2, double(uint64_t(std::pow(2,length_L2) / 1024)), (int)ss.size(), (int)ss.num_duplicates());
 //	for (int i = 0; i < 117; i++) std::printf("%s%+7.3f", i ? "," : "", ss.get_result_by_percentile(ref_p[i]));
 //	std::printf("}, %+.4f, %+.4f, %.4f},\n", ss.get_result_by_percentile(0.5), ss.get_mean(), ss.get_stddev());
 	std::printf("{\"%s\",%9.0f,%5d,%4d, {", name.c_str(), (double)blocks, (long)ss.size(), (long)ss.num_duplicates());
@@ -117,16 +117,16 @@ void print_ss(const SampleSet& ss, const std::string& name, Uint64 blocks) {
 }
 
 
-double fake_bcfn(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n) {
+double fake_bcfn(PractRand::RNGs::vRNG* known_good, int tbits, uint64_t n) {
 	PractRand::RNGs::LightWeight::sfc32 rng(known_good);
 	int size = 1 << tbits;
 	int mask = size - 1;
-	Uint32 cur = rng.raw32();
-	std::vector<Uint64> table; table.resize(size, 0);
+	uint32_t cur = rng.raw32();
+	std::vector<uint64_t> table; table.resize(size, 0);
 	std::vector<double> probs; probs.resize(size, 1.0/size);
 	n = (n + 7) >> 4;
 	while (n) {
-		Uint32 n32 = Uint32(n);
+		uint32_t n32 = uint32_t(n);
 		if (n32 != n) n32 = 1<<30;
 		n -= n32;
 		for (; n32 > 0; n32--) {
@@ -156,23 +156,23 @@ double fake_bcfn(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n) {
 	double rn = PractRand::Tests::math_chisquared_to_normal(rv, reduced_size-1);
 	return rn;
 }
-double fake_bcfn2(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n, double p) {
+double fake_bcfn2(PractRand::RNGs::vRNG* known_good, int tbits, uint64_t n, double p) {
 	if (p == 0.5) return fake_bcfn(known_good, tbits, n);
 	if (p <= 0 || p >= 1) issue_error();
 	PractRand::RNGs::LightWeight::sfc32 rng(known_good);
 	int size = 1 << tbits;
 	int mask = size - 1;
-	Uint32 p_i = Uint32(std::floor(p * std::pow(2.0, 32)));
-	Uint32 cur = rng.raw32();
-	std::vector<Uint64> table; table.resize(size, 0);
+	uint32_t p_i = uint32_t(std::floor(p * std::pow(2.0, 32)));
+	uint32_t cur = rng.raw32();
+	std::vector<uint64_t> table; table.resize(size, 0);
 	std::vector<double> probs; probs.resize(size);
-	for (Uint32 i = 0; i < size; i++) {
+	for (uint32_t i = 0; i < size; i++) {
 		int ones = std::popcount(i);
 		probs[i] = std::pow(p, ones) * std::pow(1-p, tbits-ones);
 	}
 	n = (n + 3) >> 3;
 	while (n) {
-		Uint32 n32 = Uint32(n);
+		uint32_t n32 = uint32_t(n);
 		if (n32 != n) n32 = 1<<30;
 		n -= n32;
 		for (; n32 > 0; n32--) {
@@ -185,7 +185,7 @@ double fake_bcfn2(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n, double
 			table[(cur >>  6) & mask]++;
 			table[(cur >>  7) & mask]++;
 #define BIT (rng.raw32() < p_i ? 1 : 0)
-			Uint32 next8 = (BIT);
+			uint32_t next8 = (BIT);
 			next8 |= (BIT) << 1;
 			next8 |= (BIT) << 2;
 			next8 |= (BIT) << 3;
@@ -204,10 +204,10 @@ double fake_bcfn2(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n, double
 	double rn = PractRand::Tests::math_chisquared_to_normal(rv, reduced_size-1);
 	return rn;
 }
-SampleSet fake_bcfn_dist(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 n, Uint32 samples, double p) {
+SampleSet fake_bcfn_dist(PractRand::RNGs::vRNG* known_good, int tbits, uint64_t n, uint32_t samples, double p) {
 	SampleSet ss;
-	if (p == 0.5) for (Uint32 i = 0; i < samples; i++) ss._add(fake_bcfn(known_good, tbits, n));
-	else for (Uint32 i = 0; i < samples; i++) ss._add(fake_bcfn2(known_good, tbits, n, p));
+	if (p == 0.5) for (uint32_t i = 0; i < samples; i++) ss._add(fake_bcfn(known_good, tbits, n));
+	else for (uint32_t i = 0; i < samples; i++) ss._add(fake_bcfn2(known_good, tbits, n, p));
 	ss._normalize();
 	return ss;
 }
@@ -236,7 +236,7 @@ void print_fake_bcfn_dist(int tbits, int stride_L2, double length_L2, int sample
 	double p = unbalanced ? (even_chance + 1)*0.5 : 0.5;
 	double unskipped_chance = unbalanced ? 1 : 1 - even_chance;
 	ss = fake_bcfn_dist(&known_good, tbits, std::pow(2, length_L2 + 3 - level) * unskipped_chance - tbits + 1, samples, p);
-	std::printf("{\"%s-%d/%d\",%9.0f,%5d,%4d, {", unbalanced?"BCFNU":"BCFN", tbits, 1<<stride_L2, double(Uint64(std::pow(2,length_L2) / 1024)), (int)ss.size(), (int)ss.num_duplicates());
+	std::printf("{\"%s-%d/%d\",%9.0f,%5d,%4d, {", unbalanced?"BCFNU":"BCFN", tbits, 1<<stride_L2, double(uint64_t(std::pow(2,length_L2) / 1024)), (int)ss.size(), (int)ss.num_duplicates());
 	for (int i = 0; i < 129; i++) std::printf("%s%+7.3f", i ? "," : "", ss.get_result_by_percentile(ref_p129[i]));
 	std::printf("}, %+.4f, %+.4f, %.4f, %d},\n", ss.get_result_by_percentile(0.5), ss.get_mean(), ss.get_stddev(), 0);
 }
@@ -250,7 +250,7 @@ void blah_bcfn() {
 		}
 	}
 }
-Uint64 generate_binomial_dist(PractRand::RNGs::vRNG* known_good, Uint64 sample_length) {
+uint64_t generate_binomial_dist(PractRand::RNGs::vRNG* known_good, uint64_t sample_length) {
 	//returns number of 0s in (sample_length) random bits
 	if (sample_length > 1ull << 12) {
 		double p = known_good->randf();
@@ -259,23 +259,23 @@ Uint64 generate_binomial_dist(PractRand::RNGs::vRNG* known_good, Uint64 sample_l
 		double dev = sqrt(sample_length * 0.5 * 0.5);
 		//double delta = 1.0 / dev;
 		double rv = mean + n * dev;
-		return Uint64(rv);
+		return uint64_t(rv);
 	}
-	Uint32 len = sample_length;
-	Uint32 rv = 0;
+	uint32_t len = sample_length;
+	uint32_t rv = 0;
 	for (; len >= 32; len -= 32) rv += std::popcount(known_good->raw32());
 	for (; len >= 8; len -= 8) rv += std::popcount(known_good->raw8());
 	for (; len >= 1; len -= 1) rv += known_good->raw32() & 1;
 	return rv;
 }
-void fake_fpf_raw(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 sample_length, int trials, SampleSet& ss_raw) {
-	std::vector<Uint64> counts;
+void fake_fpf_raw(PractRand::RNGs::vRNG* known_good, int tbits, uint64_t sample_length, int trials, SampleSet& ss_raw) {
+	std::vector<uint64_t> counts;
 	long size = 1 << tbits;
 	counts.resize(size);
 	long mask = size - 1;
 	for (long i = 0; i < trials; i++) {
 		for (long x = 0; x <= mask; x++) counts[x] = 0;
-		Uint64 samples_left = sample_length;
+		uint64_t samples_left = sample_length;
 		while (samples_left >= 1024) {
 			for (int x = 0; x < 256; x++) {
 				counts[known_good->raw32() & mask]++; counts[known_good->raw32() & mask]++; counts[known_good->raw32() & mask]++; counts[known_good->raw32() & mask]++;
@@ -287,8 +287,8 @@ void fake_fpf_raw(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 sample_le
 		/*counts[0] = sample_length;
 		for (int b = 0; b < tbits; b++) {
 			for (int x = 0; x < (1<<b); x++) {
-				Uint64 base = counts[x];
-				Uint64 half = generate_binomial_dist(known_good, base);
+				uint64_t base = counts[x];
+				uint64_t half = generate_binomial_dist(known_good, base);
 				counts[x] = half;
 				counts[x + (1<<b)] = base-half;
 			}
@@ -302,7 +302,7 @@ void fake_fpf_raw(PractRand::RNGs::vRNG* known_good, int tbits, Uint64 sample_le
 	}
 	ss_raw._normalize();
 }
-void print_fake_fpf_intra(int tbits, Uint64 sample_length, int trials) {
+void print_fake_fpf_intra(int tbits, uint64_t sample_length, int trials) {
 	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 	SampleSet ss_raw;
 	fake_fpf_raw(&known_good, tbits, sample_length, trials, ss_raw);
@@ -320,7 +320,7 @@ void print_fake_fpf_intra(int tbits, Uint64 sample_length, int trials) {
 	}
 	std::printf("}, %+.4f, %+.4f, %.4f, %d},\n", ss.get_result_by_percentile(0.5), ss.get_mean(), ss.get_stddev(), 0);
 }
-void print_fake_fpf_others(int tbits, Uint64 sample_length, int trials) {
+void print_fake_fpf_others(int tbits, uint64_t sample_length, int trials) {
 }
 void blah_fpf_all2() {
 	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
@@ -349,7 +349,7 @@ void blah_fpf() {
 	for (int trials = 1 << 0; trials <= 1 << 24; trials <<= 2) {
 		printf("\n\n\n");
 		for (int tbits = 2; tbits <= 3; tbits+=1) {
-			for (Uint64 length = 1ull<<(tbits+9); length <= 1ull<<(tbits+9); length <<= 1) {
+			for (uint64_t length = 1ull<<(tbits+9); length <= 1ull<<(tbits+9); length <<= 1) {
 				print_fake_fpf_intra(tbits, length, trials);
 				if (length > 1) print_fake_fpf_intra(tbits, length + (length >> 1), trials);
 			}
@@ -360,7 +360,7 @@ void blah_fpf() {
 void set_shift_values(int shift1, int shift2, int shift3);
 struct CharPoly {
 	static constexpr int WORDS = 3;
-	typedef Uint16 Word;
+	typedef uint16_t Word;
 	static constexpr int BITS = sizeof(Word) * 8;
 	Word data[WORDS];
 
@@ -448,12 +448,12 @@ void find_test_distributions() {
 	TestManager tman(&tests, &known_good);
 	tman.reset(&rng);
 
-	//Uint64 test_size = 1 << 16;
+	//uint64_t test_size = 1 << 16;
 	//test_size *= Tests::TestBlock::SIZE;
 
-	std::map<std::string,std::map<Uint64,SampleSet> > data;
-	Uint64 next_checkpoint = 1;
-	for (Uint64 n = 0; n <= 1ull<<30; n++) {
+	std::map<std::string,std::map<uint64_t,SampleSet> > data;
+	uint64_t next_checkpoint = 1;
+	for (uint64_t n = 0; n <= 1ull<<30; n++) {
 		if (n == next_checkpoint) {
 			constexpr int CHUNKY = 1 << 12;
 			if (next_checkpoint < CHUNKY) next_checkpoint <<= 1; else next_checkpoint += CHUNKY;
@@ -467,10 +467,10 @@ void find_test_distributions() {
 			else std::printf("for length = %d TB\n", test_size >> 40);*/
 			std::printf("==================================================\n");
 			int test_name_index = 0;
-			for (std::map<std::string,std::map<Uint64,SampleSet> >::iterator it = data.begin(); it != data.end(); it++, test_name_index++) {
+			for (std::map<std::string,std::map<uint64_t,SampleSet> >::iterator it = data.begin(); it != data.end(); it++, test_name_index++) {
 				std::string name = it->first;
-				for (std::map<Uint64,SampleSet>::iterator it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-					Uint64 length = it2->first;
+				for (std::map<uint64_t,SampleSet>::iterator it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+					uint64_t length = it2->first;
 					//int length_L2 = it2->first;
 					SampleSet& ss = it2->second;
 					ss._normalize();
@@ -512,10 +512,10 @@ void find_test_distributions() {
 				}
 			}
 		}
-		Uint64 blocks_so_far = 0;
+		uint64_t blocks_so_far = 0;
 		for (int length_L2 = 10; length_L2 <= 25; length_L2 += 1) {
 			if (length_L2 >= 10+3 && length_L2 < 99) {
-				Uint64 new_blocks = (5ull << (length_L2-3)) / Tests::TestBlock::SIZE;
+				uint64_t new_blocks = (5ull << (length_L2-3)) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
 				blocks_so_far = new_blocks;
 				for (int i = 0; i < tests.tests.size(); i++) {
@@ -525,7 +525,7 @@ void find_test_distributions() {
 				}
 			}
 			if (length_L2 >= 10+2 && length_L2 <= 99) {
-				Uint64 new_blocks = (3ull << (length_L2-2)) / Tests::TestBlock::SIZE;
+				uint64_t new_blocks = (3ull << (length_L2-2)) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
 				blocks_so_far = new_blocks;
 				for (int i = 0; i < tests.tests.size(); i++) {
@@ -535,7 +535,7 @@ void find_test_distributions() {
 				}
 			}
 			if (length_L2 >= 10+3 && length_L2 < 99) {
-				Uint64 new_blocks = (7ull << (length_L2-3)) / Tests::TestBlock::SIZE;
+				uint64_t new_blocks = (7ull << (length_L2-3)) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
 				blocks_so_far = new_blocks;
 				for (int i = 0; i < tests.tests.size(); i++) {
@@ -545,7 +545,7 @@ void find_test_distributions() {
 				}
 			}
 			if constexpr (true) {
-				Uint64 new_blocks = (1ull << length_L2) / Tests::TestBlock::SIZE;
+				uint64_t new_blocks = (1ull << length_L2) / Tests::TestBlock::SIZE;
 				tman.test(new_blocks - blocks_so_far);
 				blocks_so_far = new_blocks;
 				for (int i = 0; i < tests.tests.size(); i++) {
@@ -575,7 +575,7 @@ static void calibrate_set_uniformity(SampleSet* calib, int n, PractRand::RNGs::v
 }
 static void simple_chisquare_test( PractRand::RNGs::vRNG* known_good ) {
 	constexpr int SIZE = 1<<4;
-	Uint64 counts[SIZE];
+	uint64_t counts[SIZE];
 	double probs[SIZE];
 	SampleSet ssA, ssB;
 	constexpr int N = 8;
@@ -619,8 +619,8 @@ void verify_test_distributions() {
 	tman.reset(&rng);
 
 	std::map<std::string,std::map<int,SampleSet> > data;
-	Uint64 next_checkpoint = 1;
-	for (Uint64 n = 0; n <= 1<<20; n++) {
+	uint64_t next_checkpoint = 1;
+	for (uint64_t n = 0; n <= 1<<20; n++) {
 		if (n == next_checkpoint) {
 			SampleSet calib;
 			calibrate_set_uniformity(&calib, n, &known_good);
@@ -655,10 +655,10 @@ void verify_test_distributions() {
 				}
 			}
 		}
-		Uint64 blocks_so_far = 0;
+		uint64_t blocks_so_far = 0;
 		for (int length_L2 = 21; length_L2 <= 30; length_L2 += 1) {
 			//data["fred"][length_L2]._add(known_good.randf(0.95));continue;
-			Uint64 new_blocks = (1ull << length_L2) / Tests::TestBlock::SIZE;
+			uint64_t new_blocks = (1ull << length_L2) / Tests::TestBlock::SIZE;
 			tman.test(new_blocks - blocks_so_far);
 			blocks_so_far = new_blocks;
 			for (int i = 0; i < tests.tests.size(); i++) {
@@ -672,7 +672,7 @@ void verify_test_distributions() {
 }
 
 struct Data {
-	Uint64 count;
+	uint64_t count;
 	double vec[129];
 	Data() : count(0) {
 		for (int i = 0; i < 129; i++) vec[i] = 0;
@@ -697,8 +697,8 @@ void print_data() {
 	}
 }
 
-static int sum_of_bytes(Uint32 in) {
-	const Uint32 mask1 = 0x00FF00FF;
+static int sum_of_bytes(uint32_t in) {
+	const uint32_t mask1 = 0x00FF00FF;
 	in = (in & mask1) + ((in>>8) & mask1);
 	in += in >> 16;
 	return (in & 1023);
@@ -808,8 +808,8 @@ double generate_gaussian( RNG& rng ) {
 	//17+8: 33+
 	double a, b, r;
 	do {
-		a = Sint32(rng.raw32()) / 2147483648.0;//rng.randf()*2-1;
-		b = Sint32(rng.raw32()) / 2147483648.0;//rng.randf()*2-1;
+		a = int32_t(rng.raw32()) / 2147483648.0;//rng.randf()*2-1;
+		b = int32_t(rng.raw32()) / 2147483648.0;//rng.randf()*2-1;
 		r = a*a + b*b;
 	}
 	while (r > 1.0);
@@ -936,7 +936,7 @@ double generate_gaussian( RNG& rng ) {
 			int n = 1<<28;
 			for (int i = 0; i < n; i++) {
 				double norm = normtable_a[i & (NORMTABLE_SIZE-1)];
-				norm += normtable_b[i & (NORMTABLE_SIZE-1)] * Sint32(rng.raw32());
+				norm += normtable_b[i & (NORMTABLE_SIZE-1)] * int32_t(rng.raw32());
 				sum += norm; sum2 += norm * norm;
 			}
 			sum /= n; sum2 /= n;
@@ -959,7 +959,7 @@ double generate_gaussian( RNG& rng ) {
 			int n = 1<<28;
 			for (int i = 0; i < n; i++) {
 				double norm = 0;
-				for (int a = 0; a < STRONG; a++) {int index = rng.raw32(); norm += normtable_a[index & (NORMTABLE_SIZE-1)] + normtable_b[index & (NORMTABLE_SIZE-1)] * Sint32(rng.raw32());}
+				for (int a = 0; a < STRONG; a++) {int index = rng.raw32(); norm += normtable_a[index & (NORMTABLE_SIZE-1)] + normtable_b[index & (NORMTABLE_SIZE-1)] * int32_t(rng.raw32());}
 				for (int a = 0; a < WEAK; a++) {int index = rng.raw32(); norm += normtable_a[index & (NORMTABLE_SIZE-1)];}
 				sum += norm; sum2 += norm * norm;
 			}
@@ -972,8 +972,8 @@ double generate_gaussian( RNG& rng ) {
 		//for (int i = 0; i < NORMTABLE_SIZE; i++) std::printf("%s%+.11g, ", (i%16)?"":"\n", normtable_b[i]);
 		inited = true;
 	}
-	Uint32 indeces = rng.raw32();
-	int index; Sint32 u; double rv = 0;
+	uint32_t indeces = rng.raw32();
+	int index; int32_t u; double rv = 0;
 	for (int x = 0; x < STRONG; x++) {
 		index = indeces & (NORMTABLE_SIZE-1); indeces >>= NORMTABLE_SIZE_L2;
 		//index = rng.raw16() & (NORMTABLE_SIZE-1);
@@ -998,7 +998,7 @@ void test_normal_distribution_a() {
 	bench_start = std::clock();
 	while (bench_start == (bench_end = std::clock())) ;
 	bench_start = bench_end;
-	Uint32 count = 0;
+	uint32_t count = 0;
 	while (CLOCKS_PER_SEC*0.5+1 > std::clock_t((bench_end = std::clock())-bench_start)) {
 		double a = generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng) + generate_gaussian(rng);
 		//generate_gaussian_(&rng); generate_gaussian_(&rng); generate_gaussian_(&rng); generate_gaussian_(&rng);
@@ -1024,8 +1024,8 @@ void test_normal_distribution_a() {
 	}
 	if constexpr (true) {
 		constexpr int TBITS=17;
-		std::vector<Uint64> counts; counts.resize(1<<TBITS, 0);
-		Uint64 total = 0;
+		std::vector<uint64_t> counts; counts.resize(1<<TBITS, 0);
+		uint64_t total = 0;
 		constexpr int DISCARD_BITS = 4;
 		const double scale = std::pow(2.0, TBITS*1.0+DISCARD_BITS);
 		const double p_thresh = std::pow(0.5, DISCARD_BITS*1.0);
@@ -1037,7 +1037,7 @@ void test_normal_distribution_a() {
 					double norm = generate_gaussian(rng);
 					if (norm >= n_thresh) continue;
 					double p = Tests::math_normaldist_to_pvalue(norm);
-					Uint32 index = Uint32(std::floor(p*scale));
+					uint32_t index = uint32_t(std::floor(p*scale));
 					if (index > (1 << TBITS)) PractRand::issue_error();
 					counts[index]++;
 					i++;
@@ -1049,21 +1049,21 @@ void test_normal_distribution_a() {
 	}
 }
 
-Uint64 count_period(PractRand::RNGs::vRNG* rng) {
+uint64_t count_period(PractRand::RNGs::vRNG* rng) {
 	constexpr int BYTES = 32;//must be a power of 2 greater than or equal to 8
 	if (rng->get_native_output_size() == 8) {
-		typedef Uint8 Word;
+		typedef uint8_t Word;
 		constexpr int BUFSIZE = BYTES / sizeof(Word);
 		Word buff1[BUFSIZE];
 		Word buff2[BUFSIZE];
 		rng->autoseed();
 		for (int i = 0; i < BUFSIZE; i++) buff1[i] = rng->raw8();
-		for (Uint64 p = 0; p < (1ull << 48); p++) {
+		for (uint64_t p = 0; p < (1ull << 48); p++) {
 			if ((buff2[p & (BUFSIZE - 1)] = rng->raw8()) == buff1[BUFSIZE - 1]) {
 				bool match = true;
 				for (int i = 1; i < BUFSIZE; i++) if (buff2[(p - i) & (BUFSIZE - 1)] != buff1[BUFSIZE - 1 - i]) match = false;
 				if (match) {
-					Uint64 rv = p + 1;
+					uint64_t rv = p + 1;
 					std::printf("cycle found in [%s] of length %.0f\n", rng->get_name().c_str(), double(rv));
 					if (!(rv & ((1 << 20)-1))) std::printf("%.0fM exactly\n", double(rv >> 20));
 					else if (!(rv & 1023)) std::printf("%.0fK exactly\n", double(rv >> 10));
@@ -1079,21 +1079,21 @@ void test_sfc16() {
 	if constexpr (1) {//search for short cycles
 		constexpr int BUFFER_SIZE = 16;//plenty to tell if the state matched (6 would probably be enough, but more doesn't hurt)
 		constexpr int SHORT_CYCLE_L2 = 40;//the log-based-2 of the cycle length we consider "too short"
-		Uint16 buffy[BUFFER_SIZE];
+		uint16_t buffy[BUFFER_SIZE];
 		PractRand::RNGs::Raw::sfc16 rng;
-		for (Uint64 seed = 0; true; seed++) {
+		for (uint64_t seed = 0; true; seed++) {
 			rng.seed(seed);
 			for (int i = 0; i < BUFFER_SIZE; i++) buffy[i] = rng.raw16();
-			for (Uint64 i = 0; i < ((1ull << SHORT_CYCLE_L2) - BUFFER_SIZE); i++) rng.raw16();
+			for (uint64_t i = 0; i < ((1ull << SHORT_CYCLE_L2) - BUFFER_SIZE); i++) rng.raw16();
 			int match = true;
 			for (int i = 0; i < BUFFER_SIZE; i++) if (buffy[i] != rng.raw16()) match = false;
 			if (match || !(seed & 15)) {
 				std::printf("seed 0x");
 				if (seed >> 32) {
-					std::printf("%X", Uint32(seed >> 32));
-					std::printf("%08X", Uint32(seed >> 0));
+					std::printf("%X", uint32_t(seed >> 32));
+					std::printf("%08X", uint32_t(seed >> 0));
 				}
-				else std::printf("%X", Uint32(seed));
+				else std::printf("%X", uint32_t(seed));
 				if (match) std::printf(" had a short cycle\n\n  !!!!!!!!!!!!!!!!!!!\n\n  !!!!!!!!!!!!!!!!!!!\n\n  !!!!!!!!!!!!!!!!!!!\n");
 				else std::printf(" was good\n");
 			}

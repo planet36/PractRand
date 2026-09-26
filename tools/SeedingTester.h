@@ -21,10 +21,10 @@ class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG* base_rng;
-	PractRand::Uint64 current_seed{};
+	uint64_t current_seed{};
 
-	std::set<PractRand::Uint64> unordered_history;
-	std::deque<PractRand::Uint64> history;
+	std::set<uint64_t> unordered_history;
+	std::deque<uint64_t> history;
 	unsigned int history_limit{1024};
 
 	explicit Seeder_MetaRNG(PractRand::RNGs::vRNG* base_rng_) : known_good(PractRand::SEED_NONE), base_rng(base_rng_) {
@@ -37,13 +37,13 @@ public:
 		current_seed = known_good.raw64();
 		record_seed(current_seed);
 	}
-	void seed(PractRand::Uint64 s) override {
+	void seed(uint64_t s) override {
 		known_good.seed(s);
 		current_seed = known_good.raw64();
 		record_seed(current_seed);
 	}
 	using vRNG::seed;
-	bool record_seed(PractRand::Uint64 new_seed) {
+	bool record_seed(uint64_t new_seed) {
 		if (!unordered_history.insert(new_seed).second) return false;
 		current_seed = new_seed;
 		history.push_back(current_seed);
@@ -54,10 +54,10 @@ public:
 		return true;
 	}
 	void evolve_seed() {
-		PractRand::Uint64 bits_tried = 0;
+		uint64_t bits_tried = 0;
 		while (true) {
-			PractRand::Uint64 bit = 1ULL << known_good.randi(64);
-			PractRand::Uint64 new_seed = current_seed ^ bit;
+			uint64_t bit = 1ULL << known_good.randi(64);
+			uint64_t new_seed = current_seed ^ bit;
 			bits_tried |= bit;
 			if (record_seed(new_seed)) return;
 			if (0 == ~bits_tried) {
@@ -67,9 +67,9 @@ public:
 			}
 		}
 	}
-	PractRand::Uint64 raw64() override {
+	uint64_t raw64() override {
 		base_rng->seed(current_seed);
-		PractRand::Uint64 rv = base_rng->raw64();
+		uint64_t rv = base_rng->raw64();
 		evolve_seed();
 		return rv;
 	}
@@ -91,20 +91,20 @@ public:
 };
 class EntropyPool_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:
-	using Transform = PractRand::Uint64;
+	using Transform = uint64_t;
 	PractRand::RNGs::Polymorphic::hc256 known_good;
 	PractRand::RNGs::vRNG* base_entropy_pool;
 	unsigned int min_length, max_length;
 	unsigned int history_length{16384};
-	std::vector<PractRand::Uint8> current_seed;
+	std::vector<uint8_t> current_seed;
 	Transform last_transform{};
-	std::multiset<PractRand::Uint64> unordered_history;//hashes only
-	std::deque<std::pair<std::multiset<PractRand::Uint64>::iterator, Transform> > history;//hashes first, then transform applied - newest at front
+	std::multiset<uint64_t> unordered_history;//hashes only
+	std::deque<std::pair<std::multiset<uint64_t>::iterator, Transform> > history;//hashes first, then transform applied - newest at front
 
 	//what it should be: (but the current version is good enough)
-	//std::map<Uint64,Uint64> unordered_history;// hashes -> positions;
-	//std::deque<std::pair<std::map<Uint64,Uint64>::iterator,Transform> > history;//hashes first, then transform applied - newest at front
-	//Uint64 position;//starts at 0, incremented after every entropy string
+	//std::map<uint64_t,uint64_t> unordered_history;// hashes -> positions;
+	//std::deque<std::pair<std::map<uint64_t,uint64_t>::iterator,Transform> > history;//hashes first, then transform applied - newest at front
+	//uint64_t position;//starts at 0, incremented after every entropy string
 
 	EntropyPool_MetaRNG(PractRand::RNGs::vRNG* base_entropy_pool_, int min_length_, int max_length_) : known_good(PractRand::SEED_NONE), base_entropy_pool(base_entropy_pool_), min_length(min_length_), max_length(max_length_) {
 		//int len = (min_length + max_length) / 2;
@@ -120,32 +120,32 @@ public:
 		current_seed.resize(len);
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
-	void seed(PractRand::Uint64 s) override {
+	void seed(uint64_t s) override {
 		known_good.seed(s);
 		int len = (min_length + max_length) / 2;
 		current_seed.resize(len);
 		for (int i = 0; i < len; i++) current_seed[i] = known_good.raw8();
 	}
 	using vRNG::seed;
-	Transform pick_random_transform(const std::vector<PractRand::Uint8>& message) {
+	Transform pick_random_transform(const std::vector<uint8_t>& message) {
 		while (true) {
 			if (known_good.randf() < 0.96) {//toggle bit
-				return known_good.randi(message.size() * 8) + (PractRand::Uint64(0) << 56);
+				return known_good.randi(message.size() * 8) + (uint64_t(0) << 56);
 			}
 			if (known_good.randf() < 0.50) {//insertion
 				if (message.size() >= max_length) continue;
 				//low 8 bits = value to insert ; next 28 bits = position to insert at ; top 8 bits = action type
-				PractRand::Uint64 position = known_good.randi(message.size() + 1);
-				return known_good.raw8() + (position << 8) + (PractRand::Uint64(1) << 56);
+				uint64_t position = known_good.randi(message.size() + 1);
+				return known_good.raw8() + (position << 8) + (uint64_t(1) << 56);
 			}
 			else {//deletion
 				if (message.size() <= min_length) continue;
-				PractRand::Uint64 position = known_good.randi(message.size());
-				return message[position] + (position << 8) + (PractRand::Uint64(2) << 56);
+				uint64_t position = known_good.randi(message.size());
+				return message[position] + (position << 8) + (uint64_t(2) << 56);
 			}
 		}
 	}
-	static void apply_transform(std::vector<PractRand::Uint8>& message, Transform transform) {
+	static void apply_transform(std::vector<uint8_t>& message, Transform transform) {
 		//toggle bit, add byte at end, add byte at begining, remove byte at end, remove byte at begining
 		//adds or removals must include the data added or removed in addition to the action
 		switch (transform >> 56) {
@@ -178,22 +178,22 @@ public:
 			std::exit(1);
 		}
 	}
-	static void apply_inverse_transform(std::vector<PractRand::Uint8>& message, Transform transform) {
+	static void apply_inverse_transform(std::vector<uint8_t>& message, Transform transform) {
 		switch (transform >> 56) {
 		case 0://reverse a toggle bit by doing the same thign
 			apply_transform(message, transform);
 			break;
 		case 1://reverse an insertion with a deletion
-			apply_transform(message, transform + (PractRand::Uint64(1) << 56));
+			apply_transform(message, transform + (uint64_t(1) << 56));
 			break;
 		case 2://reverse a deletion with an insertion
-			apply_transform(message, transform - (PractRand::Uint64(1) << 56));
+			apply_transform(message, transform - (uint64_t(1) << 56));
 			break;
 		default:
 			break;
 		}
 	}
-	[[nodiscard]] PractRand::Uint64 hash_message(const std::vector<PractRand::Uint8>& message) const {
+	[[nodiscard]] uint64_t hash_message(const std::vector<uint8_t>& message) const {
 		base_entropy_pool->reset_entropy();
 		base_entropy_pool->add_entropy_N(message.data(), message.size());
 		//base_entropy_pool->add_entropy64(0);
@@ -206,13 +206,13 @@ public:
 			history.pop_back();
 		}
 	}
-	static int hamming_distance(const PractRand::Uint8* message1, const PractRand::Uint8* message2, int n) {
-		PractRand::Uint32 sum = 0;
+	static int hamming_distance(const uint8_t* message1, const uint8_t* message2, int n) {
+		uint32_t sum = 0;
 		for (int i = 0; i < n; i++) sum += std::popcount(static_cast<unsigned int>(message1[i] ^ message2[i]));
 		return sum;
 	}
-	bool check_conflict(const std::vector<PractRand::Uint8>& message) {
-		std::vector<PractRand::Uint8> rewound = current_seed;
+	bool check_conflict(const std::vector<uint8_t>& message) {
+		std::vector<uint8_t> rewound = current_seed;
 		for (auto& entry : history) {
 			//if (message.size() == rewound.size() && !std::memcmp(&message[0], &rewound[0], message.size())) {
 			if (message.size() == rewound.size() && !hamming_distance(message.data(), rewound.data(), message.size())) {
@@ -225,13 +225,13 @@ public:
 	void evolve_seed() {
 		while (true) {
 			Transform t = pick_random_transform(current_seed);
-			std::vector<PractRand::Uint8> new_seed = current_seed;
+			std::vector<uint8_t> new_seed = current_seed;
 			apply_transform(new_seed, t);
-			PractRand::Uint64 hash = hash_message(new_seed);
-			std::pair<std::multiset<PractRand::Uint64>::iterator, std::multiset<PractRand::Uint64>::iterator> sitr = unordered_history.equal_range(hash);
+			uint64_t hash = hash_message(new_seed);
+			std::pair<std::multiset<uint64_t>::iterator, std::multiset<uint64_t>::iterator> sitr = unordered_history.equal_range(hash);
 			if (sitr.first == sitr.second || !check_conflict(new_seed)) {//no conflicts
 				current_seed.swap(new_seed);
-				std::multiset<PractRand::Uint64>::iterator it;
+				std::multiset<uint64_t>::iterator it;
 				if (sitr.first == unordered_history.end()) it = unordered_history.insert(hash);
 				else it = unordered_history.insert(--sitr.first, hash);
 				history.emplace_front(it, t);
@@ -240,8 +240,8 @@ public:
 			}
 		}
 	}
-	PractRand::Uint64 raw64() override {
-		PractRand::Uint64 rv = hash_message(current_seed);
+	uint64_t raw64() override {
+		uint64_t rv = hash_message(current_seed);
 		evolve_seed();
 		return rv;
 	}

@@ -18,12 +18,12 @@ protected:
 	int prefix_blocks;
 	int main_blocks;
 	int blocks_to_repeat{};
-	PractRand::Uint64 blocks_so_far;
+	uint64_t blocks_so_far;
 	bool freshly_created;
-	int prep_blocks(PractRand::Uint64& blocks);
+	int prep_blocks(uint64_t& blocks);
 public:
 	[[nodiscard]] const PractRand::RNGs::vRNG* get_rng() const {return rng;}//RNG being tested
-	[[nodiscard]] PractRand::Uint64 get_blocks_so_far() const {return blocks_so_far;}//number of blocks tested
+	[[nodiscard]] uint64_t get_blocks_so_far() const {return blocks_so_far;}//number of blocks tested
 
 	explicit TestManager(PractRand::Tests::ListOfTests* tests_, PractRand::RNGs::vRNG* known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));
 	//rng_ = RNG to test
@@ -35,7 +35,7 @@ public:
 
 	virtual void reset(PractRand::RNGs::vRNG* rng_);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 
-	virtual void test(PractRand::Uint64 blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
+	virtual void test(uint64_t blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
 
 	virtual void get_results( std::vector<PractRand::TestResult>& result_vec ) final;//gets the results
 };
@@ -68,8 +68,8 @@ void TestManager::reset(PractRand::RNGs::vRNG* rng_) {
 	prefix_blocks = 0;
 	blocks_so_far = 0;
 }
-int TestManager::prep_blocks(PractRand::Uint64& blocks) {
-	PractRand::Uint64 _delta_blocks = blocks;
+int TestManager::prep_blocks(uint64_t& blocks) {
+	uint64_t _delta_blocks = blocks;
 	if (_delta_blocks > max_buffer_amount) _delta_blocks = max_buffer_amount;
 	int delta_blocks = int(_delta_blocks);
 	blocks -= delta_blocks;
@@ -90,7 +90,7 @@ int TestManager::prep_blocks(PractRand::Uint64& blocks) {
 	blocks_so_far += delta_blocks;
 	return delta_blocks;
 }
-void TestManager::test(PractRand::Uint64 num_blocks) {
+void TestManager::test(uint64_t num_blocks) {
 	while (num_blocks) {
 		prep_blocks(num_blocks);
 		for (auto& test : tests->tests)

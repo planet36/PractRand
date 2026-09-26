@@ -24,7 +24,7 @@ namespace PractRand::Tests {
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + POSITIONS1_L2 + POSITIONS2_L2;
 			int blocks_till_next{};
 			int blocks_per;
-			FixedSizeCount<Uint8, 1 << TOTAL_INDEX_BITS> counts;
+			FixedSizeCount<uint8_t, 1 << TOTAL_INDEX_BITS> counts;
 		};
 		class TripleFreq final : public TestBaseclass {
 		public:
@@ -52,7 +52,7 @@ namespace PractRand::Tests {
 			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
-			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
+			FixedSizeCount<uint16_t, 1 << TOTAL_INDEX_BITS> counts;
 			// reordered order:                (pos2 aka region), (pos3), (window1), (window2), (window3)
 			// index order, from high to low:  (pos2 aka region), (window1), (window2), (pos3), (window3)
 		};
@@ -78,7 +78,7 @@ namespace PractRand::Tests {
 			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
-			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
+			FixedSizeCount<uint16_t, 1 << TOTAL_INDEX_BITS> counts;
 			// index order, from high to low:  (pos), (window1), (window2), (window3)
 		};
 		class TripleMirrorFreqN : public TestBaseclass {
@@ -100,7 +100,7 @@ namespace PractRand::Tests {
 			static constexpr int SIZE3 = 3;
 			static constexpr int POSITIONS_L2 = 4;//can't exceed (6-ALIGN_L2) atm
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
-			Uint64 saved_blocks[MAX_LEVELS * 2]{};
+			uint64_t saved_blocks[MAX_LEVELS * 2]{};
 			char level_state[MAX_LEVELS]{};
 			//states:
 			//0: no blocks saved
@@ -111,7 +111,7 @@ namespace PractRand::Tests {
 			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int minimum_level;
-			FixedSizeCount<Uint16, MAX_LEVELS << TOTAL_INDEX_BITS> counts;
+			FixedSizeCount<uint16_t, MAX_LEVELS << TOTAL_INDEX_BITS> counts;
 			// index order, from high to low:  (pos), (window1), (window2), (window3)
 		};
 		class TripleMirrorCoup final : public TestBaseclass {
@@ -134,16 +134,16 @@ namespace PractRand::Tests {
 			static constexpr int POSITIONS_L2 = 6;//can't exceed (10-SAMPLE_ALIGN_L2) atm
 			static constexpr int TOTAL_INDEX_BITS = SIZE1 + SIZE2 + SIZE3 + POSITIONS_L2;
 			static constexpr int COUP_BUCKETS = 256;
-			Uint64 pass_number{};
+			uint64_t pass_number{};
 			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
-			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
+			FixedSizeCount<uint16_t, 1 << TOTAL_INDEX_BITS> counts;
 			//This array is too small for test_blocks().  See the comment there.
-			Uint64 coup_masks[1 << (TOTAL_INDEX_BITS >> 6)]{};
-			Uint64 coup_counts[COUP_BUCKETS]{};
-			Uint64 coup_last[1 << POSITIONS_L2]{};
-			Uint64 coup_collected{};
+			uint64_t coup_masks[1 << (TOTAL_INDEX_BITS >> 6)]{};
+			uint64_t coup_counts[COUP_BUCKETS]{};
+			uint64_t coup_last[1 << POSITIONS_L2]{};
+			uint64_t coup_collected{};
 			// index order, from high to low:  (pos), (window1), (window2), (window3)
 		};
 		class QuadFreq : public TestBaseclass {//not yet implemented
@@ -174,7 +174,7 @@ namespace PractRand::Tests {
 			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
-			FixedSizeCount<Uint16, 1 << TOTAL_INDEX_BITS> counts;
+			FixedSizeCount<uint16_t, 1 << TOTAL_INDEX_BITS> counts;
 			// reordered order:                (pos2 aka region), (pos3), (window1), (window2), (window3)
 			// index order, from high to low:  (pos2 aka region), (window1), (window2), (pos3), (window3)
 		};
@@ -193,6 +193,6 @@ namespace PractRand::Tests {
 			int blocks_till_next_pass{};
 			int blocks_per_pass;
 			int passes_at_once;
-			FixedSizeCount<Uint16, LPERM_BUCKETS> lperm_counts;//consider: also doing longer range tests on the comparisons done here
+			FixedSizeCount<uint16_t, LPERM_BUCKETS> lperm_counts;//consider: also doing longer range tests on the comparisons done here
 		};
 }//PractRand

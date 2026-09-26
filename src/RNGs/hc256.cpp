@@ -13,32 +13,32 @@ using namespace PractRand;
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(hc256)
 std::string PractRand::RNGs::Polymorphic::hc256::get_name() const {return "hc256";}
 void PractRand::RNGs::Polymorphic::hc256::flush_buffers() {implementation.flush_buffers();}
-void PractRand::RNGs::Polymorphic::hc256::seed(Uint64 s) {implementation.seed(s);}
-void PractRand::RNGs::Polymorphic::hc256::seed(Uint32 key_and_iv[16]) { implementation.seed(key_and_iv); }
+void PractRand::RNGs::Polymorphic::hc256::seed(uint64_t s) {implementation.seed(s);}
+void PractRand::RNGs::Polymorphic::hc256::seed(uint32_t key_and_iv[16]) { implementation.seed(key_and_iv); }
 void PractRand::RNGs::Polymorphic::hc256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 
 //raw:
 PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 
 #define h1(x,y) { \
-	Uint8 a,b,c,d; \
-	a = static_cast<Uint8>(x); \
-	b = static_cast<Uint8>((x) >> 8); \
-	c = static_cast<Uint8>((x) >> 16); \
-	d = static_cast<Uint8>((x) >> 24); \
+	uint8_t a,b,c,d; \
+	a = static_cast<uint8_t>(x); \
+	b = static_cast<uint8_t>((x) >> 8); \
+	c = static_cast<uint8_t>((x) >> 16); \
+	d = static_cast<uint8_t>((x) >> 24); \
 	(y) = Q[a]+Q[256+b]+Q[512+c]+Q[768+d]; \
 }
 
 #define h2(x,y) { \
-	Uint8 a,b,c,d; \
-	a = static_cast<Uint8>(x); \
-	b = static_cast<Uint8>((x) >> 8); \
-	c = static_cast<Uint8>((x) >> 16); \
-	d = static_cast<Uint8>((x) >> 24); \
+	uint8_t a,b,c,d; \
+	a = static_cast<uint8_t>(x); \
+	b = static_cast<uint8_t>((x) >> 8); \
+	c = static_cast<uint8_t>((x) >> 16); \
+	d = static_cast<uint8_t>((x) >> 24); \
 	(y) = P[a]+P[256+b]+P[512+c]+P[768+d]; \
 }
 #define step_A(u,v,a,b,c,d,m){ \
-	Uint32 tem0,tem1,tem2,tem3; \
+	uint32_t tem0,tem1,tem2,tem3; \
 	tem0 = std::rotr((v),23); \
 	tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
@@ -48,7 +48,7 @@ PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 	(m) = tem3 ^ (u) ; \
 }
 #define step_B(u,v,a,b,c,d,m){ \
-	Uint32 tem0,tem1,tem2,tem3; \
+	uint32_t tem0,tem1,tem2,tem3; \
 	tem0 = std::rotr((v),23); \
 	tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
@@ -59,7 +59,7 @@ PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
 }
 
 void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
-	Uint32* data = &outbuf[0];
+	uint32_t* data = &outbuf[0];
 	unsigned long cc = counter & 0x3ff;
 	unsigned long end = (cc + OUTPUT_BUFFER_SIZE) & 0x3ff;
 
@@ -80,7 +80,7 @@ void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
 			step_A(P[cc+12],P[cc+13],X[12],X[2], X[9], X[0], data[12]);
 			step_A(P[cc+13],P[cc+14],X[13],X[3], X[10],X[1], data[13]);
 			step_A(P[cc+14],P[cc+15],X[14],X[4], X[11],X[2], data[14]);
-			Uint32 dd = (cc+16)&0x3ff;
+			uint32_t dd = (cc+16)&0x3ff;
 			step_A(P[cc+15],P[dd+0], X[15],X[5], X[12],X[3], data[15]);
 			cc = dd;
 			data += 16;
@@ -103,7 +103,7 @@ void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
 			step_B(Q[cc+12],Q[cc+13],Y[12],Y[2], Y[9], Y[0], data[12]);
 			step_B(Q[cc+13],Q[cc+14],Y[13],Y[3], Y[10],Y[1], data[13]);
 			step_B(Q[cc+14],Q[cc+15],Y[14],Y[4], Y[11],Y[2], data[14]);
-			Uint32 dd = (cc+16)&0x3ff;
+			uint32_t dd = (cc+16)&0x3ff;
 			step_B(Q[cc+15],Q[dd], Y[15],Y[5], Y[12],Y[3], data[15]);
 			cc = dd;
 			data += 16;
@@ -112,26 +112,26 @@ void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
 	counter = (counter + OUTPUT_BUFFER_SIZE) & 0x7ff;
 	used = 0;
 }
-//Uint32 PractRand::RNGs::Raw::hc256::raw32() {//LOCKED, do not change
+//uint32_t PractRand::RNGs::Raw::hc256::raw32() {//LOCKED, do not change
 //	if (used < OUTPUT_BUFFER_SIZE) return outbuf[used++];
 //	_do_batch();
 //	return outbuf[used++];
 //}
-void PractRand::RNGs::Raw::hc256::seed(Uint64 s) {//LOCKED, do not change
-	Uint32 seed_array[16];
-	seed_array[0] = Uint32(s);
-	seed_array[1] = Uint32(s >> 32);
+void PractRand::RNGs::Raw::hc256::seed(uint64_t s) {//LOCKED, do not change
+	uint32_t seed_array[16];
+	seed_array[0] = uint32_t(s);
+	seed_array[1] = uint32_t(s >> 32);
 	for (int i = 2; i < 16; i++) seed_array[i] = 0;
 	seed(seed_array);
 }
 void PractRand::RNGs::Raw::hc256::seed(vRNG* seeder_rng) {//LOCKED, do not change
-	Uint32 seed_array[16];
+	uint32_t seed_array[16];
 	for (auto& i : seed_array) i = seeder_rng->raw32();
 	seed(seed_array);
 }
 void PractRand::RNGs::Raw::hc256::self_test() {
 	Raw::hc256 rng{};
-	Uint32 key_and_iv[16] = {0};
+	uint32_t key_and_iv[16] = {0};
 	rng.seed(key_and_iv);
 	if (rng.raw32() != 0x8589075b) issue_error("hc256::self_test() failed");
 	key_and_iv[8] = 1; rng.seed(key_and_iv); key_and_iv[8] = 0;
@@ -139,7 +139,7 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 	key_and_iv[0] = 0x55; rng.seed(key_and_iv); key_and_iv[0] = 0;
 	if (rng.raw32() != 0xfe4a401c) issue_error("hc256::self_test() failed");
 	rng.seed(key_and_iv);
-	Uint32 checksums[16] = {0};
+	uint32_t checksums[16] = {0};
 	for (int x = 0; x < 1<<16; x++) {
 		for (auto& checksum : checksums) checksum ^= rng.raw32();
 	}
@@ -153,22 +153,22 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 #define f2(x) (std::rotr((x),17) ^ std::rotr((x),19) ^ ((x) >> 10))
 #define f(a,b,c,d) (f2((a)) + (b) + f1((c)) + (d))
 #define feedback_1(u,v,b,c) { \
-	Uint32 tem0,tem1,tem2; \
+	uint32_t tem0,tem1,tem2; \
 	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
 	(u) += (b)+(tem0^tem1)+Q[tem2]; \
 }
 #define feedback_2(u,v,b,c) { \
-	Uint32 tem0,tem1,tem2; \
+	uint32_t tem0,tem1,tem2; \
 	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
 	tem2 = ((v) ^ (c)) & 0x3ff; \
 	(u) += (b)+(tem0^tem1)+P[tem2]; \
 }
 
-void PractRand::RNGs::Raw::hc256::seed(const Uint32 key_and_iv[16]) {//LOCKED, do not change
+void PractRand::RNGs::Raw::hc256::seed(const uint32_t key_and_iv[16]) {//LOCKED, do not change
 	//LOCKED, do not change
 
-	Uint32 i = 0,j = 0;
+	uint32_t i = 0,j = 0;
 	//expand the key and iv into P and Q
 	for (i = 0; i < 16; i++) P[i] = key_and_iv[i];
 	for (i = 16; i < 512+16; i++)
