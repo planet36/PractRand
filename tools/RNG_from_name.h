@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iterator>
 #include <map>
 #include <string>
 #include <vector>
@@ -88,7 +89,7 @@ namespace PractRand::RNG_Sets {
 				"mt19937",
 				nullptr
 			};
-			const int num_recommended_rngs = sizeof(recommended_rngs) / sizeof(recommended_rngs[0]) - 1;
+			const int num_recommended_rngs = std::size(recommended_rngs) - 1;
 			const char* nonrecommended_simple[] = {
 				"xorshift32", "xorshift64", "xorshift32of128", "xoroshiro128plus",
 				"xorwow32of96", "xorwow32x6", "xsalta16x3", "xsaltb16x3", "xsaltc16x3",
@@ -103,7 +104,7 @@ namespace PractRand::RNG_Sets {
 				"ara16", "ara32", "arx16", "arx32", "hara16", "harx16", "learx16", "hlearx16", "alearx16", "arac16", "arxc16",
 				nullptr
 			};
-			const int num_nonrecommended_simple = sizeof(nonrecommended_simple) / sizeof(nonrecommended_simple[0]) - 1;
+			const int num_nonrecommended_simple = std::size(nonrecommended_simple) - 1;
 			const char* nonrecommended_nonlcg[] = {
 				"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16", "multish3x32", "multish4x16",
 				"mwrca16", "mwrca32", "mwrcc16", "mwrcc32", "mwrcca16", "mwrcca32",
@@ -111,7 +112,7 @@ namespace PractRand::RNG_Sets {
 				"mo_Cmfr", "mo_Cmr32of64", "mulcr16", "mulcr32", "mmr16", "mmr32",
 				nullptr
 			};
-			const int num_nonrecommended_nonlcg = sizeof(nonrecommended_nonlcg) / sizeof(nonrecommended_nonlcg[0]) - 1;
+			const int num_nonrecommended_nonlcg = std::size(nonrecommended_nonlcg) - 1;
 			const char* nonrecommended_lcgish[] = {
 				"lcg(16,32)", "lcg(16,40)", "lcg(16,48)", "lcg(16,56)", "lcg(16,64)", "lcg(16,72)", "lcg(16,80)", "lcg(16,96)", "lcg(16,112)",
 				"xlcg(16,32)", "xlcg(16,40)", "xlcg(16,48)", "xlcg(16,56)", "xlcg(16,64)", "xlcg(16,72)",
@@ -121,7 +122,7 @@ namespace PractRand::RNG_Sets {
 				"pcg32_norot", "pcg32", "cmrg32of192", "xsh_lcg_bad",
 				nullptr
 			};
-			const int num_nonrecommended_lcgish = sizeof(nonrecommended_lcgish) / sizeof(nonrecommended_lcgish[0]) - 1;
+			const int num_nonrecommended_lcgish = std::size(nonrecommended_lcgish) - 1;
 			const char* nonrecommended_cbuf[] = {
 				"mm32", "mm32_awc", "mm16of32", "mm16of32_awc", "mm4691",
 				"cbuf_accum", "cbuf_accum_big", "cbuf_2accum_small", "cbuf_2accum", "dual_cbuf_small", "dual_cbuf", "dual_cbufa_small", "dual_cbuf_accum",
@@ -129,7 +130,7 @@ namespace PractRand::RNG_Sets {
 				"mt19937_unhashed", "salsa(3)", "chacha(3)", "salsa(4)", "chacha(4)",
 				nullptr
 			};
-			const int num_nonrecommended_cbuf = sizeof(nonrecommended_cbuf) / sizeof(nonrecommended_cbuf[0]) - 1;
+			const int num_nonrecommended_cbuf = std::size(nonrecommended_cbuf) - 1;
 			const char* nonrecommended_indirect[] = {
 				"ibaa8(1)", "ibaa8(2)", "ibaa8(3)", "ibaa16(1)", "ibaa16(2)", "ibaa16(3)", "ibaa32(1)", "ibaa32(2)", "ibaa32(3)",
 				"rc4_weakenedA", "rc4_weakenedB", "rc4_weakenedC", "rc4_weakenedD", "rc4",
@@ -139,7 +140,7 @@ namespace PractRand::RNG_Sets {
 				"genindE(1)", "genindE(2)", "genindE(3)", "genindF(2)", "genindF(3)", "genindF(4)", "genindF(5)",
 				nullptr
 			};
-			const int num_nonrecommended_indirect = sizeof(nonrecommended_indirect) / sizeof(nonrecommended_indirect[0]) - 1;
+			const int num_nonrecommended_indirect = std::size(nonrecommended_indirect) - 1;
 }
 
 
