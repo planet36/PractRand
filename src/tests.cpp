@@ -10821,7 +10821,7 @@ PractRand::Tests::Transforms::multiplex::~multiplex ( ) {
 	subtests.tests.clear();
 }
 std::string PractRand::Tests::Transforms::multiplex::get_name() const {
-	return name.c_str();
+	return name;
 }
 void PractRand::Tests::Transforms::multiplex::test_blocks(TestBlock *data, int numblocks) {
 	for (auto & test : subtests.tests)
