@@ -134,7 +134,7 @@ Uint64 PractRand::RNGs::Polymorphic::arbee::get_flags() const {
 	return FLAGS;
 }
 std::string PractRand::RNGs::Polymorphic::arbee::get_name() const {
-	return std::string("arbee");
+	return {"arbee"};
 }
 Uint8  PractRand::RNGs::Polymorphic::arbee::raw8 () {
 	return Uint8(implementation.raw64());

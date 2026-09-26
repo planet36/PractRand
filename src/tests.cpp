@@ -1540,7 +1540,7 @@ int PractRand::Tests::TestBaseclass::get_blocks_to_repeat() const { return 1; }
 
 
 std::string PractRand::Tests::Gap16::get_name() const {
-	return std::string("Gap-16");
+	return {"Gap-16"};
 }
 void PractRand::Tests::Gap16::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
 	int i = 0;
@@ -1740,7 +1740,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	}
 }*/
 std::string PractRand::Tests::Rep16::get_name() const {
-	return std::string("Rep-16");
+	return {"Rep-16"};
 }
 void PractRand::Tests::Rep16::init(PractRand::RNGs::vRNG *known_good) {
 	TestBaseclass::init(known_good);
@@ -6177,7 +6177,7 @@ void PractRand::Tests::CoupGap::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 //	count_gaps_by_oldest_sym.reset_counts();
 }
 std::string PractRand::Tests::CoupGap::get_name( ) const {
-	return std::string("CoupGap");
+	return {"CoupGap"};
 }
 void PractRand::Tests::CoupGap::get_results(std::vector<TestResult> &results) {
 	if (autofail) {
@@ -10820,7 +10820,7 @@ static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(
 	const char *c = name.c_str();
 	int r = std::sscanf(c, "[Low%d/%d%c", &first, &last, &termination);
 	if (r != 3 || termination != ']') return fail;
-	return std::pair<unsigned int,std::pair<int,int> >(static_cast<unsigned int>(strchr(c, ']') - c + 1), std::pair<int,int>(first,last));
+	return {static_cast<unsigned int>(strchr(c, ']') - c + 1), std::pair<int,int>(first,last)};
 }
 static std::string combine_transform_names(const std::string &prefix, const std::string &name) {
 	std::string fail = prefix + name;
