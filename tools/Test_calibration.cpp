@@ -1,17 +1,3 @@
-#include <algorithm>
-#include <bit>
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <list>
-#include <map>
-#include <sstream>
-#include <string>
-#include <vector>
-
-
 //master header, includes everything in PractRand for both
 //  practical usage and research...
 //  EXCEPT it does not include specific algorithms
@@ -40,12 +26,25 @@
 #include "PractRand/RNGs/other/special.h"
 #include "PractRand/RNGs/other/transform.h"
 
-using namespace PractRand;
-using namespace PractRand::Tests;
-
 //some helpers for the sample programs:
 #include "MultithreadedTestManager.h"
 #include "TestManager.h"
+
+#include <algorithm>
+#include <bit>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <list>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
+
+using namespace PractRand;
+using namespace PractRand::Tests;
 
 
 
