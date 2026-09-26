@@ -199,7 +199,7 @@ void benchmark_entropy_pool_input() {
 	POLYPERF(sha2_based)
 }
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) { // NOLINT(bugprone-exception-escape)
 	PractRand::initialize_PractRand();
 	PractRand::hook_error_handler(PractRand::print_err);
 //	PractRand::self_test_PractRand();

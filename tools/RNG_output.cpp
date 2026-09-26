@@ -74,7 +74,7 @@ void signal_handler(int param)
 
 #include "SeedingTester.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 #ifdef _WIN32
 	_setmode( _fileno(stdout), _O_BINARY); // needed to allow binary stdout on windows
 #endif
