@@ -18,12 +18,12 @@ make clean
 make install                     # copies the binaries to $(PREFIX)/bin, default /usr/local
 ```
 
-The Makefile builds with `-std=c++20 -Wall -Wextra -Wpedantic -Wfatal-errors -O3 -flto=auto -march=native`.  `-Wfatal-errors` stops at the first error, so expect one diagnostic per build attempt.
+The Makefile builds with `-std=c++23 -Wall -Wextra -Wpedantic -Wfatal-errors -O3 -flto=auto -march=native`.  `-Wfatal-errors` stops at the first error, so expect one diagnostic per build attempt.
 
 To lint a single file, run clang-tidy with the same flags the `lint` target passes:
 
 ```sh
-clang-tidy --quiet src/RNGs/jsf.cpp -- -MMD -MP -I include -std=c++20 -Wall -Wextra -Wpedantic
+clang-tidy --quiet src/RNGs/jsf.cpp -- -MMD -MP -I include -std=c++23 -Wall -Wextra -Wpedantic
 ```
 
 Any new tool must be named `tools/RNG_*.cpp` to be picked up by the Makefile's wildcard.  `tools/Test_calibration.cpp` does not match that pattern and is not built.

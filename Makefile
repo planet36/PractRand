@@ -22,7 +22,7 @@ BINS = $(basename $(BIN_SRCS))
 CPPFLAGS = -MMD -MP
 CPPFLAGS += -I include
 
-CXXFLAGS = -std=c++20
+CXXFLAGS = -std=c++23
 CXXFLAGS += -pipe -Wall -Wextra -Wpedantic -Wfatal-errors
 CXXFLAGS += -O3 -flto=auto
 CXXFLAGS += -Wno-unused-function
