@@ -82,10 +82,10 @@ namespace PractRand::Crypto {
 			typedef SHA2_512_constants Constants;
 			//do preprocessing on the block
 			Word preprocessed[Constants::ROUNDS];
-			long i;
+			long i = 0;
 			for (i = 0; i < Constants::INPUT_WORDS; i++) preprocessed[i] = input_buffer.as_word[i];
 			for (i = Constants::INPUT_WORDS; i < Constants::ROUNDS; i++) {
-				Word s0, s1;
+				Word s0 = 0, s1 = 0;
 				constexpr int OFFS_A = Constants::INPUT_WORDS - 1;
 				constexpr int OFFS_B = 2;
 				constexpr int OFFS_C = Constants::INPUT_WORDS - 0;
@@ -107,7 +107,7 @@ namespace PractRand::Crypto {
 			//preparations complete
 			//starting main loop
 			for (i = 0; i < Constants::ROUNDS; i+=2) {
-				Word s0, s1, maj, t1, t2, ch;
+				Word s0 = 0, s1 = 0, maj = 0, t1 = 0, t2 = 0, ch = 0;
 				s0 =
 					Constants::MAINLOOP_SHIFT_S0_1(temp_state[0]) ^
 					Constants::MAINLOOP_SHIFT_S0_2(temp_state[0]) ^

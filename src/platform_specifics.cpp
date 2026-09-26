@@ -82,7 +82,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG *rng
 #if 1
 	{//unix (linux/bsd/osx/etc, all flavors supposedly)
 		//mostly safe to use even on platforms where it won't work
-		std::FILE *f;
+		std::FILE *f = nullptr;
 		Uint64 buf[N64];
 		if ((f = std::fopen("/dev/urandom", "rb"))) {
 			if (std::fread(buf,N64*sizeof(buf[0]),1,f) == 1) {

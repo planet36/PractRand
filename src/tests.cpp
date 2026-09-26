@@ -273,7 +273,7 @@ class TestCalibrationData {
 	double mid_sample{};
 	void init() {
 		Uint64 n = raw->num_samples;
-		double p1, p2;
+		double p1 = NAN, p2 = NAN;
 		// p1 >= 1/sqrt(num_samples)
 		// p2 >= p1 + 1/sqrt(num_samples)
 		//asside from that, p1 & p2 should be as small as possible
@@ -339,7 +339,7 @@ class TestCalibrationData {
 			low_sample = raw->pvalue_to_sample(p1);
 			high_sample = raw->pvalue_to_sample(1 - p1);
 			mid_sample = raw->pvalue_to_sample(0.5);
-			double x1, x2, y1, y2, dx, dy;
+			double x1 = NAN, x2 = NAN, y1 = NAN, y2 = NAN, dx = NAN, dy = NAN;
 			x1 = TestResult::pvalue_to_suspicion(p1);
 			x2 = TestResult::pvalue_to_suspicion(p2);
 			y1 = raw->pvalue_to_sample(p1);
@@ -1543,7 +1543,7 @@ std::string PractRand::Tests::Gap16::get_name() const {
 	return std::string("Gap-16");
 }
 void PractRand::Tests::Gap16::init([[maybe_unused]] PractRand::RNGs::vRNG *known_good ) {
-	int i;
+	int i = 0;
 	for (i = 0; i < 65536; i += 1) last[i] = 0;
 	counts.reset_counts();
 	autofail = false;
@@ -1591,8 +1591,8 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock *data, int numblocks) {
 		else warmup--;
 	}
 	else while (ofs != max2) {
-		Uint16 a;
-		Uint32 prior, lag;
+		Uint16 a = 0;
+		Uint32 prior = 0, lag = 0;
 
 		a = *(base++);
 		prior = last[a];
@@ -1649,7 +1649,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 	double lopped = 0;
 	double inv_total_samples = 1.0 / (blocks_tested * (TestBlock::SIZE/2.));
 	for (int i = 0; i < TSIZE; i++) {
-		int first, last_;
+		int first = 0, last_ = 0;
 		if (i < SIZE1) {
 			first = i << SET1_SHIFT;
 			last_ = first + (1 << SET1_SHIFT) - 1;
@@ -1691,7 +1691,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult> &results ) {
 		return;
 	}
 
-	double r1, r2;
+	double r1 = NAN, r2 = NAN;
 	int reduced_size = simplify_prob_table(
 		TSIZE,
 		(blocks_tested * TestBlock::SIZE/2.) / 40.,
@@ -1747,8 +1747,8 @@ void PractRand::Tests::Rep16::init(PractRand::RNGs::vRNG *known_good) {
 	counts.reset_counts();
 }
 void PractRand::Tests::Rep16::test_blocks(TestBlock *data, int numblocks) {
-	Uint16 old1, old2;
-	unsigned long index;
+	Uint16 old1 = 0, old2 = 0;
+	unsigned long index = 0;
 	unsigned long max = numblocks * TestBlock::SIZE / 2;
 	if (blocks_tested) {
 		index = 0;
@@ -1761,7 +1761,7 @@ void PractRand::Tests::Rep16::test_blocks(TestBlock *data, int numblocks) {
 		old2 = data->as16[1];
 	}
 	for (; index < max; index++) {
-		Uint16 cur;
+		Uint16 cur = 0;
 		cur = data->as16[index];
 		if (cur == old1) counts.increment(cur);
 		if (cur == old2) counts.increment(cur + 65536);
@@ -1882,7 +1882,7 @@ void PractRand::Tests::DistC6::test_blocks(TestBlock *data, int numblocks) {
 		int max2 = ((warmup + (1 << 4) - 1) >> 4) << 4;//round up to a multiple of 16
 		if (max2 > max) max2 = max;
 		if (!ENABLE_8_BIT_BYPASS || unitsL) while (max2 > i) {
-			int bits;
+			int bits = 0;
 			switch (unitsL) {
 				case 0: bits = std::popcount(data->as8 [i]); break;
 				case 1: bits = std::popcount(data->as16[i]); break;
@@ -1982,7 +1982,7 @@ void PractRand::Tests::DistC6::test_blocks(TestBlock *data, int numblocks) {
 void PractRand::Tests::DistC6::generate_reorder_codes ( ) {
 	long double _probs[64+1];
 	long double _tprobs[64];
-	int i;
+	int i = 0;
 	//probabilities of bit-counts
 	int hNP = 4 << unitsL;
 	int NP = 1 + (8 << unitsL);
@@ -2023,7 +2023,7 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult> &results) {
 	if (!blocks_tested) return;
 	long double _probs[64+1];
 	long double _tprobs[64];
-	int i;
+	int i = 0;
 	//probabilities of bit-counts
 	int hNP = 4 << unitsL;
 	int NP = 1 + (8 << unitsL);
@@ -2153,7 +2153,7 @@ void PractRand::Tests::DistC7::test_blocks(TestBlock *data, int numblocks) {
 		int max2 = ((warmup + (1 << 4) - 1) >> 4) << 4;//round up to a multiple of 16
 		if (max2 > max) max2 = max;
 		if (!ENABLE_8_BIT_BYPASS || unitsL) while (max2 > i) {
-			int bits;
+			int bits = 0;
 			switch (unitsL) {
 				case 0: bits = std::popcount(data->as8[i]); break;
 				case 1: bits = std::popcount(data->as16[i]); break;
@@ -2260,7 +2260,7 @@ void PractRand::Tests::DistC7::test_blocks(TestBlock *data, int numblocks) {
 }
 void PractRand::Tests::DistC7::get_results(std::vector<TestResult> &results) {
 	unsigned long initial_results_size = results.size();
-	unsigned long old_results_size;
+	unsigned long old_results_size = 0;
 	Uint64 tmp = blocks_tested;
 	blocks_tested >>= 1;
 	if (blocks_tested) {
@@ -2615,7 +2615,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 		if (!unbalanced) samples *= 1 - chance_balanced;
 		samples -= tbits + 1;
 		if (samples < 0) samples = 0;
-		int effective_bits;
+		int effective_bits = 0;
 		/*
 			when tbits is 1, the result is a close aproximation of a normal distribution
 			but at higher tbits, the samples are coorelated and the deviation from normality becomes large
@@ -2656,7 +2656,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult> &results) {
 		std::ostringstream name;
 		name << "BCFN(";
 		//double w = 0.5 / (1.0 + level * 0.25 + level * level * 0.05);
-		double w;
+		double w = NAN;
 		if (unitsL2 + level < 5) w = (unitsL2 + level + 2) / 8.0;
 		else w = std::pow(0.5, double((unitsL2 + level + 2)/2));
 		if (w > 0.375) w = 0.375;
@@ -2777,8 +2777,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS8(0);
 					HANDLE_BITS(0,bits0);
@@ -2788,8 +2788,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 1: {
 				for (int i = 0; i < TestBlock::SIZE / 2; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS16(0);
 					HANDLE_BITS(0,bits0);
@@ -2799,8 +2799,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 2: {
 				for (int i = 0; i < TestBlock::SIZE / 4; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS32(0);
 					HANDLE_BITS(0,bits0);
@@ -2810,8 +2810,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 3: {
 				for (int i = 0; i < TestBlock::SIZE / 8; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS64(0);
 					HANDLE_BITS(0,bits0);
@@ -2837,8 +2837,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS8(0);
 					HANDLE_BITS(0,bits0);
@@ -2848,8 +2848,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 1: {
 				for (int i = 0; i < TestBlock::SIZE / 2; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS16(0);
 					HANDLE_BITS(0,bits0);
@@ -2859,8 +2859,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 2: {
 				for (int i = 0; i < TestBlock::SIZE / 4; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS32(0);
 					HANDLE_BITS(0,bits0);
@@ -2870,8 +2870,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 3: {
 				for (int i = 0; i < TestBlock::SIZE / 8; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS64(0);
 					HANDLE_BITS(0,bits0);
@@ -2894,8 +2894,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS8(a)
 			case 0: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 #define HANDLE_BITS(level,var) if constexpr (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 					//0
 					bits1 = bits0 = GET_BITS(0);
@@ -2936,8 +2936,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS16(a)
 			case 1: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -2977,8 +2977,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS32(a)
 			case 2: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3018,8 +3018,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					int bits0, bits1, bits2, bits3;
-					int tmp;
+					int bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					int tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3067,8 +3067,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS8(a)
 			case 0: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 #define HANDLE_BITS(level,var) if (var){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 					//0
 					bits1 = bits0 = GET_BITS(0);
@@ -3109,8 +3109,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS16(a)
 			case 1: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3150,8 +3150,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS32(a)
 			case 2: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3191,8 +3191,8 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					int bits0, bits1, bits2, bits3;
-					int tmp;
+					int bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					int tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3330,7 +3330,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		if (!unbalanced) samples *= 1 - chance_balanced;
 		samples -= tbits + 1;
 		if (samples < 0) samples = 0;
-		int effective_bits;
+		int effective_bits = 0;
 		/*
 		when tbits is 1, the result is a close aproximation of a normal distribution
 		but at higher tbits, the samples are coorelated and the deviation from normality becomes large
@@ -3371,7 +3371,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 		std::ostringstream name;
 		name << "BCFN_FF(";
 		//double w = 0.5 / (1.0 + level * 0.25 + level * level * 0.05);
-		double w;
+		double w = NAN;
 		if (unitsL2 + level < 5) w = (unitsL2 + level + 2) / 8.0;
 		else w = std::pow(0.5, double((unitsL2 + level + 2) / 2));
 		if (w > 0.375) w = 0.375;
@@ -3477,7 +3477,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult> &results) {
 				double p2 = math_normaldist_to_pvalue(-n_ / 1.6);
 				std::ostringstream name;
 				name << "BCFN_FF(" << unitsL2 << "+" << level << "):freq";
-				double w;
+				double w = NAN;
 				if (unitsL2 + level < 5) w = (unitsL2 + level + 2) / 8.0;
 				else w = std::pow(0.5, double((unitsL2 + level + 2)/2));
 				if (w > 0.375) w = 0.375;
@@ -3532,8 +3532,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS8(0);
 					HANDLE_BITS(0,bits0);
@@ -3543,8 +3543,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 1: {
 				for (int i = 0; i < TestBlock::SIZE / 2; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS16(0);
 					HANDLE_BITS(0,bits0);
@@ -3554,8 +3554,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 2: {
 				for (int i = 0; i < TestBlock::SIZE / 4; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS32(0);
 					HANDLE_BITS(0,bits0);
@@ -3565,8 +3565,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 			break;
 			case 3: {
 				for (int i = 0; i < TestBlock::SIZE / 8; i+=1) {
-					int bits0;
-					int tmp;
+					int bits0 = 0;
+					int tmp = 0;
 					//0
 					bits0 = GET_BITS64(0);
 					HANDLE_BITS(0,bits0);
@@ -3589,8 +3589,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS8(a)
 			case 0: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 #define HANDLE_BITS(level,var) {counts2[level][var+COUNTS2_SIZE/2]++; if constexpr (true){tmp=var>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
 					//0
 					bits1 = bits0 = GET_BITS(0);
@@ -3631,8 +3631,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS16(a)
 			case 1: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3672,8 +3672,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS32(a)
 			case 2: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					long bits0, bits1, bits2, bits3;
-					long tmp;
+					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
+					long tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3713,8 +3713,8 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock *data, int numblocks) {
 #define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
-					int bits0, bits1, bits2/*, bits3*/;
-					int tmp;
+					int bits0 = 0, bits1 = 0, bits2/*, bits3*/ = 0;
+					int tmp = 0;
 					//0
 					bits1 = bits0 = GET_BITS(0);
 					HANDLE_BITS(0,bits0);
@@ -3886,7 +3886,7 @@ void PractRand::Tests::FPF::init([[maybe_unused]] RNGs::vRNG *known_good ) {
 	static bool zeroes_table_inited = false;
 	if (!zeroes_table_inited) {
 		for (int i = 0; i < 256; i++) {
-			int k;
+			int k = 0;
 			for (k=0; (k < 8) && !((i>>k)&1); k++) ;//number of leading 0s, max 7
 			//count_leading_zeroes_table[i] = k;
 			if (count_low_zeroes_table[i] != k) issue_error("count zeroes table invalid");
@@ -4044,8 +4044,8 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 		}
 		else {//small footprint, short stride
 			long max32 = numblocks * (TestBlock::SIZE / 4);
-			Uint32 cur;
-			long start;
+			Uint32 cur = 0;
+			long start = 0;
 			if (blocks_tested) {
 				cur = reverse_bits32(data->as32[-1]);
 				start = 0;
@@ -4063,7 +4063,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 						word >>= 1;
 					}
 					unsigned long e = count_low_zeroes32(cur);
-					unsigned long sig;
+					unsigned long sig = 0;
 					if (e >= max_exp) {
 						e = max_exp;
 						sig = (cur >> e) & max_sig;
@@ -4093,7 +4093,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 				else {
 					Uint64 cur2 = cur | (Uint64(data->as32[i+1]) << 32);
 					if (e == 32) e += count_low_zeroes32(data->as32[i+1]);
-					unsigned long sig;
+					unsigned long sig = 0;
 					if (e < max_exp) {
 						sig = Uint32(cur2 >> (e+1)) & max_sig;
 					}
@@ -4108,8 +4108,8 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 		}
 		else {//large footprint, short stride
 			long max32 = numblocks * (TestBlock::SIZE / 4) - 1;
-			long start;
-			Uint32 cur;
+			long start = 0;
+			Uint32 cur = 0;
 			if (blocks_tested) {
 				cur = data->as32[-2];//
 				start = -1;
@@ -4124,7 +4124,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 				for (long i = start; i < max32; i += 1) {
 					Uint32 word = data->as32[i];
 
-					unsigned long e, sig;
+					unsigned long e = 0, sig = 0;
 					cur >>= STRIDE_BITS;
 					cur |= word << (32 - STRIDE_BITS);
 					word >>= stride_bits;//
@@ -4177,7 +4177,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 						cur |= word << (32 - STRIDE_BITS);
 						word >>= stride_bits;//
 						unsigned long e = count_low_zeroes32(cur);
-						unsigned long sig;
+						unsigned long sig = 0;
 						if (e < inv_sig_bits) {
 							sig = (cur >> (e+1)) & max_sig;
 						}
@@ -4206,7 +4206,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 						cur |= word << (32 - STRIDE_BITS);
 						word >>= stride_bits;//
 						unsigned long e = count_low_zeroes32(cur);
-						unsigned long sig;
+						unsigned long sig = 0;
 						if (e < inv_sig_bits) {
 							sig = (cur >> (e+1)) & max_sig;
 						}
@@ -4235,7 +4235,7 @@ void PractRand::Tests::FPF::test_blocks(TestBlock *data, int numblocks) {
 						cur |= word << (32 - stride_bits);
 						word >>= stride_bits;//
 						unsigned long e = count_low_zeroes32(cur);
-						unsigned long sig;
+						unsigned long sig = 0;
 						if (e < inv_sig_bits) {
 							sig = (cur >> (e+1)) & max_sig;
 						}
@@ -4301,7 +4301,7 @@ PractRand::Tests::FPMulti::FPMulti() //(int stride_bits_L2_, int skip_platters_)
 	};
 	for (int i = 0; i <= MAX_EXP; i++) {
 		int L = i + BASE_SIG_BITS + 1 - (i == MAX_EXP ? 1 : 0);
-		double e;
+		double e = NAN;
 		static constexpr int THRESHOLD = 30;
 		//if (L <= THRESHOLD) e = gap_log2_expected(std::pow(0.5, L));
 		//else e = gap_log2_expected(std::pow(0.5, 20)) + L - THRESHOLD;
@@ -4356,7 +4356,7 @@ void PractRand::Tests::FPMulti::process(Uint64 position, unsigned long e, unsign
 			p.gap_product *= normalized;
 			if (!(p.gap_hits & 63)) {//testing suggests this is good up to 4095 - for safety margin I use 1023, and set autofail on any gap products out of range at that point
 				// no wait... if GAP_SIG_BITS is adjusted the usable range changes (4095 was for 9 bits), though 127 seems to be usable for all useful values of GAP_SIG_BITS
-				int L2;
+				int L2 = 0;
 				//if (std::isinf(p.gap_product)) issue_error("FPMulti::process - gap product is infinite");
 				if (std::isinf(p.gap_product)) autofail = true;
 				//if (0 == p.gap_product) issue_error("FPMulti::process - gap product is zero");
@@ -4397,7 +4397,7 @@ void PractRand::Tests::FPMulti::init(RNGs::vRNG *known_good) {
 	static bool zeroes_table_inited = false;
 	if (!zeroes_table_inited) {//now just a validity check, not initialization
 		for (int i = 0; i < 256; i++) {
-			int k;
+			int k = 0;
 			for (k = 0; (k < 8) && !((i >> k) & 1); k++);//number of leading 0s, max 7
 			if (count_low_zeroes_table[i] != k) issue_error("FPMulti::init() - count zeroes table invalid");
 		}
@@ -4426,7 +4426,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 			if (p.gap_product == 0) { autofail = true; continue; }
 			if (std::isnan(p.gap_product)) issue_error("FPMulti::get_results - gap product is NaN");// should be impossible, I think
 
-			int L2;
+			int L2 = 0;
 			p.gap_product = std::frexp(p.gap_product, &L2);
 			p.gap_product_extracted_L2 += L2;
 		}
@@ -4486,7 +4486,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult> &results) {
 			//double cLK = 0.7;
 			double cLK = 1.0;
 			//double per_sample_variance = gap_log2_variance(std::pow(0.5, L));
-			double per_sample_variance;
+			double per_sample_variance = NAN;
 			if (L <= NUM_PRECALCED) per_sample_variance = precalced_per_sample_variance[L - 1];
 			else per_sample_variance = precalced_per_sample_variance[NUM_PRECALCED - 1];
 			//std::printf("%2d %2d %.15f\n", e, int(L), per_sample_variance);
@@ -4655,7 +4655,7 @@ void PractRand::Tests::FPMulti::test_blocks(TestBlock *data, int numblocks) {
 	for (unsigned long i = 0; i < end; i++) {
 		Uint64 raw = data[0].as64[i];
 		unsigned long e = count_low_zeroes64(raw);
-		unsigned long sig;
+		unsigned long sig = 0;
 		if (e < MAX_EXP) {
 			sig = (raw >> (e + 1)) & ((1 << BASE_SIG_BITS) - 1);
 		}
@@ -5416,8 +5416,8 @@ static double largest_spacing_cdf(Uint64 N, double value) {
 	if (value < invN) return 0;
 	if (value > 1) return 1;
 	long double invX = 1.0 / value;
-	Uint64 mink, maxk;
-	bool invert_result;
+	Uint64 mink = 0, maxk = 0;
+	bool invert_result = false;
 	if (invX > N / 2) { mink = int(invX + 1); maxk = N; invert_result = true; }
 	else { mink = 1; maxk = int(invX); invert_result = false; }
 	long double p = 0, pp = 0;
@@ -5644,7 +5644,7 @@ void PractRand::Tests::BirthdaySystematic128::do_incomplete_buffer() {
 	long bits_per_sample = std::floor(3 * log2_of_buffer_size - 2);
 	if (bits_per_sample > bits_to_use) issue_error();
 	//const Uint64 effective_buffer_size = 1ull << effective_bufsize_L2;
-	Uint64 high_mask = 0xFFffFFffFFffFFffull, low_mask;
+	Uint64 high_mask = 0xFFffFFffFFffFFffull, low_mask = 0;
 	if (bits_per_sample == 128) low_mask = high_mask;
 	else if (bits_per_sample > 64) low_mask = high_mask << (128 - bits_per_sample);
 	else if (bits_per_sample == 64) low_mask = 0;
@@ -5750,7 +5750,7 @@ Uint64 PractRand::Tests::BirthdaySystematic128::flush_buffer() {
 }
 void PractRand::Tests::BirthdaySystematic128::test_blocks(TestBlock *data, int numblocks) {
 	if (autofail) return;
-	Uint64 mask_high = Uint64(Sint64(-1)), mask_low;
+	Uint64 mask_high = Uint64(Sint64(-1)), mask_low = 0;
 	if (bits_to_use < 64) {
 		mask_low = 0;
 		mask_high <<= (64 - bits_to_use);
@@ -5875,7 +5875,7 @@ void PractRand::Tests::BirthdayAlt::_lookup_constants(int table_size_L2,long dou
 void PractRand::Tests::BirthdayAlt::get_results(std::vector<TestResult> &results) {
 	if (!count) return;
 	//long buffer_size = 1 << buffer_size_L2;
-	long double dev, _sample_size/*, uncertainty*/;
+	long double dev = NAN, _sample_size/*, uncertainty*/ = NAN;
 	_lookup_constants(buffer_size_L2, nullptr, &dev, &_sample_size);
 
 	double score = score_sum_log / std::sqrt(double(count)) / dev;
@@ -5890,7 +5890,7 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	BirthdayHelpers::_sorted_deltas_of_sorted_values(buffer, buffer_size_L2, sort_helper_counts);
 	for (auto & sort_helper_count : sort_helper_counts) sort_helper_count = 0;
 
-	long double expected_log_offset{}, expected_log_samples, deviation/*, uncertainty*/;
+	long double expected_log_offset{}, expected_log_samples = NAN, deviation/*, uncertainty*/ = NAN;
 	_lookup_constants(buffer_size_L2, &expected_log_offset, &deviation, &expected_log_samples);
 
 	long double sum_log = 0, sum_log2 = 0;
@@ -5922,7 +5922,7 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 	count++;
 	if (count == 1) {
 		for (int i = 6; i <= 29; i++) {
-			long double old;
+			long double old = NAN;
 			_lookup_constants(i, &old, nullptr, nullptr);
 			//Uint64 bufsize = 1ull << i;
 			//long double preadj = std::pow(2.0, 128.0 - i) / (bufsize - 1);
@@ -6212,7 +6212,7 @@ void PractRand::Tests::CoupGap::get_results(std::vector<TestResult> &results) {
 }
 void PractRand::Tests::CoupGap::test_blocks(TestBlock *data, int numblocks) {
 	if (autofail) return;
-	int i;
+	int i = 0;
 	[[maybe_unused]] Uint32 ofs = Uint32(blocks_tested) * TestBlock::SIZE;
 	int max = TestBlock::SIZE * numblocks;
 	for (i = 0; i < max; i++, ofs++) {
@@ -6735,7 +6735,7 @@ void PractRand::Tests::NearSeq::test_blocks(TestBlock *data, int numblocks) {
 		is_near_ideal       341 B	367 K	227 M	137 T	204 B	159 M	224 K	73 B	35 M	1 B
 		looks nice?					.		*						*						*		*
 		*/
-		Word *core;
+		Word *core = nullptr;
 		if constexpr (false);
 		else if constexpr (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
 		else if constexpr (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
@@ -6783,7 +6783,7 @@ void PractRand::Tests::NearSeq2::init(PractRand::RNGs::vRNG *known_good) {
 			lookup_table2 = new Uint8[1UL << BITS_PER_BLOCK];
 			for (unsigned int i = 0; i < (1UL << BITS_PER_BLOCK); i++) {
 				int h = std::popcount(i);
-				int v1, v2;
+				int v1 = 0, v2 = 0;
 				if (h >= BITS_PER_BLOCK - MAX_HDIST_PER_BLOCK) {
 					v1 = 1;
 					v2 = BITS_PER_BLOCK - h;
@@ -6804,7 +6804,7 @@ void PractRand::Tests::NearSeq2::init(PractRand::RNGs::vRNG *known_good) {
 			lookup_table1 = new Sint8[BITS_PER_BLOCK + 1];
 			lookup_table2 = new Uint8[BITS_PER_BLOCK + 1];
 			for (int h = 0; h <= BITS_PER_BLOCK; h++) {
-				int v1, v2;
+				int v1 = 0, v2 = 0;
 				if (h >= BITS_PER_BLOCK - MAX_HDIST_PER_BLOCK) {
 					v1 = 1;
 					v2 = BITS_PER_BLOCK - h;
@@ -6852,7 +6852,7 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 		else return false;
 	}
 	else if constexpr (!(WORD_BITS % BITS_PER_BLOCK)) {//blocks align to word boundaries
-		int index;
+		int index = 0;
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 			if (lookup1(w) < 0) return true;
@@ -6944,7 +6944,7 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int
 		}
 	}
 	else if constexpr (!(WORD_BITS % BITS_PER_BLOCK)) {//blocks align to word boundaries
-		int index_;
+		int index_ = 0;
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {
 			analyze_block(w, core_bucket, bucket_bit++, h);
@@ -7246,7 +7246,7 @@ void PractRand::Tests::NearSeq2::test_blocks(TestBlock *data, int numblocks) {
 		27	846636978475316672	217		2402093292062053101
 		28	1118770292985239888	47		3520863585047292989
 		*/
-		Word *core;
+		Word *core = nullptr;
 		if constexpr (false);
 		else if constexpr (WORD_BITS == 8) core = reinterpret_cast<Word*>(&data[0].as8[pos]);
 		else if constexpr (WORD_BITS == 16) core = reinterpret_cast<Word*>(&data[0].as16[pos]);
@@ -7260,7 +7260,7 @@ void PractRand::Tests::NearSeq2::test_blocks(TestBlock *data, int numblocks) {
 			continue;
 		}
 
-		int bucket_index, hdist;
+		int bucket_index = 0, hdist = 0;
 		core_analysis(core, bucket_index, hdist);
 		if (bucket_index < 0 || bucket_index > NUM_BUCKETS) issue_error("NearS2::text_blocks bucket_index out of range, bad analysis");
 
@@ -7381,7 +7381,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult> &results
 	for (int i = K; i < P2; i++) {
 		packed_counts[i - K] += counts[i];
 	}
-	double base1, base2;
+	double base1 = NAN, base2 = NAN;
 	if constexpr (WORD_BITS == 8) {
 		base1 = 85.0 / 256;
 		base2 = 86.0 / 256;
@@ -7602,9 +7602,9 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 		}
 
 		std::vector<double> probs; probs.resize(effective_K);
-		double cs;
+		double cs = NAN;
 		if (level < 5) {
-			long double base1, base2, values;
+			long double base1 = NAN, base2 = NAN, values = NAN;
 			values = std::pow(2.0, 8 << level);
 			base1 = std::floor(values / 3) / values;
 			base2 = std::floor(values / 3 + 1) / values;
@@ -7720,7 +7720,7 @@ void PractRand::Tests::mod3n::test_blocks(TestBlock *data, int numblocks) {
 		}
 		if (blocks_on > numblocks) blocks_on = numblocks;
 		unsigned int max = blocks_on * TestBlock::SIZE;
-		unsigned long i;
+		unsigned long i = 0;
 		for (i = 0; levels[1].warmup && i < max; i += 4) {
 			handle_level(0, u8_mod3(data->as8[i + 0]));
 			handle_level(0, u8_mod3(data->as8[i + 1]));
@@ -7728,7 +7728,7 @@ void PractRand::Tests::mod3n::test_blocks(TestBlock *data, int numblocks) {
 			handle_level(0, u8_mod3(data->as8[i + 3]));
 		}
 		for (; i < max; i += 4) {
-			Uint8 remainder;
+			Uint8 remainder = 0;
 
 			//level 0, even
 			remainder = u8_mod3(data->as8[i + 0]);
@@ -8340,7 +8340,7 @@ void PractRand::Tests::TripleMirrorFreqN::test_blocks(TestBlock *data, int numbl
 				saved_blocks[level + MAX_LEVELS] = data[0].as64[0];
 			}
 			else {
-				Uint64 old0, old1;
+				Uint64 old0 = 0, old1 = 0;
 				if (ostate == 2) {
 					old0 = saved_blocks[level];
 					old1 = saved_blocks[level + MAX_LEVELS];
@@ -10626,7 +10626,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 			//std::printf("");
 		}
 		int u = i;
-		int d;
+		int d = 0;
 		for (int x = 0; x < 8; x++) {
 			d = u % (8 - x);
 			u /= 8 - x;
@@ -10835,8 +10835,8 @@ void PractRand::Tests::Transforms::multiplex::test_blocks(TestBlock *data, int n
 }
 static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(const std::string name) {
 	std::pair<unsigned int,std::pair<int,int> > fail(0, std::pair<int,int>(0,0));
-	int first, last;
-	char termination;
+	int first = 0, last = 0;
+	char termination = 0;
 	const char *c = name.c_str();
 	int r = std::sscanf(c, "[Low%d/%d%c", &first, &last, &termination);
 	if (r != 3 || termination != ']') return fail;
@@ -11081,7 +11081,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		data += MAX_BLOCKS_AT_ONCE;
 		numblocks -= MAX_BLOCKS_AT_ONCE;
 	}
-	int max, lowbits_;
+	int max = 0, lowbits_ = 0;
 	if (unitsL != -1) {
 		max = numblocks * (TestBlock::SIZE >> unitsL);
 		lowbits_ = 1 << lowbitsL;
@@ -11090,7 +11090,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock *data, int num
 		max = numblocks * TestBlock::SIZE;
 		lowbits_ = 2 << lowbitsL;
 	}
-	Uint32 *dest_ptr;
+	Uint32 *dest_ptr = nullptr;
 	if constexpr (true) {//allocate space in vector:
 		int spare_words = (TestBlock::SIZE/4 - leftovers) & (TestBlock::SIZE/4-1);
 		int words_to_use = (max * lowbits_) / 32;

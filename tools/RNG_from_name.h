@@ -413,7 +413,7 @@ namespace RNG_Factories {
 	PractRand::RNGs::vRNG *_generic_variable_parameter_transform_RNG_factory(std::vector<std::string> &params) {
 		if (params.size() < 1) return nullptr;
 		std::vector<PractRand::RNGs::vRNG *> source_rngs;
-		PractRand::RNGs::vRNG *rng;
+		PractRand::RNGs::vRNG *rng = nullptr;
 		for (unsigned int i = 0; i < params.size(); i++) {
 			rng = create_rng(params[i]);
 			if (!rng) return nullptr;

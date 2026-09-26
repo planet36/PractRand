@@ -149,7 +149,7 @@ void PractRand::RNGs::Raw::xsm64::seed(Uint64 seed_low, Uint64 seed_high) {
 }
 void PractRand::RNGs::Raw::xsm64::seed(vRNG *seeder_rng) {
 	//guarantees that no two distinct seeded states are within 2**95 of each other on the same cycle ; 2**160 distinct seeded states are possible
-	Uint64 s1, s2, s3;
+	Uint64 s1 = 0, s2 = 0, s3 = 0;
 	s1 = seeder_rng->raw64();
 	s2 = seeder_rng->raw64();
 	s3 = seeder_rng->raw64();

@@ -190,7 +190,7 @@ void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject *walker) {
 	}
 }
 void PractRand::RNGs::Raw::salsa::seek_forward (Uint64 how_far_low, Uint64 how_far_high) {
-	Uint64 pos_low, pos_high;
+	Uint64 pos_low = 0, pos_high = 0;
 	_get_position(pos_low, pos_high);
 	Uint64 new_pos_low = pos_low + how_far_low;
 	if (new_pos_low < pos_low) how_far_high++;

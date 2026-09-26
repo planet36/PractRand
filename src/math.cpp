@@ -29,7 +29,7 @@ namespace PractRand {
 		}
 		static void multiply_128 ( const Uint32 *a, const Uint32 *b, Uint32 *result ) {
 			Uint32 buffer[4];
-			Uint64 current = 0, carry = 0, tmp;
+			Uint64 current = 0, carry = 0, tmp = 0;
 			for (int x = 0; x < 4; x++) {
 				for (int y = 0; y <= x; y++) {
 					tmp = Uint64(a[y]) * b[x-y];
@@ -262,7 +262,7 @@ namespace PractRand {
 
 
 		double chi_squared_test ( unsigned long categories, const double *prob_table, const Uint64 *counts ) {
-			unsigned long i;
+			unsigned long i = 0;
 			long double sum = 0, v = 0;
 
 			for (i=0; i<categories; ++i) {
@@ -554,7 +554,7 @@ namespace PractRand {
 			if (x < 0) issue_error("math_erfcx(negative parameter)");
 			if (x < 2) return (1 - math_erf(x)) * std::exp(x * x);
 			double x2 = x * x;
-			double a = 0, b /*= x2*/, c = x2, d = 0, e = 0, f = x2;
+			double a = 0, b /*= x2*/ = NAN, c = x2, d = 0, e = 0, f = x2;
 			for (int i = 1; i < 500; i += 1) {
 				a = i - 0.5;
 				b = 1;
@@ -752,7 +752,7 @@ namespace PractRand {
 			r *= 0.5;
 			r += 0.5;
 			return r;*/
-			double upper_p, lower_p;
+			double upper_p = NAN, lower_p = NAN;
 			if (norm >= 0) {
 				upper_p = 1;
 				lower_p = 0.5;
@@ -802,7 +802,7 @@ namespace PractRand {
 
 			const double threshold_low = 0.02425;
 			const double threshold_high = 1.0 - threshold_low;
-			double q, x = 0, r;
+			double q = NAN, x = 0, r = NAN;
 
 			if (pvalue <= 0) return -999999999.;
 			if (pvalue >= 1) return +999999999.;
@@ -1089,7 +1089,7 @@ namespace PractRand {
 			//could use more optimization, but who cares?
 			long s = rs.size();
 			if (!s) return 0;
-			int i;
+			int i = 0;
 			if (rs[0] > other_result) return s;
 			for (i = 0; i < s && rs[s-1-i] > other_result; i++) ;
 			return i;
@@ -1113,7 +1113,7 @@ namespace PractRand {
 			double &r = other_result;
 			long s = rs.size();
 			if (!s) return 0;
-			int lower, higher;
+			int lower = 0, higher = 0;
 			get_num_elements_less_and_greater(r, lower, higher);
 			if (lower+higher < s) {//exact match and possibly duplicates
 				return lower + (s-(lower+higher)-1)/2.0;
@@ -1129,9 +1129,9 @@ namespace PractRand {
 			double &r = other_result;
 			long s = rs.size();
 			if (!s) return 0;
-			int lower, higher;
+			int lower = 0, higher = 0;
 			get_num_elements_less_and_greater(r, lower, higher);
-			double percentile;
+			double percentile = NAN;
 			if (lower+higher < s) {//exact match and/or duplicates?
 				percentile = (lower + (s-(lower+higher))/2.0) / s;
 			}

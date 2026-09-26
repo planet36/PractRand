@@ -104,7 +104,7 @@ namespace Threading {
 		issue_error(msg);
 	}
 	void create_thread( THREADFUNC_RETURN_TYPE (THREADFUNC_CALLING_CONVENTION *func)(void*), void *param ) {
-		pthread_t thread;
+		pthread_t thread = 0;
 		if (pthread_create(&thread, nullptr, func, param)) {
 			_issue_pthread_error(errno, "Threading::create_thread: pthread_create failed");
 

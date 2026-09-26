@@ -68,7 +68,7 @@ int TestManager::prep_blocks(Uint64 &blocks) {
 	if (_delta_blocks > max_buffer_amount) _delta_blocks = max_buffer_amount;
 	int delta_blocks = int(_delta_blocks);
 	blocks -= delta_blocks;
-	size_t repeat_region_start, repeat_region_size;
+	size_t repeat_region_start = 0, repeat_region_size = 0;
 	if (prefix_blocks + main_blocks >= blocks_to_repeat) {
 		repeat_region_start = prefix_blocks + main_blocks - blocks_to_repeat;
 		repeat_region_size = blocks_to_repeat;

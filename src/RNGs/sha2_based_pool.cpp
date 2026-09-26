@@ -58,7 +58,7 @@ void PractRand::RNGs::Polymorphic::sha2_based_pool::flush_buffers() {
 }
 
 void PractRand::RNGs::Polymorphic::sha2_based_pool::seed(Uint64 s) {
-	unsigned long i;
+	unsigned long i = 0;
 	for (i = 0; i < 8; i++) state[i] = Uint8(s >> (i*8));
 	for (; i < STATE_SIZE; i++) state[i] = 0;
 	input_buffer_left = 128;

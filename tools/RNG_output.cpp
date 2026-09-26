@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
 	}
 
 	double _n = atof(argv[2]);//should be atol, but on 32 bit systems that's too limited
-	Uint64 n;
+	Uint64 n = 0;
 	if (_n <= 0 || _n >= 18446744073709551616.0) {
 		if (!strcmp(argv[2], "name")) {
 			std::printf("%s\n", rng->get_name().c_str());
@@ -120,12 +120,12 @@ int main(int argc, char **argv) {
 
 	if (argc == 3) rng->autoseed();
 	else {
-		Uint64 seed;
+		Uint64 seed = 0;
 		if (!interpret_seed(argv[3],seed)) {(void)std::fprintf(stderr, "RNG_output ERROR: \"%s\" is not a valid 64 bit hexadecimal seed\n", argv[3]); std::exit(0);}
 		rng->seed(seed);
 	}
 
-	void(*prev_handler)(int);
+	void(*prev_handler)(int) = nullptr;
 	prev_handler = signal(SIGINT, signal_handler);  if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGINT has failed." << std::endl; }
 	prev_handler = signal(SIGTERM, signal_handler); if (prev_handler == SIG_ERR) { std::cerr << "WARNING: Setting signal handler for SIGTERM has failed." << std::endl; }
 #ifdef __linux__

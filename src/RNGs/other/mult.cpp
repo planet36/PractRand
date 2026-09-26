@@ -492,7 +492,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				Uint16 old_mwlac16::raw16() {
-					Uint16 oa;
+					Uint16 oa = 0;
 					oa = a;
 					a = (b * 0x9785) ^ (a >> 7);
 					b = c + (oa >> 2);
@@ -505,7 +505,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a); walker->handle(b); walker->handle(c); walker->handle(d);
 				}
 				Uint16 mwlac_varA::raw16() {
-					Uint16 oa;
+					Uint16 oa = 0;
 					oa = a * 0x9785;//   1001011110000101
 					a = b ^ std::rotl(a, 7);
 					b += c;
@@ -517,7 +517,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a); walker->handle(b); walker->handle(c);
 				}
 				Uint16 mwlac_varB::raw16() {
-					Uint16 oa;
+					Uint16 oa = 0;
 					oa = a * 0x9785;//   1001011110000101
 					b = std::rotl(b, 13);
 					a = b ^ std::rotl(a, 7);

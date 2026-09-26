@@ -22,7 +22,7 @@ static inline unsigned long twist32( unsigned long m, unsigned long s0, unsigned
 }
 void PractRand::RNGs::Raw::mt19937::_advance_state() {//LOCKED, do not change
 	Uint32 *p = state;
-	long i;
+	long i = 0;
 	for( i = ARRAY_SIZE - OFFSET; i--; ++p )
 		*p = Uint32(twist32( p[OFFSET], p[0], p[1] ));
 	for( i = OFFSET; --i; ++p )
@@ -56,7 +56,7 @@ void PractRand::RNGs::Raw::mt19937::seed(Uint64 s) {
 	}
 }
 void PractRand::RNGs::Raw::mt19937::seed(Uint32 s[], int seed_length) {//LOCKED, do not change
-	int i, j, k;
+	int i = 0, j = 0, k = 0;
 	seed(19650218UL);
 	i=1; j=0;
 	k = (ARRAY_SIZE > seed_length) ? ARRAY_SIZE : seed_length;
@@ -83,7 +83,7 @@ void PractRand::RNGs::Raw::mt19937::walk_state(StateWalkingObject *walker) {
 	for (auto & i : state) walker->handle(i);
 	if (used > ARRAY_SIZE) used = ARRAY_SIZE;
 	if (walker->is_clumsy()) {
-		unsigned long successive_zeroes;
+		unsigned long successive_zeroes = 0;
 		for (successive_zeroes = 0; successive_zeroes < ARRAY_SIZE; successive_zeroes++)
 			if (state[successive_zeroes]) break;
 		if (successive_zeroes == ARRAY_SIZE) state[0] = 1;

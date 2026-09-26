@@ -10,7 +10,7 @@
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
 	using namespace Internals;
 				Uint16 xsalta16x3::raw16() {//slightly more complex output function
-					Uint16 tmp, old;
+					Uint16 tmp = 0, old = 0;
 					tmp = a + c + ((b >> 11) | (b << 5));
 					old = a;
 					a = b ^ (b >> 3);
@@ -24,7 +24,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!a && !b && !c) a = 1;
 				}
 				Uint16 xsaltb16x3::raw16() {//radically different output function
-					Uint16 tmp, old;
+					Uint16 tmp = 0, old = 0;
 					tmp = (a & b) | (b & c) | (c & a);
 					old = a;
 					a = b ^ (b >> 3);
@@ -38,7 +38,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!a && !b && !c) a = 1;
 				}
 				Uint16 xsaltc16x3::raw16() {//deviating from the standard LFSR state function
-					Uint16 old;
+					Uint16 old = 0;
 					old = a;
 					a = b ^ (b >> 5);
 					b = c + (c << 3);
@@ -227,7 +227,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(state1);
 				}
 				void tinyMT::next_state() {
-					Uint32 x, y;
+					Uint32 x = 0, y = 0;
 					y = state[3];
 					x = (state[0] & 0x7fFFffFF) ^ state[1] ^ state[2];
 					x ^= x << 1;
@@ -241,7 +241,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				Uint32 tinyMT::raw32() {
 					next_state();
-					Uint32 a, b;
+					Uint32 a = 0, b = 0;
 					a = state[3];
 					b = state[0] + (state[2] >> 8);
 					a ^= b;
@@ -261,7 +261,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 
 				Uint32 sapparot::raw32() {
-					Uint32 tmp;
+					Uint32 tmp = 0;
 					tmp = a + 0x9e3779b9;
 					tmp = (tmp << 7) | (tmp >> 25);
 					a = b ^ (~tmp) ^ (tmp << 3);
@@ -276,7 +276,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 
 				Uint16 sap16of48::raw16() {
-					Uint16 tmp;
+					Uint16 tmp = 0;
 					tmp = a + 0x79b9 + c;
 					tmp = (tmp << 5) | (tmp >> 11);
 					a = b ^ (~tmp) ^ (tmp << 3);
@@ -292,7 +292,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(c);
 				}
 				Uint32 sap32of96::raw32() {
-					Uint32 tmp;
+					Uint32 tmp = 0;
 					tmp = a + 0x9e3779b9 + c;
 					tmp = (tmp << 7) | (tmp >> 25);
 					a = b ^ (~tmp) ^ (tmp << 3);

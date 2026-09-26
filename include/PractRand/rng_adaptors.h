@@ -88,7 +88,7 @@ namespace PractRand::RNGs::Adaptors {
 				public:
 					//static constexpr int DISTRIBUTIONS_TYPE = DISTRIBUTIONS_TYPE__NORMAL;
 					Uint32 randi ( Uint32 max ) {
-						Uint32 mask, tmp;
+						Uint32 mask = 0, tmp = 0;
 						max -= 1;
 						mask = max;
 						mask |= mask >> 1; mask |= mask >>  2; mask |= mask >> 4;
@@ -101,7 +101,7 @@ namespace PractRand::RNGs::Adaptors {
 					Uint32 randi ( Uint32 min, Uint32 max ) {return randi(max-min) + min;}
 
 					Uint64 randli ( Uint64 max ) {
-						Uint64 mask, tmp;
+						Uint64 mask = 0, tmp = 0;
 						max -= 1;
 						mask = max;
 						mask |= mask >> 1; mask |= mask >>  2; mask |= mask >>  4;

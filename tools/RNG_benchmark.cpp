@@ -42,7 +42,7 @@ double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * 0.1 + 0.5);
 	PractRand::RNGs::LightWeight::sfc64 known_fast(13);
 	long clock0 = clock();
-	long clock1, clock2;
+	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
 
 	Uint64 sum = 0;
@@ -160,7 +160,7 @@ DECLARE_EP_BENCH_FUNC(64)
 double benchmark_entropy_pool_N (PractRand::RNGs::vRNG &entropy_pool, DataBlock *data) {\
 	constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	long clock0 = clock();
-	long clock1, clock2;
+	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {

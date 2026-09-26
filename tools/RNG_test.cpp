@@ -804,7 +804,7 @@ int main(int argc, char **argv) {
 	}
 	known_good.seed(seed + 1);//the +1 is there just in case the RNG uses the same algorithm as the known good RNG
 
-	PractRand::RNGs::vRNG *testing_rng;
+	PractRand::RNGs::vRNG *testing_rng = nullptr;
 	if (mode == 0) {
 		rng->seed(seed);
 		testing_rng = rng;
@@ -888,7 +888,7 @@ int main(int argc, char **argv) {
 
 //	Tests::ListOfTests tests = Tests::Batteries::get_expanded_standard_tests(rng);
 #if defined MULTITHREADING_SUPPORTED
-	TestManager *tman;
+	TestManager *tman = nullptr;
 	if (use_multithreading) tman = new MultithreadedTestManager(&tests, &known_good);
 	else tman = new TestManager(&tests, &known_good);
 #else

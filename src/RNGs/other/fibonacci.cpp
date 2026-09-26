@@ -139,7 +139,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 
 				//Mitchell-Moore: LFib32(Uint32, 55, 24, ADD)
 				Uint32 mm32::raw32() {
-					Uint32 tmp;
+					Uint32 tmp = 0;
 					tmp = cbuf[index1] += cbuf[index2];
 					if ( ++index1 == 55 ) index1 = 0;
 					if ( ++index2 == 55 ) index2 = 0;
@@ -155,7 +155,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				//Mitchell-Moore modified: LFib16(Uint32, 55, 24, ADD) >> 16
 				Uint16 mm16of32::raw16() {
-					Uint32 tmp;
+					Uint32 tmp = 0;
 					tmp = cbuf[index1] += cbuf[index2];
 					if ( ++index1 == 55 ) index1 = 0;
 					if ( ++index2 == 55 ) index2 = 0;
@@ -171,7 +171,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				//Mitchell-Moore modified: LFib32(Uint32, 55, 24, ADD) >> 16
 				Uint32 mm32_awc::raw32() {
-					Uint32 tmp1, tmp2, tmp3;
+					Uint32 tmp1 = 0, tmp2 = 0, tmp3 = 0;
 					tmp1 = cbuf[index1];
 					tmp2 = cbuf[index2];
 					tmp3 = tmp1 + tmp2 + carry;
@@ -194,7 +194,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				//Mitchell-Moore modified: LFib32(Uint32, 55, 24, ADC) >> 16
 				Uint16 mm16of32_awc::raw16() {
-					Uint32 tmp1, tmp2, tmp3;
+					Uint32 tmp1 = 0, tmp2 = 0, tmp3 = 0;
 					tmp1 = cbuf[index1];
 					tmp2 = cbuf[index2];
 					tmp3 = tmp1 + tmp2 + carry;
@@ -219,7 +219,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//used by Marsaglia in KISS4691 (2010)
 				Uint32 mwc4691::raw32() {
 					index = (index < 4691-1) ? index + 1 : 0;
-					Uint32 x, t;
+					Uint32 x = 0, t = 0;
 					x = cbuf[index];
 					t = (x << 13) + carry + x;
 					carry = (x>>19) + (t<=x);
@@ -308,7 +308,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!index) index = L;
 				}
 				Uint32 dual_cbuf_small::raw32() {
-					Uint32 tmp1, tmp2;
+					Uint32 tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					cbuf1[index1] = tmp1 + tmp2;
@@ -329,7 +329,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!index2) index2 = L2;
 				}
 				Uint32 dual_cbuf::raw32() {
-					Uint32 tmp1, tmp2;
+					Uint32 tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					cbuf1[index1] = tmp1 + tmp2;
@@ -350,7 +350,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!index2) index2 = L2;
 				}
 				Uint32 dual_cbufa_small::raw32() {
-					Uint32 tmp1, tmp2;
+					Uint32 tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					accum = ((accum << 11) | (accum >> 21)) + tmp1;
@@ -373,7 +373,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if ( !index2 ) index2 = L2;
 				}
 				Uint32 dual_cbuf_accum::raw32() {
-					Uint32 tmp1, tmp2;
+					Uint32 tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					accum = ((accum << 11) | (accum >> 21)) + tmp1;

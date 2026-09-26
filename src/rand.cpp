@@ -54,7 +54,7 @@ namespace PractRand {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::abs(v);
-			int exp;
+			int exp = 0;
 			double n = std::frexp(v, &exp);
 			auto tmp_exp = Uint16( (exp<<1) + (sign?1:0));
 			handle(tmp_exp);
@@ -65,7 +65,7 @@ namespace PractRand {
 			//uses excess bits to hopefully safely handle floats that might not be exactly IEEE
 			bool sign = v < 0;
 			v = std::abs(v);
-			int exp;
+			int exp = 0;
 			double n = std::frexp(v, &exp);
 			Uint32 tmp_exp = exp + (sign?0x80000000:0);
 			handle(tmp_exp);
@@ -283,7 +283,7 @@ namespace PractRand {
 	namespace Internals {
 		void test_random_access(PractRand::RNGs::vRNG *rng, PractRand::RNGs::vRNG *known_good, Uint64 period_low64, Uint64 period_high64) {
 			Uint64 seed = known_good->raw64();
-			Uint8 a1, a2, a3, b1, b2, b3;
+			Uint8 a1 = 0, a2 = 0, a3 = 0, b1 = 0, b2 = 0, b3 = 0;
 			//basic check
 			rng->seed(seed);
 			//a1 = rng->raw8(); a2 = rng->raw8(); a3 = rng->raw8();

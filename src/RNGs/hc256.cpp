@@ -168,7 +168,7 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 void PractRand::RNGs::Raw::hc256::seed(Uint32 key_and_iv[16]) {//LOCKED, do not change
 	//LOCKED, do not change
 
-	Uint32 i,j;
+	Uint32 i = 0,j = 0;
 	//expand the key and iv into P and Q
 	for (i = 0; i < 16; i++) P[i] = key_and_iv[i];
 	for (i = 16; i < 512+16; i++)

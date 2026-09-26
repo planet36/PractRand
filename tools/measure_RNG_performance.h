@@ -8,7 +8,7 @@ template<typename RNG> double measure_RNG_performance_16(RNG *rng) {
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint16 buffy[1024];
 	long clock0 = clock();
-	long clock1, clock2;
+	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
@@ -32,7 +32,7 @@ template<typename RNG> double measure_RNG_performance_32(RNG *rng) {
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint32 buffy[1024] = {0};
 	long clock0 = clock();
-	long clock1, clock2;
+	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {
@@ -56,7 +56,7 @@ template<typename RNG> double measure_RNG_performance_64(RNG *rng) {
 	//RAW_RNG rng(PractRand::SEED_AUTO);
 	Uint64 buffy[1024] = {0};
 	long clock0 = clock();
-	long clock1, clock2;
+	long clock1 = 0, clock2 = 0;
 	while ((clock1 = clock()) == clock0) ;
 	int j = 0;
 	do {

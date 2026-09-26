@@ -25,7 +25,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(a);
 					walker->handle(b);
 					if (walker->is_clumsy() && !walker->is_read_only()) {
-						Uint64 seed;
+						Uint64 seed = 0;
 						walker->handle(seed);
 						PractRand::RNGs::Raw::arbee seeder(seed);
 						for (int i = 0; i < 256; i++) arr[i] = i;
@@ -80,7 +80,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int mask = (1<<table_size_L2)-1;
 					Uint8 *base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
-						Uint8 x, y;
+						Uint8 x = 0, y = 0;
 						x = base[i];
 						a = ((a << 5) | (a >> 3)) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
@@ -117,7 +117,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int mask = (1<<table_size_L2)-1;
 					Uint16 *base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
-						Uint16 x, y;
+						Uint16 x = 0, y = 0;
 						x = base[i];
 						a = ((a << 11) | (a >> 5)) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
@@ -154,7 +154,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int mask = (1<<table_size_L2)-1;
 					Uint32 *base = &table[mask+1];
 					for (int i = 0; i <= mask; i++) {
-						Uint32 x, y;
+						Uint32 x = 0, y = 0;
 						x = base[i];
 						a = ((a << 19) | (a >> 13)) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
@@ -199,8 +199,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int HALF_SIZE = 1<<(table_size_L2-1);
 					const int MASK = (1<<table_size_L2)-1;
 					Uint32 *base = &table[MASK+1];
-					Uint32 *m, *m2, *mend, *r;
-					Uint32 x, y;
+					Uint32 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
+					Uint32 x = 0, y = 0;
 					//m = base;
 					r = table;
 					b += ++c;
@@ -273,8 +273,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int HALF_SIZE = 1<<(table_size_L2-1);
 					const int MASK = (1<<table_size_L2)-1;
 					Uint16 *base = &table[MASK+1];
-					Uint16 *m, *m2, *mend, *r;
-					Uint16 x, y;
+					Uint16 *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
+					Uint16 x = 0, y = 0;
 					//m = base;
 					r = table;
 					b += ++c;

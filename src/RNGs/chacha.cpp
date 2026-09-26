@@ -266,7 +266,7 @@ void PractRand::RNGs::Raw::chacha::walk_state(StateWalkingObject *walker) {
 	}
 }
 void PractRand::RNGs::Raw::chacha::seek_forward (Uint64 how_far_low, Uint64 how_far_high) {
-	Uint64 pos_low, pos_high;
+	Uint64 pos_low = 0, pos_high = 0;
 	_get_position(pos_low, pos_high);
 	Uint64 new_pos_low = pos_low + how_far_low;
 	if (new_pos_low < pos_low) how_far_high++;
@@ -289,7 +289,7 @@ static void test_chacha ( Uint32 rounds, const Uint32 *seed_and_iv, bool short_s
 	if (!short_seed) rng.seed(seed_and_iv, false);
 	else rng.seed_short(seed_and_iv, false);
 	Uint32 observed0 = rng.raw32();
-	Uint32 observed1;
+	Uint32 observed1 = 0;
 	if (!index) observed1 = observed0;
 	else {
 		for (Uint32 i = 1; i < index; i++) rng.raw32();
