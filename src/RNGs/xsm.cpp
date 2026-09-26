@@ -1,16 +1,16 @@
+#include "PractRand/RNGs/xsm32.h"
+#include "PractRand/RNGs/xsm64.h"
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
+
 #include <bit>
 #include <string>
 
 #if defined _MSC_VER && _MSC_VER >= 1800
 #include <intrin.h>
 #endif
-
-#include "PractRand/RNGs/xsm32.h"
-#include "PractRand/RNGs/xsm64.h"
 
 using namespace PractRand;
 using namespace PractRand::Internals;

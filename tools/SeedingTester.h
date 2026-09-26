@@ -1,9 +1,9 @@
 #pragma once
 
+#include "parse_number.h"
+
 #include <bit>
 #include <print>
-
-#include "parse_number.h"
 
 class Seeder_MetaRNG : public PractRand::RNGs::vRNG64 {
 public:

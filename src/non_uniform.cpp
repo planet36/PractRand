@@ -3,6 +3,9 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 
+//for use in seeding & self-tests:
+#include "PractRand/RNGs/all.h"
+
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -10,9 +13,6 @@
 #include <ctime>
 #include <string>
 #include <vector>
-
-//for use in seeding & self-tests:
-#include "PractRand/RNGs/all.h"
 
 /*
 	currently the only non-uniform distribution supported is the Gaussian distribution

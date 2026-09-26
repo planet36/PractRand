@@ -3,6 +3,9 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 
+//for use in seeding & self-tests:
+#include "PractRand/RNGs/all.h"
+
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -14,9 +17,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-//for use in seeding & self-tests:
-#include "PractRand/RNGs/all.h"
 
 namespace PractRand {
 	const char* version_str = "0.95" "-planet36";

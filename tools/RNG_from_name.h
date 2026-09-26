@@ -6,6 +6,8 @@
 #include "PractRand/RNGs/other/simple.h"
 #include "PractRand/RNGs/other/transform.h"
 #include "PractRand/rng_basics.h"
+#include "parse_number.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -14,8 +16,6 @@
 #include <print>
 #include <string>
 #include <vector>
-
-#include "parse_number.h"
 
 namespace Special_RNGs {
 	template<typename Word>
