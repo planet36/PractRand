@@ -14,7 +14,7 @@ using namespace PractRand::Internals;
 namespace PractRand::Testing::RNG_Sets {
 			const char* recommended_rngs[] = {
 				"hc256", "trivium",
-				"efiix64x384", "efiix32x384", "efiix16x384", "efiix8x384",
+				"efiix64x48", "efiix32x48", "efiix16x48", "efiix8x48",
 				"isaac64x256", "isaac32x256",
 				"chacha(8)", "salsa(8)",
 				"arbee",

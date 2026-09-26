@@ -81,7 +81,7 @@ namespace Special_RNGs {
 namespace PractRand::RNG_Sets {
 			const char* recommended_rngs[] = {
 				"hc256", "trivium",
-				"efiix64x384", "efiix32x384", "efiix16x384", "efiix8x384",
+				"efiix64x48", "efiix32x48", "efiix16x48", "efiix8x48",
 				"isaac64x256", "isaac32x256",
 				"chacha(8)", "salsa(8)",
 				"arbee",
@@ -111,7 +111,7 @@ namespace PractRand::RNG_Sets {
 				"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16", "multish3x32", "multish4x16",
 				"mwrca16", "mwrca32", "mwrcc16", "mwrcc32", "mwrcca16", "mwrcca32",
 				"old_mwlac16", "mwlac_varA", "mwlac_varB", "mwlac_varC", "mwlac_varD", "mwlac_varE",
-				"mo_Cmfr", "mo_Cmr32of64", "mulcr16", "mulcr32", "mmr16", "mmr32",
+				"mo_Cmfr32", "mo_Cmr32of64", "mulcr16", "mulcr32", "mmr16", "mmr32",
 				nullptr
 			};
 			const int num_nonrecommended_nonlcg = std::size(nonrecommended_nonlcg) - 1;
@@ -126,7 +126,7 @@ namespace PractRand::RNG_Sets {
 			};
 			const int num_nonrecommended_lcgish = std::size(nonrecommended_lcgish) - 1;
 			const char* nonrecommended_cbuf[] = {
-				"mm32", "mm32_awc", "mm16of32", "mm16of32_awc", "mm4691",
+				"mm32", "mm32_awc", "mm16of32", "mm16of32_awc", "mwc4691",
 				"cbuf_accum", "cbuf_accum_big", "cbuf_2accum_small", "cbuf_2accum", "dual_cbuf_small", "dual_cbuf", "dual_cbufa_small", "dual_cbuf_accum",
 				"fibmul16of32", "fibmul32of64", "fibmulmix16", "ranrot32small", "ranrot32", "ranrot32big", "ranrot3tap32small", "ranrot3tap32", "ranrot3tap32big", "ranrot32hetsmall", "ranrot32het", "ranrot32hetbig",
 				"mt19937_unhashed", "salsa(3)", "chacha(3)", "salsa(4)", "chacha(4)",
@@ -136,7 +136,7 @@ namespace PractRand::RNG_Sets {
 			const char* nonrecommended_indirect[] = {
 				"ibaa8(1)", "ibaa8(2)", "ibaa8(3)", "ibaa16(1)", "ibaa16(2)", "ibaa16(3)", "ibaa32(1)", "ibaa32(2)", "ibaa32(3)",
 				"rc4_weakenedA", "rc4_weakenedB", "rc4_weakenedC", "rc4_weakenedD", "rc4",
-				"isaac16(2)", "isaac16(3)", "isaac16(4)", "isaac32(2)", "isaac32(3)", "isaac32(4)",
+				"isaac16_varqual(2)", "isaac16_varqual(3)", "isaac16_varqual(4)", "isaac32_varqual(2)", "isaac32_varqual(3)", "isaac32_varqual(4)",
 				"genindA(5)", "genindA(7)", "genindA(9)", "genindB(1)", "genindB(2)", "genindB(3)", "genindB(4)",
 				"genindC(2)", "genindC(3)", "genindC(4)", "genindC(5)", "genindD(6)", "genindD(9)",
 				"genindE(1)", "genindE(2)", "genindE(3)", "genindF(2)", "genindF(3)", "genindF(4)", "genindF(5)",
