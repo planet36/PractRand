@@ -15,17 +15,17 @@ namespace PractRand::Tests::Transforms {
 				//virtual double get_result();
 				void get_results ( std::vector<TestResult> &results ) override;
 
-				virtual bool recommend_subtest_tree_descent() const;
+				[[nodiscard]] virtual bool recommend_subtest_tree_descent() const;
 				void deinit() override;
 				~multiplex ( ) override;
-				std::string get_name() const override;
+				[[nodiscard]] std::string get_name() const override;
 				void test_blocks(TestBlock *data, int numblocks) override;
-				int get_blocks_to_repeat() const override;
+				[[nodiscard]] int get_blocks_to_repeat() const override;
 
-				virtual int get_num_children() const;
-				virtual TestBaseclass *get_child(int index) const;
-				const ListOfTests &_get_children() const {return subtests;}
-				virtual Uint64 get_blocks_passed_through(int index) const;// {return blocks_already;}
+				[[nodiscard]] virtual int get_num_children() const;
+				[[nodiscard]] virtual TestBaseclass *get_child(int index) const;
+				[[nodiscard]] const ListOfTests &_get_children() const {return subtests;}
+				[[nodiscard]] virtual Uint64 get_blocks_passed_through(int index) const;// {return blocks_already;}
 				//virtual std::string get_child_name  (int index) const;
 				//virtual double      get_child_result(int index);
 			};
@@ -43,7 +43,7 @@ namespace PractRand::Tests::Transforms {
 				void init( RNGs::vRNG *known_good ) override;
 				void test_blocks(TestBlock *data, int numblocks) override;
 			//	virtual double get_result();
-				Uint64 get_blocks_passed_through(int index) const override;
+				[[nodiscard]] Uint64 get_blocks_passed_through(int index) const override;
 			};
 			class Transform_Baseclass : public multiplex {
 			private:
@@ -76,7 +76,7 @@ namespace PractRand::Tests::Transforms {
 					unitsL(unitsL_)
 				{}
 				void init( RNGs::vRNG *known_good ) override;
-				std::string get_name() const override;
+				[[nodiscard]] std::string get_name() const override;
 				void test_blocks(TestBlock *data, int numblocks) override;
 			};
 			class lowbits final : public Transform_Baseclass {
@@ -91,7 +91,7 @@ namespace PractRand::Tests::Transforms {
 					unitsL(unitsL_)
 				{}
 				void init( RNGs::vRNG *known_good ) override;
-				std::string get_name() const override;
+				[[nodiscard]] std::string get_name() const override;
 				void test_blocks(TestBlock *data, int numblocks) override;
 			};
 			/*class bitsyr8x8 : public Transform_Baseclass {
@@ -116,7 +116,7 @@ namespace PractRand::Tests::Transforms {
 					bytes_stride(bytes_stride_)
 				{}
 				void init( RNGs::vRNG *known_good ) override;
-				std::string get_name() const override;
+				[[nodiscard]] std::string get_name() const override;
 				void test_blocks(TestBlock *data, int numblocks) override;
 			};
 }//PractRand

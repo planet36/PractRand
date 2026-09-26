@@ -23,8 +23,8 @@ namespace PractRand::RNGs::Polymorphic {
 				sha2_based_pool() {reset_state();}
 				~sha2_based_pool() override;
 
-				std::string get_name() const override;
-				Uint64 get_flags() const override;
+				[[nodiscard]] std::string get_name() const override;
+				[[nodiscard]] Uint64 get_flags() const override;
 
 				Uint8  raw8 () override;
 				void seed(Uint64 s) override;

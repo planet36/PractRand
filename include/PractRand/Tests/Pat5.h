@@ -5,7 +5,7 @@ namespace PractRand::Tests {
 		public:
 			Pat5();
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -40,8 +40,8 @@ namespace PractRand::Tests {
 			FixedSizeCount<Uint8, 1 << TABLE_SIZE_L2> counts;
 			//Uint64 lifespan;
 			//internal helpers:
-			int transform_bitcount_primary(int bit_count) const;
-			int transform_bitcount_secondary(int bit_count) const;
-			int transform_bitcount_tertiary(int bit_count) const;
+			[[nodiscard]] int transform_bitcount_primary(int bit_count) const;
+			[[nodiscard]] int transform_bitcount_secondary(int bit_count) const;
+			[[nodiscard]] int transform_bitcount_tertiary(int bit_count) const;
 		};
 }//PractRand

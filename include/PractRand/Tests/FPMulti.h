@@ -74,7 +74,7 @@ namespace PractRand::Tests {
 			FPMulti();// (int stride_bits_L2_ = 6, int skip_platters_ = 6);
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			void deinit() override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;

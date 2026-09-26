@@ -373,12 +373,12 @@ public:
 		init();
 	}
 
-	double sample_to_suspicion_no_extrapolation(double sample) const {
+	[[nodiscard]] double sample_to_suspicion_no_extrapolation(double sample) const {
 		if (sample < mid_sample - 0.001) sample += 0.001;//we only record 3 digits after the zero for these samples
 		else if (sample > mid_sample + 0.001) sample -= 0.001;
 		return TestResult::pvalue_to_suspicion(raw->sample_to_pvalue(sample));
 	}
-	double sample_to_suspicion(double sample) const {
+	[[nodiscard]] double sample_to_suspicion(double sample) const {
 		if (sample < mid_sample - 0.001) sample += 0.001;//we only record 3 digits after the zero for these samples
 		else if (sample > mid_sample + 0.001) sample -= 0.001;
 
@@ -392,7 +392,7 @@ public:
 		}
 		return TestResult::pvalue_to_suspicion(raw->sample_to_pvalue(sample));
 	}
-	double suspicion_to_sample(double suspicion) const {
+	[[nodiscard]] double suspicion_to_sample(double suspicion) const {
 		double p = TestResult::suspicion_to_pvalue(suspicion);
 		if (p_threshold) {
 			if (p < p_threshold) {
@@ -405,8 +405,8 @@ public:
 		return raw->pvalue_to_sample(p);
 	}
 
-	double sample_to_pvalue(double sample) const {return TestResult::suspicion_to_pvalue(sample_to_suspicion(sample));}
-	double pvalue_to_sample(double pvalue) const {return suspicion_to_sample(TestResult::pvalue_to_suspicion(pvalue));}
+	[[nodiscard]] double sample_to_pvalue(double sample) const {return TestResult::suspicion_to_pvalue(sample_to_suspicion(sample));}
+	[[nodiscard]] double pvalue_to_sample(double pvalue) const {return suspicion_to_sample(TestResult::pvalue_to_suspicion(pvalue));}
 
 	//static double index_to_pvalue(double index);
 	//static double pvalue_to_index(double pvalue);

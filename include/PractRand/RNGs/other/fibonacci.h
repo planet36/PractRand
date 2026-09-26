@@ -23,7 +23,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint64 raw64() override;
 					bigbadlcg64X(int discard_bits_, int shift_);
 					//~bigbadlcgX();
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class bigbadlcg32X : public vRNG32 {
@@ -31,7 +31,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					bigbadlcg64X base_lcg;
 					bigbadlcg32X(int discard_bits_, int shift_);
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class bigbadlcg16X : public vRNG16 {
@@ -39,7 +39,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					bigbadlcg64X base_lcg;
 					bigbadlcg16X(int discard_bits_, int shift_);
 					Uint16 raw16() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class bigbadlcg8X : public vRNG8 {
@@ -47,7 +47,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					bigbadlcg64X base_lcg;
 					bigbadlcg8X(int discard_bits_, int shift_);
 					Uint8 raw8() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 
@@ -57,7 +57,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				//Mitchell-Moore modified: LFib16(Uint32, 55, 24, ADD) >> 16
@@ -66,7 +66,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2;
 				public:
 					Uint16 raw16() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				//Mitchell-Moore modified: LFib32(Uint32, 55, 24, ADC)
@@ -75,7 +75,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2, carry;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				//Mitchell-Moore modified: LFib16(Uint32, 55, 24, ADC)
@@ -84,7 +84,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2, carry;
 				public:
 					Uint16 raw16() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 
@@ -97,7 +97,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					lfsr_medium();
 					Uint8 raw8() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 
@@ -108,7 +108,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					unsigned int index, carry;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				//proposed by Marsaglia
@@ -120,7 +120,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class cbuf_accum_big : public vRNG32 {
@@ -129,7 +129,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint32 index;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class cbuf_2accum_small : public vRNG32 {
@@ -138,7 +138,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class cbuf_2accum : public vRNG32 {
@@ -147,7 +147,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class dual_cbuf_small : public vRNG32 {
@@ -157,7 +157,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class dual_cbuf : public vRNG32 {
@@ -167,7 +167,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class dual_cbufa_small : public vRNG32 {
@@ -177,7 +177,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class dual_cbuf_accum : public vRNG32 {
@@ -187,7 +187,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 index1, index2;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot32small : public vRNG32 {
@@ -199,7 +199,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 position;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot32 : public vRNG32 {
@@ -211,7 +211,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 position;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot32big : public vRNG32 {
@@ -223,7 +223,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 position;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot3tap32small : public vRNG32 {
@@ -239,7 +239,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot3tap32 : public vRNG32 {
@@ -255,7 +255,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot3tap32big : public vRNG32 {
@@ -271,7 +271,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot32hetsmall : public vRNG32 {
@@ -287,7 +287,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot32het : public vRNG32 {
@@ -303,7 +303,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class ranrot32hetbig : public vRNG32 {
@@ -319,7 +319,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					static Uint32 func(Uint32 a, Uint32 b, Uint32 c);
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class fibmul16of32 : public vRNG16 {// 31 @ 17/9
@@ -329,7 +329,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 position;
 				public:
 					Uint16 raw16() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class fibmul32of64 : public vRNG32 {// 35 @ 3/2, 39 @ 7/5
@@ -339,7 +339,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 position;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class fibmulmix16 : public vRNG16 {
@@ -349,14 +349,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					Uint8 position;
 				public:
 					Uint16 raw16() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 				class mt19937_unhashed : public vRNG32 {//
 					PractRand::RNGs::Raw::mt19937 implementation;
 				public:
 					Uint32 raw32() override;
-					std::string get_name() const override;
+					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject *) override;
 				};
 }

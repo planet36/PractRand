@@ -24,10 +24,10 @@ namespace PractRand {
 		//  TYPE_UNKNOWN       unusuable result, visible but no clear meaning
 
 		TestResult(const std::string &name_, double raw_, double processed_, int type_, double weight_) : name(name_), raw(raw_), processed(processed_), type(type_), weight(weight_) {}
-		double get_raw() const {return raw;}
-		double get_pvalue() const;
-		double get_suspicion() const;
-		double get_weight() const {return weight;}
+		[[nodiscard]] double get_raw() const {return raw;}
+		[[nodiscard]] double get_pvalue() const;
+		[[nodiscard]] double get_suspicion() const;
+		[[nodiscard]] double get_weight() const {return weight;}
 		void set_weight(double weight_) {weight = weight_;}
 		static double pvalue_to_suspicion(double pvalue);
 		static double suspicion_to_pvalue(double suspicion);
@@ -50,7 +50,7 @@ namespace PractRand {
 			virtual void init(PractRand::RNGs::vRNG *known_good);
 			virtual void deinit() {}
 			virtual ~TestBaseclass() = default;
-			virtual std::string get_name() const = 0;
+			[[nodiscard]] virtual std::string get_name() const = 0;
 
 			//1.  Maximum length per test_blocks() call is about 512MB (numblocks==1<<19)
 			//2.  Maximum total length from multiple calls varies slightly but is usually
@@ -67,7 +67,7 @@ namespace PractRand {
 
 			virtual void get_results ( std::vector<TestResult> &results ) = 0;
 
-			virtual int get_blocks_to_repeat() const;//this is the number of blocks at negative indeces that test_blocks should be able to access
+			[[nodiscard]] virtual int get_blocks_to_repeat() const;//this is the number of blocks at negative indeces that test_blocks should be able to access
 			//containing duplicates of data from the end of the previous set of blocks passed to test_blocks
 			//obviously up to the limit of the number of blocks previously passed in
 			//this may not be changed after the call to init()

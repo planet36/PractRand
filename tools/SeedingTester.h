@@ -59,7 +59,7 @@ public:
 		evolve_seed();
 		return rv;
 	}
-	std::string get_name() const override {
+	[[nodiscard]] std::string get_name() const override {
 		std::ostringstream tmp;
 		tmp << "SeedingTester(" << base_rng->get_name() << ")";
 		return tmp.str();
@@ -231,7 +231,7 @@ public:
 		evolve_seed();
 		return rv;
 	}
-	std::string get_name() const override {
+	[[nodiscard]] std::string get_name() const override {
 		std::ostringstream tmp;
 		tmp << "EntropyPoolingTester(" << base_entropy_pool->get_name() << "," << min_length << "to" << max_length << ")";
 		return tmp.str();

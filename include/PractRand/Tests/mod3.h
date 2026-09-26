@@ -8,7 +8,7 @@ namespace PractRand::Tests {
 		class mod3_simple : public TestBaseclass {
 		public:
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -29,7 +29,7 @@ namespace PractRand::Tests {
 		public:
 			mod3n(int block_fraction_);//0 is all, 1 is half, 2 is a quarter, 3 is an 8th, etc
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;

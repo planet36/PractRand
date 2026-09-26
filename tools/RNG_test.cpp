@@ -113,7 +113,7 @@ public:
 	}
 	using vRNG::seed;
 	//any name you want
-	std::string get_name() const override {return "DummyRNG";}
+	[[nodiscard]] std::string get_name() const override {return "DummyRNG";}
 };
 /*
 	The above class is enough to create a PRNG compatible with PractRand.

@@ -24,7 +24,7 @@ namespace PractRand::Tests {
 			CoupGap() = default;
 
 			void init( RNGs::vRNG *known_good ) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results ( std::vector<TestResult> &results ) override;
 			void test_blocks(TestBlock *data, int numblocks) override;
 		};

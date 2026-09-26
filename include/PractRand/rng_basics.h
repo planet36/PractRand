@@ -70,9 +70,9 @@ namespace PractRand {
 			double gaussian(double mean, double stddev) { return gaussian() * stddev + mean; }
 
 		//metadata functions
-			virtual Uint64 get_flags() const;
-			virtual std::string get_name() const = 0;
-			virtual int get_native_output_size() const = 0;//generally 8, 16, 32, 64, or -1 (unknown)
+			[[nodiscard]] virtual Uint64 get_flags() const;
+			[[nodiscard]] virtual std::string get_name() const = 0;
+			[[nodiscard]] virtual int get_native_output_size() const = 0;//generally 8, 16, 32, 64, or -1 (unknown)
 
 		//exotic methods (not supported by many implementations - check flags to see if they support it):
 		//exotic methods 1: random access
@@ -114,7 +114,7 @@ namespace PractRand {
 			Uint16 raw16() override;
 			Uint32 raw32() override;
 			Uint64 raw64() override;
-			int get_native_output_size() const override;
+			[[nodiscard]] int get_native_output_size() const override;
 		};
 		class vRNG16 : public vRNG {
 		public:
@@ -122,7 +122,7 @@ namespace PractRand {
 			Uint8  raw8 () override;
 			Uint32 raw32() override;
 			Uint64 raw64() override;
-			int get_native_output_size() const override;
+			[[nodiscard]] int get_native_output_size() const override;
 		};
 		class vRNG32 : public vRNG {
 		public:
@@ -130,7 +130,7 @@ namespace PractRand {
 			Uint8  raw8 () override;
 			Uint16 raw16() override;
 			Uint64 raw64() override;
-			int get_native_output_size() const override;
+			[[nodiscard]] int get_native_output_size() const override;
 		};
 		class vRNG64 : public vRNG {
 		public:
@@ -138,7 +138,7 @@ namespace PractRand {
 			Uint8  raw8 () override;
 			Uint16 raw16() override;
 			Uint32 raw32() override;
-			int get_native_output_size() const override;
+			[[nodiscard]] int get_native_output_size() const override;
 		};
 		namespace OUTPUT_TYPES {
 		//constexpr int SIMPLE_1 = 0;     //one of 8,16,32,64 as _raw()

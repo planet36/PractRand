@@ -13,7 +13,7 @@ namespace PractRand::Tests {
 			Birthday32();
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -35,7 +35,7 @@ namespace PractRand::Tests {
 			Birthday64();
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -100,7 +100,7 @@ namespace PractRand::Tests {
 			~BirthdayLamda1() override;
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -140,7 +140,7 @@ namespace PractRand::Tests {
 		public:
 			BirthdaySystematic128(int max_bufsize_L2_ = 28);
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 			void test_blocks(TestBlock *data, int numblocks) override;
 		};
@@ -171,7 +171,7 @@ namespace PractRand::Tests {
 			~BirthdayAlt() override;
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			//virtual void deinit();
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;

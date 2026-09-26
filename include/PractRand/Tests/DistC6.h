@@ -8,7 +8,7 @@ namespace PractRand::Tests {
 				int bits_clipped_1_ = 0,
 				int bits_clipped_2_ = 0 );
 			void init( PractRand::RNGs::vRNG *known_good ) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results ( std::vector<TestResult> &results ) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -34,14 +34,14 @@ namespace PractRand::Tests {
 			Uint32 last_index;
 			VariableSizeCount<Uint8> counts;
 			//internal helpers:
-			virtual int transform_bitcount ( int bit_count ) const final;
+			[[nodiscard]] virtual int transform_bitcount ( int bit_count ) const final;
 			static Uint32 _reorder_bits ( Uint32 rcode, int bits_per_sample, int length ) ;
-			Uint32 reorder_bits( Uint32 rcode ) const {return _reorder_bits(rcode, bits_per_sample, length);}
-			Uint32 unreorder_bits ( Uint32 rbcode ) const {return _reorder_bits(rbcode, length, bits_per_sample);}
-			Uint32 reorder_codes   ( Uint32 code ) const {return reorder_codes_table[code];}
-			Uint32 unreorder_codes ( Uint32 rcode ) const {return unreorder_codes_table[rcode];}
+			[[nodiscard]] Uint32 reorder_bits( Uint32 rcode ) const {return _reorder_bits(rcode, bits_per_sample, length);}
+			[[nodiscard]] Uint32 unreorder_bits ( Uint32 rbcode ) const {return _reorder_bits(rbcode, length, bits_per_sample);}
+			[[nodiscard]] Uint32 reorder_codes   ( Uint32 code ) const {return reorder_codes_table[code];}
+			[[nodiscard]] Uint32 unreorder_codes ( Uint32 rcode ) const {return unreorder_codes_table[rcode];}
 			void generate_reorder_codes ();
-			Uint32 _advance_index ( Uint32 index, int rbcode ) const {
+			[[nodiscard]] Uint32 _advance_index ( Uint32 index, int rbcode ) const {
 				if constexpr (ENABLE_REORDER)
 					return ((index & mask_pre) << 1) | rbcode ;
 				else
@@ -58,7 +58,7 @@ namespace PractRand::Tests {
 				int bits_clipped_2_ = 0
 				);
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;

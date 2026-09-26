@@ -43,8 +43,8 @@ namespace PractRand::RNGs {
 			public:
 				static constexpr int FLAGS = FLAG::USES_SPECIFIED | FLAG::ENDIAN_SAFE | FLAG::SUPPORTS_ENTROPY_ACCUMULATION;
 				Raw::arbee implementation;
-				Uint64 get_flags() const override;
-				std::string get_name() const override;
+				[[nodiscard]] Uint64 get_flags() const override;
+				[[nodiscard]] std::string get_name() const override;
 				arbee(Uint64 s) : implementation(s) {}
 				arbee(Uint64 s1, Uint64 s2, Uint64 s3, Uint64 s4) : implementation(s1,s2,s3,s4) {}
 				arbee(vRNG *seeder) {seed(seeder);}

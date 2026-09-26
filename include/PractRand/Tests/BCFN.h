@@ -30,7 +30,7 @@ namespace PractRand::Tests {
 			BCFN(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
 			void init( PractRand::RNGs::vRNG *known_good ) override;
 			void deinit( ) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			//virtual double get_result();
 			//virtual double result_to_pvalue ( Uint64 blocks, double r );
 			void get_results ( std::vector<TestResult> &results ) override;
@@ -64,7 +64,7 @@ namespace PractRand::Tests {
 			BCFN_FF(int unitsL2_ = 0, int tbits_ = 10, bool unbalanced_ = true);
 			void init( PractRand::RNGs::vRNG *known_good ) override;
 			void deinit( ) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			//virtual double get_result();
 			//virtual double result_to_pvalue ( Uint64 blocks, double r );
 			void get_results ( std::vector<TestResult> &results ) override;

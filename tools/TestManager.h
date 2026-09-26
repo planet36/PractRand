@@ -14,7 +14,7 @@ protected:
 	bool freshly_created;
 	int prep_blocks(Uint64 &blocks);
 public:
-	const PractRand::RNGs::vRNG *get_rng() const {return rng;}//RNG being tested
+	[[nodiscard]] const PractRand::RNGs::vRNG *get_rng() const {return rng;}//RNG being tested
 	Uint64 get_blocks_so_far() {return blocks_so_far;}//number of blocks tested
 
 	TestManager(PractRand::Tests::ListOfTests *tests_, PractRand::RNGs::vRNG *known_good_=nullptr, int max_buffer_amount_ = 1 << (25-10));

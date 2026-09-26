@@ -72,7 +72,7 @@ namespace PractRand {
 			auto tmp_sig = Uint64(std::ldexp(n - 0.5, 64));
 			handle(tmp_sig);
 		}
-		Uint32 get_properties() const override {return FLAG_READ_ONLY;}
+		[[nodiscard]] Uint32 get_properties() const override {return FLAG_READ_ONLY;}
 	};
 	class DeserializingStateWalker : public StateWalkingObject {
 	public:
@@ -111,7 +111,7 @@ namespace PractRand {
 			if (exp >= 0x4000) exp -= 0x8000;
 			v = (sign ? -1.0 : 1.0) * std::ldexp(static_cast<double>(tmp_sig), exp-64);
 		}
-		Uint32 get_properties() const override {return 0;}
+		[[nodiscard]] Uint32 get_properties() const override {return 0;}
 	};
 	class PrintingStateWalker : public StateWalkingObject {
 		std::ostringstream outbuf;
@@ -145,7 +145,7 @@ namespace PractRand {
 		void handle(Uint64 &v) override {v = seeder.raw64();}
 		void handle(float  &) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
 		void handle(double &) override {issue_error("RNGs with default integer seeding should not contain floating point values");}
-		Uint32 get_properties() const override { return FLAG_CLUMSY | FLAG_SEEDER; }
+		[[nodiscard]] Uint32 get_properties() const override { return FLAG_CLUMSY | FLAG_SEEDER; }
 	};
 	class GenericSeedingStateWalker : public StateWalkingObject {
 	public:
@@ -158,7 +158,7 @@ namespace PractRand {
 		void handle(Uint64 &v) override {v = seeder->raw64();}
 		void handle(float  &) override {issue_error("RNGs with default seeding should not contain floating point values");}
 		void handle(double &) override {issue_error("RNGs with default seeding should not contain floating point values");}
-		Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
+		[[nodiscard]] Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 	};
 	namespace AutoSeeder {
 		constexpr int POOL_SIZE = 5;
@@ -231,7 +231,7 @@ namespace PractRand {
 			void handle(Uint64 &v) override {v = seeder.raw64();}
 			void handle([[maybe_unused]] float  &v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
 			void handle([[maybe_unused]] double &v) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
+			[[nodiscard]] Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 		class CryptoAutoSeedingStateWalker : public StateWalkingObject {
 		public:
@@ -265,7 +265,7 @@ namespace PractRand {
 			void handle(Uint64 &v) override {v = seeder.raw64();}
 			void handle(float  &) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
 			void handle(double &) override {issue_error("RNGs with auto-seeding should not contain floating point values");}
-			Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
+			[[nodiscard]] Uint32 get_properties() const override {return FLAG_CLUMSY | FLAG_SEEDER;}
 		};
 	}
 	Uint32 randi_fast_implementation(Uint32 random_value, Uint32 max) {

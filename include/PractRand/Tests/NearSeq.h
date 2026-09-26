@@ -61,7 +61,7 @@ namespace PractRand::Tests {
 			NearSeq();
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			void deinit() override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -119,20 +119,20 @@ namespace PractRand::Tests {
 			Sint8 *lookup_table1;//bit 7: valid or invalid value for a core block, bit 0: high or low value for core block
 			Uint8 *lookup_table2;//hamming distance from idealized value for core block
 
-			Sint8 lookup1(Word value) const {
+			[[nodiscard]] Sint8 lookup1(Word value) const {
 				if constexpr (BITS_PER_BLOCK < WORD_BITS) value &= (1UL << BITS_PER_BLOCK) - 1;
 				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
 				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
 				else return lookup_table1[std::popcount(value)];
 			}
-			Sint32 _lookup1(Word value) const {
+			[[nodiscard]] Sint32 _lookup1(Word value) const {
 				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table1[value];
 				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table1[std::popcount(value)];
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table1[std::popcount(value)];
 				else return lookup_table1[std::popcount(value)];
 			}
-			Uint32 _lookup2(Word value) const {
+			[[nodiscard]] Uint32 _lookup2(Word value) const {
 				if constexpr (BITS_PER_BLOCK <= MAX_LOOKUP_L2) return lookup_table2[value];
 				else if constexpr (BITS_PER_BLOCK <= 16) return lookup_table2[std::popcount(value)];
 				else if constexpr (BITS_PER_BLOCK <= 32) return lookup_table2[std::popcount(value)];
@@ -143,7 +143,7 @@ namespace PractRand::Tests {
 				bucket |= (_lookup1(block_value) & 1) << bucket_bit;
 				hdist += _lookup2(block_value);
 			}
-			int get_hdist_bin(int hdist) const;
+			[[nodiscard]] int get_hdist_bin(int hdist) const;
 			bool is_core_bad(const Word *core) const;
 			void core_analysis(const Word *core, int &index, int &ham) const;//only call on valid cores
 			void count_bits_distribution(Word bits, Uint64 *counts, int num = WORD_BITS);
@@ -151,7 +151,7 @@ namespace PractRand::Tests {
 			NearSeq2();
 			void init(PractRand::RNGs::vRNG *known_good) override;
 			void deinit() override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;

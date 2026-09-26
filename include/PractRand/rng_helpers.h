@@ -29,11 +29,11 @@ namespace PractRand {
 		static constexpr int FLAG_WRITE_ONLY = 2;// result does not depend upon prior state
 		static constexpr int FLAG_CLUMSY = 4;    // may violate invariants (if also FLAG_READ_ONLY then only wants to see state visible to clumsy writers)
 		static constexpr int FLAG_SEEDER = 8;    // some RNGs may have extra invariants enforced only on seeded states (minimum distance away from other seeded states on cycle)
-		virtual Uint32 get_properties() const = 0;
-		bool is_read_only() const { return (get_properties() & FLAG_READ_ONLY) ? true : false; }
-		bool is_write_only() const { return (get_properties() & FLAG_WRITE_ONLY) ? true : false; }
-		bool is_clumsy() const { return (get_properties() & FLAG_CLUMSY) ? true : false; }
-		bool is_seeder() const {return (get_properties() & FLAG_SEEDER) ? true : false;}
+		[[nodiscard]] virtual Uint32 get_properties() const = 0;
+		[[nodiscard]] bool is_read_only() const { return (get_properties() & FLAG_READ_ONLY) ? true : false; }
+		[[nodiscard]] bool is_write_only() const { return (get_properties() & FLAG_WRITE_ONLY) ? true : false; }
+		[[nodiscard]] bool is_clumsy() const { return (get_properties() & FLAG_CLUMSY) ? true : false; }
+		[[nodiscard]] bool is_seeder() const {return (get_properties() & FLAG_SEEDER) ? true : false;}
 
 		/*void handle(signed char      &v) {handle((unsigned char)v);}
 		void handle(signed short     &v) {handle((unsigned short)v);}

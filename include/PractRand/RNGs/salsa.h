@@ -48,7 +48,7 @@ namespace PractRand::RNGs {
 				//when using an odd number of rounds the final transposition gets skipped - this may or may not match other implementations
 				//therefore it is recommended that only even numbers of rounds be used
 				void set_rounds(int rounds_);
-				int get_rounds() const {return rounds;}
+				[[nodiscard]] int get_rounds() const {return rounds;}
 
 				static void self_test();
 			};
@@ -69,7 +69,7 @@ namespace PractRand::RNGs {
 				//for non-crypto applications, 4 rounds is sufficient to qualify for a 3 star quality rating, 6 rounds for a 5 star quality rating
 				//for crypto applications, 8 rounds is sufficient to qualify for a 1 star crypto rating, 12 for a 3 star crypto rating, 20 for a 4 star crypto rating
 				void set_rounds(int rounds_);
-				int get_rounds() const;
+				[[nodiscard]] int get_rounds() const;
 			};
 		}
 		PRACTRAND_LIGHT_WEIGHT_RNG(salsa)

@@ -5,7 +5,7 @@ namespace PractRand::Tests {
 		public:
 			DistFreq4(int blocks_per_) : blocks_per(blocks_per_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -27,7 +27,7 @@ namespace PractRand::Tests {
 		public:
 			TripleFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -57,11 +57,11 @@ namespace PractRand::Tests {
 		public:
 			TripleMirrorFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
-			int get_blocks_to_repeat() const override;
+			[[nodiscard]] int get_blocks_to_repeat() const override;
 
 		protected:
 			static constexpr int BASE_ALIGN_L2 = 2;
@@ -82,7 +82,7 @@ namespace PractRand::Tests {
 		public:
 			TripleMirrorFreqN(int minimum_level_) : blocks_per_pass(1 << minimum_level_), minimum_level(minimum_level_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -115,11 +115,11 @@ namespace PractRand::Tests {
 		public:
 			TripleMirrorCoup(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
-			int get_blocks_to_repeat() const override;
+			[[nodiscard]] int get_blocks_to_repeat() const override;
 
 		protected:
 			static constexpr int BASE_ALIGN_L2 = 2;
@@ -146,7 +146,7 @@ namespace PractRand::Tests {
 		public:
 			QuadFreq(int passes_at_once_, int blocks_per_pass_) : blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;
@@ -178,7 +178,7 @@ namespace PractRand::Tests {
 		public:
 			LPerm16(int word_bits_, int passes_at_once_ = 0, int blocks_per_pass_ = 1) : word_bits(word_bits_), blocks_per_pass(blocks_per_pass_), passes_at_once(passes_at_once_) {}
 			void init(PractRand::RNGs::vRNG *known_good) override;
-			std::string get_name() const override;
+			[[nodiscard]] std::string get_name() const override;
 			void get_results(std::vector<TestResult> &results) override;
 
 			void test_blocks(TestBlock *data, int numblocks) override;

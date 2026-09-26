@@ -25,9 +25,9 @@ namespace PractRand::Tests {
 			void set_minimum_prob(double min) { minimum_prob = min; }
 			void add_category(Uint64 count, long double probability);
 			void finalize();
-			double get_result() const;
-			long get_DoF() const;
-			long get_categories() const { return categories; }
+			[[nodiscard]] double get_result() const;
+			[[nodiscard]] long get_DoF() const;
+			[[nodiscard]] long get_categories() const { return categories; }
 		};
 		double g_test(unsigned long categories, const double *prob_table, const Uint64 *counts);
 		double g_test_flat(unsigned long categories, const Uint64 *counts);
@@ -67,7 +67,7 @@ namespace PractRand::Tests {
 			double sum{};
 			double sum_sqr{};
 			void _count_duplicates();
-			double _get_index ( double other_result ) const;//interpolates
+			[[nodiscard]] double _get_index ( double other_result ) const;//interpolates
 		public:
 			void _normalize();
 			void _add(double result) {rs.push_back(result); sum += result; sum_sqr += result * result;}
@@ -91,16 +91,16 @@ namespace PractRand::Tests {
 				_normalize();
 			}
 			void reset() {duplicates = 0; sum = 0; sum_sqr = 0; rs.resize(0);}
-			long size() const {return rs.size();}
-			long num_duplicates() const {return duplicates;}
-			long get_index ( double other_result ) const {return int(0.5+_get_index(other_result));}
-			double get_mean() const {if (rs.empty()) return 0; else return sum / rs.size();}
-			double get_stddev() const {if (rs.empty()) return 0; double avg = get_mean(), avg_sqr = sum_sqr / rs.size(); return std::sqrt(avg_sqr - avg * avg);}
-			double get_percentile ( double other_result ) const;//0 to 1
-			double get_result_by_index(int i) const {return rs[i];}
-			double get_result_by_percentile(double d) const;
-			long get_num_elements_less_than ( double other_result ) const;
-			long get_num_elements_greater_than ( double other_result ) const;
+			[[nodiscard]] long size() const {return rs.size();}
+			[[nodiscard]] long num_duplicates() const {return duplicates;}
+			[[nodiscard]] long get_index ( double other_result ) const {return int(0.5+_get_index(other_result));}
+			[[nodiscard]] double get_mean() const {if (rs.empty()) return 0; else return sum / rs.size();}
+			[[nodiscard]] double get_stddev() const {if (rs.empty()) return 0; double avg = get_mean(), avg_sqr = sum_sqr / rs.size(); return std::sqrt(avg_sqr - avg * avg);}
+			[[nodiscard]] double get_percentile ( double other_result ) const;//0 to 1
+			[[nodiscard]] double get_result_by_index(int i) const {return rs[i];}
+			[[nodiscard]] double get_result_by_percentile(double d) const;
+			[[nodiscard]] long get_num_elements_less_than ( double other_result ) const;
+			[[nodiscard]] long get_num_elements_greater_than ( double other_result ) const;
 			void get_num_elements_less_and_greater ( double other_result, int &num_lower, int &num_higher ) const;
 		};
 
@@ -185,7 +185,7 @@ namespace PractRand::Tests {
 			void init(int w_, int h_);
 			void raw_import(int offset, Word *input, int length);
 			void import_partial_row(int x, int y, Word *input, int bits, int bit_offset, bool zeroed=false);
-			bool read_position(int x, int y) const;
+			[[nodiscard]] bool read_position(int x, int y) const;
 			void xor_rows(int destination, int source);
 			void xor_rows_skip_start(int destination, int source, int skip);//skip is measured in words?
 			void clear_rectangle(int min_x, int max_x, int min_y, int max_y);
@@ -221,15 +221,15 @@ namespace PractRand::Tests {
 	0.995, 0.998, 0.999, 0.9995, 0.9998, 0.9999, 0.99995, 0.99998, 0.99999
 };
 
-			double get_median_sample() const {return table[49 + 9];}
+			[[nodiscard]] double get_median_sample() const {return table[49 + 9];}
 
 			//linear interpolation
-			double sample_to_index(double sample) const;
-			double index_to_sample(double index) const;
+			[[nodiscard]] double sample_to_index(double sample) const;
+			[[nodiscard]] double index_to_sample(double index) const;
 			static double pvalue_to_index(double pvalue);
 			static double index_to_pvalue(double index);
-			double pvalue_to_sample(double pvalue) const {return index_to_sample(pvalue_to_index(pvalue));}
-			double sample_to_pvalue(double sample) const {return index_to_pvalue(sample_to_index(sample));}
+			[[nodiscard]] double pvalue_to_sample(double pvalue) const {return index_to_sample(pvalue_to_index(pvalue));}
+			[[nodiscard]] double sample_to_pvalue(double sample) const {return index_to_pvalue(sample_to_index(sample));}
 		};
 		struct RawTestCalibrationData_129 {// 117 wasn't quite enough, or rather in a few rare cases we can do better with a little more
 			//for use on tests that produce (very) roughly a normal distribution (typically chi-squared tests on overlapping samples)
@@ -267,14 +267,14 @@ namespace PractRand::Tests {
 	0.9999995, 0.9999998, 0.9999999
 };
 
-			double get_median_sample() const { return table[64]; }
+			[[nodiscard]] double get_median_sample() const { return table[64]; }
 
 			//linear interpolation
-			double sample_to_index(double sample) const;
-			double index_to_sample(double index) const;
+			[[nodiscard]] double sample_to_index(double sample) const;
+			[[nodiscard]] double index_to_sample(double index) const;
 			static double pvalue_to_index(double pvalue, int limit);
 			static double index_to_pvalue(double index, int limit);
-			double pvalue_to_sample(double pvalue) const { return index_to_sample(pvalue_to_index(pvalue, limit)); }
-			double sample_to_pvalue(double sample) const { return index_to_pvalue(sample_to_index(sample), limit); }
+			[[nodiscard]] double pvalue_to_sample(double pvalue) const { return index_to_sample(pvalue_to_index(pvalue, limit)); }
+			[[nodiscard]] double sample_to_pvalue(double sample) const { return index_to_pvalue(sample_to_index(sample), limit); }
 		};
 }//PractRand
