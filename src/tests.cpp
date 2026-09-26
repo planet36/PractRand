@@ -4996,7 +4996,7 @@ void PractRand::Tests::Birthday64::_histogram_sort64(Uint64 *buffer, long length
 			_histogram_sort64(&buffer[begin], end - begin, bits_already, region_counts);
 		}
 		else { std::sort(&buffer[begin], &buffer[end]); }
-		begin = end;
+		//begin = end;
 	}
 }
 void PractRand::Tests::Birthday64::_histogram_sort64(Uint64 *base, long length) {
@@ -7081,11 +7081,11 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		cores_valid.add_category(total_valid_samples, valid_core_chance);
 		cores_valid.finalize();
 
-		Uint64 counts[2] = { Uint64(total_invalid_samples), total_valid_samples };
-		double probs[2] = { invalid_core_chance, valid_core_chance };
+		//Uint64 counts[2] = { Uint64(total_invalid_samples), total_valid_samples };
+		//double probs[2] = { invalid_core_chance, valid_core_chance };
 		//double raw1 = cores_valid.get_result();
-		double raw2 = g_test(2, probs, counts);
-		raw2 = math_chisquared_to_normal(raw2, 1);
+		//double raw2 = g_test(2, probs, counts);
+		//raw2 = math_chisquared_to_normal(raw2, 1);
 		std::ostringstream os;
 		os << get_name() << ":cv";
 		results.emplace_back(os.str(),
@@ -7554,10 +7554,10 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult> &results) {
 		//if (predicted_samples < 200) return;
 		if (predicted_samples < 20) return;//remove me
 
-		int effective_EXP = int(std::floor(std::log(predicted_samples) / std::log(4.0) - 2.9));
-		if (effective_EXP < 3) effective_EXP = 3;
-		if (effective_EXP > EXP) effective_EXP = EXP;
-		effective_EXP = 3;////remove me
+		//int effective_EXP = int(std::floor(std::log(predicted_samples) / std::log(4.0) - 2.9));
+		//if (effective_EXP < 3) effective_EXP = 3;
+		//if (effective_EXP > EXP) effective_EXP = EXP;
+		int effective_EXP = 3;////remove me
 
 		int effective_K = int(std::pow(3.0, static_cast<double>(effective_EXP)));
 		//double E = predicted_samples / effective_K;
@@ -11041,9 +11041,9 @@ void PractRand::Tests::Transforms::FirstNofM::test_blocks(TestBlock *data, int n
 		}
 	}
 	if (end_out) std::memcpy(outptr, inptr, end_out);
-	outptr += end_out;
-	inptr += end_length;
-	max -= end_length;
+	//outptr += end_out;
+	//inptr += end_length;
+	//max -= end_length;
 	if (main_length + end_length) {
 		input_phase = bytes_stride - end_length;
 		if (!end_length) input_phase = 0;
