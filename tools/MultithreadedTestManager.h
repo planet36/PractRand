@@ -1,59 +1,21 @@
 #pragma once
 
-#include "multithreading.h"
-#include <chrono>
 #include <thread>
 
 class MultithreadedTestManager : public TestManager {
-	class TestThread {
-		PractRand::Tests::TestBlock* base_block;
-		PractRand::Tests::TestBaseclass* test;
-		Uint64 numblocks;
-		Threading::Lock lock;
-		bool finished{false};
-	public:
-		bool retire() {
-			lock.enter();
-			if (!finished) {
-				//must have tried to retire it too quickly to initialize properly?
-				lock.leave();
-				std::this_thread::sleep_for(std::chrono::milliseconds::zero());
-				return false;
-			}
-			lock.leave();
-			delete this;
-			return true;
+	static void run_test(PractRand::Tests::TestBaseclass* test, PractRand::Tests::TestBlock* base_block, Uint64 numblocks) {
+		constexpr int MAX_BLOCKS_PER_CALL = 1ULL << 18;
+		while (numblocks > MAX_BLOCKS_PER_CALL) {
+			test->test_blocks(base_block,MAX_BLOCKS_PER_CALL);
+			numblocks -= MAX_BLOCKS_PER_CALL;
+			base_block += MAX_BLOCKS_PER_CALL;
 		}
-		TestThread(PractRand::Tests::TestBaseclass* test_, PractRand::Tests::TestBlock* base_block_, Uint64 numblocks_)
-		:
-			base_block(base_block_),
-			test(test_),
-			numblocks(numblocks_)
-		{
-			//_thread_func(this);
-			Threading::create_thread(_thread_func, this);
-		}
-		static THREADFUNC_RETURN_TYPE THREADFUNC_CALLING_CONVENTION _thread_func(void* param_) {
-			auto* param = static_cast<TestThread*>(param_);
-			param->lock.enter();
-			constexpr int MAX_BLOCKS_PER_CALL = 1ULL << 18;
-			while (param->numblocks > MAX_BLOCKS_PER_CALL) {
-				param->test->test_blocks(param->base_block,MAX_BLOCKS_PER_CALL);
-				param->numblocks -= MAX_BLOCKS_PER_CALL;
-				param->base_block += MAX_BLOCKS_PER_CALL;
-			}
-			if (param->numblocks) param->test->test_blocks(param->base_block,static_cast<int>(param->numblocks));
-			param->finished = true;
-			param->lock.leave();
-			return nullptr;
-		}
-	};
-	std::vector<TestThread*> threads;
+		if (numblocks) test->test_blocks(base_block,static_cast<int>(numblocks));
+	}
+	std::vector<std::jthread> threads;
 	void wait_on_threads() {
-		while(!threads.empty()) {
-			TestThread* last = threads.back();
-			if (last->retire()) threads.pop_back();
-		}
+		for (auto& thread : threads) thread.join();
+		threads.clear();
 	}
 
 
@@ -95,7 +57,7 @@ public:
 			wait_on_threads();
 			alt_buffer.swap(buffer);
 			for (auto& test : tests->tests) {
-				threads.push_back( new TestThread( test, &alt_buffer[prefix_blocks], main_blocks ) );
+				threads.emplace_back( run_test, test, &alt_buffer[prefix_blocks], main_blocks );
 			}
 		}
 		wait_on_threads();
