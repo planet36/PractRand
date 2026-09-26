@@ -8,10 +8,6 @@
 #include <bit>
 #include <string>
 
-#if defined _MSC_VER && _MSC_VER >= 1800
-#include <intrin.h>
-#endif
-
 using namespace PractRand;
 using namespace PractRand::Internals;
 
@@ -59,16 +55,9 @@ void PractRand::RNGs::Raw::xsm32::step_backwards() {
 	lcg_high -= lcg_low + lcg_adder_high + (carry ? 1 : 0);
 }
 void PractRand::RNGs::Raw::xsm32::step_forwards() {
-#if defined _MSC_VER && _MSC_VER >= 1800 && defined _M_IX86
-	Uint32 tmp = lcg_low + lcg_adder_high;
-	Uint8 carry = 0;
-	carry = _addcarry_u32(carry, lcg_low, lcg_adder_low, &lcg_low);
-	_addcarry_u32(carry, lcg_high, tmp, &lcg_high);
-#else
 	Uint32 tmp = lcg_low + lcg_adder_high;
 	lcg_low += lcg_adder_low;
 	lcg_high += tmp + ((lcg_low < lcg_adder_low) ? 1 : 0);
-#endif
 }
 void PractRand::RNGs::Raw::xsm32::seed(Uint64 s) {
 	//guaranteed that no two seeds are closer than 2**63 apart on the same cycle
@@ -126,16 +115,9 @@ void PractRand::RNGs::Raw::xsm64::step_backwards() {
 	lcg_high -= lcg_low + lcg_adder_high + (carry ? 1 : 0);
 }
 void PractRand::RNGs::Raw::xsm64::step_forwards() {
-#if defined _MSC_VER && _MSC_VER >= 1800 && defined _M_X64
-	Uint64 tmp = lcg_low + lcg_adder_high;
-	Uint8 carry = 0;
-	carry = _addcarry_u64(carry, lcg_low, lcg_adder_low, &lcg_low);
-	_addcarry_u64(carry, lcg_high, tmp, &lcg_high);
-#else
 	Uint64 tmp = lcg_low + lcg_adder_high;
 	lcg_low += lcg_adder_low;
 	lcg_high += tmp + ((lcg_low < lcg_adder_low) ? 1 : 0);
-#endif
 }
 void PractRand::RNGs::Raw::xsm64::seed(Uint64 seed_low, Uint64 seed_high) {
 	//no two seeds are closer than 2**127 from each other on the same cycle

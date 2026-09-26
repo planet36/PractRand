@@ -9,12 +9,6 @@
 #include <sstream>
 #include <string>
 
-#ifndef PRACTRAND_NO_SIMD
-#if defined _MSC_VER && _M_IX86_FP == 2
-#include <emmintrin.h>
-#endif
-#endif
-
 using namespace PractRand;
 using namespace PractRand::Internals;
 
@@ -53,22 +47,14 @@ int PractRand::RNGs::Polymorphic::chacha::get_rounds() const {return implementat
 
 //raw:
 PractRand::RNGs::Raw::chacha::~chacha() {std::memset(this, 0, sizeof(*this));}
-#ifdef PRACTRAND_ALIGN_128
-static constexpr Uint32 PRACTRAND_ALIGN_128 chacha_long_seed_constants[4] = {
-#else
 static constexpr Uint32 chacha_long_seed_constants[4] = {
-#endif
 	//"expand 32-byte k"
 	(Uint32('e') << 0) + (Uint32('x') << 8) + (Uint32('p') << 16) + (Uint32('a') << 24),
 	(Uint32('n') << 0) + (Uint32('d') << 8) + (Uint32(' ') << 16) + (Uint32('3') << 24),
 	(Uint32('2') << 0) + (Uint32('-') << 8) + (Uint32('b') << 16) + (Uint32('y') << 24),
 	(Uint32('t') << 0) + (Uint32('e') << 8) + (Uint32(' ') << 16) + (Uint32('k') << 24)
 };
-#ifdef PRACTRAND_ALIGN_128
-static constexpr Uint32 PRACTRAND_ALIGN_128 chacha_short_seed_constants[4] = {
-#else
 static constexpr Uint32 chacha_short_seed_constants[4] = {
-#endif
 	//"expand 16-byte k"
 	(Uint32('e') << 0) + (Uint32('x') << 8) + (Uint32('p') << 16) + (Uint32('a') << 24),
 	(Uint32('n') << 0) + (Uint32('d') << 8) + (Uint32(' ') << 16) + (Uint32('1') << 24),
@@ -95,85 +81,6 @@ void PractRand::RNGs::Raw::chacha::_get_position(Uint64& low, Uint64& high) cons
 	low = used + (Uint64(state[POS_INDEX0]) << 4) + (Uint64(state[POS_INDEX1]) << 36);
 	high = (state[POS_INDEX1] >> 28) + (Uint64(position_overflow) << 4);
 }
-#if !defined PRACTRAND_NO_SIMD && defined _MSC_VER && defined _M_IX86_FP && _M_IX86_FP == 2
-void PractRand::RNGs::Raw::chacha::_core() {
-	const Uint32* constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
-	for (int i = 0; i < 4; i++) outbuf[i] = constants[i];
-	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-	__m128i* buf = (__m128i*)&outbuf[0];
-	__m128i* base = (__m128i*)&state[0];
-	buf[1] = base[0];
-	buf[2] = base[1];
-	buf[3] = base[2];
-	for (int i = 1; i < rounds; i+=2) {
-		//a += b; d ^= a; d <<<= 16;
-		buf[0] = _mm_add_epi32(buf[0], buf[1]);
-		buf[3] = _mm_xor_si128(buf[3], buf[0]);
-		buf[3] = _mm_or_si128(_mm_slli_epi32(buf[3], 16), _mm_srli_epi32(buf[3], 16));
-		//c += d; b ^= c; b <<<= 12;
-		buf[2] = _mm_add_epi32(buf[2], buf[3]);
-		buf[1] = _mm_xor_si128(buf[1], buf[2]);
-		buf[1] = _mm_or_si128(_mm_slli_epi32(buf[1], 12), _mm_srli_epi32(buf[1], 20));
-		//a += b; d ^= a; d <<<= 8;
-		buf[0] = _mm_add_epi32(buf[0], buf[1]);
-		buf[3] = _mm_xor_si128(buf[3], buf[0]);
-		buf[3] = _mm_or_si128(_mm_slli_epi32(buf[3], 8), _mm_srli_epi32(buf[3], 24));
-		//c += d; b ^= c; b <<<= 7;
-		buf[2] = _mm_add_epi32(buf[2], buf[3]);
-		buf[1] = _mm_xor_si128(buf[1], buf[2]);
-		buf[1] = _mm_or_si128(_mm_slli_epi32(buf[1], 7), _mm_srli_epi32(buf[1], 25));
-		//pseudo-transpose A:
-		buf[1] = _mm_shuffle_epi32(buf[1], 0x39);//2103
-		buf[2] = _mm_shuffle_epi32(buf[2], 0x4e);//1032
-		buf[3] = _mm_shuffle_epi32(buf[3], 0x93);//0321
-
-		//a += b; d ^= a; d <<<= 16;
-		buf[0] = _mm_add_epi32(buf[0], buf[1]);
-		buf[3] = _mm_xor_si128(buf[3], buf[0]);
-		buf[3] = _mm_or_si128(_mm_slli_epi32(buf[3], 16), _mm_srli_epi32(buf[3], 16));
-		//c += d; b ^= c; b <<<= 12;
-		buf[2] = _mm_add_epi32(buf[2], buf[3]);
-		buf[1] = _mm_xor_si128(buf[1], buf[2]);
-		buf[1] = _mm_or_si128(_mm_slli_epi32(buf[1], 12), _mm_srli_epi32(buf[1], 20));
-		//a += b; d ^= a; d <<<= 8;
-		buf[0] = _mm_add_epi32(buf[0], buf[1]);
-		buf[3] = _mm_xor_si128(buf[3], buf[0]);
-		buf[3] = _mm_or_si128(_mm_slli_epi32(buf[3], 8), _mm_srli_epi32(buf[3], 24));
-		//c += d; b ^= c; b <<<= 7;
-		buf[2] = _mm_add_epi32(buf[2], buf[3]);
-		buf[1] = _mm_xor_si128(buf[1], buf[2]);
-		buf[1] = _mm_or_si128(_mm_slli_epi32(buf[1], 7), _mm_srli_epi32(buf[1], 25));
-		//pseudo-transpose B:
-		buf[1] = _mm_shuffle_epi32(buf[1], 0x93);//2103
-		buf[2] = _mm_shuffle_epi32(buf[2], 0x4e);//1032
-		buf[3] = _mm_shuffle_epi32(buf[3], 0x39);//0321
-	}
-	if (rounds & 1) {
-		//a += b; d ^= a; d <<<= 16;
-		buf[0] = _mm_add_epi32(buf[0], buf[1]);
-		buf[3] = _mm_xor_si128(buf[3], buf[0]);
-		buf[3] = _mm_or_si128(_mm_slli_epi32(buf[3], 16), _mm_srli_epi32(buf[3], 16));
-		//c += d; b ^= c; b <<<= 12;
-		buf[2] = _mm_add_epi32(buf[2], buf[3]);
-		buf[1] = _mm_xor_si128(buf[1], buf[2]);
-		buf[1] = _mm_or_si128(_mm_slli_epi32(buf[1], 12), _mm_srli_epi32(buf[1], 20));
-		//a += b; d ^= a; d <<<= 8;
-		buf[0] = _mm_add_epi32(buf[0], buf[1]);
-		buf[3] = _mm_xor_si128(buf[3], buf[0]);
-		buf[3] = _mm_or_si128(_mm_slli_epi32(buf[3], 8), _mm_srli_epi32(buf[3], 24));
-		//c += d; b ^= c; b <<<= 7;
-		buf[2] = _mm_add_epi32(buf[2], buf[3]);
-		buf[1] = _mm_xor_si128(buf[1], buf[2]);
-		buf[1] = _mm_or_si128(_mm_slli_epi32(buf[1], 7), _mm_srli_epi32(buf[1], 25));
-		//skip the pseudo-transform
-	}
-	buf[0] = _mm_add_epi32(buf[0], *(__m128i*)constants);
-	buf[1] = _mm_add_epi32(buf[1], base[0]);
-	buf[2] = _mm_add_epi32(buf[2], base[1]);
-	buf[3] = _mm_add_epi32(buf[3], base[2]);
-	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;//is this safe from the optimizer with all the pointer casts I've done earlier?
-}
-#else
 void PractRand::RNGs::Raw::chacha::_core() {
 	const Uint32* constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
 
@@ -204,7 +111,6 @@ void PractRand::RNGs::Raw::chacha::_core() {
 	for (int i = 4; i < 16; i++) outbuf[i] += state[i-4];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
 }
-#endif
 Uint32 PractRand::RNGs::Raw::chacha::_refill_and_raw32() {
 	_advance_1();
 	_core();

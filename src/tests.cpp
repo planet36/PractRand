@@ -3815,20 +3815,6 @@ static unsigned long count_high_zeroes32(Uint32 value) {
 	return count_high_zeroes_table[value >> 24] + count;
 }
 */
-#if defined _MSC_VER && _MSC_VER >= 1400 && (defined _M_IX86 || defined _M_X64) && 0
-// is this actually a good idea?  I'm not sure this helps performance any
-#include <intrin.h>
-static unsigned long count_low_zeroes32(Uint32 value) {
-	unsigned long rv;
-	if (!_BitScanForward(&rv, value)) rv = 32;
-	return rv;
-}
-static unsigned long count_low_zeroes64(Uint64 value) {
-	unsigned long rv;
-	if (!_BitScanForward64(&rv, value)) rv = 64;
-	return rv;
-}
-#else
 static unsigned long count_low_zeroes32(Uint32 value) {
 	if (value & 255) return count_low_zeroes_table[value & 255];
 	value >>= 8;
@@ -3855,7 +3841,6 @@ static unsigned long count_low_zeroes64(Uint64 value) {
 	value >>= 8;
 	return count_low_zeroes_table[value & 255] + 56;
 }
-#endif
 #endif
 
 PractRand::Tests::FPF::FPF(int stride_bits_L2_ , int sig_bits_ , int exp_bits_ ) : sig_bits(sig_bits_), exp_bits(exp_bits_), stride_bits_L2(stride_bits_L2_) {

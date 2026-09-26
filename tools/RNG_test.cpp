@@ -55,11 +55,6 @@
 #include <system_error>
 #include <vector>
 
-#ifdef _WIN32 // needed to allow binary stdin on windows
-#include <fcntl.h>
-#include <io.h>
-#endif
-
 using namespace PractRand;
 
 PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
@@ -480,9 +475,6 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	PractRand::initialize_PractRand();
 	PractRand::hook_error_handler(PractRand::print_err);
 	std::println("RNG_test using PractRand version {}", PractRand::version_str);
-#ifdef _WIN32 // needed to allow binary stdin on windows
-	_setmode( _fileno(stdin), _O_BINARY);
-#endif
 	if (argc <= 1) {
 		std::println("usage: {} RNG_name [options]  --  runs tests on RNG_name", argv[0]);
 		std::println("or: {} -help  --  displays more instructions", argv[0]);

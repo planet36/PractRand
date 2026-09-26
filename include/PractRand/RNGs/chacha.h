@@ -6,11 +6,7 @@
 namespace PractRand::RNGs {
 		namespace Raw {
 			//implemented in RNGs/chacha.cpp
-#ifdef PRACTRAND_ALIGN_128
-			class __declspec(align(16)) chacha {
-#else
 			class chacha {
-#endif
 			public:
 				static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_1;
 				static constexpr int OUTPUT_BITS = 32;

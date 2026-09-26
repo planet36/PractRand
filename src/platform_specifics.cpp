@@ -1,9 +1,4 @@
 
-#ifdef _WIN32
-//must come before any include, or <stdlib.h> will not declare rand_s
-#define _CRT_RAND_S
-#endif
-
 #include "PractRand/config.h"
 #include "PractRand/rng_basics.h"
 #include "PractRand/rng_helpers.h"
@@ -16,14 +11,9 @@
 #include <ctime>
 #include <string>
 
-#ifdef _WIN32
-#include <windows.h>
-#elif defined __APPLE__ && defined __MACH__
+#if defined __APPLE__ && defined __MACH__
 #include <libkern/OSAtomic.h>
 #include <cstdint>
-#endif
-#ifdef _MSC_VER
-#include <intrin.h>
 #endif
 
 
@@ -50,41 +40,6 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 	//constexpr int N32 = (DESIRED_BITS+31)/32;
 	constexpr int N64 = (DESIRED_BITS+63)/64;
 
-#if (defined _WIN32) && 0 // DISABLED
-	{//win32 crypto PRNG, simple interface
-		//disabled because MinGW won't compile it and MSVC won't put it in the standard namespace
-		int count = 0;
-		unsigned int tmp = 0;
-		for (int i = 0; i < N32 + 8; i++) {
-			count += (!rand_s(&tmp )) ? 1 : 0;
-			entropy_pool->add_entropy32(tmp);
-			if (count == N32) {
-				entropy_pool->flush_buffers();
-				return true;
-			}
-		}
-	}
-#endif
-#if (defined _WIN32) && 1
-	{//win32 crypto PRNG, another interface
-		HMODULE hLib=LoadLibraryA("ADVAPI32.DLL");
-		if (hLib) {
-			BOOLEAN (APIENTRY *get_random_bytes)(void*, ULONG) =
-				(BOOLEAN (APIENTRY *)(void*,ULONG))GetProcAddress(hLib,"SystemFunction036");
-			if (get_random_bytes) {
-				Uint64 buf[N64];
-				if(get_random_bytes(buf,N64*sizeof(buf[0]))) {
-					for (int i = 0; i < N64; i++) entropy_pool->add_entropy64(buf[i]);
-					FreeLibrary(hLib);
-					entropy_pool->flush_buffers();
-					std::memset(buf, 0, sizeof(buf));
-					return true;
-				}
-			}
-			FreeLibrary(hLib);
-		}
-	}
-#endif
 #if 1
 	{//unix (linux/bsd/osx/etc, all flavors supposedly)
 		//mostly safe to use even on platforms where it won't work
@@ -129,124 +84,6 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 		free(p);
 	}
 #endif
-#if (defined _WIN32) && 1
-	{//win32 (intended to work on win2k and later)
-		::LARGE_INTEGER qt;
-		QueryPerformanceCounter(&qt);
-		entropy_pool->add_entropy64(qt.QuadPart);
-		entropy_pool->add_entropy32(::GetCurrentProcessId());
-		entropy_pool->add_entropy64((Uint64)::GetCurrentProcess());
-		entropy_pool->add_entropy32(::GetCurrentThreadId());
-		//entropy_pool->add_entropy32(::GetCurrentProcessorNumber());//may require Vista?
-		SYSTEMTIME st;
-		::GetSystemTime(&st);
-		entropy_pool->add_entropy_N(&st, sizeof(st));
-		MEMORYSTATUS mem;
-		GlobalMemoryStatus(&mem);
-		entropy_pool->add_entropy_N(&mem, sizeof(mem));
-		DWORD t = GetCurrentTime();
-		entropy_pool->add_entropy32(t);
-	}
-#endif
-#if defined _MSC_VER && ((defined _M_IX86 && _M_IX86 >= 500) || defined _M_X64 || defined _M_AMD64)
-	{
-		entropy_pool->add_entropy64(__rdtsc());
-	}
-#endif
-#if (defined _WIN32) && 0 //DISABLED
-	{//WINDOWS REGISTRY
-		//Not a true entropy source, but an accumulator across multiple runs,
-		//  which we need more than we need another entropy source.
-		//Probably ought to be a transaction,
-		//  but that would require Vista as a minimum Windows version,
-		//  and I want to support 2k and XP also
-		HKEY key = nullptr;
-		for (int tries = 0; tries < 3; tries++) {
-			//printf("attempt %d\n", tries);
-			if (key) {
-				RegCloseKey(key);
-				key = nullptr;
-			}
-			DWORD d;
-			long r;
-			r = RegCreateKeyExA(
-				HKEY_CURRENT_USER,
-				"Software\\PractRand",
-				0,
-				nullptr,
-				REG_OPTION_NON_VOLATILE,
-				KEY_QUERY_VALUE | KEY_SET_VALUE,
-				nullptr,
-				&key,
-				&d
-			);
-			if (r != ERROR_SUCCESS) continue;
-			//printf("%s\n", (d==REG_CREATED_NEW_KEY) ? "failed to find key, creating" : "found key");
-			constexpr int TARGET_SIZE = 128;
-			constexpr int BUFFER_SIZE = 512;
-			Uint8 buffer[BUFFER_SIZE];
-			DWORD size = BUFFER_SIZE;
-			DWORD type;
-			//to do: use different seed names for different EntropyPool algorithms
-			r = RegQueryValueExA(key, "seed", nullptr, &type, buffer, &size);
-			if (r == ERROR_MORE_DATA || type != REG_BINARY) {
-				r = ERROR_FILE_NOT_FOUND;
-				d = REG_CREATED_NEW_KEY;
-				//printf("seed invalid\n");
-			}
-			if (r == ERROR_FILE_NOT_FOUND && (d == REG_CREATED_NEW_KEY || (tries > 0)) ) {
-				//printf("resetting seed (either invalid or failed to read multiple times)\n");
-				entropy_pool->flush_buffers();
-				for (int i = 0; i < TARGET_SIZE; i++) buffer[i] = entropy_pool->raw8();
-				r = RegSetValueExA(key, "seed", 0, REG_BINARY, buffer, TARGET_SIZE);
-			}
-			if (r != ERROR_SUCCESS) continue;
-			//std::printf("using seed (%02x%02x)\n", buffer[1], buffer[0]);
-			entropy_pool->add_entropy_N(buffer, size);
-			if (size > TARGET_SIZE) size = TARGET_SIZE;
-			entropy_pool->flush_buffers();
-			//std::printf("buffers flushed\n");
-			for (unsigned int i = 0; i < size; i++) buffer[i] ^= entropy_pool->raw8();
-			for (unsigned int i = size; i < TARGET_SIZE; i++) buffer[i] = entropy_pool->raw8();
-			//std::printf("attempting to set new seed (%02x%02x)\n", buffer[1], buffer[0]);
-			r = RegSetValueExA(key, "seed", 0, REG_BINARY, buffer, TARGET_SIZE);
-			if (r != ERROR_SUCCESS) continue;
-			//std::printf("successfully set new seed\n");
-			break;
-		}
-		if (key) {
-			RegCloseKey(key);
-			key = nullptr;
-		}
-	}
-#endif //_WIN32 (registry)
-
-#if (defined _WIN32) && 0
-	if (milliseconds && !good_entropy_source_found) {//accumulate entropy over time (does a VERY bad job)
-		LARGE_INTEGER qt, qt2;
-		QueryPerformanceCounter(&qt);
-		DWORD start_time = GetTickCount();
-		DWORD t = start_time;
-		entropy_pool->add_entropy32(t);
-		long count=0;
-		while (t < start_time + milliseconds) {
-			if (QueryPerformanceCounter(&qt2)) {
-				if (qt2.QuadPart != qt.QuadPart) {
-					entropy_pool->add_entropy32(qt2.LowPart);
-					qt.QuadPart = qt2.QuadPart;
-				}
-			}
-			count++;
-			DWORD t2 = GetTickCount();
-			if (t != t2) {
-				entropy_pool->add_entropy32(t2 + count);
-				t = t2;
-			}
-		}
-		entropy_pool->add_entropy16(Uint16(count));
-		milliseconds = 0;
-	}
-#endif
 
 	entropy_pool->flush_buffers();
 	return false;
@@ -259,9 +96,6 @@ Uint64 PractRand::Internals::issue_unique_identifier ( ) {
 #elif defined __GNUC__
 	static volatile Uint64 count = 0;
 	return __sync_fetch_and_add(&count, Uint64(1) );
-#elif defined _WIN32
-	static volatile LONGLONG count = 0;
-	return InterlockedIncrement64(&count);
 #elif defined __APPLE__ && defined __MACH__
 	//OS X, /usr/include/libkern/OSAtomic.h, OSAtomicIncrement64
 	static volatile int64_t count = 0;
@@ -276,12 +110,7 @@ Uint64 PractRand::Internals::issue_unique_identifier ( ) {
 	//don't care about the units since it's only used as an entropy source
 	//however, rdtscp is to be avoided since not enough CPUs support it
 Uint64 PractRand::Internals::high_resolution_time() {
-#if defined _MSC_VER && ( defined _M_IX86 || defined _M_X64 )
-	//intrinsic
-	return __rdtsc();
-	//Uint32 aux;
-	//return __rdtscp(&aux);
-#elif defined __GNUC__ && ( defined(__i386__) || defined(__x86_64__) )
+#if defined __GNUC__ && ( defined(__i386__) || defined(__x86_64__) )
 	//from wikipedia
 	Uint32 low, high;
 	__asm__ __volatile__("rdtsc" : "=a"(low), "=d"(high) :: "ecx" );
@@ -305,10 +134,6 @@ Uint64 PractRand::Internals::high_resolution_time() {
 	result = result|lower;
 
 	return(result);
-#elif defined WIN32
-	LARGE_INTEGER qt;
-	QueryPerformanceCounter(&qt);
-	return qt.QuadPart;
 #else
 	//to do: figure out the appropriate preprocessor defines to check for gettimeofday
 

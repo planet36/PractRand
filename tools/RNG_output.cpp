@@ -39,11 +39,6 @@
 #include <system_error>
 #include <vector>
 
-#ifdef _WIN32 // needed to allow binary stdout on windows
-#include <fcntl.h>
-#include <io.h>
-#endif
-
 using namespace PractRand;
 
 
@@ -75,9 +70,6 @@ void signal_handler(int param)
 }
 
 int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
-#ifdef _WIN32
-	_setmode( _fileno(stdout), _O_BINARY); // needed to allow binary stdout on windows
-#endif
 	if (argc < 3 || argc > 4) print_usage(argv[0]);
 	PractRand::initialize_PractRand();
 	PractRand::hook_error_handler(PractRand::print_err);
