@@ -6,6 +6,7 @@
 Things to configure in this file:
 1.  Endianness (usually CPU dependent)
 2.  Integer types (compiler and CPU dependent)
+3.  SIMD (compiler and CPU dependent, only used by ChaCha)
 */
 
 /*
