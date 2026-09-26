@@ -10865,7 +10865,7 @@ void PractRand::Tests::Transforms::multiplex::get_results(std::vector<TestResult
 }
 int PractRand::Tests::Transforms::multiplex::get_blocks_to_repeat() const {
 	int rv = 0;
-	for (auto test : subtests.tests) {
+	for (auto *test : subtests.tests) {
 		int x = test->get_blocks_to_repeat();
 		if (rv < x) rv = x;
 	}
