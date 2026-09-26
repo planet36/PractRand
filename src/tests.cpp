@@ -31,6 +31,7 @@
 #include <map>
 #include <numbers>
 //#include <ostream>
+#include <print>
 #include <set>
 #include <sstream>
 #include <string>
@@ -349,7 +350,7 @@ class TestCalibrationData {
 			dy = y2 - y1;//dy >= 0
 			low_a = dy / dx;//should be a semi-large positive number
 			if (low_a < 0) {
-				std::printf("%s   dy:%f  dx:%f  \n", raw->name, dy, dx);
+				std::println("{}   dy:{:f}  dx:{:f}  ", raw->name, dy, dx);
 				issue_error("calibration data has negative slope for low region?");
 			}
 			if (low_a > 100) low_a = 100;//I'd rather not have it be THAT large, even if the data supports it... maybe?
@@ -1782,7 +1783,7 @@ void  PractRand::Tests::Rep16::get_results([[maybe_unused]] std::vector<TestResu
 		counts2[v]++;
 	}
 	for (unsigned long i = 0; i < counts2.size(); i++) {
-		std::printf("%ld: %d\n", i, counts2[i]);
+		std::println("{}: {}", i, counts2[i]);
 	}
 }
 
@@ -5927,15 +5928,15 @@ void PractRand::Tests::BirthdayAlt::flush_buffer() {
 		}
 	}
 	if (count > 1 && !(count & (count-1))) {
-		std::printf("\n");
-		std::printf("sum_log obs ofs: %+.10Lf\n", static_cast<long double>(score_sum_log) / count / std::sqrt(double(buffer_size - 2)) + expected_log_offset);
-		std::printf("sum_log exp ofs: %+.10Lf\n", expected_log_offset);
-		std::printf("sum_log   delta: %+.12Lf\n", static_cast<long double>(score_sum_log) / count / std::sqrt(static_cast<long double>(buffer_size - 2)));
-		std::printf("revised obs ofs: %+.10Lf\n", score_sum_log / count / std::sqrt(double(buffer_size - 2)) + adjusted_expected_log2 - expected_log2);
-		std::printf("revised exp ofs: %+.10Lf\n", expected_log2 * expected_log_offset);
-		std::printf("sum_log obs dev: %.9Lf\n", static_cast<long double>(std::sqrt(score_sum_log_sqr / count - (score_sum_log / count * score_sum_log / count))));
-		std::printf("sum_log exp dev: %.9Lf\n", deviation);
-		std::printf("count: %.0Lf\n\n", static_cast<long double>(count));
+		std::println("");
+		std::println("sum_log obs ofs: {:+.10f}", static_cast<long double>(score_sum_log) / count / std::sqrt(double(buffer_size - 2)) + expected_log_offset);
+		std::println("sum_log exp ofs: {:+.10f}", expected_log_offset);
+		std::println("sum_log   delta: {:+.12f}", static_cast<long double>(score_sum_log) / count / std::sqrt(static_cast<long double>(buffer_size - 2)));
+		std::println("revised obs ofs: {:+.10f}", score_sum_log / count / std::sqrt(double(buffer_size - 2)) + adjusted_expected_log2 - expected_log2);
+		std::println("revised exp ofs: {:+.10f}", expected_log2 * expected_log_offset);
+		std::println("sum_log obs dev: {:.9f}", static_cast<long double>(std::sqrt(score_sum_log_sqr / count - (score_sum_log / count * score_sum_log / count))));
+		std::println("sum_log exp dev: {:.9f}", deviation);
+		std::println("count: {:.0f}\n", static_cast<long double>(count));
 		//std::exit(0);
 	}
 }
@@ -6392,13 +6393,13 @@ void PractRand::Tests::BRank::pick_next_size() {
 		}
 	}
 	if (best == -1) {
-		std::printf("BRank::pick_next_size : best is -1\n");
+		std::println("BRank::pick_next_size : best is -1");
 		std::exit(0);
 	}
 	size_index = best;
 	in_progress = new BitMatrix();
 	if (!in_progress) {
-		std::printf("BRank::pick_next_size : new BitMatrix failed\n");
+		std::println("BRank::pick_next_size : new BitMatrix failed");
 		std::exit(0);
 	}
 	in_progress->init(ps[size_index].size, ps[size_index].size);
@@ -10642,7 +10643,7 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult>& results) {
 			used |= 1 << td;
 			rawperm[x] = td;
 		}
-		if (used != 255) std::printf("duplicated values\n");
+		if (used != 255) std::println("duplicated values");
 		int limited = lperm8_8(rawperm);
 		lperm8_chances[limited] += 1.0 / fact8;
 	}
