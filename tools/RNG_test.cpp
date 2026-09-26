@@ -466,11 +466,11 @@ struct UnfoldedTestSet {
 	const char *name;
 };
 UnfoldedTestSet test_sets[] = {
-	{ 0, PractRand::Tests::Batteries::get_core_tests, "core" },//default value must come first
-	{ 1, PractRand::Tests::Batteries::get_expanded_core_tests, "expanded" },
-	{ 10, testset_BirthdaySystematic, "special (Birthday)" },
-	{ 20, testset_experimental, "experimental" },
-	{ -1, nullptr, nullptr }
+	{ .number=0, .callback=PractRand::Tests::Batteries::get_core_tests, .name="core" },//default value must come first
+	{ .number=1, .callback=PractRand::Tests::Batteries::get_expanded_core_tests, .name="expanded" },
+	{ .number=10, .callback=testset_BirthdaySystematic, .name="special (Birthday)" },
+	{ .number=20, .callback=testset_experimental, .name="experimental" },
+	{ .number=-1, .callback=nullptr, .name=nullptr }
 };
 int lookup_te_value(int te) {
 	for (int i = 0; true; i++) {
