@@ -6831,8 +6831,7 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 			w >>= BITS_PER_BLOCK;
 			if (CHECK_VALIDITY_EARLY && is_bad < 0) return true;
 		}
-		if (is_bad < 0) return true;
-		else return false;
+		return is_bad < 0;
 	}
 	else if constexpr (!(WORD_BITS % BITS_PER_BLOCK)) {//blocks align to word boundaries
 		int index = 0;
@@ -6857,8 +6856,7 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 			if constexpr (BITS_PER_BLOCK >= sizeof(w)*8) w = 0;
 			else w >>= BITS_PER_BLOCK;
 		}
-		if (is_bad < 0) return true;
-		else return false;
+		return is_bad < 0;
 	}
 	else {//blocks do NOT align to word boundaries
 		//
@@ -6911,8 +6909,7 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word *core) const {
 			w = w2 >> (WORD_BITS - USABLE_BITS - WORD_LEFTOVERS);
 			is_bad |= lookup1(w);
 		}
-		if (is_bad < 0) return true;
-		else return false;
+		return is_bad < 0;
 	}
 }
 void PractRand::Tests::NearSeq2::core_analysis(const Word *core, int &index, int &ham) const {
