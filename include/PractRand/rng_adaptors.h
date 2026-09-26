@@ -10,10 +10,10 @@ namespace PractRand::RNGs::Adaptors {
 
 
 			template<class base_rng> class NORMALIZE;
-			template<class base_rng> class _NORMALIZE_OUTPUT;
+			template<class base_rng> class NORMALIZE_OUTPUT_TYPE;
 			//template<class base_rng> class _TEMPLATIZE_OUTPUT;
-			template<class base_rng> class _NORMALIZE_SEEDING;
-			template<class base_rng> class _NORMALIZE_DISTRIBUTIONS;
+			template<class base_rng> class NORMALIZE_SEEDING_TYPE;
+			template<class base_rng> class NORMALIZE_DISTRIBUTIONS_TYPE;
 
 			namespace Internal {
 				template<class base_rng, int bits> class ADAPT_OUTPUT_1_TO_ALL;
@@ -76,11 +76,11 @@ namespace PractRand::RNGs::Adaptors {
 				};
 
 
-				template<class base_rng, int output_type, int output_bits> class _NORMALIZE_OUTPUT_HELPER;
-				template<class base_rng, int output_bits> class _NORMALIZE_OUTPUT_HELPER<base_rng, OUTPUT_TYPES::NORMAL_1, output_bits> {
+				template<class base_rng, int output_type, int output_bits> class NORMALIZE_OUTPUT_HELPER;
+				template<class base_rng, int output_bits> class NORMALIZE_OUTPUT_HELPER<base_rng, OUTPUT_TYPES::NORMAL_1, output_bits> {
 					public:using t = ADAPT_OUTPUT_1_TO_ALL<base_rng, output_bits>;
 				};
-				template<class base_rng, int output_bits> class _NORMALIZE_OUTPUT_HELPER<base_rng, OUTPUT_TYPES::NORMAL_ALL, output_bits> {
+				template<class base_rng, int output_bits> class NORMALIZE_OUTPUT_HELPER<base_rng, OUTPUT_TYPES::NORMAL_ALL, output_bits> {
 					public:using t = base_rng;
 				};
 
@@ -136,40 +136,40 @@ namespace PractRand::RNGs::Adaptors {
 					result_type max() const {return max_value;}
 #endif
 				};
-				template<class base_rng, bool needs_distributions_added> class _NORMALIZE_DISTRIBUTIONS_HELPER;
-				template<class base_rng> class _NORMALIZE_DISTRIBUTIONS_HELPER<base_rng,true> {
+				template<class base_rng, bool needs_distributions_added> class NORMALIZE_DISTRIBUTIONS_HELPER;
+				template<class base_rng> class NORMALIZE_DISTRIBUTIONS_HELPER<base_rng,true> {
 				public:using t = ADD_DISTRIBUTIONS<base_rng>;
 				};
-				template<class base_rng> class _NORMALIZE_DISTRIBUTIONS_HELPER<base_rng,false> {
+				template<class base_rng> class NORMALIZE_DISTRIBUTIONS_HELPER<base_rng,false> {
 				public:using t = base_rng;
 				};
 
 			}//namespace Internal
 
-			template<class base_rng> class _NORMALIZE_SEEDING {
+			template<class base_rng> class NORMALIZE_SEEDING_TYPE {
 			public: using t =
 				Internal::ADAPT_SEEDING<
 					base_rng, static_cast<bool>(base_rng::FLAGS & RNGs::FLAG::NEEDS_GENERIC_SEEDING)
 				>;
 			//public:typedef typename base_rng t;
 			};
-			template<class base_rng> class NORMALIZE_SEEDING : public _NORMALIZE_SEEDING<base_rng>::t {};
+			template<class base_rng> class NORMALIZE_SEEDING : public NORMALIZE_SEEDING_TYPE<base_rng>::t {};
 
-			template<class base_rng> class _NORMALIZE_OUTPUT {
-				public:using t = Internal::_NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t;
+			template<class base_rng> class NORMALIZE_OUTPUT_TYPE {
+				public:using t = Internal::NORMALIZE_OUTPUT_HELPER<base_rng,base_rng::OUTPUT_TYPE, base_rng::OUTPUT_BITS>::t;
 			};
-			template<class base_rng> class NORMALIZE_OUTPUT : public _NORMALIZE_OUTPUT<base_rng>::t {};
+			template<class base_rng> class NORMALIZE_OUTPUT : public NORMALIZE_OUTPUT_TYPE<base_rng>::t {};
 
-			template<class base_rng> class _NORMALIZE_DISTRIBUTIONS {
+			template<class base_rng> class NORMALIZE_DISTRIBUTIONS_TYPE {
 				//public:typedef typename Internal::_NORMALIZE_DISTRUBTIONS_HELPER<base_rng,bool(base_rng::DISTRUBTIONS_TYPE & DISTRIBUTIONS_TYPE__NORMAL)>::t t;
 				public:using t = Internal::ADD_DISTRIBUTIONS<base_rng>;
 			};
-			template<class base_rng> class NORMALIZE_DISTRIBUTIONS : public _NORMALIZE_DISTRIBUTIONS<base_rng>::t {};
+			template<class base_rng> class NORMALIZE_DISTRIBUTIONS : public NORMALIZE_DISTRIBUTIONS_TYPE<base_rng>::t {};
 
 			template<class base_rng> class NORMALIZE {
-				public:using t = _NORMALIZE_SEEDING<
-					typename _NORMALIZE_DISTRIBUTIONS<
-						typename _NORMALIZE_OUTPUT<base_rng>::t
+				public:using t = NORMALIZE_SEEDING_TYPE<
+					typename NORMALIZE_DISTRIBUTIONS_TYPE<
+						typename NORMALIZE_OUTPUT_TYPE<base_rng>::t
 					>::t
 				>::t;
 			};
