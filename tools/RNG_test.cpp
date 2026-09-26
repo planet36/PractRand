@@ -1,6 +1,46 @@
 
+#define MULTITHREADING_SUPPORTED
+
+//master header, includes everything in PractRand for both
+//  practical usage and research...
+//  EXCEPT it does not include specific algorithms
+#include "PractRand_full.h"
+
+//specific algorithms: all recommended RNGs
+#include "PractRand/RNGs/all.h"
+
+//specific algorithms: non-recommended RNGs
+#include "PractRand/RNGs/other/fibonacci.h"
+#include "PractRand/RNGs/other/indirection.h"
+#include "PractRand/RNGs/other/mult.h"
+#include "PractRand/RNGs/other/simple.h"
+#include "PractRand/RNGs/other/special.h"
+#include "PractRand/RNGs/other/transform.h"
+
+//for access to some functions the dummy PRNG might want to use:
+#include "PractRand/rng_internals.h"
+
+//tests used by the special and experimental test sets:
+#include "PractRand/Tests/Birthday.h"
+#include "PractRand/Tests/DistFreq4.h"
+#include "PractRand/Tests/FPF.h"
+#include "PractRand/Tests/FPMulti.h"
+#include "PractRand/Tests/Gap16.h"
+
+//helpers for the test programs, to deal with RNG names, test usage, etc
+#include "RNG_from_name.h"
+#include "parse_number.h"
+
+#include "Candidate_RNGs.h"
+#include "SeedingTester.h"
+#include "TestManager.h"
+#ifdef MULTITHREADING_SUPPORTED
+#include "MultithreadedTestManager.h"
+#endif
+
 #include <bit>
 #include <charconv>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -15,24 +55,6 @@
 #include <system_error>
 #include <vector>
 
-//master header, includes everything in PractRand for both
-//  practical usage and research...
-//  EXCEPT it does not include specific algorithms
-#include "PractRand_full.h"
-
-#define MULTITHREADING_SUPPORTED
-
-//specific algorithms: all recommended RNGs
-#include "PractRand/RNGs/all.h"
-
-//specific algorithms: non-recommended RNGs
-#include "PractRand/RNGs/other/fibonacci.h"
-#include "PractRand/RNGs/other/indirection.h"
-#include "PractRand/RNGs/other/mult.h"
-#include "PractRand/RNGs/other/simple.h"
-#include "PractRand/RNGs/other/special.h"
-#include "PractRand/RNGs/other/transform.h"
-
 #ifdef _WIN32 // needed to allow binary stdin on windows
 #include <fcntl.h>
 #include <io.h>
@@ -42,21 +64,6 @@ using namespace PractRand;
 
 PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
-//for access to some functions the dummy PRNG might want to use:
-#include "PractRand/rng_internals.h"
-
-
-//helpers for the test programs, to deal with RNG names, test usage, etc
-#include "RNG_from_name.h"
-#include "parse_number.h"
-
-#include "TestManager.h"
-#ifdef MULTITHREADING_SUPPORTED
-#include "MultithreadedTestManager.h"
-#endif
-#include "Candidate_RNGs.h"
-
-#include <chrono>
 //using TimeUnit = std::chrono::system_clock::rep;
 //TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
 //double get_time_period() { return std::chrono::system_clock::period::num / static_cast<double>(std::chrono::system_clock::period::den); }
@@ -275,8 +282,6 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 	return rs;
 }
 
-#include "SeedingTester.h"
-
 const char* seed_str = nullptr;
 
 void show_checkpoint(TestManager* tman, int mode, Uint64 seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
@@ -432,11 +437,6 @@ bool interpret_seed(const std::string& seedstr, Uint64& seed) {
 	return ec == std::errc() && ptr == last;
 }
 
-#include "PractRand/Tests/Birthday.h"
-#include "PractRand/Tests/DistFreq4.h"
-#include "PractRand/Tests/FPF.h"
-#include "PractRand/Tests/FPMulti.h"
-#include "PractRand/Tests/Gap16.h"
 PractRand::Tests::ListOfTests testset_BirthdaySystematic() {
 	//return PractRand::Tests::ListOfTests(new PractRand::Tests::BirthdayAlt(10), new PractRand::Tests::Birthday32());
 	//return PractRand::Tests::ListOfTests(new PractRand::Tests::BirthdayAlt(22));
