@@ -68,7 +68,6 @@ namespace PractRand {
 			}
 			value_low  = value[0] | (Uint64(value[1]) << 32);
 			value_high = value[2] | (Uint64(value[3]) << 32);
-			return;
 		}
 		Uint64 fast_forward_lcg64 ( Uint64 how_far, Uint64 val, Uint64 mul, Uint64 add ) {
 			while (true) {

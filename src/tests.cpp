@@ -2283,7 +2283,6 @@ void PractRand::Tests::DistC7::get_results(std::vector<TestResult> &results) {
 	double raw = -2 * (std::log(results[initial_results_size].get_pvalue()) + std::log(results[initial_results_size + 1].get_pvalue()));
 	double n = math_chisquared_to_normal(raw, 4);
 	results.emplace_back(get_name() + ":indep", n, 1 - math_chisquared_to_pvalue(raw, 4), TestResult::TYPE_GOOD_P, 0.5);
-	return;
 }
 
 
@@ -5669,7 +5668,6 @@ void PractRand::Tests::BirthdaySystematic128::do_incomplete_buffer() {
 	incomplete_duplicates = dup;
 	incomplete_expected_duplicates = std::pow(2.0, 3 * log2_of_buffer_size - 2 - bits_per_sample);
 	score = evaluate_score(incomplete_expected_duplicates, dup);
-	return;
 }
 void PractRand::Tests::BirthdaySystematic128::get_results(std::vector<TestResult> &results) {
 	if (autofail) {
@@ -6584,7 +6582,6 @@ void PractRand::Tests::NearSeq::get_results(std::vector<TestResult> &results) {
 			lowest = i + 1;
 		}
 	}*/
-	return;
 }
 int PractRand::Tests::NearSeq::is_core_good(const Word *core) const {
 	int index = 0;
@@ -7181,7 +7178,6 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult> &results) {
 		}
 	}*/
 
-	return;
 }
 void PractRand::Tests::NearSeq2::test_blocks(TestBlock *data, int numblocks) {
 	int start = blocks_tested ? -(CORE_WORDS + SEQUENCE_WORD_OFFSET - 1) : SEQUENCE_WORD_OFFSET;
