@@ -11,6 +11,7 @@
 #include <cstring>
 #include <iterator>
 #include <map>
+#include <print>
 #include <string>
 #include <vector>
 
@@ -20,7 +21,7 @@ namespace Special_RNGs {
 	template<typename Word>
 	class _stdin_reader {
 		static void read_failed() {
-			(void)std::fprintf(stderr, "error reading standard input\n");
+			std::println(stderr, "error reading standard input");
 			std::exit(0);
 		}
 		static constexpr int BUFF_SIZE = 32768 / sizeof(Word);

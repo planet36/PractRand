@@ -10,6 +10,7 @@
 #include <ctime>
 #include <iostream>
 #include <limits>
+#include <print>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -26,7 +27,7 @@ namespace PractRand {
 	void issue_error ( const char* msg) {
 		if (error_callback) { error_callback(msg); }
 		else {
-			if (msg) (void)std::fprintf(stderr, "%s\n", msg);
+			if (msg) std::println(stderr, "{}", msg);
 			std::exit(1);
 		}
 	}

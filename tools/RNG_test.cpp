@@ -186,7 +186,7 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 		else if (result.type == PractRand::TestResult::TYPE_BAD_P || result.type == PractRand::TestResult::TYPE_GOOD_P || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) {
 			double p = result.get_pvalue();
 			double a = std::abs(p-0.5);
-			std::printf((result.type != PractRand::TestResult::TYPE_GOOD_P) ? "p~= " : "p = ");
+			std::print("{}", (result.type != PractRand::TestResult::TYPE_GOOD_P) ? "p~= " : "p = ");
 			if (a > 0.49) {
 				double s = result.get_suspicion();
 				double ns = std::abs(s) + 1;
@@ -208,7 +208,7 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 		else if (result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_GOOD_S) {
 			double s = result.get_suspicion();
 			double p = result.get_pvalue();
-			std::printf((result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) ? "p~=" : "p =");
+			std::print("{}", (result.type == PractRand::TestResult::TYPE_BAD_S || result.type == PractRand::TestResult::TYPE_RAW_NORMAL) ? "p~=" : "p =");
 			if (p >= 0.01 && p <= 0.99) { std::print(" {:.3f}     ", p); }
 			else {
 				double ns = std::abs(s) + 1;
@@ -652,8 +652,8 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	std::string errmsg;
 	RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
 	if (!rng) {
-		if (errmsg.empty()) (void)std::fprintf(stderr, "unrecognized RNG name.  aborting.\n");
-		else (void)std::fprintf(stderr, "%s\n", errmsg.c_str());
+		if (errmsg.empty()) std::println(stderr, "unrecognized RNG name.  aborting.");
+		else std::println(stderr, "{}", errmsg);
 		std::exit(1);
 	}
 

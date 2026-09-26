@@ -91,8 +91,8 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
 
 	if (!rng) {
-		if (errmsg.empty()) { (void)std::fprintf(stderr, "RNG_output ERROR: unrecognized RNG name\n"); print_usage(argv[0]); }
-		else { (void)std::fprintf(stderr, "RNG_output ERROR: RNG_Factories returned error message:\n%s\n", errmsg.c_str()); exit(1); }
+		if (errmsg.empty()) { std::println(stderr, "RNG_output ERROR: unrecognized RNG name"); print_usage(argv[0]); }
+		else { std::println(stderr, "RNG_output ERROR: RNG_Factories returned error message:\n{}", errmsg); exit(1); }
 	}
 
 	double _n = 0;//stays 0 if argv[2] is not a number, such as "name"
@@ -108,7 +108,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			n = 0xFFFFffffFFFFffffULL;
 		}
 		else {
-			(void)std::fprintf(stderr, "RNG_output ERROR: invalid number of output bytes\n"); print_usage(argv[0]);
+			std::println(stderr, "RNG_output ERROR: invalid number of output bytes"); print_usage(argv[0]);
 		}
 	}
 	else { n = Uint64(_n); }
@@ -116,7 +116,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	if (argc == 3) { rng->autoseed(); }
 	else {
 		Uint64 seed = 0;
-		if (!interpret_seed(argv[3],seed)) {(void)std::fprintf(stderr, "RNG_output ERROR: \"%s\" is not a valid 64 bit hexadecimal seed\n", argv[3]); std::exit(0);}
+		if (!interpret_seed(argv[3],seed)) {std::println(stderr, "RNG_output ERROR: \"{}\" is not a valid 64 bit hexadecimal seed", argv[3]); std::exit(0);}
 		rng->seed(seed);
 	}
 
