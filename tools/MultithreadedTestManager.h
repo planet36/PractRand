@@ -51,7 +51,7 @@ public:
 
 	MultithreadedTestManager(PractRand::Tests::ListOfTests* tests_, PractRand::RNGs::vRNG* known_good_, int max_buffer_amount_ = 1 << (27-10)) : TestManager(tests_, known_good_, max_buffer_amount_) {
 		//buffer1.resize(max_buffer_amount + Tests::TestBaseclass::REPEATED_BLOCKS);
-		for (auto& test : tests->tests) test->init(known_good);
+		//for (auto& test : tests->tests) test->init(known_good);//TestManager() does this
 		for (auto* test : tests->tests) {
 			auto* fold = dynamic_cast<PractRand::Tests::Transforms::multiplex*>(test);
 			if (fold) fold->set_parallel_subtests(true);
@@ -73,9 +73,11 @@ public:
 	}
 	void reset(PractRand::RNGs::vRNG* rng_) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 		wait_on_threads();
-		if (!freshly_created) for (auto& test : tests->tests) test->deinit();
+		if (!freshly_created) {//if freshly created then the constructor initialized the tests
+			for (auto& test : tests->tests) test->deinit();
+			for (auto& test : tests->tests) test->init(known_good);
+		}
 		freshly_created = false;
-		for (auto& test : tests->tests) test->init(known_good);
 		blocks_to_repeat = 0;
 		for (auto& test : tests->tests) {
 			int rb = test->get_blocks_to_repeat();

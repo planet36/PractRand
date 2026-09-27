@@ -56,9 +56,11 @@ TestManager::~TestManager() {
 	for (auto& test : tests->tests) delete test;
 }
 void TestManager::reset(PractRand::RNGs::vRNG* rng_) {
-	if (!freshly_created) for (auto& test : tests->tests) test->deinit();
+	if (!freshly_created) {//if freshly created then the constructor initialized the tests
+		for (auto& test : tests->tests) test->deinit();
+		for (auto& test : tests->tests) test->init(known_good);
+	}
 	freshly_created = false;
-	for (auto& test : tests->tests) test->init(known_good);
 	blocks_to_repeat = 0;
 	for (auto& test : tests->tests) {
 		int rb = test->get_blocks_to_repeat();
