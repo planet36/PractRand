@@ -14,7 +14,7 @@ class MultithreadedTestManager : public TestManager {
 		}
 		if (numblocks) test->test_blocks(base_block,static_cast<int>(numblocks));
 	}
-	std::vector<std::jthread> threads;
+	std::vector<std::jthread> threads;//their destructors join them before ~TestManager() runs
 	void wait_on_threads() {
 		for (auto& thread : threads) thread.join();
 		threads.clear();
@@ -62,9 +62,12 @@ public:
 				threads.emplace_back( run_test, test, &alt_buffer[prefix_blocks], main_blocks );
 			}
 		}
+	}
+	void finish_testing() override {
 		wait_on_threads();
 	}
 	void reset(PractRand::RNGs::vRNG* rng_) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
+		wait_on_threads();
 		if (!freshly_created) for (auto& test : tests->tests) test->deinit();
 		freshly_created = false;
 		for (auto& test : tests->tests) test->init(known_good);

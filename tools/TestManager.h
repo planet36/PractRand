@@ -37,6 +37,8 @@ public:
 
 	virtual void test(uint64_t blocks);//does testing... the number of blocks is ADDITIONAL blocks to test, not total blocks to test
 
+	virtual void finish_testing() {}//waits until every block passed to test() is tested
+
 	virtual void get_results( std::vector<PractRand::TestResult>& result_vec ) final;//gets the results
 };
 
@@ -98,6 +100,7 @@ void TestManager::test(uint64_t num_blocks) {
 	}
 }
 void TestManager::get_results( std::vector<PractRand::TestResult>& result_vec ) {
+	finish_testing();
 	for (auto& test : tests->tests) {
 		test->get_results(result_vec);
 	}

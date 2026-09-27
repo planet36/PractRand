@@ -279,7 +279,10 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 
 const char* seed_str = nullptr;
 
-void show_checkpoint(TestManager* tman, int mode, uint64_t seed, double time, bool smart_thresholds, double threshold, bool end_on_failure) {
+void show_checkpoint(TestManager* tman, int mode, uint64_t seed, std::chrono::steady_clock::time_point start_time, bool smart_thresholds, double threshold, bool end_on_failure) {
+	tman->finish_testing();
+	const double time = std::chrono::duration<double>(std::chrono::steady_clock::now() - start_time).count();
+
 	std::print("rng={}", tman->get_rng()->get_name());
 
 	std::print(", seed=");
@@ -899,16 +902,16 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			}
 			int action = show_datas.begin()->second;
 			if (action == TL_SHOW) {
-				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
+				if (!already_shown) show_checkpoint(tman, mode, seed, start_time, smart_thresholds, threshold, end_on_failure);
 				already_shown = true;
 			}
 			else if (action == TL_MIN) {
 				showing_powers_of_2 = true;
-				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
+				if (!already_shown) show_checkpoint(tman, mode, seed, start_time, smart_thresholds, threshold, end_on_failure);
 				already_shown = true;
 			}
 			else if (action == TL_MAX) {
-				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
+				if (!already_shown) show_checkpoint(tman, mode, seed, start_time, smart_thresholds, threshold, end_on_failure);
 				return 0;
 			}
 			else {std::println("internal error: unrecognized test length code, aborting");std::exit(1);}
@@ -920,12 +923,12 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			int action = show_times.begin()->second;
 			show_times.erase(show_times.begin());
 			if (action == TL_SHOW) {
-				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
+				if (!already_shown) show_checkpoint(tman, mode, seed, start_time, smart_thresholds, threshold, end_on_failure);
 				already_shown = true;
 			}
 			else if (action == TL_MIN) { showing_powers_of_2 = true; }
 			else if (action == TL_MAX) {
-				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
+				if (!already_shown) show_checkpoint(tman, mode, seed, start_time, smart_thresholds, threshold, end_on_failure);
 				return 0;
 			}
 			else {std::println("internal error: unrecognized test length code, aborting");std::exit(1);}
@@ -933,7 +936,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 
 		if (blocks_tested == next_power_of_2) {
 			if (showing_powers_of_2) {
-				if (!already_shown) show_checkpoint(tman, mode, seed, time_passed, smart_thresholds, threshold, end_on_failure);
+				if (!already_shown) show_checkpoint(tman, mode, seed, start_time, smart_thresholds, threshold, end_on_failure);
 				already_shown = true;
 			}
 			next_power_of_2 <<= 1;
