@@ -73,22 +73,8 @@ public:
 	}
 	void reset(PractRand::RNGs::vRNG* rng_) override {//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 		wait_on_threads();
-		if (!freshly_created) {//if freshly created then the constructor initialized the tests
-			for (auto& test : tests->tests) test->deinit();
-			for (auto& test : tests->tests) test->init(known_good);
-		}
-		freshly_created = false;
-		blocks_to_repeat = 0;
-		for (auto& test : tests->tests) {
-			int rb = test->get_blocks_to_repeat();
-			if (blocks_to_repeat < rb) blocks_to_repeat = rb;
-		}
-		buffer.resize(max_buffer_amount + blocks_to_repeat);
+		TestManager::reset(rng_);
 		alt_buffer.resize(max_buffer_amount + blocks_to_repeat);
-		if (rng_) rng = rng_;
 		if (!rng) PractRand::issue_error();
-		main_blocks = 0;
-		prefix_blocks = 0;
-		blocks_so_far = 0;
 	}
 };
