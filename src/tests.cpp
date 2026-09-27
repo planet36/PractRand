@@ -1638,7 +1638,6 @@ void PractRand::Tests::Gap16::test_blocks(TestBlock* data, int numblocks) {
 void PractRand::Tests::Gap16::get_results( std::vector<TestResult>& results ) {
 		//total weight: 1.000001
 	if (blocks_tested < 3) return;
-	double baseprob = 65535.0 / 65536.0;
 	constexpr int TSIZE = SIZE1 + SIZE2 + SIZE3;
 	std::vector<double> probs; probs.resize(TSIZE);
 	//if (autofail) return 9876543210.;
@@ -1646,11 +1645,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult>& results ) {
 		results.emplace_back(this->get_name() + ":!", autofail, autofail, TestResult::TYPE_PASSFAIL, 0.000001);
 		return;
 	}
-	//correct probs for startup region:
-	double lopped = 0;
-	double inv_total_samples = 1.0 / (blocks_tested * (TestBlock::SIZE/2.));
-	for (int i = 0; i < TSIZE; i++) {
-		int first = 0, last_ = 0;
+	auto get_gap_range = [](int i, int& first, int& last_) {
 		if (i < SIZE1) {
 			first = i << SET1_SHIFT;
 			last_ = first + (1 << SET1_SHIFT) - 1;
@@ -1669,9 +1664,27 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult>& results ) {
 			first = (SIZE1 << SET1_SHIFT) + (SIZE2 << SET2_SHIFT) + ((SIZE3-1) << SET3_SHIFT);
 			last_ = 123456789;
 		}
+	};
+	//the gap probabilities don't depend on the data, so every instance shares one table
+	static const std::vector<double> gap_prob_table = [&get_gap_range] {
+		double baseprob = 65535.0 / 65536.0;
+		std::vector<double> table(TSIZE);
+		for (int i = 0; i < TSIZE; i++) {
+			int first = 0, last_ = 0;
+			get_gap_range(i, first, last_);
+			table[i] = gap_probs(first, last_, baseprob);
+		}
+		return table;
+	}();
+	//correct probs for startup region:
+	double lopped = 0;
+	double inv_total_samples = 1.0 / (blocks_tested * (TestBlock::SIZE/2.));
+	for (int i = 0; i < TSIZE; i++) {
+		int first = 0, last_ = 0;
+		get_gap_range(i, first, last_);
 		double fraction = ((first+last_)/2.+1.) * inv_total_samples;
 		if (fraction > 1) fraction = 1;
-		double p = gap_probs(first, last_, baseprob);
+		double p = gap_prob_table[i];
 		lopped += p * fraction;
 		probs[i] = p * (1 - fraction);
 	}
