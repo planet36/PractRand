@@ -1920,25 +1920,54 @@ void PractRand::Tests::DistC6::test_blocks(TestBlock* data, int numblocks) {
 	uint32_t index = last_index;
 	switch (unitsL) {
 		case 0: {//8bit
-			if (ENABLE_8_BIT_BYPASS) for (; i < max; ) {
-				index = _advance_index(index, lookup_table[data->as8 [i++]]);
-				counts.increment(index);
-				index = _advance_index(index, lookup_table[data->as8 [i++]]);
-				counts.increment(index);
-				index = _advance_index(index, lookup_table[data->as8 [i++]]);
-				counts.increment(index);
-				index = _advance_index(index, lookup_table[data->as8 [i++]]);
-				counts.increment(index);
+			if (ENABLE_8_BIT_BYPASS) {
+				//Each index depends on the one before it, so one stream of bytes runs one step
+				//at a time.  Four streams over the four quarters of the bytes run side by side,
+				//and their counts add up to the same totals.
+				int len = (max - i) / 4;
+				if (len >= 8) {
+					const uint8_t* p = &data->as8[i];
+					uint32_t index1 = 0, index2 = 0, index3 = 0;
+					for (int j = len - 8; j < len; j++) {//the 8 bytes before each later quarter
+						index1 = _advance_index(index1, lookup_table[p[j]]);
+						index2 = _advance_index(index2, lookup_table[p[len + j]]);
+						index3 = _advance_index(index3, lookup_table[p[2 * len + j]]);
+					}
+					for (int j = 0; j < len; j++) {
+						index = _advance_index(index, lookup_table[p[j]]);
+						counts.increment(index);
+						index1 = _advance_index(index1, lookup_table[p[len + j]]);
+						counts.increment(index1);
+						index2 = _advance_index(index2, lookup_table[p[2 * len + j]]);
+						counts.increment(index2);
+						index3 = _advance_index(index3, lookup_table[p[3 * len + j]]);
+						counts.increment(index3);
+					}
+					index = index3;
+					i += 4 * len;
+				}
+				for (; i < max; ) {//whatever is left over
+					index = _advance_index(index, lookup_table[data->as8 [i++]]);
+					counts.increment(index);
+					index = _advance_index(index, lookup_table[data->as8 [i++]]);
+					counts.increment(index);
+					index = _advance_index(index, lookup_table[data->as8 [i++]]);
+					counts.increment(index);
+					index = _advance_index(index, lookup_table[data->as8 [i++]]);
+					counts.increment(index);
+				}
 			}
-			else for (; i < max; ) {
-				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
-				counts.increment(index);
-				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
-				counts.increment(index);
-				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
-				counts.increment(index);
-				index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
-				counts.increment(index);
+			else {
+				for (; i < max; ) {
+					index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
+					counts.increment(index);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
+					counts.increment(index);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
+					counts.increment(index);
+					index = _advance_index(index, lookup_table[std::popcount(data->as8 [i++])]);
+					counts.increment(index);
+				}
 			}
 		}
 		break;
