@@ -35,6 +35,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <thread>
 #include <utility>
 #include <vector>
 
@@ -10828,9 +10829,27 @@ std::string PractRand::Tests::Transforms::multiplex::get_name() const {
 	return name;
 }
 void PractRand::Tests::Transforms::multiplex::test_blocks(TestBlock* data, int numblocks) {
-	for (auto& test : subtests.tests)
-		test->test_blocks(data, numblocks);
+	if (parallel_subtests && subtests.tests.size() > 1) {
+		std::vector<std::jthread> threads;
+		for (size_t i = 1; i < subtests.tests.size(); i++) {
+			threads.emplace_back([this, i, data, numblocks] {
+				subtests.tests[i]->test_blocks(data, numblocks);
+			});
+		}
+		subtests.tests[0]->test_blocks(data, numblocks);
+		//the threads join when they are destroyed, before the caller reuses data
+	}
+	else {
+		for (auto& test : subtests.tests)
+			test->test_blocks(data, numblocks);
+	}
 	blocks_already += numblocks;
+}
+void PractRand::Tests::Transforms::multiplex::set_parallel_subtests(bool parallel) {
+	parallel_subtests = parallel;
+	for (auto* test : subtests.tests) {
+		if (auto* child = dynamic_cast<multiplex*>(test)) child->set_parallel_subtests(parallel);
+	}
 }
 static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(const std::string& name) {
 	std::pair<unsigned int,std::pair<int,int> > fail(0, std::pair<int,int>(0,0));

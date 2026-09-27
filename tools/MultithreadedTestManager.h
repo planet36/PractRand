@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PractRand/Tests/transforms.h"
 #include "TestManager.h"
 
 #include <thread>
@@ -51,6 +52,10 @@ public:
 	MultithreadedTestManager(PractRand::Tests::ListOfTests* tests_, PractRand::RNGs::vRNG* known_good_, int max_buffer_amount_ = 1 << (27-10)) : TestManager(tests_, known_good_, max_buffer_amount_) {
 		//buffer1.resize(max_buffer_amount + Tests::TestBaseclass::REPEATED_BLOCKS);
 		for (auto& test : tests->tests) test->init(known_good);
+		for (auto* test : tests->tests) {
+			auto* fold = dynamic_cast<PractRand::Tests::Transforms::multiplex*>(test);
+			if (fold) fold->set_parallel_subtests(true);
+		}
 	}
 	void test(uint64_t num_blocks) override {
 		while (num_blocks) {

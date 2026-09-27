@@ -9,6 +9,7 @@ namespace PractRand::Tests::Transforms {
 				ListOfTests subtests;
 				std::string name;
 				uint64_t blocks_already{};//# of blocks outputed to subtests
+				bool parallel_subtests{};//if true then each subtest runs on its own thread
 			public:
 				multiplex ( const char* name_, ListOfTests testlist );
 				void init( RNGs::vRNG* known_good ) override;
@@ -27,6 +28,7 @@ namespace PractRand::Tests::Transforms {
 				[[nodiscard]] virtual TestBaseclass* get_child(int index) const;
 				[[nodiscard]] const ListOfTests& _get_children() const {return subtests;}
 				[[nodiscard]] virtual uint64_t get_blocks_passed_through(int index) const;// {return blocks_already;}
+				void set_parallel_subtests(bool parallel);//also sets it in nested multiplexes
 				//virtual std::string get_child_name  (int index) const;
 				//virtual double      get_child_result(int index);
 			};
