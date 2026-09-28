@@ -10,6 +10,7 @@
 #include <bit>
 #include <cstdint>
 #include <cstring>
+#include <span>
 #include <string>
 
 using namespace PractRand;
@@ -37,16 +38,18 @@ void PractRand::RNGs::Polymorphic::efiix64x48::seed(vRNG* seeder_rng) { implemen
 void PractRand::RNGs::Polymorphic::efiix64x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) { implementation.seed(s1, s2, s3, s4); }
 std::string PractRand::RNGs::Polymorphic::efiix64x48::get_name() const { return "efiix64x48"; }
 
-#define EFIIX_ALGORITHM(BITS, SHIFT_AMOUNT) \
-	Word iterated = iteration_table  [i % ITERATION_SIZE];\
-	Word indirect = indirection_table[c % INDIRECTION_SIZE];\
-	indirection_table[c % INDIRECTION_SIZE] = iterated + a;\
-	iteration_table  [i % ITERATION_SIZE  ] = indirect;\
-	Word old = a ^ b;\
-	a = b + i++;\
-	b = c + indirect;\
-	c = old + std::rotl(c, SHIFT_AMOUNT);\
+template<int SHIFT_AMOUNT, typename Word, std::size_t ITERATION_SIZE, std::size_t INDIRECTION_SIZE>
+[[gnu::always_inline]] static inline Word efiix_algorithm(std::span<Word, ITERATION_SIZE> iteration_table, std::span<Word, INDIRECTION_SIZE> indirection_table, Word& i, Word& a, Word& b, Word& c) {
+	Word iterated = iteration_table  [i % ITERATION_SIZE];
+	Word indirect = indirection_table[c % INDIRECTION_SIZE];
+	indirection_table[c % INDIRECTION_SIZE] = iterated + a;
+	iteration_table  [i % ITERATION_SIZE  ] = indirect;
+	Word old = a ^ b;
+	a = b + i++;
+	b = c + indirect;
+	c = old + std::rotl(c, SHIFT_AMOUNT);
 	return b ^ iterated;
+}
 //current algorithm
 //perfect statistically (unless ITERATION_SIZE and word size are both very small), reasonably fast
 //safe from a variety of attacks
@@ -240,7 +243,7 @@ PractRand::RNGs::Raw::efiix64x48::~efiix64x48() { explicit_bzero(this, sizeof(*t
 
 uint8_t PractRand::RNGs::Raw::efiix8x48::raw8() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
-	EFIIX_ALGORITHM(8, 3)
+	return efiix_algorithm<3>(std::span(iteration_table), std::span(indirection_table), i, a, b, c);
 }
 void PractRand::RNGs::Raw::efiix8x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	//EFIIX_SEED(8)
@@ -316,7 +319,7 @@ void PractRand::RNGs::Raw::efiix8x48::walk_state(StateWalkingObject* walker) {
 
 uint16_t PractRand::RNGs::Raw::efiix16x48::raw16() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
-	EFIIX_ALGORITHM(16, 7)
+	return efiix_algorithm<7>(std::span(iteration_table), std::span(indirection_table), i, a, b, c);
 }
 void PractRand::RNGs::Raw::efiix16x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	EFIIX_SEED( 16 )
@@ -347,7 +350,7 @@ void PractRand::RNGs::Raw::efiix16x48::walk_state(StateWalkingObject* walker) {
 
 uint32_t PractRand::RNGs::Raw::efiix32x48::raw32() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
-	EFIIX_ALGORITHM(32, 13)
+	return efiix_algorithm<13>(std::span(iteration_table), std::span(indirection_table), i, a, b, c);
 }
 /*
 static void mix4x32(uint32_t &a, uint32_t &b, uint32_t &c, uint32_t &d) {
@@ -392,7 +395,7 @@ void PractRand::RNGs::Raw::efiix32x48::walk_state(StateWalkingObject* walker) {
 
 uint64_t PractRand::RNGs::Raw::efiix64x48::raw64() {
 	//typedef Word check_efiix_array_sizes[(ITERATION_SIZE & (ITERATION_SIZE-1)) || (INDIRECTION_SIZE & (INDIRECTION_SIZE-1)) ? -1 : 1];
-	EFIIX_ALGORITHM(64, 25)
+	return efiix_algorithm<25>(std::span(iteration_table), std::span(indirection_table), i, a, b, c);
 }
 void PractRand::RNGs::Raw::efiix64x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {
 	EFIIX_SEED( 64 )
