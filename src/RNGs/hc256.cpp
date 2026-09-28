@@ -150,9 +150,9 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 	if (checksums[15] != 0xa9c08937) issue_error("hc256::self_test() failed");
 }
 
-#define f1(x) (std::rotr((x),7) ^ std::rotr((x),18) ^ ((x) >> 3))
-#define f2(x) (std::rotr((x),17) ^ std::rotr((x),19) ^ ((x) >> 10))
-#define f(a,b,c,d) (f2((a)) + (b) + f1((c)) + (d))
+static constexpr uint32_t f1(uint32_t x) {return std::rotr(x,7) ^ std::rotr(x,18) ^ (x >> 3);}
+static constexpr uint32_t f2(uint32_t x) {return std::rotr(x,17) ^ std::rotr(x,19) ^ (x >> 10);}
+static constexpr uint32_t f(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {return f2(a) + b + f1(c) + d;}
 #define feedback_1(u,v,b,c) { \
 	uint32_t tem0,tem1,tem2; \
 	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
