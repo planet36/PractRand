@@ -58,7 +58,7 @@ A quick regression check for a warning fix is to run `tools/RNG_test <name> -see
 - Comment out unused code instead of deleting it.  Use `//` for a line or two and `#if 0` … `#endif` for a larger block, as `src/tests.cpp` already does.
 - Leave the statistical arithmetic alone.  Warnings like `bugprone-integer-division` and `bugprone-incorrect-roundings` in `src/tests.cpp` and `src/math.cpp` sit in code that computes p-values, so a fix would change what `RNG_test` reports.
 - Tests read the end of the previous block through negative indexes such as `data->as16[-1]`, and `TestBaseclass::get_blocks_to_repeat()` reserves room for them.  The `clang-diagnostic-array-bounds` warnings on those lines are intentional.
-- The `memset(this, 0, sizeof(*this))` in the cipher RNG destructors wipes the key state.  It draws `bugprone-undefined-memory-manipulation` but is intentional.
+- The cipher RNG destructors wipe the key state with `explicit_bzero(this, sizeof(*this))`.  Keep it rather than `memset`, which draws `bugprone-undefined-memory-manipulation` and `clang-diagnostic-nontrivial-memcall`, and which GCC removes as a dead store.
 
 ## Code style
 

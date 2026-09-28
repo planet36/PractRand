@@ -232,10 +232,10 @@ public:
 */
 
 
-PractRand::RNGs::Raw::efiix8x48::~efiix8x48() { std::memset(this, 0, sizeof(*this)); }
-PractRand::RNGs::Raw::efiix16x48::~efiix16x48() { std::memset(this, 0, sizeof(*this)); }
-PractRand::RNGs::Raw::efiix32x48::~efiix32x48() { std::memset(this, 0, sizeof(*this)); }
-PractRand::RNGs::Raw::efiix64x48::~efiix64x48() { std::memset(this, 0, sizeof(*this)); }
+PractRand::RNGs::Raw::efiix8x48::~efiix8x48() { explicit_bzero(this, sizeof(*this)); }
+PractRand::RNGs::Raw::efiix16x48::~efiix16x48() { explicit_bzero(this, sizeof(*this)); }
+PractRand::RNGs::Raw::efiix32x48::~efiix32x48() { explicit_bzero(this, sizeof(*this)); }
+PractRand::RNGs::Raw::efiix64x48::~efiix64x48() { explicit_bzero(this, sizeof(*this)); }
 
 
 uint8_t PractRand::RNGs::Raw::efiix8x48::raw8() {

@@ -19,7 +19,7 @@ void PractRand::RNGs::Polymorphic::hc256::seed(uint32_t key_and_iv[16]) { implem
 void PractRand::RNGs::Polymorphic::hc256::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }
 
 //raw:
-PractRand::RNGs::Raw::hc256::~hc256() {std::memset(this, 0, sizeof(*this));}
+PractRand::RNGs::Raw::hc256::~hc256() {explicit_bzero(this, sizeof(*this));}
 
 #define h1(x,y) { \
 	uint8_t a,b,c,d; \

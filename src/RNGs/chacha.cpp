@@ -47,7 +47,7 @@ void PractRand::RNGs::Polymorphic::chacha::set_rounds(int rounds_) {implementati
 int PractRand::RNGs::Polymorphic::chacha::get_rounds() const {return implementation.get_rounds();}
 
 //raw:
-PractRand::RNGs::Raw::chacha::~chacha() {std::memset(this, 0, sizeof(*this));}
+PractRand::RNGs::Raw::chacha::~chacha() {explicit_bzero(this, sizeof(*this));}
 static constexpr uint32_t chacha_long_seed_constants[4] = {
 	//"expand 32-byte k"
 	(uint32_t('e') << 0) + (uint32_t('x') << 8) + (uint32_t('p') << 16) + (uint32_t('a') << 24),

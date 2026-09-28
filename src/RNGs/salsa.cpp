@@ -54,7 +54,7 @@ int PractRand::RNGs::Polymorphic::salsa::get_rounds() const {return implementati
 
 
 //raw:
-PractRand::RNGs::Raw::salsa::~salsa() {std::memset(this, 0, sizeof(*this));}
+PractRand::RNGs::Raw::salsa::~salsa() {explicit_bzero(this, sizeof(*this));}
 static void salsa_mix_core(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
 	b ^= std::rotl(a + d, 7);
 	c ^= std::rotl(b + a, 9);

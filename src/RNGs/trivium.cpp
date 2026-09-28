@@ -26,7 +26,8 @@ static uint64_t shift_array64( uint64_t vec[2], unsigned long bits ) {
 	return (vec[bits / 64] << (bits & 63)) | (vec[1 + bits / 64] >> (64-(bits & 63)));
 }
 //raw:
-PractRand::RNGs::Raw::trivium::~trivium() {std::memset(this, 0, sizeof(*this));}
+// Wipe each member, because wiping *this draws a false -Wstringop-overflow from GCC with LTO.
+PractRand::RNGs::Raw::trivium::~trivium() {explicit_bzero(&a, sizeof(a)); explicit_bzero(&b, sizeof(b)); explicit_bzero(&c, sizeof(c));}
 uint64_t PractRand::RNGs::Raw::trivium::raw64() {//LOCKED, do not change
 	uint64_t tmp_a = shift_array64(c, 66) ^ shift_array64(c,111);
 	uint64_t tmp_b = shift_array64(a, 66) ^ shift_array64(a, 93);
