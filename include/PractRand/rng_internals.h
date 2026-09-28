@@ -4,6 +4,7 @@
 
 //#include <vector>
 
+#if 0
 #define PRACTRAND_RANDF_IMPLEMENTATION(RNG)  {return  ((RNG).raw32() & ((uint32_t(1) << 24)-1)) *  float(1.0/16777216.0);}
 #define PRACTRAND_RANDLF_IMPLEMENTATION(RNG)  {return ((RNG).raw64() & ((uint64_t(1) << 53)-1)) * (1.0/9007199254740992.0);}
 
@@ -27,6 +28,7 @@
 		tmp = raw64() & mask;\
 	} while (tmp > (max));\
 	return tmp;
+#endif
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(RNG) \

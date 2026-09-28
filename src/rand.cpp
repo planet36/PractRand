@@ -398,16 +398,32 @@ namespace PractRand {
 			flush_buffers();
 		}
 		uint32_t vRNG::randi(uint32_t max) {
-			PRACTRAND_RANDI_IMPLEMENTATION(max)
+			max -= 1;
+			uint32_t mask = max;
+			mask |= mask >> 1; mask |= mask >>  2; mask |= mask >> 4;
+			mask |= mask >> 8; mask |= mask >> 16;
+			uint32_t tmp = 0;
+			do {
+				tmp = raw32() & mask;
+			} while (tmp > max);
+			return tmp;
 		}
 		uint64_t vRNG::randli(uint64_t max) {
-			PRACTRAND_RANDLI_IMPLEMENTATION(max)
+			max -= 1;
+			uint64_t mask = max;
+			mask |= mask >> 1; mask |= mask >>  2; mask |= mask >>  4;
+			mask |= mask >> 8; mask |= mask >> 16; mask |= mask >> 32;
+			uint64_t tmp = 0;
+			do {
+				tmp = raw64() & mask;
+			} while (tmp > max);
+			return tmp;
 		}
 		uint32_t vRNG::randi_fast(uint32_t max) {
 			return randi_fast_implementation(raw32(), max);
 		}
-		float vRNG::randf() {PRACTRAND_RANDF_IMPLEMENTATION(*this)}
-		double vRNG::randlf() {PRACTRAND_RANDLF_IMPLEMENTATION(*this)}
+		float vRNG::randf() {return static_cast<float>(raw32() & ((static_cast<uint32_t>(1) << 24)-1)) * static_cast<float>(1.0/16777216.0);}
+		double vRNG::randlf() {return static_cast<double>(raw64() & ((static_cast<uint64_t>(1) << 53)-1)) * (1.0/9007199254740992.0);}
 		double vRNG::gaussian() { return Internals::generate_gaussian_fast(raw64()); }
 		uint64_t vRNG::get_flags() const {return 0;}
 		void vRNG::seek_forward128 (uint64_t, uint64_t) {}
