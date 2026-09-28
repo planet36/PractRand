@@ -82,32 +82,34 @@ void PractRand::RNGs::Raw::chacha::_get_position(uint64_t& low, uint64_t& high) 
 	low = used + (uint64_t(state[POS_INDEX0]) << 4) + (uint64_t(state[POS_INDEX1]) << 36);
 	high = (state[POS_INDEX1] >> 28) + (uint64_t(position_overflow) << 4);
 }
+static void chacha_mix_core(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
+	a += b; d = std::rotl(d ^ a, 16);
+	c += d; b = std::rotl(b ^ c, 12);
+	a += b; d = std::rotl(d ^ a, 8);
+	c += d; b = std::rotl(b ^ c, 7);
+}
 void PractRand::RNGs::Raw::chacha::_core() {
 	const uint32_t* constants = short_seed ? chacha_short_seed_constants : chacha_long_seed_constants;
 
 	for (int i = 0; i < 4; i++) outbuf[i] = constants[i];
 	for (int i = 4; i < 16; i++) outbuf[i] = state[i-4];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-#define BLAH(base,i1,i2,i3,R) (base)[i1] += (base)[i2]; (base)[i3] = std::rotl((base)[i3] ^ (base)[i1], R);
-#define QUARTERROUND(i1,i2,i3,i4) BLAH(outbuf,i1,i2,i4,16) BLAH(outbuf,i3,i4,i2,12) BLAH(outbuf,i1,i2,i4,8) BLAH(outbuf,i3,i4,i2,7)
 	for (int round = 1; round < rounds; round+=2) {
-		QUARTERROUND( 0, 4, 8,12)
-		QUARTERROUND( 1, 5, 9,13)
-		QUARTERROUND( 2, 6,10,14)
-		QUARTERROUND( 3, 7,11,15)
-		QUARTERROUND( 0, 5,10,15)
-		QUARTERROUND( 1, 6,11,12)
-		QUARTERROUND( 2, 7, 8,13)
-		QUARTERROUND( 3, 4, 9,14)
+		chacha_mix_core(outbuf[0], outbuf[4], outbuf[8], outbuf[12]);
+		chacha_mix_core(outbuf[1], outbuf[5], outbuf[9], outbuf[13]);
+		chacha_mix_core(outbuf[2], outbuf[6], outbuf[10], outbuf[14]);
+		chacha_mix_core(outbuf[3], outbuf[7], outbuf[11], outbuf[15]);
+		chacha_mix_core(outbuf[0], outbuf[5], outbuf[10], outbuf[15]);
+		chacha_mix_core(outbuf[1], outbuf[6], outbuf[11], outbuf[12]);
+		chacha_mix_core(outbuf[2], outbuf[7], outbuf[8], outbuf[13]);
+		chacha_mix_core(outbuf[3], outbuf[4], outbuf[9], outbuf[14]);
 	}
 	if (rounds & 1) {
-		QUARTERROUND( 0, 5,10,15)
-		QUARTERROUND( 1, 6,11,12)
-		QUARTERROUND( 2, 7, 8,13)
-		QUARTERROUND( 3, 4, 9,14)
+		chacha_mix_core(outbuf[0], outbuf[5], outbuf[10], outbuf[15]);
+		chacha_mix_core(outbuf[1], outbuf[6], outbuf[11], outbuf[12]);
+		chacha_mix_core(outbuf[2], outbuf[7], outbuf[8], outbuf[13]);
+		chacha_mix_core(outbuf[3], outbuf[4], outbuf[9], outbuf[14]);
 	}
-#undef BLAH
-#undef QUARTERROUND
 	for (int i = 0; i < 4; i++) outbuf[i] += constants[i];
 	for (int i = 4; i < 16; i++) outbuf[i] += state[i-4];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;

@@ -65,24 +65,22 @@ static void salsa_mix_core(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
 void PractRand::RNGs::Raw::salsa::_core() {
 	for (int i = 0; i < 16; i++) outbuf[i] = state[i];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-#define QUARTERROUND(i1,i2,i3,i4) salsa_mix_core( outbuf[i1], outbuf[i2], outbuf[i3], outbuf[i4] );
 	for (int round = 1; round < rounds; round+=2) {
-		QUARTERROUND( 0, 4, 8,12)//columns
-		QUARTERROUND( 5, 9,13, 1)
-		QUARTERROUND(10,14, 2, 6)
-		QUARTERROUND(15, 3, 7,11)
-		QUARTERROUND( 0, 1, 2, 3)//rows
-		QUARTERROUND( 5, 6, 7, 4)
-		QUARTERROUND(10,11, 8, 9)
-		QUARTERROUND(15,12,13,14)
+		salsa_mix_core(outbuf[0], outbuf[4], outbuf[8], outbuf[12]);//columns
+		salsa_mix_core(outbuf[5], outbuf[9], outbuf[13], outbuf[1]);
+		salsa_mix_core(outbuf[10], outbuf[14], outbuf[2], outbuf[6]);
+		salsa_mix_core(outbuf[15], outbuf[3], outbuf[7], outbuf[11]);
+		salsa_mix_core(outbuf[0], outbuf[1], outbuf[2], outbuf[3]);//rows
+		salsa_mix_core(outbuf[5], outbuf[6], outbuf[7], outbuf[4]);
+		salsa_mix_core(outbuf[10], outbuf[11], outbuf[8], outbuf[9]);
+		salsa_mix_core(outbuf[15], outbuf[12], outbuf[13], outbuf[14]);
 	}
 	if (rounds & 1) {
-		QUARTERROUND( 0, 4, 8,12)//columns
-		QUARTERROUND( 5, 9,13, 1)
-		QUARTERROUND(10,14, 2, 6)
-		QUARTERROUND(15, 3, 7,11)
+		salsa_mix_core(outbuf[0], outbuf[4], outbuf[8], outbuf[12]);//columns
+		salsa_mix_core(outbuf[5], outbuf[9], outbuf[13], outbuf[1]);
+		salsa_mix_core(outbuf[10], outbuf[14], outbuf[2], outbuf[6]);
+		salsa_mix_core(outbuf[15], outbuf[3], outbuf[7], outbuf[11]);
 	}
-#undef QUARTERROUND
 	for (int i = 0; i < 16; i++) outbuf[i] += state[i];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
 }
