@@ -181,13 +181,16 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				ibaa32::~ibaa32() {delete[] table;}
 
 
-				#define ind32(mm,x)  (*reinterpret_cast<uint32_t*>((reinterpret_cast<uint8_t*>(mm)) + ((x) & ((MASK)<<2))))
-				#define rngstep32(mix,a,b,mm,m,m2,r,x) \
-				{ \
-				  (x) = *(m);  \
-				  (a) = ((a)^(mix)) + *((m2)++); \
-				  *((m)++) = y = ind32(mm,x) + (a) + (b); \
-				  *((r)++) = (b) = ind32(mm,y>>table_size_L2) + (x); \
+				[[gnu::always_inline]] static inline uint32_t ind32(const uint32_t* mm, uint32_t x, int size_L2) {
+					return *reinterpret_cast<const uint32_t*>(reinterpret_cast<const uint8_t*>(mm) + (x & (((1<<size_L2)-1)<<2)));
+				}
+				[[gnu::always_inline]] static inline void rngstep32(uint32_t mix, uint32_t& a, uint32_t& b, const uint32_t* mm, uint32_t*& m, uint32_t*& m2, uint32_t*& r, int size_L2) {
+					uint32_t x = *m;
+					a = (a^mix) + *(m2++);
+					uint32_t y = ind32(mm,x,size_L2) + a + b;
+					*(m++) = y;
+					b = ind32(mm,y>>size_L2,size_L2) + x;
+					*(r++) = b;
 				}
 				uint32_t isaac32_varqual::raw32() {
 					if (left) {
@@ -197,36 +200,36 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int MASK = (1<<table_size_L2)-1;
 					uint32_t* base = &table[MASK+1];
 					uint32_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-					uint32_t x = 0, y = 0;
+					//uint32_t x = 0, y = 0;
 					//m = base;
 					r = table;
 					b += ++c;
 					if (table_size_L2 != 2) {
 						for (m = base, mend = m2 = m+HALF_SIZE; m<mend; )
 						{
-							rngstep32( a<<13, a, b, base, m, m2, r, x);
-							rngstep32( a>> 6, a, b, base, m, m2, r, x);
-							rngstep32( a<< 2, a, b, base, m, m2, r, x);
-							rngstep32( a>>16, a, b, base, m, m2, r, x);
+							rngstep32( a<<13, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a>> 6, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a<< 2, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a>>16, a, b, base, m, m2, r, table_size_L2);
 						}
 						for (m2 = base; m2<mend; )
 						{
-							rngstep32( a<<13, a, b, base, m, m2, r, x);
-							rngstep32( a>> 6, a, b, base, m, m2, r, x);
-							rngstep32( a<< 2, a, b, base, m, m2, r, x);
-							rngstep32( a>>16, a, b, base, m, m2, r, x);
+							rngstep32( a<<13, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a>> 6, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a<< 2, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a>>16, a, b, base, m, m2, r, table_size_L2);
 						}
 					}
 					else {
 						for (m = base, mend = m2 = m+HALF_SIZE; m<mend; )
 						{
-							rngstep32( a<<13, a, b, base, m, m2, r, x);
-							rngstep32( a>> 6, a, b, base, m, m2, r, x);
+							rngstep32( a<<13, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a>> 6, a, b, base, m, m2, r, table_size_L2);
 						}
 						for (m2 = base; m2<mend; )
 						{
-							rngstep32( a<< 2, a, b, base, m, m2, r, x);
-							rngstep32( a>>16, a, b, base, m, m2, r, x);
+							rngstep32( a<< 2, a, b, base, m, m2, r, table_size_L2);
+							rngstep32( a>>16, a, b, base, m, m2, r, table_size_L2);
 						}
 					}
 					left = MASK;
@@ -250,18 +253,19 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					table = new uint32_t[2 << table_size_L2];
 				}
 				isaac32_varqual::~isaac32_varqual() {delete[] table;}
-				#undef ind32
-				#undef rngstep32
 
 
 
-				#define ind16(mm,x)  (*reinterpret_cast<uint16_t*>(reinterpret_cast<uint8_t*>(mm) + ((x) & ((MASK)<<1))))
-				#define rngstep16(mix,a,b,mm,m,m2,r,x) \
-				{ \
-				  (x) = *(m);  \
-				  (a) = ((a)^(mix)) + *((m2)++); \
-				  *((m)++) = y = ind16(mm,x) + (a) + (b); \
-				  *((r)++) = (b) = ind16(mm,y>>table_size_L2) + (x); \
+				[[gnu::always_inline]] static inline uint16_t ind16(const uint16_t* mm, uint16_t x, int size_L2) {
+					return *reinterpret_cast<const uint16_t*>(reinterpret_cast<const uint8_t*>(mm) + (x & (((1<<size_L2)-1)<<1)));
+				}
+				[[gnu::always_inline]] static inline void rngstep16(uint16_t mix, uint16_t& a, uint16_t& b, const uint16_t* mm, uint16_t*& m, uint16_t*& m2, uint16_t*& r, int size_L2) {
+					uint16_t x = *m;
+					a = (a^mix) + *(m2++);
+					uint16_t y = ind16(mm,x,size_L2) + a + b;
+					*(m++) = y;
+					b = ind16(mm,y>>size_L2,size_L2) + x;
+					*(r++) = b;
 				}
 				uint16_t isaac16_varqual::raw16() {
 					if (left) {
@@ -271,7 +275,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					const int MASK = (1<<table_size_L2)-1;
 					uint16_t* base = &table[MASK+1];
 					uint16_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-					uint16_t x = 0, y = 0;
+					//uint16_t x = 0, y = 0;
 					//m = base;
 					r = table;
 					b += ++c;
@@ -279,29 +283,29 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						for (m = base, mend = m2 = m+HALF_SIZE; m<mend; )
 						{
 							//13, 6, 2, 16 -> 7, 3, 2, 5
-							rngstep16( a<<7, a, b, base, m, m2, r, x);
-							rngstep16( a>>3, a, b, base, m, m2, r, x);
-							rngstep16( a<<2, a, b, base, m, m2, r, x);
-							rngstep16( a>>5, a, b, base, m, m2, r, x);
+							rngstep16( a<<7, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a>>3, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a<<2, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a>>5, a, b, base, m, m2, r, table_size_L2);
 						}
 						for (m2 = base; m2<mend; )
 						{
-							rngstep16( a<<7, a, b, base, m, m2, r, x);
-							rngstep16( a>>3, a, b, base, m, m2, r, x);
-							rngstep16( a<<2, a, b, base, m, m2, r, x);
-							rngstep16( a>>5, a, b, base, m, m2, r, x);
+							rngstep16( a<<7, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a>>3, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a<<2, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a>>5, a, b, base, m, m2, r, table_size_L2);
 						}
 					}
 					else {
 						for (m = base, mend = m2 = m+HALF_SIZE; m<mend; )
 						{
-							rngstep16( a<<7, a, b, base, m, m2, r, x);
-							rngstep16( a>>3 , a, b, base, m, m2, r, x);
+							rngstep16( a<<7, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a>>3 , a, b, base, m, m2, r, table_size_L2);
 						}
 						for (m2 = base; m2<mend; )
 						{
-							rngstep16( a<<2, a, b, base, m, m2, r, x);
-							rngstep16( a>>5, a, b, base, m, m2, r, x);
+							rngstep16( a<<2, a, b, base, m, m2, r, table_size_L2);
+							rngstep16( a>>5, a, b, base, m, m2, r, table_size_L2);
 						}
 					}
 					left = MASK;
@@ -325,8 +329,6 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					table = new uint16_t[2 << table_size_L2];
 				}
 				isaac16_varqual::~isaac16_varqual() {delete[] table;}
-				#undef ind16
-				#undef rngstep16
 
 
 				uint8_t efiix8_varqual::raw8() {

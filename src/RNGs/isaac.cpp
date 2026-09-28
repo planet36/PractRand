@@ -27,33 +27,37 @@ std::string PractRand::RNGs::Polymorphic::isaac64x256::get_name() const {return 
 PractRand::RNGs::Raw::isaac32x256::~isaac32x256() {explicit_bzero(this, sizeof(*this));}
 PractRand::RNGs::Raw::isaac64x256::~isaac64x256() {explicit_bzero(this, sizeof(*this));}
 
-#define ind32(mm,x)  (*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(mm) + ((x) & ((SIZE-1)<<2))))
-#define rngstep32(mix,a,b,mm,m,m2,r,x) \
-{ \
-  (x) = *(m);  \
-  (a) = ((a)^(mix)) + *((m2)++); \
-  *((m)++) = y = ind32(mm,x) + (a) + (b); \
-  *((r)++) = (b) = ind32(mm,y>>SIZE_L2) + (x); \
+[[gnu::always_inline]] static inline uint32_t ind32(const uint32_t* mm, uint32_t x, int size_L2) {
+	return *reinterpret_cast<const uint32_t*>(reinterpret_cast<const uint8_t*>(mm) + (x & (((1<<size_L2)-1)<<2)));
+}
+[[gnu::always_inline]] static inline void rngstep32(uint32_t mix, uint32_t& a, uint32_t& b, const uint32_t* mm, uint32_t*& m, uint32_t*& m2, uint32_t*& r, int size_L2) {
+	uint32_t x = *m;
+	a = (a^mix) + *(m2++);
+	uint32_t y = ind32(mm,x,size_L2) + a + b;
+	*(m++) = y;
+	b = ind32(mm,y>>size_L2,size_L2) + x;
+	*(r++) = b;
 }
 void PractRand::RNGs::Raw::isaac32x256::_advance_state() {//do not change
 	uint32_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-	uint32_t x = 0, y = 0;
+	//uint32_t x = 0, y = 0;
+	uint32_t* base = &state[0];
 	//m = state;
 	r = results;
 	b += ++c;
 	for (m = state, mend = m2 = m+(SIZE/2); m<mend; )
 	{
-		rngstep32( a<<13, a, b, state, m, m2, r, x);
-		rngstep32( a>>6 , a, b, state, m, m2, r, x);
-		rngstep32( a<<2 , a, b, state, m, m2, r, x);
-		rngstep32( a>>16, a, b, state, m, m2, r, x);
+		rngstep32( a<<13, a, b, base, m, m2, r, SIZE_L2);
+		rngstep32( a>>6 , a, b, base, m, m2, r, SIZE_L2);
+		rngstep32( a<<2 , a, b, base, m, m2, r, SIZE_L2);
+		rngstep32( a>>16, a, b, base, m, m2, r, SIZE_L2);
 	}
 	for (m2 = state; m2<mend; )
 	{
-		rngstep32( a<<13, a, b, state, m, m2, r, x);
-		rngstep32( a>>6 , a, b, state, m, m2, r, x);
-		rngstep32( a<<2 , a, b, state, m, m2, r, x);
-		rngstep32( a>>16, a, b, state, m, m2, r, x);
+		rngstep32( a<<13, a, b, base, m, m2, r, SIZE_L2);
+		rngstep32( a>>6 , a, b, base, m, m2, r, SIZE_L2);
+		rngstep32( a<<2 , a, b, base, m, m2, r, SIZE_L2);
+		rngstep32( a>>16, a, b, base, m, m2, r, SIZE_L2);
 	}
 	used = 0;
 }
@@ -156,33 +160,37 @@ void PractRand::RNGs::Raw::isaac32x256::self_test() {
 
 
 
-#define ind64(mm,x)  (*reinterpret_cast<uint64_t*>(reinterpret_cast<uint8_t*>(mm) + ((x) & ((SIZE-1)<<3))))
-#define rngstep64(mix,a,b,mm,m,m2,r,x) \
-{ \
-  (x) = *(m);  \
-  (a) = ((a)^(mix)) + *((m2)++); \
-  *((m)++) = y = ind64(mm,x) + (a) + (b); \
-  *((r)++) = (b) = ind64(mm,y>>SIZE_L2) + (x); \
+[[gnu::always_inline]] static inline uint64_t ind64(const uint64_t* mm, uint64_t x, int size_L2) {
+	return *reinterpret_cast<const uint64_t*>(reinterpret_cast<const uint8_t*>(mm) + (x & (((1<<size_L2)-1)<<3)));
+}
+[[gnu::always_inline]] static inline void rngstep64(uint64_t mix, uint64_t& a, uint64_t& b, const uint64_t* mm, uint64_t*& m, uint64_t*& m2, uint64_t*& r, int size_L2) {
+	uint64_t x = *m;
+	a = (a^mix) + *(m2++);
+	uint64_t y = ind64(mm,x,size_L2) + a + b;
+	*(m++) = y;
+	b = ind64(mm,y>>size_L2,size_L2) + x;
+	*(r++) = b;
 }
 void PractRand::RNGs::Raw::isaac64x256::_advance_state() {//do not change
 	uint64_t *m = nullptr, *m2 = nullptr, *mend = nullptr, *r = nullptr;
-	uint64_t x = 0, y = 0;
+	//uint64_t x = 0, y = 0;
+	uint64_t* base = &state[0];
 	//m = state;
 	r = results;
 	b += ++c;
 	for (m = state, mend = m2 = m+(SIZE/2); m<mend; )
 	{
-		rngstep64(~(a^(a<<21)), a, b, state, m, m2, r, x);
-		rngstep64(  a^(a>> 5) , a, b, state, m, m2, r, x);
-		rngstep64(  a^(a<<12) , a, b, state, m, m2, r, x);
-		rngstep64(  a^(a>>33) , a, b, state, m, m2, r, x);
+		rngstep64(~(a^(a<<21)), a, b, base, m, m2, r, SIZE_L2);
+		rngstep64(  a^(a>> 5) , a, b, base, m, m2, r, SIZE_L2);
+		rngstep64(  a^(a<<12) , a, b, base, m, m2, r, SIZE_L2);
+		rngstep64(  a^(a>>33) , a, b, base, m, m2, r, SIZE_L2);
 	}
 	for (m2 = state; m2<mend; )
 	{
-		rngstep64(~(a^(a<<21)), a, b, state, m, m2, r, x);
-		rngstep64(  a^(a>> 5) , a, b, state, m, m2, r, x);
-		rngstep64(  a^(a<<12) , a, b, state, m, m2, r, x);
-		rngstep64(  a^(a>>33) , a, b, state, m, m2, r, x);
+		rngstep64(~(a^(a<<21)), a, b, base, m, m2, r, SIZE_L2);
+		rngstep64(  a^(a>> 5) , a, b, base, m, m2, r, SIZE_L2);
+		rngstep64(  a^(a<<12) , a, b, base, m, m2, r, SIZE_L2);
+		rngstep64(  a^(a>>33) , a, b, base, m, m2, r, SIZE_L2);
 	}
 	used = 0;
 }
