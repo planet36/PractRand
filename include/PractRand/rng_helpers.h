@@ -69,6 +69,7 @@ namespace PractRand {
 #endif
 	StateWalkingObject* get_autoseeder(const void*);//must be deleted after use
 }
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_H(RNG) public:\
 		static constexpr int OUTPUT_TYPE = OUTPUT_TYPES::NORMAL_ALL;\
 		static constexpr int OUTPUT_BITS = Raw:: RNG ::OUTPUT_BITS;\
@@ -92,6 +93,7 @@ namespace PractRand {
 #define PRACTRAND_LIGHT_WEIGHT_ENTROPY_POOL(RNG)
 #else // ! PRACTRAND_NO_LIGHT_WEIGHT_RNGS
 #include "rng_adaptors.h"
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_LIGHT_WEIGHT_RNG(RNG) 	\
 	namespace LightWeight {\
 		typedef PractRand::RNGs::Adaptors::RAW_TO_LIGHT_WEIGHT_RNG<PractRand::RNGs::Raw:: RNG > RNG;\

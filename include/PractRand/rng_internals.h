@@ -28,6 +28,7 @@
 	} while (tmp > (max));\
 	return tmp;
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(RNG) \
 	uint8_t  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return implementation.raw8();}\
 	uint16_t PractRand::RNGs::Polymorphic:: RNG ::raw16() {uint16_t r = implementation.raw8(); return (uint16_t(implementation.raw8()) << 8) | r;}\
@@ -45,6 +46,7 @@
 	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C16(RNG) \
 	uint8_t  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return uint8_t(implementation.raw16());}\
 	uint16_t PractRand::RNGs::Polymorphic:: RNG ::raw16() {return implementation.raw16();}\
@@ -62,6 +64,7 @@
 	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(RNG) \
 	uint8_t  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return uint8_t (implementation.raw32());}\
 	uint16_t PractRand::RNGs::Polymorphic:: RNG ::raw16() {return uint16_t(implementation.raw32());}\
@@ -74,6 +77,7 @@
 	void PractRand::RNGs::Polymorphic:: RNG ::walk_state(StateWalkingObject* walker) {\
 		implementation.walk_state(walker);\
 	}
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(RNG) \
 	uint8_t  PractRand::RNGs::Polymorphic:: RNG ::raw8 () {return uint8_t (implementation.raw64());}\
 	uint16_t PractRand::RNGs::Polymorphic:: RNG ::raw16() {return uint16_t(implementation.raw64());}\
