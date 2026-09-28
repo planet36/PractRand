@@ -176,6 +176,10 @@ double benchmark_entropy_pool_N (PractRand::RNGs::vRNG& entropy_pool, DataBlock*
 	if (a == 0) std::print("unlikely!");
 	return rate;
 }
+void benchmark_entropy_pool(PractRand::RNGs::vRNG& entropy_pool, DataBlock* data) {
+	std::println("  {}", entropy_pool.get_name() );
+	std::println("    add_entropy8  :{:6.1f} MB/s\n    add_entropy16 :{:6.1f} MB/s\n    add_entropy32 :{:6.1f} MB/s\n    add_entropy64 :{:6.1f} MB/s\n    add_entropy_N :{:6.1f} MB/s", benchmark_entropy_pool_8(entropy_pool, data), benchmark_entropy_pool_16(entropy_pool, data), benchmark_entropy_pool_32(entropy_pool, data), benchmark_entropy_pool_64(entropy_pool, data), benchmark_entropy_pool_N(entropy_pool, data));
+}
 void benchmark_random_access_rngs() {
 	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
 	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
@@ -183,9 +187,8 @@ void benchmark_random_access_rngs() {
 	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
-#define POLYPERF(a) {std::println("  {}", (a).get_name() ); std::println("    add_entropy8  :{:6.1f} MB/s\n    add_entropy16 :{:6.1f} MB/s\n    add_entropy32 :{:6.1f} MB/s\n    add_entropy64 :{:6.1f} MB/s\n    add_entropy_N :{:6.1f} MB/s", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
-	POLYPERF(poly_arbee)
-	POLYPERF(sha2_based)
+	benchmark_entropy_pool(poly_arbee, &data);
+	benchmark_entropy_pool(sha2_based, &data);
 }
 void benchmark_entropy_pool_input() {
 	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
@@ -194,9 +197,8 @@ void benchmark_entropy_pool_input() {
 	for (auto& i : data.as64) i = rng.raw64();
 	RNGs::Polymorphic::arbee poly_arbee;
 	RNGs::Polymorphic::sha2_based_pool sha2_based;
-#define POLYPERF(a) {std::println("  {}", (a).get_name() ); std::println("    add_entropy8  :{:6.1f} MB/s\n    add_entropy16 :{:6.1f} MB/s\n    add_entropy32 :{:6.1f} MB/s\n    add_entropy64 :{:6.1f} MB/s\n    add_entropy_N :{:6.1f} MB/s", benchmark_entropy_pool_8(a, &data), benchmark_entropy_pool_16(a, &data), benchmark_entropy_pool_32(a, &data), benchmark_entropy_pool_64(a, &data), benchmark_entropy_pool_N(a, &data));}
-	POLYPERF(poly_arbee)
-	POLYPERF(sha2_based)
+	benchmark_entropy_pool(poly_arbee, &data);
+	benchmark_entropy_pool(sha2_based, &data);
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) { // NOLINT(bugprone-exception-escape)
