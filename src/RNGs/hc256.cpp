@@ -21,42 +21,28 @@ void PractRand::RNGs::Polymorphic::hc256::seed(vRNG* seeder_rng) { implementatio
 //raw:
 PractRand::RNGs::Raw::hc256::~hc256() {explicit_bzero(this, sizeof(*this));}
 
-#define h1(x,y) { \
-	uint8_t a,b,c,d; \
-	a = static_cast<uint8_t>(x); \
-	b = static_cast<uint8_t>((x) >> 8); \
-	c = static_cast<uint8_t>((x) >> 16); \
-	d = static_cast<uint8_t>((x) >> 24); \
-	(y) = Q[a]+Q[256+b]+Q[512+c]+Q[768+d]; \
+uint32_t PractRand::RNGs::Raw::hc256::_h1(uint32_t x) const {
+	return Q[static_cast<uint8_t>(x)] + Q[256 + static_cast<uint8_t>(x >> 8)] + Q[512 + static_cast<uint8_t>(x >> 16)] + Q[768 + static_cast<uint8_t>(x >> 24)];
 }
 
-#define h2(x,y) { \
-	uint8_t a,b,c,d; \
-	a = static_cast<uint8_t>(x); \
-	b = static_cast<uint8_t>((x) >> 8); \
-	c = static_cast<uint8_t>((x) >> 16); \
-	d = static_cast<uint8_t>((x) >> 24); \
-	(y) = P[a]+P[256+b]+P[512+c]+P[768+d]; \
+uint32_t PractRand::RNGs::Raw::hc256::_h2(uint32_t x) const {
+	return P[static_cast<uint8_t>(x)] + P[256 + static_cast<uint8_t>(x >> 8)] + P[512 + static_cast<uint8_t>(x >> 16)] + P[768 + static_cast<uint8_t>(x >> 24)];
 }
-#define step_A(u,v,a,b,c,d,m){ \
-	uint32_t tem0,tem1,tem2,tem3; \
-	tem0 = std::rotr((v),23); \
-	tem1 = std::rotr((c),10); \
-	tem2 = ((v) ^ (c)) & 0x3ff; \
-	(u) += (b)+(tem0^tem1)+Q[tem2]; \
-	(a) = (u); \
-	h1((d),tem3); \
-	(m) = tem3 ^ (u) ; \
+void PractRand::RNGs::Raw::hc256::_step_A(uint32_t& u, uint32_t v, uint32_t& a, uint32_t b, uint32_t c, uint32_t d, uint32_t& m) const {
+	uint32_t tem0 = std::rotr(v,23);
+	uint32_t tem1 = std::rotr(c,10);
+	uint32_t tem2 = (v ^ c) & 0x3ff;
+	u += b+(tem0^tem1)+Q[tem2];
+	a = u;
+	m = _h1(d) ^ u;
 }
-#define step_B(u,v,a,b,c,d,m){ \
-	uint32_t tem0,tem1,tem2,tem3; \
-	tem0 = std::rotr((v),23); \
-	tem1 = std::rotr((c),10); \
-	tem2 = ((v) ^ (c)) & 0x3ff; \
-	(u) += (b)+(tem0^tem1)+P[tem2]; \
-	(a) = (u); \
-	h2((d),tem3); \
-	(m) = tem3 ^ (u) ; \
+void PractRand::RNGs::Raw::hc256::_step_B(uint32_t& u, uint32_t v, uint32_t& a, uint32_t b, uint32_t c, uint32_t d, uint32_t& m) const {
+	uint32_t tem0 = std::rotr(v,23);
+	uint32_t tem1 = std::rotr(c,10);
+	uint32_t tem2 = (v ^ c) & 0x3ff;
+	u += b+(tem0^tem1)+P[tem2];
+	a = u;
+	m = _h2(d) ^ u;
 }
 
 void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
@@ -66,46 +52,46 @@ void PractRand::RNGs::Raw::hc256::_do_batch() {//do not change
 
 	if (counter < 1024) {
 		while (cc != end) {
-			step_A(P[cc+0], P[cc+1], X[0], X[6], X[13],X[4], data[0]);
-			step_A(P[cc+1], P[cc+2], X[1], X[7], X[14],X[5], data[1]);
-			step_A(P[cc+2], P[cc+3], X[2], X[8], X[15],X[6], data[2]);
-			step_A(P[cc+3], P[cc+4], X[3], X[9], X[0], X[7], data[3]);
-			step_A(P[cc+4], P[cc+5], X[4], X[10],X[1], X[8], data[4]);
-			step_A(P[cc+5], P[cc+6], X[5], X[11],X[2], X[9], data[5]);
-			step_A(P[cc+6], P[cc+7], X[6], X[12],X[3], X[10],data[6]);
-			step_A(P[cc+7], P[cc+8], X[7], X[13],X[4], X[11],data[7]);
-			step_A(P[cc+8], P[cc+9], X[8], X[14],X[5], X[12],data[8]);
-			step_A(P[cc+9], P[cc+10],X[9], X[15],X[6], X[13],data[9]);
-			step_A(P[cc+10],P[cc+11],X[10],X[0], X[7], X[14],data[10]);
-			step_A(P[cc+11],P[cc+12],X[11],X[1], X[8], X[15],data[11]);
-			step_A(P[cc+12],P[cc+13],X[12],X[2], X[9], X[0], data[12]);
-			step_A(P[cc+13],P[cc+14],X[13],X[3], X[10],X[1], data[13]);
-			step_A(P[cc+14],P[cc+15],X[14],X[4], X[11],X[2], data[14]);
+			_step_A(P[cc+0], P[cc+1], X[0], X[6], X[13],X[4], data[0]);
+			_step_A(P[cc+1], P[cc+2], X[1], X[7], X[14],X[5], data[1]);
+			_step_A(P[cc+2], P[cc+3], X[2], X[8], X[15],X[6], data[2]);
+			_step_A(P[cc+3], P[cc+4], X[3], X[9], X[0], X[7], data[3]);
+			_step_A(P[cc+4], P[cc+5], X[4], X[10],X[1], X[8], data[4]);
+			_step_A(P[cc+5], P[cc+6], X[5], X[11],X[2], X[9], data[5]);
+			_step_A(P[cc+6], P[cc+7], X[6], X[12],X[3], X[10],data[6]);
+			_step_A(P[cc+7], P[cc+8], X[7], X[13],X[4], X[11],data[7]);
+			_step_A(P[cc+8], P[cc+9], X[8], X[14],X[5], X[12],data[8]);
+			_step_A(P[cc+9], P[cc+10],X[9], X[15],X[6], X[13],data[9]);
+			_step_A(P[cc+10],P[cc+11],X[10],X[0], X[7], X[14],data[10]);
+			_step_A(P[cc+11],P[cc+12],X[11],X[1], X[8], X[15],data[11]);
+			_step_A(P[cc+12],P[cc+13],X[12],X[2], X[9], X[0], data[12]);
+			_step_A(P[cc+13],P[cc+14],X[13],X[3], X[10],X[1], data[13]);
+			_step_A(P[cc+14],P[cc+15],X[14],X[4], X[11],X[2], data[14]);
 			uint32_t dd = (cc+16)&0x3ff;
-			step_A(P[cc+15],P[dd+0], X[15],X[5], X[12],X[3], data[15]);
+			_step_A(P[cc+15],P[dd+0], X[15],X[5], X[12],X[3], data[15]);
 			cc = dd;
 			data += 16;
 		}
 	}
 	else {
 		while (cc != end) {
-			step_B(Q[cc+0], Q[cc+1], Y[0], Y[6], Y[13],Y[4], data[0]);
-			step_B(Q[cc+1], Q[cc+2], Y[1], Y[7], Y[14],Y[5], data[1]);
-			step_B(Q[cc+2], Q[cc+3], Y[2], Y[8], Y[15],Y[6], data[2]);
-			step_B(Q[cc+3], Q[cc+4], Y[3], Y[9], Y[0], Y[7], data[3]);
-			step_B(Q[cc+4], Q[cc+5], Y[4], Y[10],Y[1], Y[8], data[4]);
-			step_B(Q[cc+5], Q[cc+6], Y[5], Y[11],Y[2], Y[9], data[5]);
-			step_B(Q[cc+6], Q[cc+7], Y[6], Y[12],Y[3], Y[10],data[6]);
-			step_B(Q[cc+7], Q[cc+8], Y[7], Y[13],Y[4], Y[11],data[7]);
-			step_B(Q[cc+8], Q[cc+9], Y[8], Y[14],Y[5], Y[12],data[8]);
-			step_B(Q[cc+9], Q[cc+10],Y[9], Y[15],Y[6], Y[13],data[9]);
-			step_B(Q[cc+10],Q[cc+11],Y[10],Y[0], Y[7], Y[14],data[10]);
-			step_B(Q[cc+11],Q[cc+12],Y[11],Y[1], Y[8], Y[15],data[11]);
-			step_B(Q[cc+12],Q[cc+13],Y[12],Y[2], Y[9], Y[0], data[12]);
-			step_B(Q[cc+13],Q[cc+14],Y[13],Y[3], Y[10],Y[1], data[13]);
-			step_B(Q[cc+14],Q[cc+15],Y[14],Y[4], Y[11],Y[2], data[14]);
+			_step_B(Q[cc+0], Q[cc+1], Y[0], Y[6], Y[13],Y[4], data[0]);
+			_step_B(Q[cc+1], Q[cc+2], Y[1], Y[7], Y[14],Y[5], data[1]);
+			_step_B(Q[cc+2], Q[cc+3], Y[2], Y[8], Y[15],Y[6], data[2]);
+			_step_B(Q[cc+3], Q[cc+4], Y[3], Y[9], Y[0], Y[7], data[3]);
+			_step_B(Q[cc+4], Q[cc+5], Y[4], Y[10],Y[1], Y[8], data[4]);
+			_step_B(Q[cc+5], Q[cc+6], Y[5], Y[11],Y[2], Y[9], data[5]);
+			_step_B(Q[cc+6], Q[cc+7], Y[6], Y[12],Y[3], Y[10],data[6]);
+			_step_B(Q[cc+7], Q[cc+8], Y[7], Y[13],Y[4], Y[11],data[7]);
+			_step_B(Q[cc+8], Q[cc+9], Y[8], Y[14],Y[5], Y[12],data[8]);
+			_step_B(Q[cc+9], Q[cc+10],Y[9], Y[15],Y[6], Y[13],data[9]);
+			_step_B(Q[cc+10],Q[cc+11],Y[10],Y[0], Y[7], Y[14],data[10]);
+			_step_B(Q[cc+11],Q[cc+12],Y[11],Y[1], Y[8], Y[15],data[11]);
+			_step_B(Q[cc+12],Q[cc+13],Y[12],Y[2], Y[9], Y[0], data[12]);
+			_step_B(Q[cc+13],Q[cc+14],Y[13],Y[3], Y[10],Y[1], data[13]);
+			_step_B(Q[cc+14],Q[cc+15],Y[14],Y[4], Y[11],Y[2], data[14]);
 			uint32_t dd = (cc+16)&0x3ff;
-			step_B(Q[cc+15],Q[dd], Y[15],Y[5], Y[12],Y[3], data[15]);
+			_step_B(Q[cc+15],Q[dd], Y[15],Y[5], Y[12],Y[3], data[15]);
 			cc = dd;
 			data += 16;
 		}
@@ -153,17 +139,17 @@ void PractRand::RNGs::Raw::hc256::self_test() {
 static constexpr uint32_t f1(uint32_t x) {return std::rotr(x,7) ^ std::rotr(x,18) ^ (x >> 3);}
 static constexpr uint32_t f2(uint32_t x) {return std::rotr(x,17) ^ std::rotr(x,19) ^ (x >> 10);}
 static constexpr uint32_t f(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {return f2(a) + b + f1(c) + d;}
-#define feedback_1(u,v,b,c) { \
-	uint32_t tem0,tem1,tem2; \
-	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
-	tem2 = ((v) ^ (c)) & 0x3ff; \
-	(u) += (b)+(tem0^tem1)+Q[tem2]; \
+void PractRand::RNGs::Raw::hc256::_feedback_1(uint32_t& u, uint32_t v, uint32_t b, uint32_t c) const {
+	uint32_t tem0 = std::rotr(v,23);
+	uint32_t tem1 = std::rotr(c,10);
+	uint32_t tem2 = (v ^ c) & 0x3ff;
+	u += b+(tem0^tem1)+Q[tem2];
 }
-#define feedback_2(u,v,b,c) { \
-	uint32_t tem0,tem1,tem2; \
-	tem0 = std::rotr((v),23); tem1 = std::rotr((c),10); \
-	tem2 = ((v) ^ (c)) & 0x3ff; \
-	(u) += (b)+(tem0^tem1)+P[tem2]; \
+void PractRand::RNGs::Raw::hc256::_feedback_2(uint32_t& u, uint32_t v, uint32_t b, uint32_t c) const {
+	uint32_t tem0 = std::rotr(v,23);
+	uint32_t tem1 = std::rotr(c,10);
+	uint32_t tem2 = (v ^ c) & 0x3ff;
+	u += b+(tem0^tem1)+P[tem2];
 }
 
 void PractRand::RNGs::Raw::hc256::seed(const uint32_t key_and_iv[16]) {//LOCKED, do not change
@@ -188,15 +174,15 @@ void PractRand::RNGs::Raw::hc256::seed(const uint32_t key_and_iv[16]) {//LOCKED,
 	//run the cipher 4096 steps without generating output
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 10; j++)
-			feedback_1(P[j],P[j+1],P[(j-10)&0x3ff],P[(j-3)&0x3ff]);
+			_feedback_1(P[j],P[j+1],P[(j-10)&0x3ff],P[(j-3)&0x3ff]);
 		for (j = 10; j < 1023; j++)
-			feedback_1(P[j],P[j+1],P[j-10],P[j-3]);
-		feedback_1(P[1023],P[0],P[1013],P[1020]);
+			_feedback_1(P[j],P[j+1],P[j-10],P[j-3]);
+		_feedback_1(P[1023],P[0],P[1013],P[1020]);
 		for (j = 0; j < 10; j++)
-			feedback_2(Q[j],Q[j+1],Q[(j-10)&0x3ff],Q[(j-3)&0x3ff]);
+			_feedback_2(Q[j],Q[j+1],Q[(j-10)&0x3ff],Q[(j-3)&0x3ff]);
 		for (j = 10; j < 1023; j++)
-			feedback_2(Q[j],Q[j+1],Q[j-10],Q[j-3]);
-		feedback_2(Q[1023],Q[0],Q[1013],Q[1020]);
+			_feedback_2(Q[j],Q[j+1],Q[j-10],Q[j-3]);
+		_feedback_2(Q[1023],Q[0],Q[1013],Q[1020]);
 	}
 	//initialize counter2048, and tables X and Y
 	counter = 0;

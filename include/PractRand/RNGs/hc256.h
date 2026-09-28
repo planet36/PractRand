@@ -18,6 +18,12 @@ namespace PractRand::RNGs {
 				uint32_t P[1024], Q[1024];
 				uint16_t counter;
 				void _do_batch();
+				[[nodiscard, gnu::always_inline]] inline uint32_t _h1(uint32_t x) const;
+				[[nodiscard, gnu::always_inline]] inline uint32_t _h2(uint32_t x) const;
+				[[gnu::always_inline]] inline void _step_A(uint32_t& u, uint32_t v, uint32_t& a, uint32_t b, uint32_t c, uint32_t d, uint32_t& m) const;
+				[[gnu::always_inline]] inline void _step_B(uint32_t& u, uint32_t v, uint32_t& a, uint32_t b, uint32_t c, uint32_t d, uint32_t& m) const;
+				[[gnu::always_inline]] inline void _feedback_1(uint32_t& u, uint32_t v, uint32_t b, uint32_t c) const;
+				[[gnu::always_inline]] inline void _feedback_2(uint32_t& u, uint32_t v, uint32_t b, uint32_t c) const;
 			public:
 				~hc256();
 				void flush_buffers() {used = OUTPUT_BUFFER_SIZE;}
