@@ -18,24 +18,24 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock* data, int numblocks) override;
 		protected:
 			uint32_t rate_hl2;
-			uint64_t rate;
+			int64_t rate;
 
 			void pick_next_size();
 			void finish_matrix();
 
-			uint64_t saved_time{};
+			int64_t saved_time{};
 
 			//partially complete matrix:
 			BitMatrix* in_progress{nullptr};
-			uint32_t blocks_in_progress{};
+			int32_t blocks_in_progress{};
 			int size_index{};//which PerSize is active atm?
 
 			//stats:
 			class PerSize {
 			public:
 				//PerSize() {}
-				uint32_t size{};
-				uint64_t time_per{};
+				int32_t size{};
+				int64_t time_per{};
 				uint64_t total{};
 				static constexpr int NUM_COUNTS = 10;
 				static constexpr int MAX_OUTLIERS = 100;

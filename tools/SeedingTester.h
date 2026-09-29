@@ -155,7 +155,7 @@ public:
 		case 1://insert byte
 		{
 				   int position = (transform >> 8) & ((1ULL << 28) - 1);
-				   int value = transform & 255;
+				   auto value = static_cast<uint8_t>(transform & 255);
 				   int old_size = message.size();
 				   if (position > old_size) { std::println("internal error - invalid EntropyPool_MetaRNG transform (insert)"); std::exit(1); }
 				   message.resize(old_size + 1);
@@ -166,7 +166,7 @@ public:
 		case 2://delete byte
 		{
 				   int position = (transform >> 8) & ((1ULL << 28) - 1);
-				   int value = transform & 255;
+				   auto value = static_cast<uint8_t>(transform & 255);
 				   int old_size = message.size();
 				   if (message[position] != value || position >= old_size) { std::println("internal error - invalid EntropyPool_MetaRNG transform (deletion)"); std::exit(1); }
 				   if (position != old_size - 1) std::memmove(&message[position], &message[position + 1], old_size - 1 - position);

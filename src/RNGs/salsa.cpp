@@ -65,7 +65,7 @@ static void salsa_mix_core(uint32_t& a, uint32_t& b, uint32_t& c, uint32_t& d) {
 void PractRand::RNGs::Raw::salsa::_core() {
 	for (int i = 0; i < 16; i++) outbuf[i] = state[i];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-	for (int round = 1; round < rounds; round+=2) {
+	for (int round = 1; round < int{rounds}; round+=2) {
 		salsa_mix_core(outbuf[0], outbuf[4], outbuf[8], outbuf[12]);//columns
 		salsa_mix_core(outbuf[5], outbuf[9], outbuf[13], outbuf[1]);
 		salsa_mix_core(outbuf[10], outbuf[14], outbuf[2], outbuf[6]);
@@ -202,7 +202,7 @@ void PractRand::RNGs::Raw::salsa::seek_backward(uint64_t how_far_low, uint64_t h
 }
 void PractRand::RNGs::Raw::salsa::set_rounds(int rounds_) {
 	if (rounds_ < 1 || rounds_ > 255) issue_error("salsa rounds out of range");
-	if (rounds == rounds_) return;
+	if (int{rounds} == rounds_) return;
 	rounds = rounds_;
 	//_core();
 }

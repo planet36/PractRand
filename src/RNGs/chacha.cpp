@@ -94,7 +94,7 @@ void PractRand::RNGs::Raw::chacha::_core() {
 	for (int i = 0; i < 4; i++) outbuf[i] = constants[i];
 	for (int i = 4; i < 16; i++) outbuf[i] = state[i-4];
 	if (extend_cycle) outbuf[POSITION_OVERFLOW_INDEX] += position_overflow;
-	for (int round = 1; round < rounds; round+=2) {
+	for (int round = 1; round < int{rounds}; round+=2) {
 		chacha_mix_core(outbuf[0], outbuf[4], outbuf[8], outbuf[12]);
 		chacha_mix_core(outbuf[1], outbuf[5], outbuf[9], outbuf[13]);
 		chacha_mix_core(outbuf[2], outbuf[6], outbuf[10], outbuf[14]);
@@ -188,7 +188,7 @@ void PractRand::RNGs::Raw::chacha::seek_backward(uint64_t how_far_low, uint64_t 
 }
 void PractRand::RNGs::Raw::chacha::set_rounds(int rounds_) {
 	if (rounds_ < 1 || rounds_ > 255) issue_error("chacha rounds out of range");
-	if (rounds == rounds_) return;
+	if (int{rounds} == rounds_) return;
 	rounds = rounds_;
 	//_core();
 }

@@ -386,9 +386,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle64::seed(uint64_t s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++)
+					for (int i = 0; i <= int{index_mask}; i++)
 						table[i] = base_rng->raw64();
-					for (int i = 0; i <= index_mask; i++) {raw64();raw64();}
+					for (int i = 0; i <= int{index_mask}; i++) {raw64();raw64();}
 				}
 				void BaysDurhamShuffle64::walk_state(StateWalkingObject* walker) {
 					base_rng->walk_state(walker);
@@ -396,7 +396,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
-					for (int i = 0; i <= index_mask; i++) walker->handle(table[i]);
+					for (int i = 0; i <= int{index_mask}; i++) walker->handle(table[i]);
 					walker->handle(prev);
 					prev &= index_mask;
 				}
@@ -415,9 +415,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle32::seed(uint64_t s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++)
+					for (int i = 0; i <= int{index_mask}; i++)
 						table[i] = base_rng->raw32();
-					for (int i = 0; i <= index_mask; i++)  {raw32();raw32();}
+					for (int i = 0; i <= int{index_mask}; i++)  {raw32();raw32();}
 				}
 				void BaysDurhamShuffle32::walk_state(StateWalkingObject* walker) {
 					base_rng->walk_state(walker);
@@ -425,7 +425,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
-					for (int i = 0; i <= index_mask; i++) walker->handle(table[i]);
+					for (int i = 0; i <= int{index_mask}; i++) walker->handle(table[i]);
 					walker->handle(prev);
 					prev &= index_mask;
 				}
@@ -444,9 +444,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle16::seed(uint64_t s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++)
+					for (int i = 0; i <= int{index_mask}; i++)
 						table[i] = base_rng->raw32();
-					for (int i = 0; i <= index_mask; i++)  {raw16();raw16();}
+					for (int i = 0; i <= int{index_mask}; i++)  {raw16();raw16();}
 				}
 				void BaysDurhamShuffle16::walk_state(StateWalkingObject* walker) {
 					base_rng->walk_state(walker);
@@ -454,7 +454,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
-					for (int i = 0; i <= index_mask; i++) walker->handle(table[i]);
+					for (int i = 0; i <= int{index_mask}; i++) walker->handle(table[i]);
 					walker->handle(prev);
 					prev &= index_mask;
 				}
@@ -473,9 +473,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				void BaysDurhamShuffle8::seed(uint64_t s) {
 					base_rng->seed(s);
-					for (int i = 0; i <= index_mask; i++)
+					for (int i = 0; i <= int{index_mask}; i++)
 						table[i] = base_rng->raw32();
-					for (int i = 0; i <= index_mask; i++)  {raw8();raw8();}
+					for (int i = 0; i <= int{index_mask}; i++)  {raw8();raw8();}
 				}
 				void BaysDurhamShuffle8::walk_state(StateWalkingObject* walker) {
 					base_rng->walk_state(walker);
@@ -483,7 +483,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 						walker->handle(index_mask);
 						walker->handle(index_shift);
 					}
-					for (int i = 0; i <= index_mask; i++) walker->handle(table[i]);
+					for (int i = 0; i <= int{index_mask}; i++) walker->handle(table[i]);
 					walker->handle(prev);
 					prev &= index_mask;
 				}

@@ -37,13 +37,13 @@ namespace PractRand {
 	class SerializingStateWalker final : public StateWalkingObject {
 	public:
 		char* buffer;
-		std::size_t max_size;
-		std::size_t size_used{};
-		SerializingStateWalker( char* buffer_, std::size_t max_size_ )
+		long max_size;
+		long size_used{};
+		SerializingStateWalker( char* buffer_, long max_size_ )
 			: buffer(buffer_), max_size(max_size_)
 		{}
 		void push(uint8_t value) {
-			std::size_t index = size_used++;
+			long index = size_used++;
 			if (index < max_size) buffer[index] = value;
 		}
 		void handle(bool& v) override {push(v ? 1 : 0);}
@@ -78,13 +78,13 @@ namespace PractRand {
 	class DeserializingStateWalker : public StateWalkingObject {
 	public:
 		const char* buffer;
-		std::size_t max_size;
-		std::size_t size_used{};
-		DeserializingStateWalker( const char* buffer_, std::size_t max_size_ )
+		long max_size;
+		long size_used{};
+		DeserializingStateWalker( const char* buffer_, long max_size_ )
 			: buffer(buffer_), max_size(max_size_)
 		{}
 		uint8_t pop8() {
-			std::size_t index = size_used++;
+			long index = size_used++;
 			if (index < max_size) return buffer[index];
 			else return 0;
 		}
@@ -350,13 +350,13 @@ namespace PractRand {
 		long vRNG::serialize( char* buffer, long buffer_size ) {//returns serialized size, or zero on failure
 			SerializingStateWalker serializer(buffer, buffer_size);
 			walk_state(&serializer);
-			if (serializer.size_used <= static_cast<std::size_t>(buffer_size)) return serializer.size_used;
+			if (serializer.size_used <= buffer_size) return serializer.size_used;
 			return 0;
 		}
 		char* vRNG::serialize( std::size_t* size_ ) {//returns malloced block, or NULL on error, sets *size to size of block
 			SerializingStateWalker byte_counter(nullptr, 0);
 			walk_state(&byte_counter);
-			std::size_t size = byte_counter.size_used;
+			long size = byte_counter.size_used;
 			*size_ = size;
 			if (!size) return nullptr;
 			char* buffer = static_cast<char*>(std::malloc(size));
@@ -373,9 +373,10 @@ namespace PractRand {
 			return printer.get_string();
 		}
 		bool vRNG::deserialize( const char* buffer, size_t size ) {//returns number of bytes used, or zero on error
-			DeserializingStateWalker deserializer(buffer, size);
+			const auto length = static_cast<long>(size);
+			DeserializingStateWalker deserializer(buffer, length);
 			walk_state(&deserializer);
-			return deserializer.size_used == size;
+			return deserializer.size_used == length;
 		}
 		void vRNG::seed(uint64_t seed) {
 			GenericIntegerSeedingStateWalker walker(seed);

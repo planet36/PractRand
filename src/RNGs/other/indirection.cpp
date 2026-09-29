@@ -102,7 +102,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int table_size = 1<<table_size_L2;
 					for (int i = 0; i < table_size * 2; i++) walker->handle(table[i]);
 					walker->handle(left);
-					if (left >= table_size) left = 0;
+					if (int{left} >= table_size) left = 0;
 				}
 				ibaa8::ibaa8(int table_size_L2_) : table_size_L2(table_size_L2_), table(new uint8_t[2 << table_size_L2]) {
 				}
@@ -138,7 +138,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					int table_size = 1<<table_size_L2;
 					for (int i = 0; i < table_size * 2; i++) walker->handle(table[i]);
 					walker->handle(left);
-					if (left >= table_size) left = 0;
+					if (int{left} >= table_size) left = 0;
 				}
 				ibaa16::ibaa16(int table_size_L2_) : table_size_L2(table_size_L2_), table(new uint16_t[2 << table_size_L2]) {
 				}
@@ -625,7 +625,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				void genindD::walk_state(StateWalkingObject* walker) {
 					walker->handle(i);
 					walker->handle(a);
-					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table[i_]);
+					for (int i_ = 0; i_ <= int{mask}; i_++) walker->handle(table[i_]);
 				}
 				std::string genindD::get_name() const {
 					std::stringstream buf;
@@ -663,8 +663,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(i);
 					i &= mask;
 					walker->handle(a);
-					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table1[i_]);
-					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table2[i_]);
+					for (int i_ = 0; i_ <= int{mask}; i_++) walker->handle(table1[i_]);
+					for (int i_ = 0; i_ <= int{mask}; i_++) walker->handle(table2[i_]);
 				}
 				std::string genindE::get_name() const {
 					std::stringstream buf;
@@ -699,8 +699,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(i);
 					i &= mask;
 					walker->handle(a);
-					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table1[i_]);
-					for (int i_ = 0; i_ <= mask; i_++) walker->handle(table2[i_]);
+					for (int i_ = 0; i_ <= int{mask}; i_++) walker->handle(table1[i_]);
+					for (int i_ = 0; i_ <= int{mask}; i_++) walker->handle(table2[i_]);
 				}
 				std::string genindF::get_name() const {
 					std::stringstream buf;

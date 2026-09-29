@@ -4880,7 +4880,7 @@ void PractRand::Tests::Birthday64::_histogram_in_place_sort64(uint64_t* buffer, 
 		std::sort(&buffer[0], &buffer[length]);
 		return;
 	}
-	uint64_t total = 0;
+	long total = 0;
 	uint32_t region_bases[(1 << SORT_HELPER_BITS) + 1];
 	uint32_t region_bases2[(1 << SORT_HELPER_BITS) + 1];
 	long shift = 64 - SORT_HELPER_BITS - bits_already;
@@ -4891,7 +4891,7 @@ void PractRand::Tests::Birthday64::_histogram_in_place_sort64(uint64_t* buffer, 
 		region_bases2[i + 1] = region_bases[i + 1];
 		total += region_counts[i];
 	}
-	if (total != static_cast<decltype(total)>(length)) issue_error("Birthday64::_histogram_sort64 - bad region counts");
+	if (total != length) issue_error("Birthday64::_histogram_sort64 - bad region counts");
 
 	long region = 0;
 	while (region < (1 << SORT_HELPER_BITS)) {
@@ -6251,7 +6251,7 @@ void PractRand::Tests::CoupGap::test_blocks(TestBlock* data, int numblocks) {
 
 
 PractRand::Tests::BRank::BRank( uint32_t rate_hl2_ ) : rate_hl2(rate_hl2_) {
-	static uint32_t sizes[] = {
+	static int32_t sizes[] = {
 		128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6<<10, 8<<10, 12<<10, 16<<10, 24<<10, 32<<10, 48<<10, 64<<10, 0
 	};
 	for (int i = 0; true; i++) {
@@ -6262,12 +6262,12 @@ PractRand::Tests::BRank::BRank( uint32_t rate_hl2_ ) : rate_hl2(rate_hl2_) {
 		ps.resize(i+1);
 		PerSize& s = ps[i];
 		s.size = size;
-		uint64_t t = s.size / 64;
+		int64_t t = s.size / 64;
 		if (!t) t = 1;
 		s.time_per = t*t*t * 256 + t*t * 256;// *very* rough approximation
 		s.reset();
 	}
-	rate = static_cast<uint64_t>(std::pow(2.0, 0.5 * rate_hl2));
+	rate = static_cast<int64_t>(std::pow(2.0, 0.5 * rate_hl2));
 	in_progress = nullptr;
 }
 void PractRand::Tests::BRank::PerSize::reset() {
@@ -6419,23 +6419,23 @@ void PractRand::Tests::BRank::finish_matrix() {
 void PractRand::Tests::BRank::test_blocks(TestBlock* data, int numblocks) {
 	while (numblocks) {
 		PerSize& s = ps[size_index];
-		uint64_t time_needed = s.time_per;
+		int64_t time_needed = s.time_per;
 
-		uint32_t bytes = s.size * (s.size >> 3);//may exceed 4 gibibits, but not that many gibiBYTEs
-		uint32_t blocks_needed = (bytes + TestBlock::SIZE - 1) >> TestBlock::SIZE_L2;//rounding up, so no more than one matrix per block
+		int bytes = s.size * (s.size >> 3);//may exceed 4 gibibits, but not that many gibiBYTEs
+		int blocks_needed = (bytes + TestBlock::SIZE - 1) >> TestBlock::SIZE_L2;//rounding up, so no more than one matrix per block
 
 		if (saved_time < time_needed) {//throttle
 			time_needed -= saved_time;
-			uint64_t blocks_to_skip = (time_needed + rate - 1) / rate;
-			if (blocks_to_skip > static_cast<decltype(blocks_to_skip)>(numblocks)) blocks_to_skip = numblocks;
+			int64_t blocks_to_skip = (time_needed + rate - 1) / rate;
+			if (blocks_to_skip > numblocks) blocks_to_skip = numblocks;
 			data += blocks_to_skip;
 			numblocks -= blocks_to_skip;
 			saved_time += rate * blocks_to_skip;
 		}
 		else {//throttling done, begin actually using blocks
 			blocks_needed -= blocks_in_progress;
-			uint32_t offset = (blocks_in_progress * TestBlock::SIZE) >> (BitMatrix::WORD_BITS_L2 - 3);
-			if (static_cast<decltype(blocks_needed)>(numblocks) >= blocks_needed) {//whole matrix
+			int offset = (blocks_in_progress * TestBlock::SIZE) >> (BitMatrix::WORD_BITS_L2 - 3);
+			if (numblocks >= blocks_needed) {//whole matrix
 				in_progress->raw_import(offset, &data[0].as32[0], (bytes - blocks_in_progress * TestBlock::SIZE) >> (BitMatrix::WORD_BITS_L2 - 3));
 				finish_matrix();//this will reset blocks_in_progress
 				data += blocks_needed;
@@ -8200,7 +8200,7 @@ int PractRand::Tests::TripleMirrorFreq::get_blocks_to_repeat() const {
 	return (bytes_needed + TestBlock::SIZE - 1) >> TestBlock::SIZE_L2;
 }
 void PractRand::Tests::TripleMirrorFreq::test_blocks(TestBlock* data, int numblocks) {
-	while (blocks_tested < static_cast<decltype(blocks_tested)>(get_blocks_to_repeat())) {
+	while (std::cmp_less(blocks_tested, get_blocks_to_repeat())) {
 		if (!numblocks) return;
 		data += 1;
 		numblocks -= 1;
@@ -8425,7 +8425,7 @@ int PractRand::Tests::TripleMirrorCoup::get_blocks_to_repeat() const {
 	return (bytes_needed + TestBlock::SIZE - 1) >> TestBlock::SIZE_L2;
 }
 void PractRand::Tests::TripleMirrorCoup::test_blocks(TestBlock* data, int numblocks) {
-	while (blocks_tested < static_cast<decltype(blocks_tested)>(get_blocks_to_repeat())) {
+	while (std::cmp_less(blocks_tested, get_blocks_to_repeat())) {
 		if (!numblocks) return;
 		data += 1;
 		numblocks -= 1;

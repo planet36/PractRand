@@ -3,6 +3,7 @@
 #include "PractRand/rng_basics.h"
 
 #include <cmath>
+#include <limits>
 #include <vector>
 
 namespace PractRand::Tests {
@@ -32,7 +33,7 @@ namespace PractRand::Tests {
 		};
 		double g_test(unsigned long categories, const double* prob_table, const uint64_t* counts);
 		double g_test_flat(unsigned long categories, const uint64_t* counts);
-		double g_test_flat_merge_normal(unsigned long categories, const uint64_t* counts, uint64_t total = uint64_t(-1), double target_ratio = 32.0);//already converted to approximately normal distribution (mandatory since DoF is not returned)
+		double g_test_flat_merge_normal(unsigned long categories, const uint64_t* counts, uint64_t total = std::numeric_limits<uint64_t>::max(), double target_ratio = 32.0);//already converted to approximately normal distribution (mandatory since DoF is not returned)
 		double my_test(unsigned long categories, const double* prob_table, const uint64_t* counts);//if events are independent, this should converge to a normal distribution (mean 0 variance 1) ; intended for extremely unequal probability distributions like {0.5,0.25,0.125,0.0625,..}
 		double math_chisquared_to_pvalue ( double chisquared, double DoF );
 		double math_chisquared_to_normal ( double chisquared, double DoF );

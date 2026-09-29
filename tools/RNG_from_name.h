@@ -30,7 +30,7 @@ namespace Special_RNGs {
 		bool ended{false};
 		Word buffer[BUFF_SIZE];
 		void refill() {
-			std::size_t n = std::fread(&buffer[0], sizeof(Word), BUFF_SIZE, stdin);
+			const auto n = static_cast<long>(std::fread(&buffer[0], sizeof(Word), BUFF_SIZE, stdin));
 			if (n < BUFF_SIZE) ended = true;
 			if (!n) read_failed();
 			pos = &buffer[0];

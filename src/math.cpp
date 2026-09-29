@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <limits>
 //#include <list>
 #include <map>
 #include <numbers>
@@ -419,7 +420,7 @@ namespace PractRand {
 		}
 		double g_test_flat_merge_normal(unsigned long categories, const uint64_t* counts, uint64_t total, double target_ratio) {
 			if (categories < 2) return 0;
-			if (total == uint64_t(-1)) {
+			if (total == std::numeric_limits<uint64_t>::max()) {
 				total = 0;
 				for (unsigned long i = 0; i < categories; i++) total += counts[i];
 			}
