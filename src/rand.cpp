@@ -423,8 +423,8 @@ namespace PractRand {
 		uint32_t vRNG::randi_fast(uint32_t max) {
 			return randi_fast_implementation(raw32(), max);
 		}
-		float vRNG::randf() {return static_cast<float>(raw32() & ((static_cast<uint32_t>(1) << 24)-1)) * 0x1p-24F;}
-		double vRNG::randlf() {return static_cast<double>(raw64() & ((static_cast<uint64_t>(1) << 53)-1)) * 0x1p-53;}
+		float vRNG::randf() {return static_cast<float>(raw32() & ((1U << 24)-1)) * 0x1p-24F;}
+		double vRNG::randlf() {return static_cast<double>(raw64() & ((1ULL << 53)-1)) * 0x1p-53;}
 		double vRNG::gaussian() { return Internals::generate_gaussian_fast(raw64()); }
 		uint64_t vRNG::get_flags() const {return 0;}
 		void vRNG::seek_forward128 (uint64_t, uint64_t) {}
