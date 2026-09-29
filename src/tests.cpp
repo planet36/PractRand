@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <charconv>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -10846,11 +10847,13 @@ void PractRand::Tests::Transforms::multiplex::set_parallel_subtests(bool paralle
 static std::pair<unsigned int,std::pair<int,int> > extract_low_transform_params(const std::string& name) {
 	std::pair<unsigned int,std::pair<int,int> > fail(0, std::pair<int,int>(0,0));
 	int first = 0, last = 0;
-	char termination = 0;
-	const char* c = name.c_str();
-	int r = std::sscanf(c, "[Low%d/%d%c", &first, &last, &termination);
-	if (r != 3 || termination != ']') return fail;
-	return {static_cast<unsigned int>(strchr(c, ']') - c + 1), std::pair<int,int>(first,last)};
+	if (!name.starts_with("[Low")) return fail;
+	const char* end = name.data() + name.size();
+	auto r = std::from_chars(name.data() + 4, end, first);
+	if (r.ec != std::errc{} || r.ptr == end || *r.ptr != '/') return fail;
+	r = std::from_chars(r.ptr + 1, end, last);
+	if (r.ec != std::errc{} || r.ptr == end || *r.ptr != ']') return fail;
+	return {static_cast<unsigned int>(r.ptr - name.data() + 1), std::pair<int,int>(first,last)};
 }
 static std::string combine_transform_names(const std::string& prefix, const std::string& name) {
 	std::string fail = prefix + name;
