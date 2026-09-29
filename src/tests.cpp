@@ -1428,7 +1428,10 @@ PractRand::Tests::RawTestCalibrationData_129 raw_calibration_data_array129[] = {
 	{ .name=nullptr, .blocks=0, .num_samples=0, .num_duplicates=0, .table={ 0.0 }, .median=0.0, .mean=0.0, .stddev=0.0, .limit=0 }
 };
 
-TestCalibrationManager calibration_manager(raw_calibration_data_array117, raw_calibration_data_array129);
+static TestCalibrationManager& get_calibration_manager() {
+	static TestCalibrationManager calibration_manager(raw_calibration_data_array117, raw_calibration_data_array129);
+	return calibration_manager;
+}
 
 static void truncate_table_bits(uint64_t* counts, double* probs, int old_bits, int new_bits) {
 	int ns = 1 << new_bits;
@@ -1729,8 +1732,8 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult>& results ) {
 	//else if (r1 - 2.0 < -std::abs(r2)) r = r1 + 1;
 	//else r = r2;
 	//return r;
-	TestCalibrationData* calib1 = calibration_manager.get_calibration_data("Gap-16:A", blocks_tested);
-	TestCalibrationData* calib2 = calibration_manager.get_calibration_data("Gap-16:B", blocks_tested);
+	TestCalibrationData* calib1 = get_calibration_manager().get_calibration_data("Gap-16:A", blocks_tested);
+	TestCalibrationData* calib2 = get_calibration_manager().get_calibration_data("Gap-16:B", blocks_tested);
 	double s1 = calib1->sample_to_suspicion(r1) * -1;
 	double s2 = calib2->sample_to_suspicion(r2) * -1;
 	//double cp1 = TestResult::suspicion_to_pvalue(s1);
@@ -2145,9 +2148,9 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult>& results) {
 	double weight = std::pow(2.0, 1.0 - unitsL/2.0);
 	if (unitsL != 0) weight *= 0.75;
 	if (size < 1024*128) weight *= 0.5;
-	uint64_t min_len = calibration_manager.get_minimum_length(base_name);
+	uint64_t min_len = get_calibration_manager().get_minimum_length(base_name);
 	if (min_len && min_len <= blocks_tested) {
-		TestCalibrationData* calib = calibration_manager.get_calibration_data(base_name, blocks_tested);
+		TestCalibrationData* calib = get_calibration_manager().get_calibration_data(base_name, blocks_tested);
 		double suspicion = calib->sample_to_suspicion(r) * -1;//negation to make the normal failure type occur at 0 instead of 1
 		results.emplace_back(get_name(), r, suspicion, TestResult::TYPE_GOOD_S, weight);
 	}
@@ -2161,7 +2164,7 @@ void PractRand::Tests::DistC6::get_results(std::vector<TestResult>& results) {
 		int L2 = int(floor(0.5 + std::log((double)blocks_tested) / std::log(2.0)));
 		if (L2 > 36 - 10) L2 = 36-10;
 
-		TestCalibrationData *calib = calibration_manager.get_calibration_data("DC6-9x1Bytes-1", blocks_tested);
+		TestCalibrationData *calib = get_calibration_manager().get_calibration_data("DC6-9x1Bytes-1", blocks_tested);
 		//TestCalibrationData &calib = standard_dc6_9x1_1[L2];
 		double suspicion = calib->sample_to_suspicion(r) * -1;//negation to make the normal failure type occur at 0 instead of 1
 		results.push_back(TestResult(get_name(), r, suspicion, TestResult::TYPE_GOOD_S, 2.0));
@@ -2563,13 +2566,13 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult>& results) {
 
 		TestCalibrationData *calib = nullptr;
 		if (effective_bits == 4) {
-			if (samples > 1<<13) calib = calibration_manager.get_calibration_data("BCFN-4/4", samples / ref_chance / (1024/4));
-			else calib = calibration_manager.get_calibration_data("_BCFN-4/4", samples / ref_chance / (1024/4));
+			if (samples > 1<<13) calib = get_calibration_manager().get_calibration_data("BCFN-4/4", samples / ref_chance / (1024/4));
+			else calib = get_calibration_manager().get_calibration_data("_BCFN-4/4", samples / ref_chance / (1024/4));
 		}
 		else if (effective_bits > 4) {
 			std::ostringstream internal_name;
 			internal_name << "_BCFN-" << effective_bits << "/4";
-			calib = calibration_manager.get_calibration_data(internal_name.str(), samples / ref_chance / (1024/4));
+			calib = get_calibration_manager().get_calibration_data(internal_name.str(), samples / ref_chance / (1024/4));
 		}
 
 		std::ostringstream name;
@@ -2683,13 +2686,13 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult>& results) {
 
 		TestCalibrationData* calib = nullptr;
 		if (effective_bits == 4) {
-			if (adjusted_samples > 1<<13) calib = calibration_manager.get_calibration_data("BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024/4));
-			else calib = calibration_manager.get_calibration_data("_BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024/4));
+			if (adjusted_samples > 1<<13) calib = get_calibration_manager().get_calibration_data("BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024/4));
+			else calib = get_calibration_manager().get_calibration_data("_BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024/4));
 		}
 		else if (effective_bits > 4) {
 			std::ostringstream internal_name;
 			internal_name << "_BCFN-" << effective_bits << "/4";
-			calib = calibration_manager.get_calibration_data(internal_name.str(), adjusted_samples / ref_chance_unbalanced / (1024/4));
+			calib = get_calibration_manager().get_calibration_data(internal_name.str(), adjusted_samples / ref_chance_unbalanced / (1024/4));
 		}
 
 		std::ostringstream name;
@@ -3371,13 +3374,13 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult>& results) {
 
 		TestCalibrationData* calib = nullptr;
 		if (effective_bits == 4) {
-			if (adjusted_samples > 1 << 13) calib = calibration_manager.get_calibration_data("BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024 / 4));
-			else calib = calibration_manager.get_calibration_data("_BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024 / 4));
+			if (adjusted_samples > 1 << 13) calib = get_calibration_manager().get_calibration_data("BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024 / 4));
+			else calib = get_calibration_manager().get_calibration_data("_BCFN-4/4", adjusted_samples / ref_chance_unbalanced / (1024 / 4));
 		}
 		else if (effective_bits > 4) {
 			std::ostringstream internal_name;
 			internal_name << "_BCFN-" << effective_bits << "/4";
-			calib = calibration_manager.get_calibration_data(internal_name.str(), adjusted_samples / ref_chance_unbalanced / (1024 / 4));
+			calib = get_calibration_manager().get_calibration_data(internal_name.str(), adjusted_samples / ref_chance_unbalanced / (1024 / 4));
 		}
 
 		std::ostringstream name;
@@ -3945,8 +3948,8 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 				namestr << get_name() << ":" << "(" << e << "," << sig_bits << "-" << (sig_bits-ebits);
 				std::ostringstream teststr;
 				teststr << "FPF/16(" << ebits << ")";
-				TestCalibrationData* calib = calibration_manager.get_calibration_data( teststr.str(), samples / 512.0 + 0.5 );
-				if (!calib && ebits > 14 && ebits <= 16) calib = calibration_manager.get_calibration_data( "FPF/16(14)", samples / 512.0 + 0.5 );
+				TestCalibrationData* calib = get_calibration_manager().get_calibration_data( teststr.str(), samples / 512.0 + 0.5 );
+				if (!calib && ebits > 14 && ebits <= 16) calib = get_calibration_manager().get_calibration_data( "FPF/16(14)", samples / 512.0 + 0.5 );
 				if (stride_bits_L2 + e < 2 ) calib = nullptr;
 				if (calib) {
 					double suspicioun = -calib->sample_to_suspicion(norm);
@@ -3962,7 +3965,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 		over_raw *= 2;
 		double over_norm = math_chisquared_to_normal(over_raw, over_bins-1);
 		//double over_p = math_normaldist_to_pvalue(over_norm);
-		TestCalibrationData* calib = calibration_manager.get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
+		TestCalibrationData* calib = get_calibration_manager().get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
 		if (stride_bits_L2 < 2 || sig_bits != 14 || exp_bits < 4) calib = nullptr;
 		if (calib && samples >= 3000)
 			results.emplace_back(get_name() + ":all", over_norm, -calib->sample_to_suspicion(over_norm),  TestResult::TYPE_GOOD_S, .25);
@@ -3986,7 +3989,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 		sum_s -= num_s * 4.162737902123020;
 		sum_s /= 9.308158403091918;
 		sum_s /= std::sqrt(double(num_s));
-		TestCalibrationData* calib = calibration_manager.get_calibration_data("FPF:all2", num_s);
+		TestCalibrationData* calib = get_calibration_manager().get_calibration_data("FPF:all2", num_s);
 		if (calib) results.emplace_back(get_name() + ":all2", sum_s, -calib->sample_to_suspicion(sum_s), TestResult::TYPE_GOOD_S, 0.1);
 		else results.emplace_back(get_name() + ":all2", sum_s, sum_s, TestResult::TYPE_RAW_NORMAL, 0.1);
 	}
@@ -3999,7 +4002,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 		double norm = math_chisquared_to_normal(raw, bins-1) / std::numbers::sqrt2;
 		//double p = math_normaldist_to_pvalue(norm);
 		std::ostringstream str; str << get_name() << ":cross";
-		TestCalibrationData* calib = calibration_manager.get_calibration_data( "FPF-14+6/16:cross", samples / 512.0 + 0.5 );
+		TestCalibrationData* calib = get_calibration_manager().get_calibration_data( "FPF-14+6/16:cross", samples / 512.0 + 0.5 );
 		if (calib)
 			results.emplace_back(str.str(), norm, -calib->sample_to_suspicion(norm),  samples >= 4000 ? TestResult::TYPE_GOOD_S : TestResult::TYPE_BAD_S, 0.25);
 		else results.emplace_back(str.str(), norm, norm,  TestResult::TYPE_RAW_NORMAL, 0.25);
@@ -4598,7 +4601,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult>& results) {
 			freq_all_sum *= 2;
 			double all_norm = math_chisquared_to_normal(freq_all_sum, freq_all_bins - 1);
 			double all_p = math_normaldist_to_pvalue(all_norm);
-			TestCalibrationData *calib = nullptr;//calibration_manager.get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
+			TestCalibrationData *calib = nullptr;//get_calibration_manager().get_calibration_data("FPF-14+6/16:overall", samples / 512.0 + 0.5);
 			if (calib && total_samples >= 3000)
 				results.push_back(TestResult(get_name() + ":F:all", all_norm, -calib->sample_to_suspicion(all_norm), TestResult::TYPE_GOOD_S, .25));
 			else results.push_back(TestResult(get_name() + ":F:all", all_norm, all_norm, TestResult::TYPE_RAW_NORMAL, .25));
@@ -6145,9 +6148,9 @@ void PractRand::Tests::Pat5::get_results(std::vector<TestResult>& results) {
 	double weight = std::pow(2.0, 1.0 - unitsL / 2.0);
 	if (unitsL != 0) weight *= 0.75;
 	if (size < 1024 * 128) weight *= 0.5;
-	uint64_t min_len = calibration_manager.get_minimum_length(get_name());
+	uint64_t min_len = get_calibration_manager().get_minimum_length(get_name());
 	if (min_len && min_len <= blocks_tested) {
-		TestCalibrationData *calib = calibration_manager.get_calibration_data(get_name(), blocks_tested);
+		TestCalibrationData *calib = get_calibration_manager().get_calibration_data(get_name(), blocks_tested);
 		double suspicion = calib->sample_to_suspicion(r) * -1;//negation to make the normal failure type occur at 0 instead of 1
 		results.push_back(TestResult(get_name(), r, suspicion, TestResult::TYPE_GOOD_S, weight));
 	}
@@ -6195,7 +6198,7 @@ void PractRand::Tests::CoupGap::get_results(std::vector<TestResult>& results) {
 		const double* probs_ = probs.data();
 		double raw = g_test(65536, probs_, counts_);
 		raw = (raw - 3 * 65536) / (256 * 32);
-		TestCalibrationData* calib = calibration_manager.get_calibration_data("CoupGap:SxO", blocks_tested);
+		TestCalibrationData* calib = get_calibration_manager().get_calibration_data("CoupGap:SxO", blocks_tested);
 		double suspicion = calib->sample_to_suspicion(raw) * -1;//negation to make the normal failure type occur at 0 instead of 1
 		results.emplace_back(get_name() + ":SxO", raw, suspicion, TestResult::TYPE_GOOD_S, 0.25);
 	}
@@ -6340,7 +6343,7 @@ void PractRand::Tests::BRank::get_results(std::vector<TestResult>& results) {
 		//}
 		//else
 		if (s.total >= 3) {
-			TestCalibrationData* calib = calibration_manager.get_calibration_data("BRank", s.total);
+			TestCalibrationData* calib = get_calibration_manager().get_calibration_data("BRank", s.total);
 			if (s.total >= 3 && (score > 0 || s.total >= 32)) {
 				results.emplace_back(name.str(), score, -calib->sample_to_suspicion(score), TestResult::TYPE_BAD_S, 0.125 / ps.size());
 			}
@@ -7425,7 +7428,7 @@ void PractRand::Tests::mod3_simple::get_results(std::vector<TestResult>& results
 	double n = math_chisquared_to_normal(cs, cat - 1);
 	std::ostringstream buf;
 	buf << "mod3_simple(" << EXP << ")";
-	TestCalibrationData *calib = calibration_manager.get_calibration_data(buf.str(), blocks_tested);
+	TestCalibrationData *calib = get_calibration_manager().get_calibration_data(buf.str(), blocks_tested);
 	if (calib) {
 		double sus = calib->sample_to_suspicion(n);
 		results.push_back(TestResult(buf.str(), n, sus, TestResult::TYPE_GOOD_S, 0.2));
@@ -7607,7 +7610,7 @@ void PractRand::Tests::mod3n::get_results(std::vector<TestResult>& results) {
 		//we don't have calibration data past 11
 		//but for values only slightly past 11, it's about the same as for 11
 		//and values far past 11 take impossible amounts of memory/cache anyway
-		TestCalibrationData* calib = calibration_manager.get_calibration_data(buf.str(), total_blocks_on);
+		TestCalibrationData* calib = get_calibration_manager().get_calibration_data(buf.str(), total_blocks_on);
 		buf.str("");
 		buf << "mod3n(" << block_fraction << "):(" << level << "," << EXP << "-" << (EXP - effective_EXP) << ")";
 		double priority = 0.1;

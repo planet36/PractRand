@@ -57,7 +57,7 @@
 
 using namespace PractRand;
 
-PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
+//PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
 //using TimeUnit = std::chrono::system_clock::rep;
 //TimeUnit get_time() { return std::chrono::system_clock::now().time_since_epoch().count(); }
@@ -782,6 +782,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	if (do_self_test) PractRand::self_test_PractRand();
 
 
+	PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 	const auto start_time = std::chrono::steady_clock::now();
 
 	uint64_t seed = known_good.raw32();//64 bit space, as that's what the interface accepts, but 32 bit random value so that by default it's not too onerous to record/compare/whatever the value by hand
