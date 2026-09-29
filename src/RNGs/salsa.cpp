@@ -185,7 +185,9 @@ void PractRand::RNGs::Raw::salsa::walk_state(StateWalkingObject* walker) {
 	if (used >= 16) used = 16;
 	if (!walker->is_read_only()) {
 		_core();
-		used &= 15;
+		//A seeded state starts at the beginning of its block.  A restored state that used up its
+		//block keeps used at 16, so its next output comes from the next block.
+		if (walker->is_seeder()) used &= 15;
 	}
 }
 void PractRand::RNGs::Raw::salsa::seek_forward (uint64_t how_far_low, uint64_t how_far_high) {
