@@ -360,7 +360,9 @@ namespace PractRand {
 			*size_ = size;
 			if (!size) return nullptr;
 			char* buffer = static_cast<char*>(std::malloc(size));
+			if (!buffer) return nullptr;
 			SerializingStateWalker serializer(buffer, size);
+			walk_state(&serializer);
 			if (serializer.size_used != size) {
 				std::free(buffer);
 				return nullptr;
