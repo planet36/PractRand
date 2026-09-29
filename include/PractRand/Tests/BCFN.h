@@ -38,6 +38,8 @@ namespace PractRand::Tests {
 			void test_blocks(TestBlock* data, int numblocks) override;
 			void handle_high_levels_balanced   ( long level, long bits );
 			void handle_high_levels_unbalanced ( long level, long bits );
+			[[gnu::always_inline]] inline void handle_level_balanced   ( long level, long bits );
+			[[gnu::always_inline]] inline void handle_level_unbalanced ( long level, long bits );
 		};
 		class BCFN_FF final : public TestBaseclass {
 		protected:
@@ -71,5 +73,6 @@ namespace PractRand::Tests {
 
 			void test_blocks(TestBlock* data, int numblocks) override;
 			void handle_high_levels ( int level, int bits );
+			[[gnu::always_inline]] inline void handle_level ( long level, long bits );
 		};
 }//PractRand

@@ -2800,6 +2800,18 @@ void PractRand::Tests::BCFN::handle_high_levels_unbalanced ( long level, long bi
 	}
 	handle_high_levels_unbalanced(level+1, bits);
 }
+//The number of 1 bits in a word minus half its width.
+template<typename Word>
+[[gnu::always_inline]] static inline int popcount_excess(Word word) {return std::popcount(word) - static_cast<int>(sizeof(Word) * 4);}
+void PractRand::Tests::BCFN::handle_level_unbalanced ( long level, long bits ) {
+	long tmp = bits >> 31;
+	cur[level] = ((cur[level] << 1) - tmp) & mask[level];
+	if (warmup[level]) warmup[level]--;
+	else counts[level].increment(static_cast<int>(cur[level]));
+}
+void PractRand::Tests::BCFN::handle_level_balanced ( long level, long bits ) {
+	if (bits) handle_level_unbalanced(level, bits);
+}
 void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 	while (blocks_tested < 16 && numblocks > 1) {
 		test_blocks(data, 1);
@@ -2807,19 +2819,14 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 		numblocks -= 1;
 	}
 	if (unbalanced) while (warmup[4]) {
-#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
-#define HANDLE_BITS(level,var) if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS8(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as8[i]);
+					handle_level_unbalanced(0, bits0);
 					handle_high_levels_unbalanced(1, bits0);
 				}
 			}
@@ -2827,10 +2834,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			case 1: {
 				for (int i = 0; i < TestBlock::SIZE / 2; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS16(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as16[i]);
+					handle_level_unbalanced(0, bits0);
 					handle_high_levels_unbalanced(1, bits0);
 				}
 			}
@@ -2838,10 +2845,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			case 2: {
 				for (int i = 0; i < TestBlock::SIZE / 4; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS32(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as32[i]);
+					handle_level_unbalanced(0, bits0);
 					handle_high_levels_unbalanced(1, bits0);
 				}
 			}
@@ -2849,10 +2856,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			case 3: {
 				for (int i = 0; i < TestBlock::SIZE / 8; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS64(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as64[i]);
+					handle_level_unbalanced(0, bits0);
 					handle_high_levels_unbalanced(1, bits0);
 				}
 			}
@@ -2860,26 +2867,20 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			default:
 				issue_error();
 		}
-#undef HANDLE_BITS
 		blocks_tested += 1;
 		data += 1;
 		numblocks -= 1;
 		if (!numblocks) return;
 	}
 	else while (warmup[4]) {//balanced
-#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
-#define HANDLE_BITS(level,var) if (var){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS8(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as8[i]);
+					handle_level_balanced(0, bits0);
 					handle_high_levels_balanced(1, bits0);
 				}
 			}
@@ -2887,10 +2888,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			case 1: {
 				for (int i = 0; i < TestBlock::SIZE / 2; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS16(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as16[i]);
+					handle_level_balanced(0, bits0);
 					handle_high_levels_balanced(1, bits0);
 				}
 			}
@@ -2898,10 +2899,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			case 2: {
 				for (int i = 0; i < TestBlock::SIZE / 4; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS32(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as32[i]);
+					handle_level_balanced(0, bits0);
 					handle_high_levels_balanced(1, bits0);
 				}
 			}
@@ -2909,10 +2910,10 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			case 3: {
 				for (int i = 0; i < TestBlock::SIZE / 8; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS64(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as64[i]);
+					handle_level_balanced(0, bits0);
 					handle_high_levels_balanced(1, bits0);
 				}
 			}
@@ -2920,7 +2921,6 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 			default:
 				issue_error();
 		}
-#undef HANDLE_BITS
 		blocks_tested += 1;
 		data += 1;
 		numblocks -= 1;
@@ -2929,172 +2929,162 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 	if (unbalanced) {
 		unsigned long max = numblocks * TestBlock::SIZE >> unitsL2;
 		switch (unitsL2) {
-#define GET_BITS(a) GET_BITS8(a)
 			case 0: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
-#define HANDLE_BITS(level,var) if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i]);
+					handle_level_unbalanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as8[i+1]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+2]);
+					handle_level_unbalanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as8[i+3]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+4]);
+					handle_level_unbalanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as8[i+5]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+6]);
+					handle_level_unbalanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as8[i+7]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
+					handle_level_unbalanced(3, bits3);
 					handle_high_levels_unbalanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS16(a)
 			case 1: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i]);
+					handle_level_unbalanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as16[i+1]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+2]);
+					handle_level_unbalanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as16[i+3]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+4]);
+					handle_level_unbalanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as16[i+5]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+6]);
+					handle_level_unbalanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as16[i+7]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
+					handle_level_unbalanced(3, bits3);
 					handle_high_levels_unbalanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS32(a)
 			case 2: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i]);
+					handle_level_unbalanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as32[i+1]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+2]);
+					handle_level_unbalanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as32[i+3]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+4]);
+					handle_level_unbalanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as32[i+5]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+6]);
+					handle_level_unbalanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as32[i+7]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
+					handle_level_unbalanced(3, bits3);
 					handle_high_levels_unbalanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					int bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i]);
+					handle_level_unbalanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as64[i+1]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+2]);
+					handle_level_unbalanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as64[i+3]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+4]);
+					handle_level_unbalanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as64[i+5]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+6]);
+					handle_level_unbalanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as64[i+7]);
+					handle_level_unbalanced(0, bits0);
+					handle_level_unbalanced(1, bits1);
+					handle_level_unbalanced(2, bits2);
+					handle_level_unbalanced(3, bits3);
 					handle_high_levels_unbalanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#undef HANDLE_BITS
 			default:
 				issue_error();
 		}
@@ -3102,176 +3092,162 @@ void PractRand::Tests::BCFN::test_blocks(TestBlock* data, int numblocks) {
 	else {//balanced
 		unsigned long max = numblocks * TestBlock::SIZE >> unitsL2;
 		switch (unitsL2) {
-#define GET_BITS(a) GET_BITS8(a)
 			case 0: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
-#define HANDLE_BITS(level,var) if (var){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask[level];if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i]);
+					handle_level_balanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as8[i+1]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+2]);
+					handle_level_balanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as8[i+3]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+4]);
+					handle_level_balanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as8[i+5]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+6]);
+					handle_level_balanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as8[i+7]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
+					handle_level_balanced(3, bits3);
 					handle_high_levels_balanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS16(a)
 			case 1: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i]);
+					handle_level_balanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as16[i+1]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+2]);
+					handle_level_balanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as16[i+3]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+4]);
+					handle_level_balanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as16[i+5]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+6]);
+					handle_level_balanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as16[i+7]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
+					handle_level_balanced(3, bits3);
 					handle_high_levels_balanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS32(a)
 			case 2: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i]);
+					handle_level_balanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as32[i+1]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+2]);
+					handle_level_balanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as32[i+3]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+4]);
+					handle_level_balanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as32[i+5]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+6]);
+					handle_level_balanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as32[i+7]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
+					handle_level_balanced(3, bits3);
 					handle_high_levels_balanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					int bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i]);
+					handle_level_balanced(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as64[i+1]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+2]);
+					handle_level_balanced(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as64[i+3]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+4]);
+					handle_level_balanced(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as64[i+5]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+6]);
+					handle_level_balanced(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as64[i+7]);
+					handle_level_balanced(0, bits0);
+					handle_level_balanced(1, bits1);
+					handle_level_balanced(2, bits2);
+					handle_level_balanced(3, bits3);
 					handle_high_levels_balanced ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#undef GET_BITS8
-#undef GET_BITS16
-#undef GET_BITS32
-#undef GET_BITS64
-#undef HANDLE_BITS
 			default:
 				issue_error();
 		}
@@ -3552,6 +3528,13 @@ void PractRand::Tests::BCFN_FF::handle_high_levels ( int level, int bits ) {
 	}
 	handle_high_levels(level+1, bits);
 }
+void PractRand::Tests::BCFN_FF::handle_level ( long level, long bits ) {
+	counts2[level][bits + COUNTS2_SIZE/2]++;
+	long tmp = bits >> 31;
+	cur[level] = static_cast<long>(((cur[level] << 1) - tmp) & mask);
+	if (warmup[level]) warmup[level]--;
+	else counts[level].increment(static_cast<int>(cur[level]));
+}
 void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 	while (blocks_tested < 16 && numblocks > 1) {
 		test_blocks(data, 1);
@@ -3559,19 +3542,14 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 		numblocks -= 1;
 	}
 	while (warmup[4]) {
-#define GET_BITS8(pos)  (std::popcount(data[0].as8 [i+(pos)]) - 4)
-#define GET_BITS16(pos) (std::popcount(data[0].as16[i+(pos)]) - 8)
-#define GET_BITS32(pos) (std::popcount(data[0].as32[i+(pos)]) - 16)
-#define GET_BITS64(pos) (std::popcount(data[0].as64[i+(pos)]) - 32)
-#define HANDLE_BITS(level,var) {counts2[level][(var)+COUNTS2_SIZE/2]++; if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
 		switch (unitsL2) {
 			case 0: {
 				for (int i = 0; i < TestBlock::SIZE / 1; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS8(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as8[i]);
+					handle_level(0, bits0);
 					handle_high_levels(1, bits0);
 				}
 			}
@@ -3579,10 +3557,10 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 			case 1: {
 				for (int i = 0; i < TestBlock::SIZE / 2; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS16(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as16[i]);
+					handle_level(0, bits0);
 					handle_high_levels(1, bits0);
 				}
 			}
@@ -3590,10 +3568,10 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 			case 2: {
 				for (int i = 0; i < TestBlock::SIZE / 4; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS32(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as32[i]);
+					handle_level(0, bits0);
 					handle_high_levels(1, bits0);
 				}
 			}
@@ -3601,10 +3579,10 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 			case 3: {
 				for (int i = 0; i < TestBlock::SIZE / 8; i+=1) {
 					int bits0 = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits0 = GET_BITS64(0);
-					HANDLE_BITS(0,bits0);
+					bits0 = popcount_excess(data[0].as64[i]);
+					handle_level(0, bits0);
 					handle_high_levels(1, bits0);
 				}
 			}
@@ -3612,7 +3590,6 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 			default:
 				issue_error();
 		}
-#undef HANDLE_BITS
 		blocks_tested += 1;
 		data += 1;
 		numblocks -= 1;
@@ -3621,177 +3598,163 @@ void PractRand::Tests::BCFN_FF::test_blocks(TestBlock* data, int numblocks) {
 	if constexpr (true) {
 		unsigned long max = numblocks * TestBlock::SIZE >> unitsL2;
 		switch (unitsL2) {
-#define GET_BITS(a) GET_BITS8(a)
 			case 0: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
-#define HANDLE_BITS(level,var) {counts2[level][(var)+COUNTS2_SIZE/2]++; if constexpr (true){tmp=(var)>>31;cur[level]=((cur[level]<<1)-tmp)&mask;if (warmup[level]) warmup[level]--; else counts[level].increment(cur[level]);}}
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i]);
+					handle_level(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as8[i+1]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+2]);
+					handle_level(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as8[i+3]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+4]);
+					handle_level(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as8[i+5]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as8[i+6]);
+					handle_level(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as8[i+7]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
+					handle_level(3, bits3);
 					handle_high_levels ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS16(a)
 			case 1: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i]);
+					handle_level(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as16[i+1]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+2]);
+					handle_level(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as16[i+3]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+4]);
+					handle_level(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as16[i+5]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as16[i+6]);
+					handle_level(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as16[i+7]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
+					handle_level(3, bits3);
 					handle_high_levels ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS32(a)
 			case 2: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					long bits0 = 0, bits1 = 0, bits2 = 0, bits3 = 0;
-					long tmp = 0;
+					//long tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i]);
+					handle_level(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as32[i+1]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+2]);
+					handle_level(0, bits0);
 					//3
-					bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as32[i+3]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
 					//4
-					bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+4]);
+					handle_level(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as32[i+5]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as32[i+6]);
+					handle_level(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as32[i+7]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
+					handle_level(3, bits3);
 					handle_high_levels ( 4, bits3 );
 				}
 			}
 			break;
-#undef GET_BITS
-#define GET_BITS(a) GET_BITS64(a)
 			case 3: {
 				for (unsigned long i = 0; i < max; i+=8) {
 					int bits0 = 0, bits1 = 0, bits2/*, bits3*/ = 0;
-					int tmp = 0;
+					//int tmp = 0;
 					//0
-					bits1 = bits0 = GET_BITS(0);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i]);
+					handle_level(0, bits0);
 					//1
-					bits2 = bits1 += bits0 = GET_BITS(1);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as64[i+1]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//2
-					bits1 = bits0 = GET_BITS(2);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+2]);
+					handle_level(0, bits0);
 					//3
-					//bits3 = bits2 += bits1 += bits0 = GET_BITS(3);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
+					//bits3 = bits2 += bits1 += bits0 = popcount_excess(data[0].as64[i+3]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
 					handle_high_levels ( 3, bits2 );//bits2 is already 256 bits, any more might overflow the array index on counts2[3]
 					//4
-					/*bits1 = bits0 = GET_BITS(4);
-					HANDLE_BITS(0,bits0);
+					/*bits1 = bits0 = popcount_excess(data[0].as64[i+4]);
+					handle_level(0, bits0);
 					//5
-					bits2 = bits1 += bits0 = GET_BITS(5);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
+					bits2 = bits1 += bits0 = popcount_excess(data[0].as64[i+5]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
 					//6
-					bits1 = bits0 = GET_BITS(6);
-					HANDLE_BITS(0,bits0);
+					bits1 = bits0 = popcount_excess(data[0].as64[i+6]);
+					handle_level(0, bits0);
 					//7
-					bits3 += bits2 += bits1 += bits0 = GET_BITS(7);
-					HANDLE_BITS(0,bits0);
-					HANDLE_BITS(1,bits1);
-					HANDLE_BITS(2,bits2);
-					HANDLE_BITS(3,bits3);
+					bits3 += bits2 += bits1 += bits0 = popcount_excess(data[0].as64[i+7]);
+					handle_level(0, bits0);
+					handle_level(1, bits1);
+					handle_level(2, bits2);
+					handle_level(3, bits3);
 					handle_high_levels ( 4, bits3 );*/
 				}
 			}
 			break;
-#undef GET_BITS
-#undef GET_BITS8
-#undef GET_BITS16
-#undef GET_BITS32
-#undef GET_BITS64
-#undef HANDLE_BITS
 			default:
 				issue_error();
 		}
