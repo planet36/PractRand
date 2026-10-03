@@ -28,7 +28,7 @@ Two functions are performed that may need to use platform-specific functionality
 using namespace PractRand;
 
 bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* entropy_pool, [[maybe_unused]] int milliseconds ) {
-	//the intention is for "millisecond" to be an amount of time that this function is permitted to spend on obtaining entropy
+	//the intention is for "milliseconds" to be an amount of time that this function is permitted to spend on obtaining entropy
 	//but currently nothing that spends time in a controlled fashion is implemented, so it's meaningless
 
 	constexpr int DESIRED_BITS = 256;
@@ -55,7 +55,7 @@ bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* ent
 #if 0 //DISABLED
 	{
 	//disabled to avoid the possibility of blocking
-		if (millseconds && f = std::fopen("/dev/random", "rb")) {
+		if (milliseconds && f = std::fopen("/dev/random", "rb")) {
 			//skip this if a good source was already found, because this can block
 			uint64_t buf[N64];
 			if(std::fread(buf,N64*sizeof(buf[0]),1,f)) {

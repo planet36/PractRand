@@ -972,17 +972,17 @@ double generate_gaussian( RNG& rng ) {
 		//for (int i = 0; i < NORMTABLE_SIZE; i++) std::printf("%s%+.11g, ", (i%16)?"":"\n", normtable_b[i]);
 		inited = true;
 	}
-	uint32_t indeces = rng.raw32();
+	uint32_t indices = rng.raw32();
 	int index; int32_t u; double rv = 0;
 	for (int x = 0; x < STRONG; x++) {
-		index = indeces & (NORMTABLE_SIZE-1); indeces >>= NORMTABLE_SIZE_L2;
+		index = indices & (NORMTABLE_SIZE-1); indices >>= NORMTABLE_SIZE_L2;
 		//index = rng.raw16() & (NORMTABLE_SIZE-1);
 		rv += normtable_a[index];
 		u = rng.raw32(); rv += normtable_b[index] * u;
 	}
-	if ((STRONG+WEAK) * NORMTABLE_SIZE_L2 > 32) indeces = rng.raw32();
+	if ((STRONG+WEAK) * NORMTABLE_SIZE_L2 > 32) indices = rng.raw32();
 	for (int x = 0; x < WEAK; x++) {
-		index = indeces & (NORMTABLE_SIZE-1); indeces >>= NORMTABLE_SIZE_L2;
+		index = indices & (NORMTABLE_SIZE-1); indices >>= NORMTABLE_SIZE_L2;
 		//index = rng.raw16() & (NORMTABLE_SIZE-1);
 		rv += normtable_a[index];
 	}

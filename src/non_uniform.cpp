@@ -60,13 +60,13 @@ namespace PractRand::Internals {
 		};
 		double generate_gaussian_fast(uint64_t raw64) {//fast CDF-based hybrid method
 			auto si = int32_t(raw64 >> 32);
-			auto indeces = uint32_t(raw64);
-			long index = (indeces >> (GAUSSIAN_CDF_TABLE_SIZE_L2*0)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
+			auto indices = uint32_t(raw64);
+			long index = (indices >> (GAUSSIAN_CDF_TABLE_SIZE_L2*0)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
 			double rv = primary_gaussian_cdf_table[index];
 			rv += si * secondary_gaussian_cdf_table[index];
-			index = (indeces >> (GAUSSIAN_CDF_TABLE_SIZE_L2*1)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
+			index = (indices >> (GAUSSIAN_CDF_TABLE_SIZE_L2*1)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
 			rv += primary_gaussian_cdf_table[index];
-			index = (indeces >> (GAUSSIAN_CDF_TABLE_SIZE_L2*2)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
+			index = (indices >> (GAUSSIAN_CDF_TABLE_SIZE_L2*2)) & (GAUSSIAN_CDF_TABLE_SIZE-1);
 			rv += primary_gaussian_cdf_table[index];
 			return rv;
 		}

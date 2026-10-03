@@ -3952,10 +3952,10 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 				if (!calib && ebits > 14 && ebits <= 16) calib = get_calibration_manager().get_calibration_data( "FPF/16(14)", samples / 512.0 + 0.5 );
 				if (stride_bits_L2 + e < 2 ) calib = nullptr;
 				if (calib) {
-					double suspicioun = -calib->sample_to_suspicion(norm);
-					sum_s += suspicioun * suspicioun;//std::pow(2.0, std::abs(suspicioun));
+					double suspicion = -calib->sample_to_suspicion(norm);
+					sum_s += suspicion * suspicion;//std::pow(2.0, std::abs(suspicion));
 					num_s++;
-					results.emplace_back(namestr.str() + ")", norm, suspicioun, TestResult::TYPE_GOOD_S, ebits * 0.00625 / sig_bits);
+					results.emplace_back(namestr.str() + ")", norm, suspicion, TestResult::TYPE_GOOD_S, ebits * 0.00625 / sig_bits);
 				}
 				else { results.emplace_back(namestr.str() + ")", norm, norm,  TestResult::TYPE_RAW_NORMAL, ebits * 0.00625 / sig_bits); }
 			}
