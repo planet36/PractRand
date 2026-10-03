@@ -17,7 +17,7 @@ namespace PractRand::RNGs {
 				uint32_t used{};
 				uint32_t position_overflow{};
 				uint8_t rounds{20};
-				bool extend_cycle{};//true allows carries from the position field to overflow in to the upper word of the IV
+				bool extend_cycle{};//true allows carries from the position field to overflow into the upper word of the IV
 				bool short_seed{};
 				uint8_t padding[5]{};//just to make the size a round number
 

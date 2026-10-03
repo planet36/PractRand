@@ -171,7 +171,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 				};
 				class genindC : public vRNG16 {
-					//split pool, bits fed in to the accumulator is limited to tsL2 per output
+					//split pool, bits fed into the accumulator is limited to tsL2 per output
 					// 1*:23, 2:31, 3:36, 4:42
 					uint16_t* table;
 					int16_t left;

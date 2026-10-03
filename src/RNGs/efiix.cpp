@@ -180,7 +180,7 @@ Some oddities related to empirical quality vs parameterization visible there at 
 			which we can't do from a single short output window
 			...so we have to skip forward roughly ITERATION_SIZE positions to a 2nd window
 			and do the whole thing over again (but we don't have to guess "i" again)
-			and use the old predicted values of "indirect" fed in to the iteration table
+			and use the old predicted values of "indirect" fed into the iteration table
 			to check the new predicted values of "iterated"
 			and then we can START confirming our guesses
 			at region1 we guessed (a,b,c) and "i" and "indirect"

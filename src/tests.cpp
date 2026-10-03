@@ -7069,9 +7069,9 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult>& results) {
 	/*
 		things to check:
 		1. overall distribution of hamming weights within each bucket
-			report as separate p-values or unify in to a single p-value? lets try unifying
+			report as separate p-values or unify into a single p-value? let's try unifying
 		2. overall distribution of extra-bits within each bucket, on a per-hamming-weight-bin basis
-			report as separate p-values or unify in to a single p-value? both by bit position and by bucket?  lets try unifying buckets and bit positions, but not hamming weights
+			report as separate p-values or unify into a single p-value? both by bit position and by bucket?  let's try unifying buckets and bit positions, but not hamming weights
 		3. distribution between buckets, and invalid cores
 	*/
 
