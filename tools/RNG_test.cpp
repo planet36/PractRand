@@ -548,7 +548,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		std::println("  -ttseed64      Test target: RNG seeding from 64 bit integers.  First, the RNG");
 		std::println("                 is seeded with a randomly chosen 64 bit integer.  Then 8 bytes");
 		std::println("                 of output are taken from the RNG and given to the tests.  Then");
-		std::println("                 another seed is chosen at a low hamming distance from the");
+		std::println("                 another seed is chosen at a low Hamming distance from the");
 		std::println("                 prior seed and another 8 bytes of RNG output are given to the");
 		std::println("                 tests.");
 		std::println("                 This is repeated indefinitely, with care taken to minimize");
