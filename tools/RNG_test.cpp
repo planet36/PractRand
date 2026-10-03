@@ -562,7 +562,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		std::println("  -walk_sequence  Some test-target modes will search seeds sequentially,");
 		std::println("                  each subsequent seed 1 higher than the previous.");
 		std::println("  -walk_greycode  Some test-target modes will search seeds in a simple");
-		std::println("                  greycoded sequence, each subsequent seed at Hamming");
+		std::println("                  Gray-coded sequence, each subsequent seed at Hamming");
 		std::println("                  distance 1 from the prior in a strict order.");
 		std::println("  -walk_random    Some test-target modes will search seeds in a random walk,");
 		std::println("                  each subsequent seed chosen at random from unused values");
