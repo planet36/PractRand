@@ -17,15 +17,15 @@ namespace PractRand::Tests {
 					intraplatter - probably worthless? and would you index by platter hits or by global position?
 					individual FP values - probably worthwhile
 					exponent only - may be redundant with individual FP values, may not be
-					note that space for recording individual spacings is too expensive, so probably we calculate the geometric mean of gaps & expected value, in the spirit of Mauer's Universal Test
+					note that space for recording individual spacings is too expensive, so probably we calculate the geometric mean of gaps & expected value, in the spirit of Maurer's Universal Test
 					EVALUATION: good idea
 				coupon collecting -
 					intraplatter - easy, and it might even be worthwhile.  probably not really, but if they're giving rotating results on FP frequency, this could keep them honest.  Maybe.
-					individual FP values - ...I don't think a coupon test on assympetric probs is a good idea, harder to evaluate at the very least
-					exponent only - ...I don't think a coupon test on assympetric probs is a good idea, harder to evaluate at the very least
-					EVALULATION: meh... could be worse I guess
+					individual FP values - ...I don't think a coupon test on asymmetric probs is a good idea, harder to evaluate at the very least
+					exponent only - ...I don't think a coupon test on asymmetric probs is a good idea, harder to evaluate at the very least
+					EVALUATION: meh... could be worse I guess
 				???
-					average nears - keep a copy of the bytes surrounding the previous occurance.  reserve space for another equal size block, initialized those those around the 1st occurance and updated by majority vote on a per-bit basis. record the average hamming distance from it
+					average nears - keep a copy of the bytes surrounding the previous occurrence.  reserve space for another equal size block, initialized those around the 1st occurrence and updated by majority vote on a per-bit basis. record the average hamming distance from it
 			*/
 		protected:
 			//typedef uint32_t COUP_WORD;//must be 4 or 8 bytes
@@ -58,7 +58,7 @@ namespace PractRand::Tests {
 				//uint32_t history1[1 << GAP_SIG_BITS];//relative to this platter only
 				//uint64_t history2[1 << GAP_SIG_BITS];//global - implementation is not efficient
 				//uint64_t total_count;
-				//double gap_sum1;//our gap test is actually closer to Maurer's Universal Statitical Test, though they're basically the same thing
+				//double gap_sum1;//our gap test is actually closer to Maurer's Universal Statistical Test, though they're basically the same thing
 				//uint64_t gap_negative_count1;
 				//double gap_sum2;//using history2 instead of history1
 				//uint64_t gap_negative_count2;

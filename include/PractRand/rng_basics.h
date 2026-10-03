@@ -27,7 +27,7 @@ namespace PractRand {
 	namespace RNGs {
 		class vRNG {
 		public:
-		//constuctors, destructors, seeding, serialization, & low level state manipulation:
+		//constructors, destructors, seeding, serialization, & low level state manipulation:
 			//vRNG(uint64_t seed_) {seed_64(seed_);}
 			//vRNG(vRNG *rng_) {seed(rng_);}
 			//vRNG(_dummy_SeedingTypeAuto *) {autoseed();}

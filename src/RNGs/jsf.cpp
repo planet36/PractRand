@@ -71,7 +71,7 @@ void PractRand::RNGs::Raw::jsf32::seed(uint32_t seed1, uint32_t seed2, uint32_t 
 		//LOCKED, do not change
 	//exception to the locked status -
 	//   when more bad cycles are found, more code might be added to prohibit them
-	//exception: changed in 0.87 to to reduce correlation between similar seeds
+	//exception: changed in 0.87 to reduce correlation between similar seeds
 	a = seed1;
 	b = seed2;
 	c = seed3;
@@ -126,7 +126,7 @@ void PractRand::RNGs::Raw::jsf64::seed_fast(uint64_t s) {
 }
 void PractRand::RNGs::Raw::jsf64::walk_state(StateWalkingObject* walker) {
 	//LOCKED, do not change
-	//exception: changed in 0.87 to to reduce correlation between similar seeds
+	//exception: changed in 0.87 to reduce correlation between similar seeds
 	walker->handle(a);
 	walker->handle(b);
 	walker->handle(c);

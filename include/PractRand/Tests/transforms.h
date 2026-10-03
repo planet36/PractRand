@@ -8,7 +8,7 @@ namespace PractRand::Tests::Transforms {
 			protected:
 				ListOfTests subtests;
 				std::string name;
-				uint64_t blocks_already{};//# of blocks outputed to subtests
+				uint64_t blocks_already{};//# of blocks output to subtests
 				bool parallel_subtests{};//if true then each subtest runs on its own thread
 			public:
 				multiplex ( const char* name_, ListOfTests testlist );

@@ -280,7 +280,7 @@ class TestCalibrationData {
 		double p1 = NAN, p2 = NAN;
 		// p1 >= 1/sqrt(num_samples)
 		// p2 >= p1 + 1/sqrt(num_samples)
-		//asside from that, p1 & p2 should be as small as possible
+		//aside from that, p1 & p2 should be as small as possible
 		if constexpr (false) {; }
 		else if (n >= 8192 * 8192) {
 			p1 = 0.0001;
@@ -1742,7 +1742,7 @@ void PractRand::Tests::Gap16::get_results( std::vector<TestResult>& results ) {
 	results.emplace_back(get_name() + ":B", r2, s2, TestResult::TYPE_GOOD_S, 0.5);
 }
 /*double PractRand::Tests::Gap16::result_to_pvalue ( uint64_t blocks, double r ) {
-	if (1) {//very crude aproximation:
+	if (1) {//very crude approximation:
 		if (r < -9) return 1.0;
 		if (r < -7) return 0.99999;
 		if (r < -6) return 0.9999;
@@ -2543,7 +2543,7 @@ void PractRand::Tests::BCFN_MT::get_results(std::vector<TestResult>& results) {
 		double samples = blocks_tested * TestBlock::SIZE * pow(0.5, level+unitsL2) * chance - tbits + 1;
 		if (samples < 0) samples = 0;
 		int effective_bits;
-		//	when tbits is 1, the result is a close aproximation of a normal distribution
+		//	when tbits is 1, the result is a close approximation of a normal distribution
 		//	but at higher tbits, the samples are coorelated and the deviation from normality becomes large
 		//	once the number of samples becomes large though, it stabilizes to a consistent pattern
 		//	if the number of samples is not large enough to reach a stable pattern then I transform the data to make it act like tbits was smaller
@@ -2659,7 +2659,7 @@ void PractRand::Tests::BCFN::get_results(std::vector<TestResult>& results) {
 		if (samples < 0) samples = 0;
 		int effective_bits = 0;
 		/*
-			when tbits is 1, the result is a close aproximation of a normal distribution
+			when tbits is 1, the result is a close approximation of a normal distribution
 			but at higher tbits, the samples are coorelated and the deviation from normality becomes large
 			once the number of samples becomes large though, it stabilizes to a consistent pattern
 			if the number of samples is not large enough to reach a stable pattern then I transform the data to make it act like tbits was smaller
@@ -3347,7 +3347,7 @@ void PractRand::Tests::BCFN_FF::get_results(std::vector<TestResult>& results) {
 		if (samples < 0) samples = 0;
 		int effective_bits = 0;
 		/*
-		when tbits is 1, the result is a close aproximation of a normal distribution
+		when tbits is 1, the result is a close approximation of a normal distribution
 		but at higher tbits, the samples are coorelated and the deviation from normality becomes large
 		once the number of samples becomes large though, it stabilizes to a consistent pattern
 		if the number of samples is not large enough to reach a stable pattern then I transform the data to make it act like tbits was smaller
@@ -3971,7 +3971,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 			results.emplace_back(get_name() + ":all", over_norm, -calib->sample_to_suspicion(over_norm),  TestResult::TYPE_GOOD_S, .25);
 		else results.emplace_back(get_name() + ":all", over_norm, over_norm,  TestResult::TYPE_RAW_NORMAL, .25);
 	}
-	if constexpr (false) {//num_s >= 3) { - DISABLED because I don't trust the p-values near the extremas
+	if constexpr (false) {//num_s >= 3) { - DISABLED because I don't trust the p-values near the extrema
 		/*long double calib_mean = 0;
 		long double calib_e = 4.162737902123020;
 		long double calib_dev = 0;
@@ -4508,7 +4508,7 @@ void PractRand::Tests::FPMulti::get_results(std::vector<TestResult>& results) {
 				S^N = sequence of input bits
 				S[n] = nth bit of input
 				b[n] = nth word of input
-				A[n](S^N) = gap value for nth word of input (distance since last occurance) - defined to be n if there is no gap prior occurance
+				A[n](S^N) = gap value for nth word of input (distance since last occurrence) - defined to be n if there is no gap prior occurrence
 				fTu(S^N) = log2 of geometric mean of all (usable) gaps
 				c(L,K) = adjust factor that the standard deviation is multiplied by, probably fitted from empirical data
 			*/
@@ -4958,13 +4958,13 @@ void PractRand::Tests::Birthday64::_histogram_in_place_sort64(uint64_t* base, lo
 	uint32_t region_count[1 << SORT_HELPER_BITS];
 	std::memset(region_count, 0, sizeof(region_count[0])* (1 << SORT_HELPER_BITS));
 	long shift = 64 - SORT_HELPER_BITS;// -bits_already;
-	//uint64_t any_1s = 0, all_1s = 0xFFffFFffFFffFFffull;//for debuging only, disable in release - no longer applies since bits_already is assumed to be zero
+	//uint64_t any_1s = 0, all_1s = 0xFFffFFffFFffFFffull;//for debugging only, disable in release - no longer applies since bits_already is assumed to be zero
 	for (uint64_t* cur = base; cur < &base[length]; cur++) {
 		long ri = (*cur >> shift);// &((1 << SORT_HELPER_BITS) - 1);
 		region_count[ri]++;
-		//any_1s |= *cur; all_1s &= *cur;//for debuging only, disable in release - no longer applies since bits_already is assumed to be zero
+		//any_1s |= *cur; all_1s &= *cur;//for debugging only, disable in release - no longer applies since bits_already is assumed to be zero
 	}
-	//if ((any_1s ^ all_1s) >> bits_already) issue_error("_histogram_sort64 - bits_already not already sorted");//for debuging only, disable in release - no longer applies since bits_already is assumed to be zero
+	//if ((any_1s ^ all_1s) >> bits_already) issue_error("_histogram_sort64 - bits_already not already sorted");//for debugging only, disable in release - no longer applies since bits_already is assumed to be zero
 	_histogram_in_place_sort64(base, length, 0, region_count);
 }
 void PractRand::Tests::Birthday64::_histogram_sort64(uint64_t* buffer, long length, long bits_already, uint32_t region_counts[1 << SORT_HELPER_BITS]) {
@@ -5143,11 +5143,11 @@ void PractRand::Tests::BirthdayHelpers::radix_sort_and_copy(i128* buffer, i128* 
 	if constexpr (true) {//count frequencies for each pass
 		for (auto& region : regions) region = 0;
 		//long shift = 64 - SORT_HELPER_BITS - bits_already;
-		uint64_t already_check_mask = ((1ULL << bits_already) - 1) << (64 - bits_already);//debuging check, remove sometime
-		uint64_t already_check_value = buffer[0].high & already_check_mask;//debuging check, remove sometime
+		uint64_t already_check_mask = ((1ULL << bits_already) - 1) << (64 - bits_already);//debugging check, remove sometime
+		uint64_t already_check_value = buffer[0].high & already_check_mask;//debugging check, remove sometime
 		for (uint64_t i = 0; i < length; i++) {
 			uint64_t value = buffer[i].high;
-			if ((value & already_check_mask) != already_check_value) issue_error();//debuging check, remove sometime
+			if ((value & already_check_mask) != already_check_value) issue_error();//debugging check, remove sometime
 			value <<= bits_already;
 
 			for (long region_base = 0; region_base < (COMBINED_PASSES << SORT_HELPER_BITS); region_base += (1 << SORT_HELPER_BITS)) {
@@ -6865,7 +6865,7 @@ bool PractRand::Tests::NearSeq2::is_core_bad(const Word* core) const {
 	else {//blocks do NOT align to word boundaries
 		//
 		// ...this is ugly, so if possible choose parameterizations that don't hit this
-		// or, failing that, paramterizations that will reject most cores in the first word
+		// or, failing that, parameterizations that will reject most cores in the first word
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {//first word
 			is_bad |= lookup1(w);
@@ -6953,7 +6953,7 @@ void PractRand::Tests::NearSeq2::core_analysis(const Word* core, int& index, int
 	else {//blocks do NOT align to word boundaries
 		//
 		// ...this is ugly, so if possible choose parameterizations that don't hit this
-		// or, failing that, paramterizations that will reject most cores in the first word
+		// or, failing that, parameterizations that will reject most cores in the first word
 		Word w = core[0];
 		for (int i = 0; i < WORD_BITS / BITS_PER_BLOCK; i++) {//first word
 			analyze_block(w, core_bucket, bucket_bit++, h);
@@ -7069,9 +7069,9 @@ void PractRand::Tests::NearSeq2::get_results(std::vector<TestResult>& results) {
 	/*
 		things to check:
 		1. overall distribution of hamming weights within each bucket
-			report as seperate p-values or unify in to a single p-value? lets try unifying
+			report as separate p-values or unify in to a single p-value? lets try unifying
 		2. overall distribution of extra-bits within each bucket, on a per-hamming-weight-bin basis
-			report as seperate p-values or unify in to a single p-value? both by bit position and by bucket?  lets try unifying buckets and bit positions, but not hamming weights
+			report as separate p-values or unify in to a single p-value? both by bit position and by bucket?  lets try unifying buckets and bit positions, but not hamming weights
 		3. distribution between buckets, and invalid cores
 	*/
 
@@ -7801,7 +7801,7 @@ void PractRand::Tests::Coup16::get_results(std::vector<TestResult>& results) {
 	//print_at <<= 1;
 	const uint64_t* count = counts.get_array();
 	const double expected_mean = 41426.652943388356 - 1 + 0.185;// plus or minus about 0.001?... actually the value I got empirically was 0.184979, but it 0.185 was so close and so much prettier
-	const double expected_deviation = 79.81665;// plus or minus about 0.001? - these valuse were obtained from a 1280 TB test run
+	const double expected_deviation = 79.81665;// plus or minus about 0.001? - these values were obtained from a 1280 TB test run
 	//double eebar = 0.001;
 
 	//double total_error = 0;

@@ -96,7 +96,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				};
 
 				class xorshift32x4 : public vRNG32 {
-					//recommended at the top of Marsaglias 2003 xorshift paper
+					//recommended at the top of Marsaglia's 2003 xorshift paper
 					uint32_t x{},y{},z{},w{};
 				public:
 					uint32_t raw32() override;
@@ -119,7 +119,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject*) override;
 				};
 				class xorwow32x6 : public vRNG32 {
-					//recommended at the top of Marsaglias 2003 xorshift paper
+					//recommended at the top of Marsaglia's 2003 xorshift paper
 					uint32_t x{},y{},z{},w{},v{},d{};
 				public:
 					uint32_t raw32() override;
@@ -432,14 +432,14 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
-				class hara16 : public vRNG16 {//heterogenous add, bit rotate, xor
+				class hara16 : public vRNG16 {//heterogeneous add, bit rotate, xor
 					uint16_t a{}, b{}, c{};
 				public:
 					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
-				class harx16 : public vRNG16 {//heterogenous add, bit rotate, xor
+				class harx16 : public vRNG16 {//heterogeneous add, bit rotate, xor
 					uint16_t a{}, b{}, c{};
 				public:
 					uint16_t raw16() override;
@@ -453,7 +453,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					void walk_state(StateWalkingObject*) override;
 				};
-				class hlearx16 : public vRNG16 {//heterogenous LEAs, bit rotates, xor
+				class hlearx16 : public vRNG16 {//heterogeneous LEAs, bit rotates, xor
 					uint16_t a{}, b{}, c{};
 				public:
 					uint16_t raw16() override;

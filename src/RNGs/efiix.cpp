@@ -188,7 +188,7 @@ Some oddities related to empirical quality vs parameterization visible there at 
 		3.
 			we check if the "iterated" values observed actually match the constant-indirection-index required
 			but even if they appear to, that doesn't do us much good, as it's still far more likely to be a false positive than a true positive
-			unless they appear to for a very long sequence... but the chances of such a region even existing in a cyphertext length <2**64 is very small
+			unless they appear to for a very long sequence... but the chances of such a region even existing in a ciphertext length <2**64 is very small
 	overall, I think the 32 bit word variant ought to be good for 128 bit security, and the 64 bit word variant ought to be good for 160 bit security
 	I don't have much confidence in the 8 or 16 bit variants though
 */

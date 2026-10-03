@@ -30,7 +30,7 @@ namespace PractRand::RNGs {
 				PRACTRAND_POLYMORPHIC_RNG_BASICS_H(trivium)
 				void seed(uint64_t s) override;
 				void seed_fast(uint64_t s) override;
-				void seed(const uint8_t* seed_and_iv, int length);//length should not exeed 18
+				void seed(const uint8_t* seed_and_iv, int length);//length should not exceed 18
 				void seed(vRNG* seeder_rng) override;
 			};
 		}

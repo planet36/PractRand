@@ -25,11 +25,11 @@ namespace PractRand::Tests {
 			//simply calls the destructors on all tests in list of tests
 			void destruct_tests(const ListOfTests& tests);
 
-			//gets a battery of of tests
+			//gets a battery of tests
 			//
 			// notes:
 			//    bits
-			//        bits is the number of bits produced at a time by the targetted PRNG
+			//        bits is the number of bits produced at a time by the targeted PRNG
 			//        its value can normally be produced with a call to vRNG::get_native_output_size()
 			//    folding
 			//        folding refers to the process by which additional datastreams are constructed from subsets of the original datastream
@@ -63,7 +63,7 @@ namespace PractRand::Tests {
 			//apply standard foldings to a test set:
 			ListOfTests apply_standard_foldings(int bits, ListOfTests(*base_tests)());
 			ListOfTests apply_standard_foldings(const RNGs::vRNG* rng, ListOfTests(*base_tests)());
-			//note: there is specific behavior for 8 bit, 16 bit, 32 bit, and 64 bit cases ; any other value produces an alternate "unknown format" targetted folding
+			//note: there is specific behavior for 8 bit, 16 bit, 32 bit, and 64 bit cases ; any other value produces an alternate "unknown format" targeted folding
 
 			//apply extended foldings to a test set:
 			ListOfTests apply_extended_foldings(ListOfTests(*base_tests)());

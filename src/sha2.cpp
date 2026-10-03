@@ -194,7 +194,7 @@ namespace PractRand::Crypto {
 				process_block();
 				leftover_input_bytes = 0;
 			}
-			//start at begining of block, finish it
+			//start at beginning of block, finish it
 			while (input_left >= Constants::INPUT_SIZE) {
 				std::memcpy(input_buffer.as_byte, input, Constants::INPUT_SIZE);
 				input += Constants::INPUT_SIZE;

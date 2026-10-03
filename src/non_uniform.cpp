@@ -24,7 +24,7 @@ namespace PractRand::Internals {
 			Gaussian/Normal distribution implementation
 
 			Rolled my own.
-			Possibly a standard Ziggaraut method would work better, but this is simple and it works and it can be replaced later.
+			Possibly a standard Ziggurat method would work better, but this is simple and it works and it can be replaced later.
 			I suppose this does have the merit of using a fixed number of input bits.
 
 			At GAUSSIAN_CDF_TABLE_SIZE=256 this needs 2 KB of memory.  I'm not sure if that's too much or not enough.
@@ -32,8 +32,8 @@ namespace PractRand::Internals {
 			If I went to a 16 KB table size then I could speed it up a tad without compromising quality too much, but this is fast enough for now.
 
 			I'm aiming for 25 or so bits of good resolution plus another 25 or so bits of noise here -
-			good enough to be practically impossible to distinguish from from true gaussian, and significantly better than single precision floats, but not quite maxing
-			out what double precision numbers can manage.  More than that and I would have have a hard time verifying things without large number types
+			good enough to be practically impossible to distinguish from true gaussian, and significantly better than single precision floats, but not quite maxing
+			out what double precision numbers can manage.  More than that and I would have a hard time verifying things without large number types
 			and even more exotic math.
 		*/
 		constexpr int GAUSSIAN_CDF_TABLE_SIZE_L2 = 8;

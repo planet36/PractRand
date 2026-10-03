@@ -54,7 +54,7 @@ namespace PractRand::Tests {
 
 		double calculate_center_bit_combination_chance(int num_bits_L2);
 		void get_hamming_weight_chances(int num_bits, std::vector<double>& pdf, std::vector<double>& cdf);//vector size = 1+(num_bits/2))
-		// switches between a variety of mathods based upon the magnitude of num_bits
+		// switches between a variety of methods based upon the magnitude of num_bits
 
 		uint8_t  reverse_bits8 (uint8_t);
 		uint16_t reverse_bits16(uint16_t);

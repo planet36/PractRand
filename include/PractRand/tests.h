@@ -22,7 +22,7 @@ namespace PractRand {
 		//  TYPE_GOOD_P        a relatively trustworthy p-value
 		//  TYPE_GOOD_S        a transformed p-value that has better dynamic range... 1 : 0.75, 0 : 0.5, -1 = 0.25, -2 = 0.125, -3 = 0.0625, -0.3 = 0.406126..., etc
 		//  TYPE_PASSFAIL      0 means pass, 1 means fail
-		//  TYPE_UNKNOWN       unusuable result, visible but no clear meaning
+		//  TYPE_UNKNOWN       unusable result, visible but no clear meaning
 
 		TestResult(std::string name_, double raw_, double processed_, int type_, double weight_) : name(std::move(name_)), raw(raw_), processed(processed_), type(type_), weight(weight_) {}
 		[[nodiscard]] double get_raw() const {return raw;}
@@ -68,7 +68,7 @@ namespace PractRand {
 
 			virtual void get_results ( std::vector<TestResult>& results ) = 0;
 
-			[[nodiscard]] virtual int get_blocks_to_repeat() const;//this is the number of blocks at negative indeces that test_blocks should be able to access
+			[[nodiscard]] virtual int get_blocks_to_repeat() const;//this is the number of blocks at negative indices that test_blocks should be able to access
 			//containing duplicates of data from the end of the previous set of blocks passed to test_blocks
 			//obviously up to the limit of the number of blocks previously passed in
 			//this may not be changed after the call to init()

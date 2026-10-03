@@ -10,11 +10,11 @@ namespace Candidates {
 
 
 /*
-Canidates currently under consideration:
+Candidates currently under consideration:
 
 
 1. a variant of Ranrot (RanrotVariant64/32/16/8)
-	OVERALL EVALUTION: no close competitors atm, but no clear need for it either;
+	OVERALL EVALUATION: no close competitors atm, but no clear need for it either;
 		and a reduced-size version of efiix might be superior anyway
 	niche: medium speed, medium quality, medium size
 		particularly for 8 bit, which currently has nothing smaller than efiix8x384
@@ -37,7 +37,7 @@ Canidates currently under consideration:
 		(45 * 2**376 @ 8 bit, 45 * 2**752 @ 16 bit, 45 * 2**1504 @ 32 bit, 45 * 2**3008 @ 64 bit)
 
 2. very fast RNG (VeryFast64/32/16)
-	OVERALL EVALUTION: insufficiently different from sfc64/32/16
+	OVERALL EVALUATION: insufficiently different from sfc64/32/16
 	niche:
 		fastest inline RNG of reasonable quality
 		with only 2-3 words of state, 1 temp var, and six or so ops, it's cheap to inline
@@ -58,7 +58,7 @@ Canidates currently under consideration:
 		(2**48-1 @ 16 bit, 2**96-1 @ 32 bit, 2**192-1 @ 64 bit)
 
 3. possible revisions to the current sfc RNG (sfc_alternative64/32/16)
-	OVERALL EVALUTION: hard to justify
+	OVERALL EVALUATION: hard to justify
 	niche: similar to sfc -
 		small size, fast speed, guaranteed cycle length at some word sizes
 		this version substantially improves quality
@@ -221,7 +221,7 @@ public:
 		c ^= old;
 		return c;*/
 		/*
-		old = a + b;// 6 ops with LEA, 7 with RISC, unfortunately more dependencies thtn desirable, test result:  16 bit: 256 GB
+		old = a + b;// 6 ops with LEA, 7 with RISC, unfortunately more dependencies than desirable, test result:  16 bit: 256 GB
 		a = b + (b << RSHIFT);
 		b = std::rotl(b, LSHIFT) + c;
 		c = std::rotl(c, ROTATE) ^ old;
@@ -241,7 +241,7 @@ public:
 		c = std::rotl(c, ROTATE);
 		c += old;
 		return a;*/
-		//uses multiplication, only 2 words, but pretty good asside from that:
+		//uses multiplication, only 2 words, but pretty good aside from that:
 		//16: 16 MB, 32 bit: 8 TB
 		/*
 		old = a * Word(0x92ec64765925a395ull);

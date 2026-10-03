@@ -375,7 +375,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				overall:
 				good statistical properties
 				slower than earlier versions on my CPU, but still fast
-				refence values for SHIFT1,SHIFT2:
+				reference values for SHIFT1,SHIFT2:
 				16 bit: 2,5
 				32 bit: 5,12
 				64 bit: 7,41
@@ -395,7 +395,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				very good behavior on statistical tests
 				uses an extra word / register - not as nice for inlining
 				adequate speed
-				refence values for SHIFT1,SHIFT2,SHIFT3:
+				reference values for SHIFT1,SHIFT2,SHIFT3:
 				8 bit:  3,2,1
 				16 bit: 7,5,2
 				32 bit: 25,8,3

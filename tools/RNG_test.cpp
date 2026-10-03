@@ -243,7 +243,7 @@ double print_result(const PractRand::TestResult& result, bool print_header = fal
 	if constexpr (true) {// 17 characters?
 		/*
 			Threshold Values:
-			The idea is to assign a suspicioun level based not just upon the
+			The idea is to assign a suspicion level based not just upon the
 			p-value but also the number of p-values and their relative importance.
 			If there are a million p-values then we probably don't care about
 			anything less extreme than a one in ten million event.
@@ -483,9 +483,9 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		std::println("or: {} -help  --  displays more instructions", argv[0]);
 		std::println("or: {} -version  --  displays version information", argv[0]);
 		std::println("RNG_name can be the name of any PractRand recommended RNG (example: sfc16) or");
-		std::println("non-recommended RNG (example: mm32) or transformed RNG (exmple: SShrink(sfc16).");
+		std::println("non-recommended RNG (example: mm32) or transformed RNG (example: SShrink(sfc16).");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		std::println("Alternatively, use stdin as an RNG name to read raw binay data piped in from an");
+		std::println("Alternatively, use stdin as an RNG name to read raw binary data piped in from an");
 		std::println("external RNG.");
 		std::println("options available include -a, -e, -p, -tf, -te, -ttnormal, -ttseed64, -ttep,");
 		std::println("-tlmin, -tlmax, -tlshow, -multithreaded, -singlethreaded, and -seed.");
@@ -505,7 +505,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		std::println("A command line tool for testing RNGs with the PractRand library.");
 		std::println("RNG names:");
 		std::println("  To use an external RNG, use stdin as an RNG name and pipe in the random");
-		std::println("  numbers.  stdin8, stdin16, stdin32, and stdin64 also work, each interpretting");
+		std::println("  numbers.  stdin8, stdin16, stdin32, and stdin64 also work, each interpreting");
 		std::println("  the input in slightly different ways.  Use stdin if you're uncertain how many");
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
 		std::println("  bits the RNG produces at a time, or if it's not one of those options.");
@@ -517,7 +517,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		//std::printf(" The default threshold setting is '-e 0.1', an alternative is '-p 0.001'\n");
 		std::println(" The default threshold setting is '-e 0.1', alternatives are '-p 0.001' or '-a'");
 		std::println("  -a             no threshold - display all test results.");
-		std::println("  -e EXPECTED    sets intelligent p-value thesholds to display an expected");
+		std::println("  -e EXPECTED    sets intelligent p-value thresholds to display an expected");
 		std::println("                 number of test results equal to EXPECTED.  If EXPECTED is zero");
 		std::println("                 or less then intelligent p-value thresholds will be disabled");
 		std::println("                 EXPECTED is a float with default value 0.1");
@@ -616,7 +616,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		std::println("  example: -tlmin 1.4s (sets the minimum test length to 1.4 seconds)");
 		std::println("  An amount of data can be expressed as a number with no postfix, in which case");
 		std::println("  the number will be treated as the log-based-2 of the amount of bytes to test");
-		std::println("  (in normal target mode) or the log-baed-2 of the number of seeds or strings");
+		std::println("  (in normal target mode) or the log-based-2 of the number of seeds or strings");
 		std::println("  to test in alternate test target modes.");
 		std::println("  example: -tlmin 23 (sets the minimum test length to 8 mebibytes or 8");
 		std::println("    million seeds, depending upon test target mode)");
@@ -624,7 +624,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 		std::println("  KB, MB, GB, TB, or PB for kibibytes, mebibytes, gibibytes, tebibytes, or pebibytes.");
 		std::println("  example: -tlmin 14KB (sets the minimum test length to 14 kibibytes");
 		std::println("  If the B is omitted on KB, MB, GB, TB, or PB then it treats the metric");
-		std::println("  prefixes as refering to numbers of bytes in normal test target mode, or");
+		std::println("  prefixes as referring to numbers of bytes in normal test target mode, or");
 		std::println("  numbers of seeds in seeding test target mode, or numbers of strings in");
 		std::println("  entropy pooling test target mode.");
 		std::println("  example: -tlmin 40M (sets the minimum test length to ~40 mebibytes or ~40");

@@ -377,7 +377,7 @@ namespace PractRand {
 			if (categories < 2) issue_error("G_TEST::get_result - ...how many categories?");
 		}
 		void G_TEST::add_category(uint64_t count, long double prob) {
-			if (minimum_prob && prob < minimum_prob) {//currently allows combining of non-adjent categories
+			if (minimum_prob && prob < minimum_prob) {//currently allows combining of non-adjacent categories
 				partial_count += count;
 				partial_prob += prob;
 				if (partial_prob >= minimum_prob) {
@@ -468,7 +468,7 @@ namespace PractRand {
 			return rv;
 		}
 		double math_factorial(double a) {
-			//only an aproximation, but a decent one
+			//only an approximation, but a decent one
 			if (!a) return 1;
 			//static double halfL2Pi = std::log(3.14159265358979 * 2) / 2;
 			static double halfLPi = std::log(std::numbers::pi) / 2;
@@ -478,7 +478,7 @@ namespace PractRand {
 			return exp(r);
 		}
 		double math_factorial_log(uint64_t a) {
-			//only an aproximation, but a decent one
+			//only an approximation, but a decent one
 			//double actual = 0;
 			/*if (a <= 1) return 0;
 			else if (a <= 16) {
@@ -579,7 +579,7 @@ namespace PractRand {
 			//return k / ((k - 1) * std::sqrt(3.14159265358979 * x * x) + std::sqrt(3.14159265358979 * x * x + k * k));
 
 			/*
-			// found this in the same paper, supposedly good for (x > 1+(small amount)), but it does not converge... probably I misinterpretted something
+			// found this in the same paper, supposedly good for (x > 1+(small amount)), but it does not converge... probably I misinterpreted something
 
 			double old = 0;
 			double iterative = 1.0;
@@ -1174,7 +1174,7 @@ namespace PractRand {
 			//added shifts
 			Word* dest = &data[y*ww+(x>>WORD_BITS_L2)];
 			if constexpr (false) {
-			/*	//clear partial words at begining & end of region
+			/*	//clear partial words at beginning & end of region
 				int end = x + bits;
 				Word start_mask = (Word(1) << (x & WORD_BITS_MASK)) - 1;
 				Word end_mask = ~(~Word(0) >> (((end-1) & WORD_BITS_MASK) ^ WORD_BITS_MASK));

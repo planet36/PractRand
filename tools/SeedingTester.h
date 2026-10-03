@@ -146,7 +146,7 @@ public:
 		}
 	}
 	static void apply_transform(std::vector<uint8_t>& message, Transform transform) {
-		//toggle bit, add byte at end, add byte at begining, remove byte at end, remove byte at begining
+		//toggle bit, add byte at end, add byte at beginning, remove byte at end, remove byte at beginning
 		//adds or removals must include the data added or removed in addition to the action
 		switch (transform >> 56) {
 		case 0://toggle bit
@@ -180,7 +180,7 @@ public:
 	}
 	static void apply_inverse_transform(std::vector<uint8_t>& message, Transform transform) {
 		switch (transform >> 56) {
-		case 0://reverse a toggle bit by doing the same thign
+		case 0://reverse a toggle bit by doing the same thing
 			apply_transform(message, transform);
 			break;
 		case 1://reverse an insertion with a deletion
