@@ -11113,7 +11113,7 @@ void PractRand::Tests::Transforms::lowbits::test_blocks(TestBlock* data, int num
 		int needed_blocks = (needed_words + TestBlock::SIZE/4 - 1) / (TestBlock::SIZE/4);
 		int oldblocks = buffered.size();
 		buffered.resize(buffered.size() + needed_blocks);
-		dest_ptr = &(buffered[oldblocks-(leftovers?1:0)].as32[leftovers]);
+		dest_ptr = &buffered[oldblocks-(leftovers?1:0)].as32[leftovers];
 		leftovers = (leftovers + words_to_use) & (TestBlock::SIZE/4-1);
 	}
 	switch (unitsL) {

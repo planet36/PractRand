@@ -640,8 +640,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				genindE::genindE(int size_L2) : table_size_L2(size_L2) {
 					if (size_L2 < 1) issue_error("genindE - size too small");
 					if (size_L2 > 16) issue_error("genindE - size too large");
-					table1 = new uint16_t[1ULL << (table_size_L2)];
-					table2 = new uint16_t[1ULL << (table_size_L2)];
+					table1 = new uint16_t[1ULL << table_size_L2];
+					table2 = new uint16_t[1ULL << table_size_L2];
 					mask = (1ULL << table_size_L2) - 1;
 				}
 				uint16_t genindE::raw16() {
@@ -679,9 +679,9 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				genindF::genindF(int size_L2) : table_size_L2(size_L2) {
 					if (size_L2 < 1) issue_error("genindF - size too small");
 					if (size_L2 > 16) issue_error("genindF - size too large");
-					table1 = new uint16_t[1ULL << (table_size_L2)];
-					table2 = new uint16_t[1ULL << (table_size_L2)];
-					mask = (1ULL << (table_size_L2)) - 1;
+					table1 = new uint16_t[1ULL << table_size_L2];
+					table2 = new uint16_t[1ULL << table_size_L2];
+					mask = (1ULL << table_size_L2) - 1;
 				}
 				uint16_t genindF::raw16() {
 					a ^= table2[i++ & mask];
