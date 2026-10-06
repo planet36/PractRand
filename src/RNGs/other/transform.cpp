@@ -365,7 +365,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					{ .data=2, .count=2 },{ .data=2, .count=2 },{ .data=4, .count=3 },{ .data=5, .count=3 },{ .data=2, .count=2 },{ .data=2, .count=2 },{ .data=4, .count=3 },{ .data=5, .count=3 },
 					{ .data=4, .count=3 },{ .data=4, .count=3 },{ .data=8, .count=4 },{ .data=9, .count=4 },{ .data=5, .count=3 },{ .data=5, .count=3 },{.data=10, .count=4 },{.data=11, .count=4 },
 					{ .data=3, .count=2 },{ .data=3, .count=2 },{ .data=6, .count=3 },{ .data=7, .count=3 },{ .data=3, .count=2 },{ .data=3, .count=2 },{ .data=6, .count=3 },{ .data=7, .count=3 },
-					{ .data=6, .count=3 },{ .data=6, .count=3 },{.data=12, .count=4 },{.data=13, .count=4 },{ .data=7, .count=3 },{ .data=7, .count=3 },{.data=14, .count=4 },{.data=15, .count=4 }
+					{ .data=6, .count=3 },{ .data=6, .count=3 },{.data=12, .count=4 },{.data=13, .count=4 },{ .data=7, .count=3 },{ .data=7, .count=3 },{.data=14, .count=4 },{.data=15, .count=4 },
 				};
 				std::string GeneralizedTableTransform::get_name() const {return name;}
 				vRNG* apply_SelfShrinkTransform(vRNG* base_rng) {

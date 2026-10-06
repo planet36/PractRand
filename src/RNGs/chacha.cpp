@@ -53,14 +53,14 @@ static constexpr uint32_t chacha_long_seed_constants[4] = {
 	(uint32_t('e') << 0) + (uint32_t('x') << 8) + (uint32_t('p') << 16) + (uint32_t('a') << 24),
 	(uint32_t('n') << 0) + (uint32_t('d') << 8) + (uint32_t(' ') << 16) + (uint32_t('3') << 24),
 	(uint32_t('2') << 0) + (uint32_t('-') << 8) + (uint32_t('b') << 16) + (uint32_t('y') << 24),
-	(uint32_t('t') << 0) + (uint32_t('e') << 8) + (uint32_t(' ') << 16) + (uint32_t('k') << 24)
+	(uint32_t('t') << 0) + (uint32_t('e') << 8) + (uint32_t(' ') << 16) + (uint32_t('k') << 24),
 };
 static constexpr uint32_t chacha_short_seed_constants[4] = {
 	//"expand 16-byte k"
 	(uint32_t('e') << 0) + (uint32_t('x') << 8) + (uint32_t('p') << 16) + (uint32_t('a') << 24),
 	(uint32_t('n') << 0) + (uint32_t('d') << 8) + (uint32_t(' ') << 16) + (uint32_t('1') << 24),
 	(uint32_t('6') << 0) + (uint32_t('-') << 8) + (uint32_t('b') << 16) + (uint32_t('y') << 24),
-	(uint32_t('t') << 0) + (uint32_t('e') << 8) + (uint32_t(' ') << 16) + (uint32_t('k') << 24)
+	(uint32_t('t') << 0) + (uint32_t('e') << 8) + (uint32_t(' ') << 16) + (uint32_t('k') << 24),
 };
 
 void PractRand::RNGs::Raw::chacha::_advance_1() {

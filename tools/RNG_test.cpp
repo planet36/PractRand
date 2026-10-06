@@ -465,7 +465,7 @@ UnfoldedTestSet test_sets[] = {
 	{ .number=1, .callback=PractRand::Tests::Batteries::get_expanded_core_tests, .name="expanded" },
 	{ .number=10, .callback=testset_BirthdaySystematic, .name="special (Birthday)" },
 	{ .number=20, .callback=testset_experimental, .name="experimental" },
-	{ .number=-1, .callback=nullptr, .name=nullptr }
+	{ .number=-1, .callback=nullptr, .name=nullptr },
 };
 int lookup_te_value(int te) {
 	for (int i = 0; true; i++) {

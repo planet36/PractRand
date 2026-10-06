@@ -21,7 +21,7 @@ namespace PractRand::Testing::RNG_Sets {
 				"xsm64", "xsm32",
 				"jsf64", "jsf32", "sfc64", "sfc32", "sfc16",
 				"mt19937",
-				nullptr
+				nullptr,
 			};
 			const char* nonrecommended_simple[] = {
 				"xorshift32", "xorshift64", "xorshift32of128", "xoroshiro128plus",
@@ -36,11 +36,11 @@ namespace PractRand::Testing::RNG_Sets {
 				"gjishA", "gjishB", "gjishC", "gjishD",
 				"ara16", "ara32", "arx16", "arx32", "hara16", "harx16", "learx16", "hlearx16", "alearx16", "arac16", "arxc16",
 				"rarns16",
-				nullptr
+				nullptr,
 			};
 			const char* nonrecommended_nonLCG[] = {
 				//"garthy16", "garthy32", "binarymult16", "binarymult32", "rxmult16",
-				nullptr
+				nullptr,
 			};
 }
 
