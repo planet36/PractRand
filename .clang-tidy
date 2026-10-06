@@ -16,6 +16,7 @@ Checks:
   - -bugprone-easily-swappable-parameters
   - -bugprone-implicit-widening-of-multiplication-result
   - -bugprone-narrowing-conversions
+  - -bugprone-signed-bitwise
   - -bugprone-signed-char-misuse
   - -cert-dcl58-cpp
   - -cert-dcl59-cpp
