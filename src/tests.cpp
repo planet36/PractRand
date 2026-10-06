@@ -3938,7 +3938,7 @@ void PractRand::Tests::FPF::get_results(std::vector<TestResult>& results) {
 				else ebits = sig_bits;
 				int bins = 1<<ebits;
 				double truncated_expected = expected * std::pow(.5, double(ebits));
-				for (int x = 0; x < bins; x++) if (intra_counts[x]) if (intra_counts[x]) over_raw += intra_counts[x] * std::log(intra_counts[x] / truncated_expected);
+				for (int x = 0; x < bins; x++) if (intra_counts[x]) over_raw += intra_counts[x] * std::log(intra_counts[x] / truncated_expected);
 				over_bins += bins;
 				if (ebits < 3) continue; // too few distinct values show up in calibration data
 				double raw = g_test(bins, intra_probs.data(), intra_counts.data());
