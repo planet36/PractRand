@@ -312,7 +312,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					cbuf1[index1] = tmp1 + tmp2;
-					cbuf2[index2] = ((tmp1 << 11) | (tmp1 >> 21)) ^ tmp2;
+					cbuf2[index2] = std::rotl(tmp1, 11) ^ tmp2;
 					if (!index1) index1 = L1;
 					if (!index2) index2 = L2;
 					return tmp1 + tmp2;
@@ -333,7 +333,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
 					cbuf1[index1] = tmp1 + tmp2;
-					cbuf2[index2] = ((tmp1 << 11) | (tmp1 >> 21)) ^ tmp2;
+					cbuf2[index2] = std::rotl(tmp1, 11) ^ tmp2;
 					if (!index1) index1 = L1;
 					if (!index2) index2 = L2;
 					return tmp1 + tmp2;

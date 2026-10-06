@@ -323,7 +323,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!counter) scale += 2;
 					scale += 2;
 					uint16_t temp = value * scale;
-					value += ((temp << 7) | (temp >> 9)) ^ counter++;
+					value += std::rotl(temp, 7) ^ counter++;
 					return value;
 				}
 				std::string garthy16::get_name() const { return "garthy16"; }
@@ -335,7 +335,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					if (!counter) scale += 2;
 					scale += 2;
 					uint32_t temp = value * scale;
-					value += ((temp << 13) | (temp >> 19)) ^ counter++;
+					value += std::rotl(temp, 13) ^ counter++;
 					return value;
 				}
 				std::string garthy32::get_name() const {return "garthy32";}
@@ -385,7 +385,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint64_t multish2x64::raw64() {
 					uint64_t old = ~a;
 					a = (a * 0xa536c4b9) + b;
-					b += (old << 21) | (old >> 43);
+					b += std::rotl(old, 21);
 					return old;
 				}
 				std::string multish2x64::get_name() const {return "multish2x64";}

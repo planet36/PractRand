@@ -31,7 +31,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b ^ (b >> 3);
 					b = c ^ (c << 7);
 					c = c ^ (c >> 8) ^ old;
-					return c + ((tmp << 5) | (tmp >> 11));
+					return c + std::rotl(tmp, 5);
 				}
 				std::string xsaltb16x3::get_name() const { return "xsaltb16x3"; }
 				void xsaltb16x3::walk_state(StateWalkingObject* walker) {
@@ -264,7 +264,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint32_t sapparot::raw32() {
 					uint32_t tmp = 0;
 					tmp = a + 0x9e3779b9;
-					tmp = (tmp << 7) | (tmp >> 25);
+					tmp = std::rotl(tmp, 7);
 					a = b ^ (~tmp) ^ (tmp << 3);
 					a = (a << 7) | (a >> 25);
 					b = tmp;
@@ -279,7 +279,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint16_t sap16of48::raw16() {
 					uint16_t tmp = 0;
 					tmp = a + 0x79b9 + c;
-					tmp = (tmp << 5) | (tmp >> 11);
+					tmp = std::rotl(tmp, 5);
 					a = b ^ (~tmp) ^ (tmp << 3);
 					a = (a << 5) | (a >> 11);
 					b = tmp;
@@ -295,7 +295,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint32_t sap32of96::raw32() {
 					uint32_t tmp = 0;
 					tmp = a + 0x9e3779b9 + c;
-					tmp = (tmp << 7) | (tmp >> 25);
+					tmp = std::rotl(tmp, 7);
 					a = b ^ (~tmp) ^ (tmp << 3);
 					a = (a << 7) | (a >> 25);
 					b = tmp;
