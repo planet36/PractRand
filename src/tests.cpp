@@ -4334,15 +4334,21 @@ void PractRand::Tests::FPMulti::process(uint64_t position, unsigned long e, unsi
 		uint64_t old_pos = p.gap_global_history[gap_sig];
 		p.gap_global_history[gap_sig] = position;// & 0x7FffFFffFFffFFffull;
 		constexpr int WARMUP_SETS = 2;
+		// Shift in 64 bits, since an int overflows once e reaches 21.
+		// A platter whose warmup distance does not fit in 64 bits never warms up.
+		auto get_warmup_distance = [e] {
+			if (e + GAP_SIG_BITS >= 63) return UINT64_MAX;
+			return uint64_t{WARMUP_SETS} << (e + GAP_SIG_BITS);
+		};
 		if (!p.gap_warmed_up) {
-			uint64_t warmup_distance = WARMUP_SETS << (e + GAP_SIG_BITS);
+			uint64_t warmup_distance = get_warmup_distance();
 			if (position >= warmup_distance) p.gap_warmed_up = true;
 		}
 		if (p.gap_warmed_up) {
 			p.gap_hits += 1;
 			double g = (position - old_pos);// & 0x7FffFFffFFffFFffull;
 			if (!old_pos) {
-				uint64_t warmup_distance = WARMUP_SETS << (e + GAP_SIG_BITS);
+				uint64_t warmup_distance = get_warmup_distance();
 				g += (g - warmup_distance) * 1.5;
 			}
 			double normalized = g * p.gap_expected_inverse;
