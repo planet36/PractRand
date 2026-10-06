@@ -225,10 +225,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				std::string Xor::get_name() const {
 					std::string rv = "xor(";
 					for (unsigned int sri = 0; sri < source_rngs.size(); sri++) {
-						if (sri) rv += ",";
+						if (sri) rv += ',';
 						rv += source_rngs[sri]->get_name();
 					}
-					rv += ")";
+					rv += ')';
 					return rv;
 				}
 
