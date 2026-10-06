@@ -371,7 +371,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint16_t rxmult16::raw16() {
 					if (!a) {c++; if (!c) {c=1; d+=2;}}
 					a = a * 0x9ad + d;
-					b = (((b<<7)|(b>>9)) + a) ^ c;
+					b = (std::rotl(b, 7) + a) ^ c;
 					uint16_t tmp = b * 5245;
 					tmp ^= tmp >> 8;
 					return tmp + a;
@@ -395,7 +395,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint32_t multish3x32::raw32() {
 					uint32_t old = a;
 					a = (b * 0xa536c4b9) + c++;
-					b = ((b << 7) | (b >> 25)) + old;
+					b = std::rotl(b, 7) + old;
 					return old;
 				}
 				std::string multish3x32::get_name() const {return "multish3x32";}
@@ -406,7 +406,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint16_t old = a;
 					if (!c++) d++;
 					a = (b^d) * 0x96b9 + c;
-					b = ((b << 5) | (b >> 11)) ^ old;
+					b = std::rotl(b, 5) ^ old;
 					return old;
 				}
 				std::string multish4x16::get_name() const {return "multish4x16";}

@@ -357,11 +357,11 @@ static void mix4x32(uint32_t &a, uint32_t &b, uint32_t &c, uint32_t &d) {
 	b ^= a + (a << 13);
 	c += b ^ (b >> 5);
 	d ^= c + b;
-	a += d ^ ((c << 8) | (c >> 24));
+	a += d ^ std::rotl(c, 8);
 	b ^= a + (a << 11);
 	c += b ^ (b >> 9);
 	d ^= c + b;
-	a += d ^ ((c << 8) | (c >> 24));
+	a += d ^ std::rotl(c, 8);
 }
 */
 void PractRand::RNGs::Raw::efiix32x48::seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4) {

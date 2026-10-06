@@ -237,7 +237,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				//
 				uint32_t cbuf_accum::raw32() {
 					uint32_t tmp = cbuf[--index];
-					accum = ((accum << 11) | (accum >> 21)) + ~tmp;
+					accum = std::rotl(accum, 11) + ~tmp;
 					cbuf[index] = accum;
 					if (!index) index = L;
 					return accum;
@@ -252,7 +252,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				}
 				uint32_t cbuf_accum_big::raw32() {
 					uint32_t tmp = cbuf[--index];
-					accum = ((accum << 11) | (accum >> 21)) + ~tmp;
+					accum = std::rotl(accum, 11) + ~tmp;
 					cbuf[index] = accum;
 					if (!index) index = L;
 					return accum;
@@ -293,7 +293,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint32_t cbuf_2accum::raw32() {
 					uint32_t tmp = cbuf[--index] + accum2;
 					accum2 += accum1;
-					accum1 = ((accum1 << 11) | (accum1 >> 21)) ^ tmp;
+					accum1 = std::rotl(accum1, 11) ^ tmp;
 					cbuf[index] = accum2;
 					if (!index) index = L;
 					return accum2;
@@ -353,7 +353,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint32_t tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
-					accum = ((accum << 11) | (accum >> 21)) + tmp1;
+					accum = std::rotl(accum, 11) + tmp1;
 					cbuf1[index1] = tmp1 ^ tmp2;
 					cbuf2[index2] = accum;
 					if ( !index1 ) index1 = L1;
@@ -376,7 +376,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint32_t tmp1 = 0, tmp2 = 0;
 					tmp1 = cbuf1[--index1];
 					tmp2 = cbuf2[--index2];
-					accum = ((accum << 11) | (accum >> 21)) + tmp1;
+					accum = std::rotl(accum, 11) + tmp1;
 					cbuf1[index1] = tmp1 ^ tmp2;
 					cbuf2[index2] = accum;
 					if (!index1) index1 = L1;

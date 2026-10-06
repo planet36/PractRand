@@ -82,7 +82,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (int i = 0; i <= mask; i++) {
 						uint8_t x = 0, y = 0;
 						x = base[i];
-						a = ((a << 5) | (a >> 3)) + base[(i+half_size) & mask];
+						a = std::rotl(a, 5) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
 						base[i] = y;
 						b = base[(y >> table_size_L2) & mask] + x;
@@ -118,7 +118,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (int i = 0; i <= mask; i++) {
 						uint16_t x = 0, y = 0;
 						x = base[i];
-						a = ((a << 11) | (a >> 5)) + base[(i+half_size) & mask];
+						a = std::rotl(a, 11) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
 						base[i] = y;
 						b = base[(y >> table_size_L2) & mask] + x;
@@ -154,7 +154,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					for (int i = 0; i <= mask; i++) {
 						uint32_t x = 0, y = 0;
 						x = base[i];
-						a = ((a << 19) | (a >> 13)) + base[(i+half_size) & mask];
+						a = std::rotl(a, 19) + base[(i+half_size) & mask];
 						y = base[x & mask] + a + b;
 						base[i] = y;
 						b = base[(y >> table_size_L2) & mask] + x;

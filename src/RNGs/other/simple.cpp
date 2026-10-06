@@ -12,7 +12,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 	using namespace Internals;
 				uint16_t xsalta16x3::raw16() {//slightly more complex output function
 					uint16_t tmp = 0, old = 0;
-					tmp = a + c + ((b >> 11) | (b << 5));
+					tmp = a + c + std::rotl(b, 5);
 					old = a;
 					a = b ^ (b >> 3);
 					b = c ^ (c << 7);
@@ -266,7 +266,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp = a + 0x9e3779b9;
 					tmp = std::rotl(tmp, 7);
 					a = b ^ (~tmp) ^ (tmp << 3);
-					a = (a << 7) | (a >> 25);
+					a = std::rotl(a, 7);
 					b = tmp;
 					return a ^ b;
 				}
@@ -281,7 +281,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp = a + 0x79b9 + c;
 					tmp = std::rotl(tmp, 5);
 					a = b ^ (~tmp) ^ (tmp << 3);
-					a = (a << 5) | (a >> 11);
+					a = std::rotl(a, 5);
 					b = tmp;
 					c = (c + a) ^ b;
 					return b;
@@ -297,7 +297,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					tmp = a + 0x9e3779b9 + c;
 					tmp = std::rotl(tmp, 7);
 					a = b ^ (~tmp) ^ (tmp << 3);
-					a = (a << 7) | (a >> 25);
+					a = std::rotl(a, 7);
 					b = tmp;
 					c = (c + a) ^ b;
 					return b;
@@ -480,8 +480,8 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					walker->handle(counter);
 				}
 				uint16_t jsf16::raw16() {
-					uint16_t e = a - ((b << 13) | (b >> 3));
-					a = b ^ ((c << 9) | (c >> 7));
+					uint16_t e = a - std::rotl(b, 13);
+					a = b ^ std::rotl(c, 9);
 					b = c + d;
 					c = d + e;
 					d = e + a;
@@ -622,7 +622,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint32_t old = a + b;
 					a = b ^ c;
 					b = c + old;
-					c = old + ((c << 13) | (c >> 19));
+					c = old + std::rotl(c, 13);
 					return old;
 				}
 				std::string simpleE::get_name() const { return "simpleE"; }
@@ -636,7 +636,7 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					a = b ^ (c & d);
 					b = c + old;
 					c = ~d;
-					d = old + ((d << 5) | (d >> 11));
+					d = old + std::rotl(d, 5);
 					return c;
 				}
 				std::string simpleF::get_name() const { return "simpleF"; }

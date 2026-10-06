@@ -6,6 +6,7 @@
 #include "PractRand/rng_helpers.h"
 #include "PractRand/rng_internals.h"
 
+#include <bit>
 #include <cstdint>
 #include <string>
 
@@ -24,8 +25,8 @@ std::string PractRand::RNGs::Polymorphic::jsf32::get_name() const {return "jsf32
 
 //raw:
 uint32_t PractRand::RNGs::Raw::jsf32::raw32() {//LOCKED, do not change
-	uint32_t e = a - ((b << 27) | (b >> 5));
-	a = b ^ ((c << 17) | (c >> 15));
+	uint32_t e = a - std::rotl(b, 27);
+	a = b ^ std::rotl(c, 17);
 	b = c + d;
 	c = d + e;
 	d = e + a;
@@ -106,8 +107,8 @@ void PractRand::RNGs::Raw::jsf32::walk_state(StateWalkingObject* walker) {
 }
 uint64_t PractRand::RNGs::Raw::jsf64::raw64() {
 	//LOCKED, do not change
-	uint64_t e = a - ((b << 39) | (b >> 25));
-	a = b ^ ((c << 11) | (c >> 53));
+	uint64_t e = a - std::rotl(b, 39);
+	a = b ^ std::rotl(c, 11);
 	b = c + d;
 	c = d + e;
 	d = e + a;
