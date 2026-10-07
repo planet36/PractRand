@@ -2,6 +2,7 @@
 
 #include "PractRand/rng_basics.h"
 
+#include <bit>
 #include <cmath>
 #include <limits>
 #include <vector>
@@ -184,7 +185,7 @@ namespace PractRand::Tests {
 		public:
 			static constexpr int WORD_BITS = sizeof(Word)*8;
 			static constexpr int WORD_BITS_MASK = WORD_BITS-1;
-			static constexpr int WORD_BITS_L2 = WORD_BITS==64?6:(WORD_BITS==32?5:(WORD_BITS==16?4:(WORD_BITS==8?3:-1)));
+			static constexpr int WORD_BITS_L2 = std::countr_zero(sizeof(Word)*8);
 			void init(int w_, int h_);
 			void raw_import(int offset, const Word* input, int length);
 			void import_partial_row(int x, int y, const Word* input, int bits, int bit_offset, bool zeroed=false);

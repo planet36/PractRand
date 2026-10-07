@@ -23,7 +23,7 @@ namespace PractRand::Tests {
 				*/
 
 			static constexpr int WORD_BITS = sizeof(Word)* 8;
-			static constexpr int WORD_BITS_L2 = (WORD_BITS == 8) ? 3 : ((WORD_BITS == 16) ? 4 : ((WORD_BITS == 32) ? 5 : ((WORD_BITS == 64) ? 6 : -1)));
+			static constexpr int WORD_BITS_L2 = std::countr_zero(sizeof(Word)* 8);
 			static constexpr int NUM_BUCKETS_L2 = 9;
 			static constexpr int NUM_BUCKETS = 1 << NUM_BUCKETS_L2;
 			static constexpr int BITS_PER_BLOCK = 7;
@@ -86,7 +86,7 @@ namespace PractRand::Tests {
 				*/
 
 			static constexpr int WORD_BITS = sizeof(Word)* 8;
-			static constexpr int WORD_BITS_L2 = (WORD_BITS == 8) ? 3 : ((WORD_BITS == 16) ? 4 : ((WORD_BITS == 32) ? 5 : ((WORD_BITS == 64) ? 6 : -1)));
+			static constexpr int WORD_BITS_L2 = std::countr_zero(sizeof(Word)* 8);
 			static constexpr int NUM_BUCKETS_L2 = 8;
 			static constexpr int NUM_BUCKETS = 1 << NUM_BUCKETS_L2;
 			static constexpr int BITS_PER_BLOCK = 32;

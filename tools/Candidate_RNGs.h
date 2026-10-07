@@ -120,6 +120,17 @@ public:\
 	std::string get_name() const override {return std::string(#rng) + #bits ;}\
 };
 
+// Returns the value for the given word size, or -1 for a word size with no value.
+constexpr int by_word_bits(int word_bits, int if64, int if32, int if16, int if8 = -1) {
+	switch (word_bits) {
+		case 64: return if64;
+		case 32: return if32;
+		case 16: return if16;
+		case 8: return if8;
+		default: return -1;
+	}
+}
+
 template<typename Word, int LAG1, int LAG2, int SHIFT1, int SHIFT2, int SHIFT3>
 class RanrotVariant {
 public:
@@ -475,7 +486,7 @@ public:
 		return a;
 	}
 	void _seed(uint64_t s) {
-		constexpr int SEEDING_ROUNDS = (OUTPUT_BITS == 64) ? 24 : ((OUTPUT_BITS == 32) ? 24 : ((OUTPUT_BITS == 16) ? 16 : ((OUTPUT_BITS == 8) ? 12 : -1)));
+		constexpr int SEEDING_ROUNDS = by_word_bits(OUTPUT_BITS, 24, 24, 16, 12);
 		//16 bit: 9/10/12/16
 		//32 bit: 15/18/21/24
 		//64 bit: ?
@@ -672,12 +683,12 @@ public:
 	static constexpr int EXTRA_ROUNDS = 2;
 	static constexpr int ROUNDS_PER_OUTPUT = 1;
 	static constexpr int WORD_BITS = sizeof(Word)* 8;
-	static constexpr int SH1 = (WORD_BITS == 64) ? 11 : ((WORD_BITS == 32) ?  5 : ((WORD_BITS == 16) ? 3 : -1));
-	static constexpr int SH2 = (WORD_BITS == 64) ? 16 : ((WORD_BITS == 32) ?  8 : ((WORD_BITS == 16) ? 4 : -1));
-	static constexpr int SH3 = (WORD_BITS == 64) ? 32 : ((WORD_BITS == 32) ? 16 : ((WORD_BITS == 16) ? 8 : -1));
-	static constexpr int SH4 = (WORD_BITS == 64) ? 13 : ((WORD_BITS == 32) ?  9 : ((WORD_BITS == 16) ? 3 : -1));
-	static constexpr int SH5 = (WORD_BITS == 64) ? 19 : ((WORD_BITS == 32) ? 11 : ((WORD_BITS == 16) ? 5 : -1));
-	static constexpr int SH6 = (WORD_BITS == 64) ? 32 : ((WORD_BITS == 32) ? 16 : ((WORD_BITS == 16) ? 8 : -1));
+	static constexpr int SH1 = by_word_bits(WORD_BITS, 11,  5, 3);
+	static constexpr int SH2 = by_word_bits(WORD_BITS, 16,  8, 4);
+	static constexpr int SH3 = by_word_bits(WORD_BITS, 32, 16, 8);
+	static constexpr int SH4 = by_word_bits(WORD_BITS, 13,  9, 3);
+	static constexpr int SH5 = by_word_bits(WORD_BITS, 19, 11, 5);
+	static constexpr int SH6 = by_word_bits(WORD_BITS, 32, 16, 8);
 	Word k1, k2, counter;
 	class SipHash {
 	public:
