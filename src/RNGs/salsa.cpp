@@ -11,9 +11,6 @@
 #include <sstream>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
-
 /*
 Salsa matrix structure:
 00-03	constant0, seed0, seed1, seed2

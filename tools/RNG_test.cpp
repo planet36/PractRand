@@ -55,8 +55,6 @@
 #include <system_error>
 #include <vector>
 
-using namespace PractRand;
-
 //PractRand::RNGs::Polymorphic::hc256 known_good(PractRand::SEED_AUTO);
 
 //using TimeUnit = std::chrono::system_clock::rep;
@@ -297,7 +295,7 @@ void show_checkpoint(TestManager* tman, int mode, uint64_t seed, std::chrono::st
 	std::println("");
 
 	std::print("length= ");
-	uint64_t length = tman->get_blocks_so_far() * Tests::TestBlock::SIZE;
+	uint64_t length = tman->get_blocks_so_far() * PractRand::Tests::TestBlock::SIZE;
 	double log2b = std::log(double(length)) / std::numbers::ln2;
 	const char* unitstr[6] = {"kibibyte", "mebibyte", "gibibyte", "tebibyte", "pebibyte", "exbibyte"};
 	int units = int(std::floor(log2b / 10)) - 1;
@@ -453,7 +451,7 @@ PractRand::Tests::ListOfTests testset_experimental() {
 	//return PractRand::Tests::ListOfTests(new PractRand::Tests::BirthdayLamda1(20));
 	//return PractRand::Tests::ListOfTests(new PractRand::Tests::Rep16());
 	//return PractRand::Tests::ListOfTests(new PractRand::Tests::FPMulti());
-	return PractRand::Tests::ListOfTests(new Tests::FPF(4, 14, 6));
+	return PractRand::Tests::ListOfTests(new PractRand::Tests::FPF(4, 14, 6));
 }
 struct UnfoldedTestSet {
 	int number;
@@ -645,7 +643,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	Seeder_MetaRNG::register_name();
 	EntropyPool_MetaRNG::register_name();
 	std::string errmsg;
-	RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
+	PractRand::RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
 	if (!rng) {
 		if (errmsg.empty()) std::println(stderr, "unrecognized RNG name.  aborting.");
 		else std::println(stderr, "{}", errmsg);
@@ -771,13 +769,13 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 			double length = interpret_length(argv[++i], !mode);
 			if (!length) {std::println("invalid test length: {}", argv[i]);std::exit(0);}
 			if (length < 0) show_times[-length] = TL_SHOW;
-			else show_datas[uint64_t(length) / Tests::TestBlock::SIZE] = TL_SHOW;
+			else show_datas[uint64_t(length) / PractRand::Tests::TestBlock::SIZE] = TL_SHOW;
 		}
 	}
 	if (show_min < 0) show_times[-show_min] = TL_MIN;
-	else show_datas[uint64_t(show_min) / Tests::TestBlock::SIZE] = TL_MIN;
+	else show_datas[uint64_t(show_min) / PractRand::Tests::TestBlock::SIZE] = TL_MIN;
 	if (show_max < 0) show_times[-show_max] = TL_MAX;
-	else show_datas[uint64_t(show_max) / Tests::TestBlock::SIZE] = TL_MAX;
+	else show_datas[uint64_t(show_max) / PractRand::Tests::TestBlock::SIZE] = TL_MAX;
 
 	if (do_self_test) PractRand::self_test_PractRand();
 
@@ -868,12 +866,12 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 
 	std::println("\n");
 
-	Tests::ListOfTests tests( static_cast<Tests::TestBaseclass*>(nullptr));
+	PractRand::Tests::ListOfTests tests( static_cast<PractRand::Tests::TestBaseclass*>(nullptr));
 	if (test_set_index == -1) { std::println("internal error"); std::exit(1); }
 	if constexpr (false) { ; }
 	else if (folding == 0) { tests = test_sets[test_set_index].callback(); }
-	else if (folding == 1) { tests = Tests::Batteries::apply_standard_foldings(testing_rng, test_sets[test_set_index].callback); }
-	else if (folding == 2) { tests = Tests::Batteries::apply_extended_foldings(test_sets[test_set_index].callback); }
+	else if (folding == 1) { tests = PractRand::Tests::Batteries::apply_standard_foldings(testing_rng, test_sets[test_set_index].callback); }
+	else if (folding == 2) { tests = PractRand::Tests::Batteries::apply_extended_foldings(test_sets[test_set_index].callback); }
 	else { std::println("internal error"); std::exit(1); }
 
 //	Tests::ListOfTests tests = Tests::Batteries::get_expanded_standard_tests(rng);

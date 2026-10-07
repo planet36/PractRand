@@ -9,8 +9,6 @@
 #include <string>
 
 
-using namespace PractRand;
-
 
 PractRand::RNGs::Polymorphic::sha2_based_pool::~sha2_based_pool() {
 	std::memset(state, 0, STATE_SIZE);

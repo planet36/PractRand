@@ -9,7 +9,6 @@
 #include <string>
 
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
-	using namespace Internals;
 				uint32_t lcg32of64_varqual::raw32() {
 					state = state * 1103515245 + 12345;
 					return uint32_t(state >> outshift);

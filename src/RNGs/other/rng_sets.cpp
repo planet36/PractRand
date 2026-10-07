@@ -8,9 +8,6 @@
 #include <sstream>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
-
 namespace PractRand::Testing::RNG_Sets {
 			const char* recommended_rngs[] = {
 				"hc256", "trivium",

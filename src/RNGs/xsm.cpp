@@ -8,8 +8,8 @@
 #include <cstdint>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
+using PractRand::Internals::fast_forward_lcg128;
+using PractRand::Internals::fast_forward_lcg64;
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(xsm32)

@@ -8,8 +8,6 @@
 #include <cstring>
 #include <string>
 
-using namespace PractRand;
-
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(hc256)
 std::string PractRand::RNGs::Polymorphic::hc256::get_name() const {return "hc256";}

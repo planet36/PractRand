@@ -9,7 +9,6 @@
 #include <string>
 
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
-	using namespace Internals;
 				uint16_t xsalta16x3::raw16() {//slightly more complex output function
 					uint16_t tmp = 0, old = 0;
 					tmp = a + c + std::rotl(b, 5);

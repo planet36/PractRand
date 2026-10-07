@@ -10,8 +10,6 @@
 #include <cstdint>
 #include <string>
 
-using namespace PractRand;
-
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(jsf64)
 void PractRand::RNGs::Polymorphic::jsf64::seed(uint64_t s) {implementation.seed(s);}

@@ -13,9 +13,6 @@
 #include <span>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
-
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C8(efiix8x48)
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(uint64_t s) { implementation.seed(s); }
 void PractRand::RNGs::Polymorphic::efiix8x48::seed(vRNG* seeder_rng) { implementation.seed(seeder_rng); }

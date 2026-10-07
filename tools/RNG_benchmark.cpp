@@ -32,8 +32,6 @@
 #include <string>
 //#include <vector>
 
-using namespace PractRand;
-
 
 template<typename RNG>
 double benchmark_seeding(/*PractRand::RNGs::vRNG *rng*/) {
@@ -182,21 +180,21 @@ void benchmark_entropy_pool(PractRand::RNGs::vRNG& entropy_pool, DataBlock* data
 }
 void benchmark_random_access_rngs() {
 	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
-	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
+	PractRand::RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data{};
 	for (auto& i : data.as64) i = rng.raw64();
-	RNGs::Polymorphic::arbee poly_arbee;
-	RNGs::Polymorphic::sha2_based_pool sha2_based;
+	PractRand::RNGs::Polymorphic::arbee poly_arbee;
+	PractRand::RNGs::Polymorphic::sha2_based_pool sha2_based;
 	benchmark_entropy_pool(poly_arbee, &data);
 	benchmark_entropy_pool(sha2_based, &data);
 }
 void benchmark_entropy_pool_input() {
 	//constexpr int NUM_CLOCKS_TO_TEST = int(CLOCKS_PER_SEC * .15) + 1;
-	RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
+	PractRand::RNGs::Polymorphic::isaac64x256 rng(PractRand::SEED_AUTO);
 	DataBlock data{};
 	for (auto& i : data.as64) i = rng.raw64();
-	RNGs::Polymorphic::arbee poly_arbee;
-	RNGs::Polymorphic::sha2_based_pool sha2_based;
+	PractRand::RNGs::Polymorphic::arbee poly_arbee;
+	PractRand::RNGs::Polymorphic::sha2_based_pool sha2_based;
 	benchmark_entropy_pool(poly_arbee, &data);
 	benchmark_entropy_pool(sha2_based, &data);
 }

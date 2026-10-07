@@ -9,9 +9,6 @@
 #include <sstream>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
-
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				bigbadlcg64X::bigbadlcg64X(int discard_bits_, int shift_bits_) : discard_bits(discard_bits_) {
 					int max_discard_bits = MAX_N * 64 - 64;

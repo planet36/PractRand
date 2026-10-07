@@ -39,8 +39,6 @@
 #include <system_error>
 #include <vector>
 
-using namespace PractRand;
-
 
 bool interpret_seed(const std::string& seedstr, uint64_t& seed) {
 	const char* first = seedstr.data();
@@ -80,7 +78,7 @@ int main(int argc, char** argv) { // NOLINT(bugprone-exception-escape)
 	Seeder_MetaRNG::register_name();
 	EntropyPool_MetaRNG::register_name();
 	std::string errmsg;
-	RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
+	PractRand::RNGs::vRNG* rng = RNG_Factories::create_rng(argv[1], &errmsg);
 
 	if (!rng) {
 		if (errmsg.empty()) { std::println(stderr, "RNG_output ERROR: unrecognized RNG name"); print_usage(argv[0]); }

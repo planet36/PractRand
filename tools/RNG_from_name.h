@@ -211,7 +211,8 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::num_recommended_rngs;
+		using PractRand::RNG_Sets::recommended_rngs;
 		if (index < 1 || index > num_recommended_rngs) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(recommended_rngs[index - 1]);
 	}
@@ -219,7 +220,8 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::nonrecommended_simple;
+		using PractRand::RNG_Sets::num_nonrecommended_simple;
 		if (index < 1 || index > num_nonrecommended_simple) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_simple[index - 1]);
 	}
@@ -227,7 +229,8 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::nonrecommended_nonlcg;
+		using PractRand::RNG_Sets::num_nonrecommended_nonlcg;
 		if (index < 1 || index > num_nonrecommended_nonlcg) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_nonlcg[index - 1]);
 	}
@@ -235,7 +238,8 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::nonrecommended_lcgish;
+		using PractRand::RNG_Sets::num_nonrecommended_lcgish;
 		if (index < 1 || index > num_nonrecommended_lcgish) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_lcgish[index - 1]);
 	}
@@ -243,7 +247,8 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::nonrecommended_cbuf;
+		using PractRand::RNG_Sets::num_nonrecommended_cbuf;
 		if (index < 1 || index > num_nonrecommended_cbuf) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_cbuf[index - 1]);
 	}
@@ -251,7 +256,8 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::nonrecommended_indirect;
+		using PractRand::RNG_Sets::num_nonrecommended_indirect;
 		if (index < 1 || index > num_nonrecommended_indirect) { params.emplace_back("rngset lookup index out of range"); return nullptr; }
 		return create_rng(nonrecommended_indirect[index - 1]);
 	}
@@ -259,7 +265,16 @@ namespace RNG_Factories {
 		if (params.empty()) { params.emplace_back("rngset lookup requires index"); return nullptr; }
 		int index = 0;
 		if (!parse_number(params.front(), index)) { params.emplace_back("rngset lookup index must be an integer"); return nullptr; }
-		using namespace PractRand::RNG_Sets;
+		using PractRand::RNG_Sets::nonrecommended_cbuf;
+		using PractRand::RNG_Sets::nonrecommended_indirect;
+		using PractRand::RNG_Sets::nonrecommended_lcgish;
+		using PractRand::RNG_Sets::nonrecommended_nonlcg;
+		using PractRand::RNG_Sets::nonrecommended_simple;
+		using PractRand::RNG_Sets::num_nonrecommended_cbuf;
+		using PractRand::RNG_Sets::num_nonrecommended_indirect;
+		using PractRand::RNG_Sets::num_nonrecommended_lcgish;
+		using PractRand::RNG_Sets::num_nonrecommended_nonlcg;
+		using PractRand::RNG_Sets::num_nonrecommended_simple;
 		if (index < 1) {// || index > num_nonrecommended_simple + num_nonrecommended_nonlcg + num_nonrecommended_lcgish + num_nonrecommended_cbuf + num_nonrecommended_indirect) {
 			params.emplace_back("rngset lookup index out of range");
 			return nullptr;

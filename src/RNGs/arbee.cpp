@@ -8,9 +8,6 @@
 #include <cstdint>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
-
 //raw:
 void PractRand::RNGs::Raw::arbee::reset_entropy() {
 	//the default state is arrived at by setting all values to 1, then calling mix()

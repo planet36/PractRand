@@ -9,9 +9,6 @@
 #include <cstdint>
 #include <string>
 
-using namespace PractRand;
-using namespace PractRand::Internals;
-
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(sfc64)
 void PractRand::RNGs::Polymorphic::sfc64::seed(uint64_t s) {implementation.seed(s);}

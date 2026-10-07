@@ -8,8 +8,6 @@
 #include <cstring>
 #include <string>
 
-using namespace PractRand;
-
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(isaac32x256)
 void PractRand::RNGs::Polymorphic::isaac32x256::seed(uint64_t s) { implementation.seed(s); }

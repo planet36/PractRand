@@ -25,8 +25,6 @@ Two functions are performed that may need to use platform-specific functionality
 			(this should get used at most once per thread creation)
 */
 
-using namespace PractRand;
-
 bool PractRand::Internals::add_entropy_automatically( PractRand::RNGs::vRNG* entropy_pool, [[maybe_unused]] int milliseconds ) {
 	//the intention is for "milliseconds" to be an amount of time that this function is permitted to spend on obtaining entropy
 	//but currently nothing that spends time in a controlled fashion is implemented, so it's meaningless

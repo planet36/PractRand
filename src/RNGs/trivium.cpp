@@ -9,8 +9,6 @@
 #include <cstring>
 #include <string>
 
-using namespace PractRand;
-
 
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C64(trivium)

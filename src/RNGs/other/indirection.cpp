@@ -10,8 +10,6 @@
 #include <sstream>
 #include <string>
 
-using namespace PractRand::Internals;
-
 namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				uint8_t rc4::raw8() {
 					b += arr[a];

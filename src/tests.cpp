@@ -40,7 +40,8 @@
 #include <utility>
 #include <vector>
 
-using namespace PractRand;
+using PractRand::TestResult;
+using PractRand::issue_error;
 
 static long double gap_probs(int first, int last, long double chance_of_not_gap1) {
 	return std::pow(chance_of_not_gap1, static_cast<long double>(first)) - std::pow(chance_of_not_gap1, static_cast<long double>(last) + 1);
@@ -1486,7 +1487,7 @@ public:
 	uint32_t transform_index(uint32_t old_index) { return lookup0[uint8_t(old_index >> 0)] | lookup1[uint8_t(old_index >> 8)] | lookup2[uint8_t(old_index >> 16)] | lookup3[uint8_t(old_index >> 24)]; }
 };
 
-void Tests::TestBlock::fill(RNGs::vRNG* rng, unsigned long numblocks) {
+void PractRand::Tests::TestBlock::fill(PractRand::RNGs::vRNG* rng, unsigned long numblocks) {
 	int b = rng->get_native_output_size();
 	unsigned long n = numblocks * SIZE;
 	switch (b) {
@@ -1511,10 +1512,10 @@ void Tests::TestBlock::fill(RNGs::vRNG* rng, unsigned long numblocks) {
 			break;
 	}
 }
-Tests::ListOfTests::ListOfTests(TestBaseclass** tests_) {
+PractRand::Tests::ListOfTests::ListOfTests(TestBaseclass** tests_) {
 	for (int i = 0; tests_[i]; i++) tests.push_back(tests_[i]);
 }
-Tests::ListOfTests::ListOfTests(
+PractRand::Tests::ListOfTests::ListOfTests(
 	TestBaseclass* test1, TestBaseclass* test2, TestBaseclass* test3, TestBaseclass* test4,
 	TestBaseclass* test5, TestBaseclass* test6, TestBaseclass* test7, TestBaseclass* test8,
 	TestBaseclass* test9, TestBaseclass* test10, TestBaseclass* test11, TestBaseclass* test12,
@@ -4806,7 +4807,7 @@ void PractRand::Tests::Birthday32::init([[maybe_unused]] PractRand::RNGs::vRNG* 
 	num_buffered = 0;
 	for (auto& count : counts) count = 0;
 }
-std::string Tests::Birthday32::get_name() const {
+std::string PractRand::Tests::Birthday32::get_name() const {
 	return "BDay32";
 }
 void PractRand::Tests::Birthday32::get_results(std::vector<TestResult>& results) {
@@ -5026,7 +5027,7 @@ void PractRand::Tests::Birthday64::init([[maybe_unused]] PractRand::RNGs::vRNG* 
 	num_buffered = 0;
 	for (auto& count : counts) count = 0;
 }
-std::string Tests::Birthday64::get_name() const {
+std::string PractRand::Tests::Birthday64::get_name() const {
 	return "BDay64";
 }
 void PractRand::Tests::Birthday64::get_results(std::vector<TestResult>& results) {
@@ -5403,7 +5404,7 @@ void PractRand::Tests::BirthdayLamda1::init([[maybe_unused]] PractRand::RNGs::vR
 	for (auto& sort_helper_count : sort_helper_counts) sort_helper_count = 0;
 	autofail = false;
 }
-std::string Tests::BirthdayLamda1::get_name() const {
+std::string PractRand::Tests::BirthdayLamda1::get_name() const {
 	std::stringstream buf;
 	buf << "BDayL1(" << buffer_size_L2 << ")";
 	return buf.str();
@@ -5583,7 +5584,7 @@ void PractRand::Tests::BirthdaySystematic128::init(PractRand::RNGs::vRNG* known_
 	incomplete_expected_duplicates = 0;
 	//incomplete_duplicates = 0;
 }
-std::string Tests::BirthdaySystematic128::get_name() const {
+std::string PractRand::Tests::BirthdaySystematic128::get_name() const {
 	std::ostringstream buf;
 	buf << "BDayS128(" << buffer_size_L2 << ")";
 	return buf.str();
@@ -5818,7 +5819,7 @@ void PractRand::Tests::BirthdayAlt::init([[maybe_unused]] PractRand::RNGs::vRNG*
 	score_sum_log_sqr = 0;
 	count = 0;
 }
-std::string Tests::BirthdayAlt::get_name() const {
+std::string PractRand::Tests::BirthdayAlt::get_name() const {
 	std::ostringstream buf;
 	buf << "BDayX(" << buffer_size_L2 << ")";
 	return buf.str();
@@ -6065,7 +6066,7 @@ void PractRand::Tests::Pat5::test_blocks(TestBlock* data, int numblocks) {
 }
 static std::vector<double> get_Pat5_prob_sub_table(int base_bits, int shift, int final_bits) {
 	std::vector<double> pdf, cdf, result;
-	Tests::get_hamming_weight_chances(base_bits, pdf, cdf);
+	PractRand::Tests::get_hamming_weight_chances(base_bits, pdf, cdf);
 	result.resize(1 << final_bits, 0.0);
 	int max = (1 << final_bits) - 1;
 	for (int i = 0; i <= base_bits; i++) {
@@ -10895,7 +10896,7 @@ int PractRand::Tests::Transforms::multiplex::get_blocks_to_repeat() const {
 	return rv;
 }
 int PractRand::Tests::Transforms::multiplex::get_num_children() const { return subtests.tests.size(); }
-Tests::TestBaseclass* PractRand::Tests::Transforms::multiplex::get_child  (int index) const {return subtests.tests[index];}
+PractRand::Tests::TestBaseclass* PractRand::Tests::Transforms::multiplex::get_child  (int index) const {return subtests.tests[index];}
 //std::string PractRand::Tests::Transforms::multiplex::get_child_name  (int index) const {return subtests[index]->get_name();}
 //double      PractRand::Tests::Transforms::multiplex::get_child_result(int index) {return subtests[index]->get_result();}
 

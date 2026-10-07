@@ -7,8 +7,6 @@
 #include <cstdint>
 #include <string>
 
-using namespace PractRand;
-
 //polymorphic:
 PRACTRAND_POLYMORPHIC_RNG_BASICS_C32(mt19937)
 void PractRand::RNGs::Polymorphic::mt19937::seed(uint64_t s) {implementation.seed(s);}
