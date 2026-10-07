@@ -22,6 +22,10 @@ namespace PractRand::RNGs::Polymorphic {
 				explicit sha2_based_pool(SEED_NONE_TYPE ) {reset_state();}
 				sha2_based_pool() {reset_state();}
 				~sha2_based_pool() override;
+				sha2_based_pool(const sha2_based_pool&) = delete;
+				sha2_based_pool& operator=(const sha2_based_pool&) = delete;
+				sha2_based_pool(sha2_based_pool&&) = delete;
+				sha2_based_pool& operator=(sha2_based_pool&&) = delete;
 
 				[[nodiscard]] std::string get_name() const override;
 				[[nodiscard]] uint64_t get_flags() const override;

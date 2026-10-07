@@ -30,6 +30,10 @@ namespace PractRand::RNGs {
 			public:
 				salsa() = default;
 				~salsa();
+				salsa(const salsa&) = delete;
+				salsa& operator=(const salsa&) = delete;
+				salsa(salsa&&) = delete;
+				salsa& operator=(salsa&&) = delete;
 				uint32_t raw32() {
 					if (used < 16) return outbuf[used++];
 					return _refill_and_raw32();

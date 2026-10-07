@@ -32,6 +32,10 @@ public:
 	//max_buffer_amount_ = size in kibibytes of the maximum amount of random data to keep buffered up at on time
 
 	virtual ~TestManager();//destructor (destroys the tests in the ListOfTests)
+	TestManager(const TestManager&) = delete;
+	TestManager& operator=(const TestManager&) = delete;
+	TestManager(TestManager&&) = delete;
+	TestManager& operator=(TestManager&&) = delete;
 
 	virtual void reset(PractRand::RNGs::vRNG* rng_);//resets contents for starting a new test run ; if rng is NULL then it will reuse the current RNG
 

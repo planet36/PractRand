@@ -19,7 +19,12 @@ namespace PractRand::RNGs {
 				Word iteration_table[ITERATION_SIZE], indirection_table[INDIRECTION_SIZE];
 				Word i, a, b, c;
 			public:
+				efiix32x48() = default;
 				~efiix32x48();
+				efiix32x48(const efiix32x48&) = delete;
+				efiix32x48& operator=(const efiix32x48&) = delete;
+				efiix32x48(efiix32x48&&) = delete;
+				efiix32x48& operator=(efiix32x48&&) = delete;
 				uint32_t raw32();
 				void seed(uint64_t s) { seed(s, s, s, s); }
 				void seed(uint64_t s1, uint64_t s2, uint64_t s3, uint64_t s4);

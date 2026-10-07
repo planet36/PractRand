@@ -20,7 +20,12 @@ namespace PractRand::RNGs {
 				void _advance_state();
 				void _seed(bool flag=true);
 			public:
+				isaac64x256() = default;
 				~isaac64x256();
+				isaac64x256(const isaac64x256&) = delete;
+				isaac64x256& operator=(const isaac64x256&) = delete;
+				isaac64x256(isaac64x256&&) = delete;
+				isaac64x256& operator=(isaac64x256&&) = delete;
 				void flush_buffers() {used = SIZE;}
 				uint64_t raw64() {//LOCKED, do not change
 					//note: this walks the buffer in the same direction as the buffer is filled

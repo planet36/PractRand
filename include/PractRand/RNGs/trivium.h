@@ -14,7 +14,12 @@ namespace PractRand::RNGs {
 			protected:
 				uint64_t a[2], b[2], c[2];
 			public:
+				trivium() = default;
 				~trivium();
+				trivium(const trivium&) = delete;
+				trivium& operator=(const trivium&) = delete;
+				trivium(trivium&&) = delete;
+				trivium& operator=(trivium&&) = delete;
 				uint64_t raw64();
 				void seed(const uint8_t* seed_and_iv, int length);//(length should not exceed 20) - standard algorithm for Trivium, not a good match for PractRand
 				void seed(uint64_t s);//Triviums standard seeding algorithm adapted to PractRand interface

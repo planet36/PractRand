@@ -18,6 +18,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject* walker) override;
 					explicit Transform64(vRNG* rng) : base_rng(rng) {}
 					~Transform64() override;
+					Transform64(const Transform64&) = delete;
+					Transform64& operator=(const Transform64&) = delete;
+					Transform64(Transform64&&) = delete;
+					Transform64& operator=(Transform64&&) = delete;
 				};
 				class Transform32 : public vRNG32 {
 				public:
@@ -28,6 +32,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject* walker) override;
 					explicit Transform32(vRNG* rng) : base_rng(rng) {}
 					~Transform32() override;
+					Transform32(const Transform32&) = delete;
+					Transform32& operator=(const Transform32&) = delete;
+					Transform32(Transform32&&) = delete;
+					Transform32& operator=(Transform32&&) = delete;
 				};
 				class Transform16 : public vRNG16 {
 				public:
@@ -38,6 +46,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject* walker) override;
 					explicit Transform16(vRNG* rng) : base_rng(rng) {}
 					~Transform16() override;
+					Transform16(const Transform16&) = delete;
+					Transform16& operator=(const Transform16&) = delete;
+					Transform16(Transform16&&) = delete;
+					Transform16& operator=(Transform16&&) = delete;
 				};
 				class Transform8 : public vRNG8 {
 				public:
@@ -48,6 +60,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject* walker) override;
 					explicit Transform8(vRNG* rng) : base_rng(rng) {}
 					~Transform8() override;
+					Transform8(const Transform8&) = delete;
+					Transform8& operator=(const Transform8&) = delete;
+					Transform8(Transform8&&) = delete;
+					Transform8& operator=(Transform8&&) = delete;
 				};
 				class MultiplexTransformRNG : public vRNG {
 				public:
@@ -66,6 +82,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject* walker) override;
 					explicit MultiplexTransformRNG(const std::vector<vRNG*>& sources);
 					~MultiplexTransformRNG() override;
+					MultiplexTransformRNG(const MultiplexTransformRNG&) = delete;
+					MultiplexTransformRNG& operator=(const MultiplexTransformRNG&) = delete;
+					MultiplexTransformRNG(MultiplexTransformRNG&&) = delete;
+					MultiplexTransformRNG& operator=(MultiplexTransformRNG&&) = delete;
 					[[nodiscard]] int get_native_output_size() const override;
 				};
 
@@ -93,6 +113,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					GeneralizedTableTransform(vRNG* rng, const Entry* table_, std::string name_) : table(table_), name(std::move(name_)), base_rng(rng) {}
 					~GeneralizedTableTransform() override;
+					GeneralizedTableTransform(const GeneralizedTableTransform&) = delete;
+					GeneralizedTableTransform& operator=(const GeneralizedTableTransform&) = delete;
+					GeneralizedTableTransform(GeneralizedTableTransform&&) = delete;
+					GeneralizedTableTransform& operator=(GeneralizedTableTransform&&) = delete;
 					void walk_state(StateWalkingObject*) override;
 					uint8_t raw8() override;
 				};
@@ -106,6 +130,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit ReinterpretAsUnknown( vRNG* rng );
 					~ReinterpretAsUnknown() override;
+					ReinterpretAsUnknown(const ReinterpretAsUnknown&) = delete;
+					ReinterpretAsUnknown& operator=(const ReinterpretAsUnknown&) = delete;
+					ReinterpretAsUnknown(ReinterpretAsUnknown&&) = delete;
+					ReinterpretAsUnknown& operator=(ReinterpretAsUnknown&&) = delete;
 					uint8_t raw8() override;
 					//to do: fix endianness issues
 					[[nodiscard]] std::string get_name() const override;
@@ -118,6 +146,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit ReinterpretAs8( vRNG* rng );
 					~ReinterpretAs8() override;
+					ReinterpretAs8(const ReinterpretAs8&) = delete;
+					ReinterpretAs8& operator=(const ReinterpretAs8&) = delete;
+					ReinterpretAs8(ReinterpretAs8&&) = delete;
+					ReinterpretAs8& operator=(ReinterpretAs8&&) = delete;
 					uint8_t raw8() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -128,6 +160,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit ReinterpretAs16( vRNG* rng );
 					~ReinterpretAs16() override;
+					ReinterpretAs16(const ReinterpretAs16&) = delete;
+					ReinterpretAs16& operator=(const ReinterpretAs16&) = delete;
+					ReinterpretAs16(ReinterpretAs16&&) = delete;
+					ReinterpretAs16& operator=(ReinterpretAs16&&) = delete;
 					uint16_t raw16() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -138,6 +174,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit ReinterpretAs32( vRNG* rng );
 					~ReinterpretAs32() override;
+					ReinterpretAs32(const ReinterpretAs32&) = delete;
+					ReinterpretAs32& operator=(const ReinterpretAs32&) = delete;
+					ReinterpretAs32(ReinterpretAs32&&) = delete;
+					ReinterpretAs32& operator=(ReinterpretAs32&&) = delete;
 					uint32_t raw32() override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -148,6 +188,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit ReinterpretAs64( vRNG* rng );
 					~ReinterpretAs64() override;
+					ReinterpretAs64(const ReinterpretAs64&) = delete;
+					ReinterpretAs64& operator=(const ReinterpretAs64&) = delete;
+					ReinterpretAs64(ReinterpretAs64&&) = delete;
+					ReinterpretAs64& operator=(ReinterpretAs64&&) = delete;
 					uint64_t raw64() override;
 					[[nodiscard]] std::string get_name() const override;
 				};

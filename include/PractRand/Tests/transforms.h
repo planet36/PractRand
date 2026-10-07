@@ -20,6 +20,10 @@ namespace PractRand::Tests::Transforms {
 				[[nodiscard]] virtual bool recommend_subtest_tree_descent() const;
 				void deinit() override;
 				~multiplex ( ) override;
+				multiplex(const multiplex&) = delete;
+				multiplex& operator=(const multiplex&) = delete;
+				multiplex(multiplex&&) = delete;
+				multiplex& operator=(multiplex&&) = delete;
 				[[nodiscard]] std::string get_name() const override;
 				void test_blocks(TestBlock* data, int numblocks) override;
 				[[nodiscard]] int get_blocks_to_repeat() const override;

@@ -108,6 +108,10 @@ namespace PractRand::Tests {
 		public:
 			explicit BirthdayLamda1(int buffer_size_L2_ = 26);
 			~BirthdayLamda1() override;
+			BirthdayLamda1(const BirthdayLamda1&) = delete;
+			BirthdayLamda1& operator=(const BirthdayLamda1&) = delete;
+			BirthdayLamda1(BirthdayLamda1&&) = delete;
+			BirthdayLamda1& operator=(BirthdayLamda1&&) = delete;
 			void init(PractRand::RNGs::vRNG* known_good) override;
 			//virtual void deinit();
 			[[nodiscard]] std::string get_name() const override;
@@ -179,6 +183,10 @@ namespace PractRand::Tests {
 		public:
 			explicit BirthdayAlt(int buffer_size_L2_, int filter_bits_ = 0);
 			~BirthdayAlt() override;
+			BirthdayAlt(const BirthdayAlt&) = delete;
+			BirthdayAlt& operator=(const BirthdayAlt&) = delete;
+			BirthdayAlt(BirthdayAlt&&) = delete;
+			BirthdayAlt& operator=(BirthdayAlt&&) = delete;
 			void init(PractRand::RNGs::vRNG* known_good) override;
 			//virtual void deinit();
 			[[nodiscard]] std::string get_name() const override;

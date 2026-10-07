@@ -32,6 +32,10 @@ public:
 		//record_seed(current_seed);
 	}
 	~Seeder_MetaRNG() override { delete base_rng; }
+	Seeder_MetaRNG(const Seeder_MetaRNG&) = delete;
+	Seeder_MetaRNG& operator=(const Seeder_MetaRNG&) = delete;
+	Seeder_MetaRNG(Seeder_MetaRNG&&) = delete;
+	Seeder_MetaRNG& operator=(Seeder_MetaRNG&&) = delete;
 	void autoseed() override {
 		known_good.autoseed();
 		current_seed = known_good.raw64();
@@ -114,6 +118,10 @@ public:
 		//last_transform = ???;
 	}
 	~EntropyPool_MetaRNG() override { delete base_entropy_pool; }
+	EntropyPool_MetaRNG(const EntropyPool_MetaRNG&) = delete;
+	EntropyPool_MetaRNG& operator=(const EntropyPool_MetaRNG&) = delete;
+	EntropyPool_MetaRNG(EntropyPool_MetaRNG&&) = delete;
+	EntropyPool_MetaRNG& operator=(EntropyPool_MetaRNG&&) = delete;
 	void autoseed() override {
 		known_good.autoseed();
 		int len = (min_length + max_length) / 2;

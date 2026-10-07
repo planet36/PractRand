@@ -25,7 +25,12 @@ namespace PractRand::RNGs {
 				[[gnu::always_inline]] inline void _feedback_1(uint32_t& u, uint32_t v, uint32_t b, uint32_t c) const;
 				[[gnu::always_inline]] inline void _feedback_2(uint32_t& u, uint32_t v, uint32_t b, uint32_t c) const;
 			public:
+				hc256() = default;
 				~hc256();
+				hc256(const hc256&) = delete;
+				hc256& operator=(const hc256&) = delete;
+				hc256(hc256&&) = delete;
+				hc256& operator=(hc256&&) = delete;
 				void flush_buffers() {used = OUTPUT_BUFFER_SIZE;}
 				uint32_t raw32() {//LOCKED, do not change
 					if (used < OUTPUT_BUFFER_SIZE) return outbuf[used++];

@@ -31,6 +31,10 @@ namespace PractRand::RNGs {
 			public:
 				chacha() = default;
 				~chacha();
+				chacha(const chacha&) = delete;
+				chacha& operator=(const chacha&) = delete;
+				chacha(chacha&&) = delete;
+				chacha& operator=(chacha&&) = delete;
 				uint32_t raw32() {
 					if (used < 16) return outbuf[used++];
 					return _refill_and_raw32();

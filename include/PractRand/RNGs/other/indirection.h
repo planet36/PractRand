@@ -61,6 +61,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject*) override;
 					explicit ibaa8(int table_size_L2_);
 					~ibaa8() override;
+					ibaa8(const ibaa8&) = delete;
+					ibaa8& operator=(const ibaa8&) = delete;
+					ibaa8(ibaa8&&) = delete;
+					ibaa8& operator=(ibaa8&&) = delete;
 				};
 				class ibaa16 : public vRNG16 {
 					int table_size_L2;
@@ -72,6 +76,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject*) override;
 					explicit ibaa16(int table_size_L2_);
 					~ibaa16() override;
+					ibaa16(const ibaa16&) = delete;
+					ibaa16& operator=(const ibaa16&) = delete;
+					ibaa16(ibaa16&&) = delete;
+					ibaa16& operator=(ibaa16&&) = delete;
 				};
 				class ibaa32 : public vRNG32 {
 					int table_size_L2;
@@ -83,6 +91,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject*) override;
 					explicit ibaa32(int table_size_L2_);
 					~ibaa32() override;
+					ibaa32(const ibaa32&) = delete;
+					ibaa32& operator=(const ibaa32&) = delete;
+					ibaa32(ibaa32&&) = delete;
+					ibaa32& operator=(ibaa32&&) = delete;
 				};
 				//based upon the ISAAC algorithm by Robert Jenkins
 				//but adapted slightly to permit smaller minimum table sizes
@@ -96,6 +108,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject*) override;
 					explicit isaac32_varqual(int table_size_L2_);
 					~isaac32_varqual() override;
+					isaac32_varqual(const isaac32_varqual&) = delete;
+					isaac32_varqual& operator=(const isaac32_varqual&) = delete;
+					isaac32_varqual(isaac32_varqual&&) = delete;
+					isaac32_varqual& operator=(isaac32_varqual&&) = delete;
 				};
 				//as isaac32_small, but adapted to use 16 bit integers instead of 32
 				class isaac16_varqual : public vRNG16 {
@@ -108,6 +124,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					void walk_state(StateWalkingObject*) override;
 					explicit isaac16_varqual(int table_size_L2_);
 					~isaac16_varqual() override;
+					isaac16_varqual(const isaac16_varqual&) = delete;
+					isaac16_varqual& operator=(const isaac16_varqual&) = delete;
+					isaac16_varqual(isaac16_varqual&&) = delete;
+					isaac16_varqual& operator=(isaac16_varqual&&) = delete;
 				};
 				class efiix8_varqual : public vRNG8 {
 					static constexpr int SHIFT_AMOUNT = 2;
@@ -123,6 +143,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					efiix8_varqual(int iteration_table_size_L2, int indirection_table_size_L2);
 					~efiix8_varqual() override;
+					efiix8_varqual(const efiix8_varqual&) = delete;
+					efiix8_varqual& operator=(const efiix8_varqual&) = delete;
+					efiix8_varqual(efiix8_varqual&&) = delete;
+					efiix8_varqual& operator=(efiix8_varqual&&) = delete;
 				};
 				//efiix algorithm, shrunk down to operate on 4 bit integers (reports itself as an 8 bit PRNG)
 				class efiix4_varqual : public vRNG8 {
@@ -140,6 +164,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					[[nodiscard]] std::string get_name() const override;
 					efiix4_varqual(int iteration_table_size_L2, int indirection_table_size_L2);
 					~efiix4_varqual() override;
+					efiix4_varqual(const efiix4_varqual&) = delete;
+					efiix4_varqual& operator=(const efiix4_varqual&) = delete;
+					efiix4_varqual(efiix4_varqual&&) = delete;
+					efiix4_varqual& operator=(efiix4_varqual&&) = delete;
 				};
 
 				//generic indirection-based PRNGs, just for testing test suites
@@ -152,6 +180,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit genindA(int size_L2);
 					~genindA() override;
+					genindA(const genindA&) = delete;
+					genindA& operator=(const genindA&) = delete;
+					genindA(genindA&&) = delete;
+					genindA& operator=(genindA&&) = delete;
 					uint16_t raw16() override;
 					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
@@ -166,6 +198,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 				public:
 					explicit genindB(int size_L2);
 					~genindB() override;
+					genindB(const genindB&) = delete;
+					genindB& operator=(const genindB&) = delete;
+					genindB(genindB&&) = delete;
+					genindB& operator=(genindB&&) = delete;
 					uint16_t raw16() override;
 					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
@@ -184,6 +220,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					}
 					explicit genindC(int size_L2);
 					~genindC() override;
+					genindC(const genindC&) = delete;
+					genindC& operator=(const genindC&) = delete;
+					genindC(genindC&&) = delete;
+					genindC& operator=(genindC&&) = delete;
 					uint16_t refill();
 					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
@@ -199,6 +239,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint16_t raw16() override;
 					explicit genindD(int size_L2);
 					~genindD() override;
+					genindD(const genindD&) = delete;
+					genindD& operator=(const genindD&) = delete;
+					genindD(genindD&&) = delete;
+					genindD& operator=(genindD&&) = delete;
 					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -214,6 +258,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint16_t raw16() override;
 					explicit genindE(int size_L2);
 					~genindE() override;
+					genindE(const genindE&) = delete;
+					genindE& operator=(const genindE&) = delete;
+					genindE(genindE&&) = delete;
+					genindE& operator=(genindE&&) = delete;
 					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
 				};
@@ -229,6 +277,10 @@ namespace PractRand::RNGs::Polymorphic::NotRecommended {
 					uint16_t raw16() override;
 					explicit genindF(int size_L2);
 					~genindF() override;
+					genindF(const genindF&) = delete;
+					genindF& operator=(const genindF&) = delete;
+					genindF(genindF&&) = delete;
+					genindF& operator=(genindF&&) = delete;
 					void walk_state(StateWalkingObject*) override;
 					[[nodiscard]] std::string get_name() const override;
 				};
