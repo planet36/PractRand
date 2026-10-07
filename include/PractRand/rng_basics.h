@@ -32,7 +32,12 @@ namespace PractRand {
 			//vRNG(vRNG *rng_) {seed(rng_);}
 			//vRNG(_dummy_SeedingTypeAuto *) {autoseed();}
 			//vRNG(_dummy_SeedingTypeNone *) {}
+			vRNG() = default;
 			virtual ~vRNG();
+			vRNG(const vRNG&) = delete;
+			vRNG& operator=(const vRNG&) = delete;
+			vRNG(vRNG&&) = delete;
+			vRNG& operator=(vRNG&&) = delete;
 			virtual void seed(uint64_t seed);
 			virtual void seed_fast(uint64_t seed);
 			virtual void seed(vRNG* rng);

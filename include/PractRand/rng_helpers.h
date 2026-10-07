@@ -5,7 +5,12 @@
 namespace PractRand {
 	class StateWalkingObject {
 	public:
+		StateWalkingObject() = default;
 		virtual ~StateWalkingObject() = default;
+		StateWalkingObject(const StateWalkingObject&) = delete;
+		StateWalkingObject& operator=(const StateWalkingObject&) = delete;
+		StateWalkingObject(StateWalkingObject&&) = delete;
+		StateWalkingObject& operator=(StateWalkingObject&&) = delete;
 		virtual void handle(bool&) = 0;
 		/*virtual void handle(unsigned char &) = 0;
 		virtual void handle(unsigned short &) = 0;
