@@ -633,17 +633,15 @@ namespace PractRand {
 		double math_lower_incomplete_gamma(double a, double x) {
 			double scale = 1.0;
 			double offset = 0.0;
-		recurse:
-			if (a == 0.5) return (std::sqrt(std::numbers::pi) * math_erf(std::sqrt(x))) * scale + offset;
-			if (a == 1) return (1 - std::exp(-x)) * scale + offset;
 			//if (a > 1) return (a - 1) * math_lower_incomplete_gamma(a - 1, x) - std::pow(x, a - 1) * std::exp(-x);
-			if (a > 1) {
+			while (a > 1) {
 				a -= 1;
 				//offset -= std::pow(x, a) * std::exp(-x) * scale;
 				offset -= std::exp(std::log(x) * a - x) * scale;
 				scale *= a;
-				goto recurse;
 			}
+			if (a == 0.5) return (std::sqrt(std::numbers::pi) * math_erf(std::sqrt(x))) * scale + offset;
+			if (a == 1) return (1 - std::exp(-x)) * scale + offset;
 			issue_error(); return -1;
 		}
 		double math_gamma_function ( double a ) {
@@ -660,7 +658,16 @@ namespace PractRand {
 			double ln_scale = 0;
 			//double scale = 1.0;
 			//double offset = 0.0;
-		recurse:
+			//if (a > 1) return (a - 1) * math_lower_incomplete_gamma(a - 1, x) - std::pow(x, a - 1) * std::exp(-x);
+			while (a > 1) {
+				a -= 1;
+				//offset -= std::pow(x, a) * std::exp(-x) * scale;
+				//offset -= std::exp(std::log(x) * a - x) * scale;
+				//offset -= std::exp(std::log(x) * a - x) * scale;
+				ln_offsets.push_back(std::log(x) * a - x + ln_scale);
+				//scale *= a;
+				ln_scale += std::log(a);
+			}
 			if (a == 0.5) {
 				//double gamma = std::sqrt(3.141592653589793238) * scale;
 				//return (std::sqrt(3.141592653589793238) * math_erf(std::sqrt(x)) * scale + offset) / gamma;
@@ -678,17 +685,6 @@ namespace PractRand {
 					sum_offsets += std::exp(ln_offset - ln_scale);
 				//return (1 - std::exp(-x)) + offset / scale;
 				return (1 - std::exp(-x)) - sum_offsets;
-			}
-			//if (a > 1) return (a - 1) * math_lower_incomplete_gamma(a - 1, x) - std::pow(x, a - 1) * std::exp(-x);
-			if (a > 1) {
-				a -= 1;
-				//offset -= std::pow(x, a) * std::exp(-x) * scale;
-				//offset -= std::exp(std::log(x) * a - x) * scale;
-				//offset -= std::exp(std::log(x) * a - x) * scale;
-				ln_offsets.push_back(std::log(x) * a - x + ln_scale);
-				//scale *= a;
-				ln_scale += std::log(a);
-				goto recurse;
 			}
 			issue_error(); return -1;
 		}
