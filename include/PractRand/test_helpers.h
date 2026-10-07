@@ -157,6 +157,10 @@ namespace PractRand::Tests {
 			VariableSizeCount() = default;
 			explicit VariableSizeCount(int size_) {set_size(size_);}
 			VariableSizeCount(const VariableSizeCount& other) = delete;//copy constructor disallowed
+			VariableSizeCount& operator=(const VariableSizeCount&) = delete;
+			VariableSizeCount(VariableSizeCount&&) = delete;
+			VariableSizeCount& operator=(VariableSizeCount&&) = delete;
+			~VariableSizeCount() = default;
 			void increment(int index) {if (!++low[index]) high[index] += 1ULL << (8*sizeof(LowIntType));}
 			const uint64_t& operator[] (int index) {
 				high[index] += low[index];
