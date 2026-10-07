@@ -491,7 +491,7 @@ namespace PractRand {
 			}*/
 			if (a < 32) {
 				static constexpr double lookup[32] = {//values found here: https://www.johndcook.com/blog/csharp_log_factorial/
-					0.000000000000000, 0.000000000000000, 0.693147180559945, 1.791759469228055,    //0-3
+					0.000000000000000, 0.000000000000000, std::numbers::ln2, 1.791759469228055,    //0-3
 					3.178053830347946, 4.787491742782046, 6.579251212010101, 8.525161361065415,    //4-7
 					10.604602902745251, 12.801827480081469, 15.104412573075516, 17.502307845873887,//8-11
 					19.987214495661885, 22.552163853123421, 25.191221182738683, 27.899271383840894,//12-15
@@ -1003,7 +1003,7 @@ namespace PractRand {
 			sum_log = -sum_log;
 			sum_log -= size_a * std::numbers::egamma - 0.5;
 			sum_log /= std::sqrt(size_f);
-			sum_log += std::pow(2*size_f+1, -1.442695) * 0.2;
+			sum_log += std::pow(2*size_f+1, -std::numbers::log2e) * 0.2;
 			sum_log *= 1.245;
 
 			longest -= math_harmonic_series(size_a) / size_a;
