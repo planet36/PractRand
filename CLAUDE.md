@@ -67,10 +67,11 @@ A quick regression check for a warning fix is to run `tools/RNG_test <name> -see
 
 ## Code style
 
+@COMMENT-STYLE.md
+
 - Keep the upstream style: tabs for indentation and `#pragma once` header guards.  Many clang-tidy checks are disabled in `.clang-tidy` precisely because they conflict with this code's idioms (C arrays, magic numbers, pointer arithmetic, unions, and similar).  Disabling a check there is an accepted fix when it would force a rewrite of upstream code.
 - Put local `#include "..."` lines before system `#include <...>` lines, with a blank line between the two groups.
 - Attach `&` and `*` to the type, as in `const std::string& name` and `vRNG* rng`.  A line that declares several pointers, such as `uint32_t *m = nullptr, *m2 = nullptr;`, keeps the sigil on each name.
 - Never remove existing braces.  Adding braces is fine.
 - Use signed integers for counts, sizes, indexes, and loop counters.  Keep unsigned integers for bit manipulation, raw RNG output, and byte data.  A class member keeps its fixed width when it changes signedness, so `uint32_t` becomes `int32_t`.
 - Commit messages follow the existing pattern.  Disabling a check in `.clang-tidy` is `Add -<check-name>`.  A warning fix is `Fix warning: <diagnostic> [<check or -W flag>]`, quoting the diagnostic with `XXX` in place of any name that varies between occurrences.  When more than one part varies, each gets its own placeholder (`XXX`, `YYY`, and so on), as in `Fix warning: prefer 'std::numbers::XXX' to this literal, differs by 'YYY' [modernize-use-std-numbers]`.  A warning silenced with `// NOLINTNEXTLINE(<check>)` is `Suppress warning: <diagnostic> [<check>]`, with the same placeholders.
-- Comments, doc blocks, and commit messages follow `COMMENT-STYLE.md`.  The rules that most often apply are one thought per sentence, two spaces after a sentence-ending period, a 96-column line limit, two hyphens for a dash in code comments, American spellings, and the serial comma.
