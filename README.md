@@ -15,7 +15,9 @@ make -j $(nproc)
 make install PREFIX=$HOME/.local
 ```
 
-The Makefile builds with `-march=native`, so the binaries may not run on a different CPU.  Do not run `./configure`.  It is upstream's script, and it overwrites the Makefile.
+The Makefile builds with `-march=native`, so the binaries may not run on a different CPU.
+
+Do not run `./configure`.  It is upstream's script, and it overwrites the Makefile.
 
 ## Usage
 

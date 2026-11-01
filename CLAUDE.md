@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A fork of PractRand pre0.95 (https://pracrand.sourceforge.net/), a library and command-line suite for statistically testing random number generators.  The fork targets Linux and is updated to C++23.  Most commits fix compiler and clang-tidy warnings, and others fix upstream bugs or speed up `RNG_test`.  A change must not alter what an RNG outputs or what a statistical test reports, unless it fixes a bug in one.
+This is a fork of PractRand pre0.95 (https://pracrand.sourceforge.net/), a library and command-line suite for statistically testing random number generators.  The fork targets Linux and is updated to C++23.  Most commits fix compiler and clang-tidy warnings, and others fix upstream bugs or speed up `RNG_test`.  A change must not alter what an RNG outputs or what a statistical test reports, unless it fixes a bug in one.
 
 Only Linux with GCC on little-endian targets is supported, and `include/PractRand/endian.h` enforces little-endian with a `static_assert`.  The Windows, MSVC, Apple, and big-endian code was removed, so do not add branches for them back.
 
@@ -33,7 +33,7 @@ After an LLVM upgrade, run `clang-tidy --verify-config` from the repo root.  cla
 
 Any new tool must be named `tools/RNG_*.cpp` to be picked up by the Makefile's wildcard.  `tools/Test_calibration.cpp` does not match that pattern and is not built.
 
-Do not run `./configure`.  It is upstream's script and it overwrites the hand-maintained `Makefile` with a generated POSIX one that targets `-std=c++14`.
+Do not run `./configure`.  It is upstream's script, and it overwrites the hand-maintained `Makefile` with a generated POSIX one that targets `-std=c++14`.
 
 ## Testing
 
@@ -74,4 +74,7 @@ A quick regression check for a warning fix is to run `tools/RNG_test <name> -see
 - Attach `&` and `*` to the type, as in `const std::string& name` and `vRNG* rng`.  A line that declares several pointers, such as `uint32_t *m = nullptr, *m2 = nullptr;`, keeps the sigil on each name.
 - Never remove existing braces.  Adding braces is fine.
 - Use signed integers for counts, sizes, indexes, and loop counters.  Keep unsigned integers for bit manipulation, raw RNG output, and byte data.  A class member keeps its fixed width when it changes signedness, so `uint32_t` becomes `int32_t`.
-- Commit messages follow the existing pattern.  Disabling a check in `.clang-tidy` is `Add -<check-name>`.  A warning fix is `Fix warning: <diagnostic> [<check or -W flag>]`, quoting the diagnostic with `XXX` in place of any name that varies between occurrences.  When more than one part varies, each gets its own placeholder (`XXX`, `YYY`, and so on), as in `Fix warning: prefer 'std::numbers::XXX' to this literal, differs by 'YYY' [modernize-use-std-numbers]`.  A warning silenced with `// NOLINTNEXTLINE(<check>)` is `Suppress warning: <diagnostic> [<check>]`, with the same placeholders.
+- Commit messages follow the existing pattern:
+  - Disabling a check in `.clang-tidy` is `Add -<check-name>`.
+  - A warning fix is `Fix warning: <diagnostic> [<check or -W flag>]`, quoting the diagnostic with `XXX` in place of any name that varies between occurrences.  When more than one part varies, each gets its own placeholder (`XXX`, `YYY`, and so on), as in `Fix warning: prefer 'std::numbers::XXX' to this literal, differs by 'YYY' [modernize-use-std-numbers]`.
+  - A warning silenced with `// NOLINTNEXTLINE(<check>)` is `Suppress warning: <diagnostic> [<check>]`, with the same placeholders.
